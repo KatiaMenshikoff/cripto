@@ -30,9 +30,19 @@
 \usepackage{array}
 \usepackage{booktabs}
 \usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds,
+                shapes.geometric,shapes.misc,chains,matrix,
+                decorations.pathreplacing,decorations.markings}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
 
 % Evitar problemas de "spanish" con guiones en listas/itemize
 \frenchspacing
+
+% Entorno para diagramas con epígrafe consistente
+\newcommand{\diagcaption}[1]{\begin{center}\footnotesize\textit{#1}\end{center}}
 
 %----------------------------------------------------------------------
 %  Cajas de estilo

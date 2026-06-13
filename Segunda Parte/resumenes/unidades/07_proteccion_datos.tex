@@ -35,6 +35,29 @@ divulgar.
   \item \textbf{Respuesta (Respond):} responder ante filtraciones y evitar que se repitan.
 \end{enumerate}
 
+\begin{center}
+\begin{tikzpicture}[
+    fase/.style={draw, rounded corners=2pt, align=center, font=\footnotesize,
+                 minimum width=2.1cm, minimum height=0.85cm, fill=blue!8},
+    flecha/.style={-{Stealth[length=2.4mm]}, thick, blue!55!black}]
+  % seis fases dispuestas en círculo (radio ~2.6cm)
+  \node[fase] (gov)  at (90:2.8)  {Gobierno\\\scriptsize(Govern)};
+  \node[fase] (dis)  at (30:2.8)  {Descubrim.\\\scriptsize(Discover)};
+  \node[fase] (pro)  at (-30:2.8) {Protección\\\scriptsize(Protect)};
+  \node[fase] (com)  at (-90:2.8) {Cumplim.\\\scriptsize(Comply)};
+  \node[fase] (det)  at (-150:2.8){Detección\\\scriptsize(Detect)};
+  \node[fase] (res)  at (150:2.8) {Respuesta\\\scriptsize(Respond)};
+  \draw[flecha] (gov) to[bend left=15] (dis);
+  \draw[flecha] (dis) to[bend left=15] (pro);
+  \draw[flecha] (pro) to[bend left=15] (com);
+  \draw[flecha] (com) to[bend left=15] (det);
+  \draw[flecha] (det) to[bend left=15] (res);
+  \draw[flecha] (res) to[bend left=15] (gov);
+\end{tikzpicture}
+\end{center}
+\diagcaption{Ciclo de la protección de la información: es un ciclo, al terminar
+Respond se vuelve a Govern.}
+
 \subsubsection{Data Governance}
 Son \textbf{todas las tareas para asegurar que los datos estén seguros, privados,
 íntegros y disponibles}. Incluye las medidas que toman las \textbf{personas}, los
@@ -47,6 +70,26 @@ almacenamiento, procesamiento, retención y eliminación.
 (3) Use \& distribute $\to$ (4) Retain $\to$ (5) Dispose and destroy (al vencer el
 período de retención).
 
+\begin{center}
+\begin{tikzpicture}[
+    etapa/.style={draw, rounded corners=2pt, align=center, font=\footnotesize,
+                  minimum width=2.3cm, minimum height=0.95cm, fill=orange!12},
+    flecha/.style={-{Stealth[length=2.4mm]}, thick, orange!60!black}]
+  \node[etapa] (c) at (90:2.9)   {1. Recopilación\\\scriptsize Create \& collect};
+  \node[etapa] (s) at (18:2.9)   {2. Almacenam.\\\scriptsize Store \& transmit};
+  \node[etapa] (u) at (-54:2.9)  {3. Procesam.\\\scriptsize Use \& distribute};
+  \node[etapa] (r) at (-126:2.9) {4. Retención\\\scriptsize Retain};
+  \node[etapa] (d) at (162:2.9)  {5. Eliminación\\\scriptsize Dispose \& destroy};
+  \draw[flecha] (c) to[bend left=12] (s);
+  \draw[flecha] (s) to[bend left=12] (u);
+  \draw[flecha] (u) to[bend left=12] (r);
+  \draw[flecha] (r) to[bend left=12] (d);
+  \draw[flecha] (d) to[bend left=12] (c);
+\end{tikzpicture}
+\end{center}
+\diagcaption{Ciclo de vida del dato (PwC): la eliminación ocurre al vencer el
+período de retención y el ciclo se reinicia.}
+
 \subsubsection{Data Roles (jerarquía)}
 \begin{itemize}[nosep]
   \item \textbf{Data Trustee:} posición estratégica/\emph{cabinet-level}, responsable
@@ -58,6 +101,40 @@ período de retención).
   \item \textbf{Data User:} quien efectivamente \textbf{accede} y usa los datos.
 \end{itemize}
 A medida que se baja en la jerarquía, el dominio de datos manejado es cada vez más chico.
+
+\begin{center}
+\begin{tikzpicture}[
+    rol/.style={draw, rounded corners=2pt, align=center, font=\footnotesize,
+                minimum height=0.8cm},
+    cust/.style={rol, fill=orange!18, minimum width=1.9cm},
+    flecha/.style={-{Stealth[length=2.2mm]}, thick}]
+  \node[rol, fill=red!18, minimum width=4cm] (trustee) at (0,3)
+        {\textbf{Data Trustee} \scriptsize(legal, \emph{cabinet-level})};
+  \node[rol, fill=yellow!22, minimum width=2.5cm] (st1) at (-2.2,1.7)
+        {\textbf{Steward}};
+  \node[rol, fill=yellow!22, minimum width=2.5cm] (st2) at (2.2,1.7)
+        {\textbf{Steward}};
+  \node[cust] (c1) at (-3.4,0.4) {Custodian};
+  \node[cust] (c2) at (-1.1,0.4) {Custodian};
+  \node[cust] (c3) at (2.2,0.4)  {Custodian};
+  \node[rol, fill=teal!18, minimum width=8cm] (user) at (0,-0.9)
+        {\textbf{Data User} \scriptsize(accede y usa los datos)};
+  \draw[flecha] (trustee) -- (st1);
+  \draw[flecha] (trustee) -- (st2);
+  \draw[flecha] (st1) -- (c1);
+  \draw[flecha] (st1) -- (c2);
+  \draw[flecha] (st2) -- (c3);
+  \draw[{Stealth[length=2.2mm]}-{Stealth[length=2.2mm]}, thick] (c1) -- (c1|-user.north);
+  \draw[{Stealth[length=2.2mm]}-{Stealth[length=2.2mm]}, thick] (c2) -- (c2|-user.north);
+  \draw[{Stealth[length=2.2mm]}-{Stealth[length=2.2mm]}, thick] (c3) -- (c3|-user.north);
+  \node[font=\scriptsize, align=left, anchor=west] at (4.6,1.55)
+        {Steward: \emph{aprueba}\\ accesos};
+  \node[font=\scriptsize, align=left, anchor=west] at (4.6,0.4)
+        {Custodian: \emph{otorga}\\ acceso (autoriz. por\\ el Steward)};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Roles del dato: al bajar en la jerarquía el dominio de datos
+manejado es cada vez más chico.}
 
 %======================================================================
 \subsection{Marco legal y regulaciones}
@@ -150,6 +227,29 @@ lineamientos para cada uno:
         esperando a la CPU, o \emph{in-transit} entre el bus de I/O y la CPU.
 \end{itemize}
 
+\begin{center}
+\begin{tikzpicture}[
+    estado/.style={draw, rounded corners=2pt, align=center, font=\footnotesize,
+                   minimum width=3.4cm, minimum height=1.5cm},
+    tec/.style={font=\scriptsize, align=center}]
+  \node[estado, fill=red!12] (rest) at (0,0)
+        {\textbf{At-rest}\\\scriptsize(en reposo)\\[1pt]\scriptsize disco, backup,\\\scriptsize bucket S3, Excel};
+  \node[estado, fill=yellow!18] (transit) at (4.2,0)
+        {\textbf{In-transit}\\\scriptsize(en tránsito)\\[1pt]\scriptsize red, pendrive,\\\scriptsize query};
+  \node[estado, fill=violet!14] (use) at (8.4,0)
+        {\textbf{In-use}\\\scriptsize(execution-time)\\[1pt]\scriptsize app / CPU\\\scriptsize procesando};
+  \draw[-{Stealth[length=2.4mm]}, thick] (rest) -- (transit);
+  \draw[-{Stealth[length=2.4mm]}, thick] (transit) -- (use);
+  \node[tec] (t1) at (0,-1.85)  {HSM, Keystore,\\ KEK-DEK\\ (EncFS, EFS, FileVault)};
+  \node[tec] (t2) at (4.2,-1.85){TLS / HTTPS,\\ SMTP+TLS,\\ IPSEC, SSH; GPG};
+  \node[tec] (t3) at (8.4,-1.85){TME / TME-MK\\ (AES-XTS en CPU);\\ DLP};
+  \draw[-{Stealth[length=2mm]}, gray] (rest) -- (t1);
+  \draw[-{Stealth[length=2mm]}, gray] (transit) -- (t2);
+  \draw[-{Stealth[length=2mm]}, gray] (use) -- (t3);
+\end{tikzpicture}
+\end{center}
+\diagcaption{Mismo dato en distintos estados y la técnica de cifrado en cada uno.}
+
 \subsubsection{Enforcement (Compiler-time)}
 Asegura que el código cumpla políticas de seguridad \textbf{antes} de ejecutarse, vía
 \textbf{análisis estático de código} en la compilación (ej.\ detectar que se imprimen
@@ -176,6 +276,34 @@ Objetivo: proteger datos inactivos (disco, pendrive, etc.). Mecanismos:
         Ejemplos: EncFS/Loop-AES, EFS (Windows), FileVault (Mac OS X). Problemas
         asociados: \emph{Data Remanence} y \emph{Secure Deletion}.
 \end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[
+    nodo/.style={draw, rounded corners=2pt, align=center, font=\footnotesize,
+                 minimum height=0.85cm},
+    op/.style={draw, circle, fill=gray!25, font=\scriptsize, inner sep=1pt,
+               minimum size=0.75cm},
+    flecha/.style={-{Stealth[length=2.4mm]}, thick}]
+  \node[nodo, fill=blue!10, minimum width=2.4cm] (kek) at (0,2.4)
+        {\textbf{KEK}\\\scriptsize Key Encryption Key};
+  \node[nodo, fill=orange!14, minimum width=2.4cm] (dek) at (0,0.8)
+        {\textbf{DEK}\\\scriptsize Data Encryption Key};
+  \node[nodo, fill=green!12, minimum width=2.4cm] (data) at (0,-0.8)
+        {\textbf{Datos}};
+  \node[nodo, fill=gray!10, minimum width=2.4cm] (cif) at (5,-0.8)
+        {Datos cifrados\\\scriptsize (en disco/backup)};
+  \node[nodo, fill=gray!10, minimum width=2.4cm] (dekc) at (5,0.8)
+        {DEK cifrada};
+  \draw[flecha] (kek) -- node[right, font=\scriptsize] {cifra a} (dek);
+  \draw[flecha] (dek) -- node[right, font=\scriptsize] {cifra a} (data);
+  \draw[flecha] (data) -- (cif);
+  \draw[flecha] (dek) -- (dekc);
+  \node[font=\scriptsize, align=left, anchor=west] at (2.6,2.4)
+        {Rotar la KEK \emph{no} obliga\\ a re-encriptar los datos};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Jerarquía de claves (envelope encryption): la KEK cifra la DEK y la
+DEK cifra los datos. Se almacenan la DEK cifrada y los datos cifrados.}
 
 \paragraph{At-rest en la nube.} La nube es infraestructura de terceros. Espectro de
 opciones (de mayor control/menor costo a mayor eficiencia operativa/mayor costo):
@@ -282,6 +410,26 @@ operar sobre el texto plano.
 \paragraph{Utilidad.} Permite \textbf{computación en la nube preservando la privacidad}:
 un tercero (proveedor) puede procesar/analizar datos cifrados \textbf{sin verlos nunca}
 en claro. Útil cuando se quiere delegar cómputo sobre datos sensibles sin exponerlos.
+
+\begin{center}
+\begin{tikzpicture}[
+    caja/.style={draw, rounded corners=2pt, align=center, font=\footnotesize,
+                 minimum height=1.6cm, minimum width=3.6cm},
+    flecha/.style={-{Stealth[length=2.4mm]}, thick}]
+  \node[caja, fill=green!10] (cli) at (0,0)
+        {\textbf{Cliente}\\[2pt]\scriptsize cifra: $\mathrm{Enc}_k(x)$\\[2pt]
+         \scriptsize descifra el resultado:\\\scriptsize $\mathrm{Dec}_k(\mathrm{Enc}_k(f(x)))=f(x)$};
+  \node[caja, fill=blue!8] (srv) at (6,0)
+        {\textbf{Servidor / Nube}\\[2pt]\scriptsize opera sobre el cifrado:\\[2pt]
+         \scriptsize $f(\mathrm{Enc}_k(x))=\mathrm{Enc}_k(f(x))$\\\scriptsize (nunca ve $x$ en claro)};
+  \draw[flecha] (cli.north east) to[bend left=18]
+        node[above, font=\scriptsize] {$\mathrm{Enc}_k(x)$} (srv.north west);
+  \draw[flecha] (srv.south west) to[bend left=18]
+        node[below, font=\scriptsize] {$\mathrm{Enc}_k(f(x))$} (cli.south east);
+\end{tikzpicture}
+\end{center}
+\diagcaption{Encripción homomórfica: el cliente cifra, el servidor opera sobre el
+texto cifrado sin descifrarlo y el cliente descifra el resultado.}
 
 \begin{ojo}
 La diapositiva del teórico escribe la propiedad como $f(x)=y \Rightarrow f(\mathrm{Enc}(x))=f(\mathrm{Dec}(y))$,

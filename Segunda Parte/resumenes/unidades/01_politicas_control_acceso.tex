@@ -83,6 +83,21 @@ El profesor remarca mucho la distinción \textbf{MODELO / POLÍTICA / REGLAS}:
 Un ejercicio típico ($2025$-2Q) pide identificar explícitamente cada nivel.
 \end{destacado}
 
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize,node distance=2.1cm,
+  ent/.style={circle,draw,fill=blue!12,minimum size=1.0cm},
+  mod/.style={draw,rounded corners=3pt,fill=gray!10,minimum height=1.0cm,align=center,inner sep=6pt}]
+  \node[ent] (s) {Sujeto};
+  \node[mod,right=of s] (auth) {Módulo de\\Autenticación};
+  \node[mod,right=of auth] (ac) {Módulo de\\Control\\de Acceso};
+  \node[ent,right=of ac] (o) {Objeto};
+  \draw[-{Stealth},thick] (s) -- node[above,font=\scriptsize,align=center]{identidad} (auth);
+  \draw[-{Stealth},thick] (auth) -- node[above,font=\scriptsize,align=center]{sujeto\\autenticado} (ac);
+  \draw[-{Stealth},thick] (ac) -- node[above,font=\scriptsize,align=center]{acceso\\permitido} (o);
+\end{tikzpicture}
+\end{center}
+\diagcaption{Encadenamiento de módulos (ejercicio de parcial 2013): el sujeto pasa primero por la \textbf{autenticación} (¿quién sos?) y luego por el \textbf{control de acceso} (¿podés?) antes de llegar al objeto.}
+
 %======================================================================
 \subsection{Modelos de Confidencialidad: Bell-LaPadula (BLP)}
 %======================================================================
@@ -104,6 +119,31 @@ Un sujeto puede \textbf{escribir} un objeto si y solo si el nivel del objeto es 
 \begin{center}
 \textbf{BLP (confidencialidad): READ DOWN, WRITE UP.}
 \end{center}
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize,
+  lvl/.style={draw,rounded corners=3pt,minimum width=2.2cm,minimum height=0.7cm},
+  ok/.style={-{Stealth},green!55!black,thick},
+  no/.style={-{Stealth},red!75!black,thick,dashed}]
+  % niveles
+  \node[lvl,fill=red!25]    (h) at (0,3) {Top Secret};
+  \node[lvl,fill=orange!30] (m) at (0,1.5) {Secret \scriptsize(sujeto)};
+  \node[lvl,fill=green!25]  (l) at (0,0) {Unclassified};
+  \node[font=\bfseries] at (0,3.9) {Niveles};
+  % sujeto en el nivel medio
+  \node[circle,fill=blue!20,draw,minimum size=0.5cm] (s) at (3.4,1.5) {S};
+  % lecturas: read down (permitido leer igual o menor)
+  \draw[ok] (s) to[bend right=10] node[above,pos=0.55,green!45!black]{\scriptsize read} (m.east);
+  \draw[ok] (s) to[bend right=22] node[below,pos=0.6,green!45!black]{\scriptsize read} (l.east);
+  \draw[no] (s) to[bend left=22]  node[above,pos=0.6,red!70!black]{\scriptsize no read up} (h.east);
+  % escrituras: write up (permitido escribir igual o mayor)
+  \node[circle,fill=blue!20,draw,minimum size=0.5cm] (s2) at (-3.4,1.5) {S};
+  \draw[ok] (s2) to[bend left=10]  node[above,pos=0.55,green!45!black]{\scriptsize write} (m.west);
+  \draw[ok] (s2) to[bend left=22]  node[above,pos=0.6,green!45!black]{\scriptsize write} (h.west);
+  \draw[no] (s2) to[bend right=22] node[below,pos=0.6,red!70!black]{\scriptsize no write down} (l.west);
+\end{tikzpicture}
+\end{center}
+\diagcaption{Bell-LaPadula: un sujeto \emph{lee hacia abajo} (su nivel y menores) y \emph{escribe hacia arriba} (su nivel y mayores). La intersección lectura$\cap$escritura es su mismo nivel (strong star).}
 
 \paragraph{¿Por qué la *-property?} La CSS sola solo resuelve el acceso \emph{directo}. La *-property garantiza \textbf{control de flujo de información}: impide que alguien con acceso alto vuelque la información a un nivel más bajo. Ejemplo del editor de texto que guarda una copia temporal: el archivo original queda protegido, pero la copia podría quedar legible para quien no debe. Ejemplo del directivo que ``sin querer'' filtra información que conoce al hablar con gente de nivel inferior. Caso extremo: en el Proyecto Manhattan se aisló físicamente a los científicos en un pueblo para evitar interacción con niveles inferiores (aplicación de BLP).
 
@@ -146,6 +186,27 @@ Esto forma un \textbf{retículo (lattice)}, que es un \textbf{conjunto de orden 
   \item $(\text{Secret},\{\text{nuclear}\})$ y $(\text{Secret},\{\text{crypto}\})$ \textbf{NO} tienen relación: mismo nivel, pero ninguna lista de etiquetas es subconjunto de la otra. No hay dominancia en ningún sentido $\Rightarrow$ están efectivamente separados (ni lectura ni escritura entre ellos).
 \end{itemize}
 
+\begin{center}
+\begin{tikzpicture}[font=\scriptsize,
+  c/.style={draw,rounded corners=2pt,fill=gray!8,inner sep=3pt}]
+  \node[c] (top) at (0,3) {(Top Secret, \{nuclear,crypto\})};
+  \node[c] (tn)  at (-4,1.5) {(TS, \{nuclear\})};
+  \node[c] (sc)  at (0,1.5) {(Secret, \{nuclear,crypto\})};
+  \node[c] (tc)  at (4,1.5) {(TS, \{crypto\})};
+  \node[c] (sn)  at (-4,0) {(Secret, \{nuclear\})};
+  \node[c] (ts0) at (0,0) {(Top Secret, \{\})};
+  \node[c] (scr) at (4,0) {(Secret, \{crypto\})};
+  \node[c] (bot) at (0,-1.5) {(Secret, \{\})};
+  % aristas de dominancia (el de arriba domina al de abajo)
+  \draw (top)--(tn); \draw (top)--(sc); \draw (top)--(tc);
+  \draw (tn)--(sn); \draw[dashed] (tn)--(ts0);
+  \draw (sc)--(sn); \draw (sc)--(scr); \draw[dashed] (sc)--(ts0);
+  \draw (tc)--(scr); \draw[dashed] (tc)--(ts0);
+  \draw (sn)--(bot); \draw (ts0)--(bot); \draw (scr)--(bot);
+\end{tikzpicture}
+\end{center}
+\diagcaption{Retículo (diagrama de Hasse) del libro: cada arista sube hacia el que \textbf{domina}. (Secret,\{nuclear\}) y (Secret,\{crypto\}) \textbf{no son comparables} (ninguna lista de etiquetas contiene a la otra) $\Rightarrow$ están separados.}
+
 A nivel implementación es simple: a cada objeto y a cada sujeto se le almacena como metadata un nivel y una lista de etiquetas; resolver cada operación con las dos reglas es directo.
 
 \begin{ojo}
@@ -169,6 +230,37 @@ Creado por Kenneth J.\ Biba. Fue el primer modelo público que \textbf{no buscab
 \begin{center}
 \textbf{Biba (integridad): READ UP, WRITE DOWN.} (Invertir las flechas de un retículo BLP da Biba.)
 \end{center}
+
+\begin{center}
+\begin{tikzpicture}[font=\scriptsize,
+  lvl/.style={draw,rounded corners=3pt,minimum width=1.9cm,minimum height=0.6cm},
+  ok/.style={-{Stealth},green!55!black,thick},
+  no/.style={-{Stealth},red!75!black,thick,dashed}]
+  % ---- BLP (izquierda) ----
+  \node[font=\bfseries\footnotesize] at (0,3.6) {BLP (confidencialidad)};
+  \node[lvl,fill=red!25]    (bh) at (0,2.6) {alto};
+  \node[lvl,fill=orange!30] (bm) at (0,1.5) {medio (S)};
+  \node[lvl,fill=green!25]  (bl) at (0,0.4) {bajo};
+  \node[circle,fill=blue!20,draw,minimum size=0.42cm] (bs) at (2.0,1.5) {S};
+  \draw[ok] (bs) to[bend right=12] (bl.east);   % read down
+  \draw[no] (bs) to[bend left=12]  (bh.east);    % no read up
+  \draw[ok] (bs) to[bend left=28]  (bh.east);    % write up
+  \node[green!45!black] at (2.7,0.5) {read};
+  \node[green!45!black] at (2.7,2.6) {write};
+  % ---- Biba (derecha): retículo invertido ----
+  \node[font=\bfseries\footnotesize] at (6,3.6) {Biba (integridad)};
+  \node[lvl,fill=red!25]    (ih) at (6,2.6) {alto};
+  \node[lvl,fill=orange!30] (im) at (6,1.5) {medio (S)};
+  \node[lvl,fill=green!25]  (il) at (6,0.4) {bajo};
+  \node[circle,fill=blue!20,draw,minimum size=0.42cm] (is) at (8.0,1.5) {S};
+  \draw[ok] (is) to[bend left=12]  (ih.east);    % read up
+  \draw[no] (is) to[bend right=12] (il.east);    % no read down
+  \draw[ok] (is) to[bend right=28] (il.east);    % write down
+  \node[green!45!black] at (8.7,2.6) {read};
+  \node[green!45!black] at (8.7,0.5) {write};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Biba es el \textbf{espejo} de BLP: las flechas de lectura y escritura están invertidas. Confidencialidad lee abajo / escribe arriba; integridad lee arriba / escribe abajo.}
 
 Intuición: ``uno es tan confiable como las fuentes que utiliza''. Para considerar a un sujeto confiable, la información en la que se basa debe ser de igual o mayor confianza (no puede leer información dudosa). Y lo que un sujeto genera/escribe tiene a lo sumo su mismo nivel, nunca mayor. Ejemplo: el SO te advierte al ejecutar un archivo bajado de Internet (origen poco confiable) y no si lo bajaste del App Store.
 
@@ -239,6 +331,53 @@ Definir el conjunto de accesos \emph{enumerándolos} uno por uno.
 \begin{ojo}
 Falso clásico de parcial: \textbf{``una matriz de acceso bien diseñada evita el flujo de información no deseado''}. \textbf{FALSO}. La matriz (DAC, por extensión) solo controla el acceso \emph{directo}; no garantiza control de flujo de información. Para eso hacen falta modelos MAC tipo Bell-LaPadula (la *-property es justamente lo que controla el flujo).
 \end{ojo}
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize,
+  obj/.style={font=\footnotesize\bfseries},
+  perm/.style={fill=yellow!30,draw=gray!50,rounded corners=1pt,minimum width=2.3cm,minimum height=0.8cm,align=center}]
+  % cabeceras de objetos
+  \node[obj] at (2.0,1.0) {File 1};
+  \node[obj] at (4.6,1.0) {File 2};
+  \node[obj] at (0,1.6) {\textsc{Objetos}$\rightarrow$};
+  \node[obj,rotate=90] at (-1.2,-0.3) {\textsc{Sujetos}};
+  % filas
+  \node[obj] at (0,0.2) {User 1};
+  \node[obj] at (0,-1.0) {User 2};
+  \node[perm] at (2.0,0.2) {r, w};
+  \node[perm] at (4.6,0.2) {r, w, x,\\ own};
+  \node[perm] at (2.0,-1.0) {r, w, x};
+  \node[perm] at (4.6,-1.0) {r, print};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Matriz de acceso: sujetos (filas) $\times$ objetos (columnas); cada celda lista las acciones permitidas (basado en la slide ``Control por extensión'').}
+
+\begin{center}
+\begin{tikzpicture}[font=\scriptsize,
+  box/.style={draw=gray!60,rounded corners=2pt,minimum height=0.65cm,inner sep=4pt}]
+  % ACL: por columna (objeto)
+  \node[font=\footnotesize\bfseries] at (1.6,2.2) {ACL (por columna $=$ objeto)};
+  \node[box,fill=blue!8] (f1) at (0,1.4) {File 1};
+  \node[box,fill=yellow!25,right=0.3 of f1] (f1a) {User1: r,w};
+  \node[box,fill=yellow!25,right=0.2 of f1a] (f1b) {User2: r,w,x};
+  \node[box,fill=blue!8] (f2) at (0,0.4) {File 2};
+  \node[box,fill=yellow!25,right=0.3 of f2] (f2a) {User1: r,w,x,own};
+  \node[box,fill=yellow!25,right=0.2 of f2a] (f2b) {User2: r,print};
+  \draw[-{Stealth}] (f1) -- (f1a); \draw[-{Stealth}] (f1a) -- (f1b);
+  \draw[-{Stealth}] (f2) -- (f2a); \draw[-{Stealth}] (f2a) -- (f2b);
+  % Capabilities: por fila (sujeto)
+  \node[font=\footnotesize\bfseries] at (1.6,-0.6) {Capabilities (por fila $=$ sujeto)};
+  \node[box,fill=red!8] (u1) at (0,-1.4) {User 1};
+  \node[box,fill=green!18,right=0.3 of u1] (u1a) {File1: r,w};
+  \node[box,fill=green!18,right=0.2 of u1a] (u1b) {File2: r,w,x,own};
+  \node[box,fill=red!8] (u2) at (0,-2.4) {User 2};
+  \node[box,fill=green!18,right=0.3 of u2] (u2a) {File1: r,w,x};
+  \node[box,fill=green!18,right=0.2 of u2a] (u2b) {File2: r,print};
+  \draw[-{Stealth}] (u1) -- (u1a); \draw[-{Stealth}] (u1a) -- (u1b);
+  \draw[-{Stealth}] (u2) -- (u2a); \draw[-{Stealth}] (u2a) -- (u2b);
+\end{tikzpicture}
+\end{center}
+\diagcaption{Descomposición de la matriz: \textbf{ACL} recorre por columnas (a cada objeto, quién puede); \textbf{Capabilities} recorre por filas (a cada sujeto, a qué puede). Misma información, distinta forma de almacenarla.}
 
 \paragraph{ACL (Access Control List).} Como las matrices reales son \textbf{dispersas} (permisos por ``islas''), se representan de forma compacta: para cada objeto, la lista de pares (sujeto, acción) permitidos. Es la misma información que la matriz, pero compacta. Se complementa con \textbf{permisos por defecto}, \textbf{grupos/agrupaciones} y \textbf{patrones} (\texttt{/users/*}, \texttt{/home/**/*.tmp}).
 
@@ -360,6 +499,31 @@ Es \textbf{el} ejercicio: dados sujetos, objetos y requisitos en \textbf{lenguaj
 \subsubsection{Chinese Wall / Muralla China}
 
 Modelo de \textbf{conflicto de interés}. Se agrupan los objetos en \textbf{clases de conflicto de interés (COI / Conflict of Interest)}; dentro de cada clase hay \textbf{datasets de compañías (CD)}. La regla: un sujeto que accedió a datos de una compañía dentro de una clase de COI \textbf{no puede acceder a los datos de otra compañía competidora} de la misma clase (ya consultó a un competidor). Tomado en el parcial 2018.
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize,
+  coi/.style={draw,rounded corners=4pt,inner sep=8pt,dashed,thick},
+  cd/.style={circle,draw,minimum size=1.1cm,inner sep=1pt,align=center}]
+  % COI Bancos
+  \node[cd,fill=blue!15]  (b1) at (0,0)   {Banco\\A};
+  \node[cd,fill=blue!15]  (b2) at (1.8,0) {Banco\\B};
+  \node[coi,fit=(b1)(b2),label={[font=\footnotesize\bfseries]above:COI Bancos}] {};
+  % COI Petroleras
+  \node[cd,fill=orange!20] (p1) at (5,0)   {Oil\\X};
+  \node[cd,fill=orange!20] (p2) at (6.8,0) {Oil\\Y};
+  \node[coi,fit=(p1)(p2),label={[font=\footnotesize\bfseries]above:COI Petroleras}] {};
+  % sujeto
+  \node[rectangle,draw,fill=green!15,rounded corners=2pt] (s) at (3.4,-2.4) {Consultor S};
+  % accesos
+  \draw[-{Stealth},green!55!black,thick] (s) -- (b1);
+  \draw[-{Stealth},red!75!black,thick,dashed] (s) -- (b2);
+  \draw[-{Stealth},green!55!black,thick] (s) -- (p1);
+  \node[green!45!black,font=\scriptsize] at (-1.0,-1.45) {1.\ lee OK};
+  \node[red!70!black,font=\scriptsize]   at (2.55,-1.45) {2.\ \textbf{bloqueado}};
+  \node[green!45!black,font=\scriptsize] at (5.6,-1.2) {lee OK (otro COI)};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Chinese Wall: tras leer Banco A, el consultor \textbf{no puede} leer a Banco B (competidor del mismo COI), pero sí una petrolera de \emph{otro} COI.}
 
 %======================================================================
 \subsection{Mentalidad de seguridad (clase de consulta)}

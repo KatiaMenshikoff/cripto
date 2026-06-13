@@ -130,6 +130,45 @@ De la política se va ``bajando línea'' con creciente especificidad (y decrecie
     capacitaciones, concientización).
 \end{itemize}
 
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize]
+  % Niveles de la piramide (de arriba=mas angosto hacia abajo=mas ancho)
+  % Cada nivel es un trapecio definido por su ancho superior e inferior.
+  \def\h{1.0}       % alto de cada nivel
+  \def\step{1.15}   % cuanto se ensancha cada lado por nivel
+  \def\apex{0.55}   % medio-ancho del vertice (para que entre el texto)
+  \foreach \i/\name/\sub/\col in {
+      0/POLICY/{General Mgmt Statement}/red!75!black,
+      1/STANDARDS/{Specific Mandatory Controls}/red!80!orange,
+      2/PROCEDURES/{Step by Step Instructions}/orange!90!red,
+      3/GUIDELINES/{Recommendations / Best Practices}/orange,
+      4/BASELINES/{Uniform Implementation}/yellow!80!orange} {
+    \pgfmathsetmacro{\yt}{-\i*\h}
+    \pgfmathsetmacro{\yb}{-(\i+1)*\h}
+    \pgfmathsetmacro{\wt}{\apex+\i*\step}
+    \pgfmathsetmacro{\wb}{\apex+(\i+1)*\step}
+    \fill[\col] (-\wt,\yt) -- (\wt,\yt) -- (\wb,\yb) -- (-\wb,\yb) -- cycle;
+    \draw[white,thick] (-\wt,\yt) -- (\wt,\yt) -- (\wb,\yb) -- (-\wb,\yb) -- cycle;
+    \node[white,font=\scriptsize\bfseries] at (0,{\yt-\h/2+0.14}) {\name};
+    \node[white,font=\tiny] at (0,{\yt-\h/2-0.16}) {\sub};
+  }
+  % Eje izquierdo: ownership del management (+ arriba, - abajo)
+  \draw[-{Stealth[length=2mm]},thick,blue!60!black] (-7.1,-5) -- (-7.1,0)
+        node[midway,left,rotate=90,anchor=south,font=\scriptsize] {OWNERSHIP DEL MANAGEMENT};
+  \node[blue!60!black] at (-7.1,0.25) {$+$};
+  \node[blue!60!black] at (-7.1,-5.25) {$-$};
+  % Eje derecho: especificidad (- arriba, + abajo)
+  \draw[-{Stealth[length=2mm]},thick,blue!60!black] (7.1,0) -- (7.1,-5)
+        node[midway,right,rotate=90,anchor=south,font=\scriptsize] {ESPECIFICIDAD};
+  \node[blue!60!black] at (7.1,0.25) {$-$};
+  \node[blue!60!black] at (7.1,-5.25) {$+$};
+  % Bandas mandatorio / discrecional
+  \node[gray,font=\scriptsize] at (0,-5.55) {arriba: \textbf{mandatorio} \quad abajo: \textbf{discrecional}};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Pirámide de políticas: hacia arriba crece el ownership del
+management y la obligatoriedad; hacia abajo crece la especificidad.}
+
 \begin{ojo}
 En la pirámide, hacia \textbf{arriba} crece el \textbf{ownership del management}
 y es \textbf{mandatorio}; hacia \textbf{abajo} crece la \textbf{especificidad}
@@ -169,6 +208,29 @@ Para llegar al dato, el atacante debe pasar perímetro $\to$ moverse
 lateralmente a la red de servidores (que no debería ser alcanzable) $\to$
 vulnerar el host jardinizado $\to$ vulnerar la aplicación.
 
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize]
+  % Capas concentricas (modelo "cebolla"): de afuera hacia el dato
+  \fill[purple!55] (0,0) circle (3.2cm);
+  \fill[purple!40] (0,0) circle (2.55cm);
+  \fill[blue!45]   (0,0) circle (1.9cm);
+  \fill[cyan!45]   (0,0) circle (1.25cm);
+  \fill[teal!60]   (0,0) circle (0.65cm);
+  \foreach \r in {0.65,1.25,1.9,2.55,3.2} \draw[white,thick] (0,0) circle (\r cm);
+  \node[white] at (0,2.85) {\textbf{Perímetro}};
+  \node[white] at (0,2.22) {\textbf{Red}};
+  \node[white] at (0,1.57) {\textbf{Host}};
+  \node[white,font=\scriptsize] at (0,0.95) {\textbf{Aplicación}};
+  \node[white,font=\scriptsize] at (0,0) {\textbf{Datos}};
+  % Amenaza externa
+  \node[red!70!black] at (0,3.75) {\faExclam Amenaza externa};
+  \draw[-{Stealth[length=2.5mm]},red!70!black,very thick] (0,3.55) -- (0,3.25);
+\end{tikzpicture}
+\end{center}
+\diagcaption{Defense-in-depth (modelo ``cebolla''): cada capa contiene a la
+siguiente. El atacante debe atravesar Perímetro $\to$ Red $\to$ Host $\to$
+Aplicación para llegar al Dato.}
+
 \paragraph{Principios.}
 \begin{itemize}
   \item \textbf{Diversificación}: distintas tecnologías/métodos $\Rightarrow$ una
@@ -207,6 +269,55 @@ solo estos dos (firewall de perímetro y WAF).
 aparecen las \emph{Secure DMZs} dentro de la seguridad de
 \textbf{perímetro/red}: es la zona expuesta hacia la red externa.
 \end{destacado}
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize,
+    node distance=4mm,
+    fw/.style={rectangle,draw=red!70!black,fill=red!12,thick,
+               minimum width=1.05cm,minimum height=1.6cm,align=center,inner sep=1pt},
+    srv/.style={rectangle,draw=blue!55!black,fill=blue!10,thick,rounded corners=2pt,
+                minimum width=1.55cm,minimum height=0.85cm,align=center,font=\scriptsize},
+    cloud/.style={ellipse,draw=gray,fill=gray!12,thick,minimum width=1.7cm,
+                  minimum height=1.0cm,align=center},
+    sensor/.style={circle,draw=orange!80!black,fill=orange!25,thick,inner sep=1pt,
+                   minimum size=0.7cm,font=\scriptsize\bfseries}]
+
+  \node[cloud] (net) {Internet};
+  \node[fw,right=8mm of net] (fwext) {FW\\ext.};
+  % Zona DMZ (caja punteada)
+  \node[srv,right=14mm of fwext,yshift=7mm] (web) {Servidor\\Web};
+  \node[srv,below=4mm of web] (mail) {Servidor\\Correo};
+  \begin{scope}[on background layer]
+    \node[draw=teal!70!black,dashed,thick,fill=teal!8,rounded corners=3pt,
+          fit=(web)(mail),inner sep=6pt,label={[teal!50!black,font=\scriptsize\bfseries]above:DMZ (expuesta)}] (dmz) {};
+  \end{scope}
+  \node[fw,right=10mm of dmz] (fwint) {FW\\int.};
+  % LAN interna
+  \node[srv,right=12mm of fwint,yshift=7mm] (lan1) {Workstation};
+  \node[srv,below=4mm of lan1] (lan2) {App / BD\\interna};
+  \begin{scope}[on background layer]
+    \node[draw=blue!60!black,thick,fill=blue!6,rounded corners=3pt,
+          fit=(lan1)(lan2),inner sep=6pt,label={[blue!50!black,font=\scriptsize\bfseries]above:Red interna (LAN)}] (lan) {};
+  \end{scope}
+
+  % Conexiones
+  \draw[-{Stealth[length=2mm]},thick] (net) -- (fwext);
+  \draw[-{Stealth[length=2mm]},thick] (fwext) -- (dmz);
+  \draw[-{Stealth[length=2mm]},thick] (dmz) -- (fwint);
+  \draw[-{Stealth[length=2mm]},thick] (fwint) -- (lan);
+
+  % Sensores IDS/IPS y WAF
+  \node[sensor,above=5mm of fwext] (idsp) {IDS\slash IPS};
+  \node[font=\scriptsize\bfseries,orange!80!black,above=0pt of idsp] {perímetro};
+  \node[sensor,below=5mm of lan2] (hids) {H-IDS};
+  \node[font=\scriptsize\bfseries,orange!80!black,below=0pt of hids] {host};
+  \node[sensor,fill=purple!25,draw=purple!70!black,left=2mm of web] (waf) {WAF};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Topología con DMZ. El \textbf{firewall externo} expone solo la DMZ
+(web, correo); el \textbf{firewall interno} protege la LAN. El \textbf{IDS/IPS}
+se ubica en el perímetro y también en el host (Host~IDS); el \textbf{WAF} se
+coloca delante de la aplicación web.}
 
 \paragraph{IDS / IPS.}
 \begin{definicion}{IDS / IPS}
@@ -290,6 +401,59 @@ Point (PDP)} = \textbf{Policy Engine} + \textbf{Policy Administrator}, y el
     el PE).
 \end{itemize}
 
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize,
+    feed/.style={chamfered rectangle,chamfered rectangle corners=east,
+                 chamfered rectangle xsep=4pt,draw=gray,fill=gray!18,thick,
+                 minimum width=1.7cm,minimum height=0.62cm,align=center,font=\scriptsize},
+    feedw/.style={chamfered rectangle,chamfered rectangle corners=west,
+                  chamfered rectangle xsep=4pt,draw=gray,fill=gray!18,thick,
+                  minimum width=1.7cm,minimum height=0.62cm,align=center,font=\scriptsize},
+    core/.style={rectangle,draw=red!70!black,fill=red!75!black,text=white,thick,
+                 rounded corners=2pt,minimum width=2.0cm,minimum height=0.7cm,align=center,font=\scriptsize\bfseries},
+    box/.style={rectangle,draw=gray!60,fill=gray!12,rounded corners=2pt,
+                minimum width=1.5cm,minimum height=0.7cm,align=center,font=\scriptsize}]
+
+  % --- Control Plane (PDP) ---
+  \node[core] (pe) {Policy Engine};
+  \node[core,below=2mm of pe] (pa) {Policy\\Administrator};
+  \begin{scope}[on background layer]
+    \node[draw=gray!50,fill=gray!8,rounded corners=3pt,fit=(pe)(pa),inner sep=7pt,
+          label={[font=\scriptsize\bfseries]right:PDP}] (pdp) {};
+  \end{scope}
+  \node[font=\scriptsize\bfseries,above=0pt of pdp] {Control Plane};
+
+  % --- Data Plane: Subject (Untrusted) -> PEP -> Resource (Trusted) ---
+  \node[box,below=22mm of pe.south,xshift=-3.0cm] (subj) {Subject\\+ System};
+  \node[core,right=18mm of subj,fill=red!70!black] (pep) {Policy\\Enforcement\\Point};
+  \node[box,right=18mm of pep,fill=teal!15,draw=teal!60!black] (res) {Enterprise\\Resource};
+
+  \draw[-{Stealth[length=2mm]},thick] (subj) -- node[above,font=\scriptsize,red!60!black]{Untrusted} (pep);
+  \draw[-{Stealth[length=2mm]},thick] (pep) -- node[above,font=\scriptsize,teal!50!black]{Trusted} (res);
+  % PDP controla al PEP (verificacion continua)
+  \draw[-{Stealth[length=2mm]},dashed,thick,gray] (pa) -- (pep);
+
+  % --- Fuentes que alimentan al motor de politicas (izquierda) ---
+  \node[feed,left=20mm of pe,yshift=10mm] (cdm) {CDM};
+  \node[feed,below=2mm of cdm] (comp) {Ind. Compliance};
+  \node[feed,below=2mm of comp] (ti) {Threat Intel.};
+  \node[feed,below=2mm of ti] (logs) {Activity Logs};
+  \foreach \n in {cdm,comp,ti,logs} \draw[-{Stealth[length=1.6mm]},gray] (\n.east) -- (pe.west);
+
+  % --- Fuentes (derecha) ---
+  \node[feedw,right=20mm of pe,yshift=10mm] (dap) {Data Access Pol.};
+  \node[feedw,below=2mm of dap] (pki) {PKI};
+  \node[feedw,below=2mm of pki] (idm) {ID Management};
+  \node[feedw,below=2mm of idm] (siem) {SIEM};
+  \foreach \n in {dap,pki,idm,siem} \draw[-{Stealth[length=1.6mm]},gray] (\n.west) -- (pe.east);
+\end{tikzpicture}
+\end{center}
+\diagcaption{Zero Trust (NIST 800-207): el \textbf{PDP} (Policy Engine + Policy
+Administrator) decide; el \textbf{PEP} aplica y separa la zona \emph{Untrusted}
+(Subject) de la \emph{Trusted} (Enterprise Resource), con verificación continua
+alimentada por CDM, Compliance, Threat Intel, Logs, PKI, ID Mgmt, SIEM y Data
+Access Policy.}
+
 \begin{ojo}
 ZTA ``parece la panacea'' pero es \textbf{muy fácil de implementar mal}: o se
 implementa de forma deficiente, o se implementa y \textbf{no se controla / no se
@@ -338,6 +502,34 @@ El problema histórico: Dev quiere sacar features rápido; Seguridad quiere fren
 todo para revisar. Hoy la mayoría aplica seguridad recién en la \textbf{última
 etapa} (operación). DevSecOps propone el \textbf{Shift Left}: meter la seguridad
 lo más a la izquierda posible (planificación/desarrollo).
+
+\begin{center}
+\begin{tikzpicture}[font=\scriptsize,
+    stage/.style={chamfered rectangle,chamfered rectangle corners=east,
+                  chamfered rectangle xsep=5pt,draw=black!60,thick,
+                  minimum width=2.05cm,minimum height=0.85cm,align=center,
+                  font=\scriptsize\bfseries}]
+  \node[stage,fill=red!18]    (s1) {PLAN \&\\DEVELOP};
+  \node[stage,fill=purple!18,right=2mm of s1] (s2) {COMMIT\\THE CODE};
+  \node[stage,fill=orange!20,right=2mm of s2] (s3) {BUILD \&\\TEST};
+  \node[stage,fill=blue!18,right=2mm of s3]   (s4) {GO TO\\PRODUCTION};
+  \node[stage,fill=teal!22,right=2mm of s4]   (s5) {OPERATE};
+
+  % Contenido de seguridad por etapa
+  \node[below=1mm of s1,align=center,font=\scriptsize,text width=2.1cm] {Threat modeling, pre-commit hooks, revisión PR};
+  \node[below=1mm of s2,align=center,font=\scriptsize,text width=2.1cm] {SAST, tests de seguridad, deps, pipelines};
+  \node[below=1mm of s3,align=center,font=\scriptsize,text width=2.1cm] {DAST, IaC scan, security acceptance};
+  \node[below=1mm of s4,align=center,font=\scriptsize,text width=2.1cm] {WAF/IPS, pentest, Red/Blue team};
+  \node[below=1mm of s5,align=center,font=\scriptsize,text width=2.1cm] {Monitoreo, Threat Intel, postmortems};
+
+  % Flecha Shift Left
+  \draw[-{Stealth[length=3mm]},very thick,red] ($(s5.south)+(0,-1.55)$) -- ($(s1.south)+(0,-1.55)$);
+  \node[red,font=\scriptsize\bfseries] at ($(s3.south)+(0,-1.85)$) {Shift Left (la seguridad se corre hacia la izquierda)};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Pipeline DevSecOps: la seguridad se integra en cada etapa
+(plan/develop $\to$ commit $\to$ build/test $\to$ production $\to$ operate). El
+\emph{Shift Left} empuja los controles lo más temprano posible.}
 
 \prof{Cuanto más temprano detectamos un problema, menos difícil es resolverlo.}
 

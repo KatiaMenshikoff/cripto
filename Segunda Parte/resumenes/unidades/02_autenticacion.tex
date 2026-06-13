@@ -62,6 +62,24 @@ Piden dar una vulnerabilidad de \emph{cada} módulo. Ideas del material:
 \prof{Una vez que te personaste como otro usuario, ya está; el sistema, si no tiene métodos fuertes de detectar que ese no sos vos, por lo general no lo tiene, y podés hacer lo que quieras dentro del sistema.}
 \end{examen}
 
+\begin{center}
+\begin{tikzpicture}[
+  node distance=0.85cm,
+  ent/.style={circle, draw=black!70, thick, fill=gray!12, minimum size=1.1cm, font=\footnotesize},
+  mod/.style={rectangle, rounded corners, draw=blue!60!black, thick, fill=blue!8,
+              text width=2.7cm, align=center, minimum height=1.5cm, font=\footnotesize},
+  arr/.style={-{Stealth[length=3mm]}, thick}]
+  \node[ent] (suj) {sujeto};
+  \node[mod, right=of suj] (aut) {\textbf{Autenticación}\\[2pt]¿quién sos?};
+  \node[mod, right=of aut] (ca)  {\textbf{Control de\\ acceso}\\[2pt]¿qué podés hacer?};
+  \node[ent, right=of ca] (obj) {objeto};
+  \draw[arr] (suj) -- (aut);
+  \draw[arr] (aut) -- (ca);
+  \draw[arr] (ca)  -- (obj);
+\end{tikzpicture}
+\end{center}
+\diagcaption{Dos módulos distintos: primero se verifica la identidad (autenticación), luego qué operaciones se permiten sobre el objeto (control de acceso). Cada módulo tiene sus propias vulnerabilidades.}
+
 \subsection{Factores de autenticación}
 
 La información de autenticación posee distintos \textbf{grados de confianza}. Los \emph{factores} indican la naturaleza de la información.
@@ -78,6 +96,22 @@ Algo que \textbf{soy} & Características intrínsecas (biometría). Huella, reti
 \bottomrule
 \end{tabular}
 \end{center}
+
+\begin{center}
+\begin{tikzpicture}[
+  factor/.style={rectangle, rounded corners, draw=blue!60!black, thick,
+                 fill=blue!8, text width=2.9cm, align=center, minimum height=2.4cm,
+                 inner sep=4pt},
+  lbl/.style={font=\footnotesize\itshape, blue!50!black}]
+  \node[factor] (sé)   {\textbf{Algo que SÉ}\\[2pt] {\footnotesize password, frase, pregunta secreta}\\[4pt] {\Large $\bullet\bullet\bullet\bullet\bullet$}};
+  \node[factor, right=0.9cm of sé]   (tengo) {\textbf{Algo que TENGO}\\[2pt] {\footnotesize token, smart card, celular}\\[4pt] {\Large $\boxdot$}};
+  \node[factor, right=0.9cm of tengo] (soy)  {\textbf{Algo que SOY}\\[2pt] {\footnotesize huella, cara, retina, voz}\\[4pt] {\Large $\circledcirc$}};
+  \node[lbl, above=2pt of sé]    {secreto compartido};
+  \node[lbl, above=2pt of tengo] {elemento físico};
+  \node[lbl, above=2pt of soy]   {biometría};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Los tres factores clásicos de autenticación. A más factores independientes combinados, mayor grado de confianza.}
 
 \begin{destacado}
 La información de autenticación la controla la entidad externa; el sistema no puede ``ingerirla''/forzarla, pero sí puede \textbf{exigir ciertos factores} que gradúan la confianza. No es lo mismo que alguien diga una contraseña (que pudo haber escuchado) a que muestre su cara: distintos grados de confianza.
@@ -191,6 +225,24 @@ donde $P$ = probabilidad de adivinar una clave, $G$ = número de pruebas realiza
 
 El \textbf{espacio de claves} es $N = (\text{tamaño del alfabeto})^{\text{longitud}}$.
 
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={rectangle, draw=black!70, thick, align=center, font=\footnotesize},
+  arr/.style={-{Stealth[length=2.5mm]}, thick}]
+  % espacio de claves del usuario
+  \node[box, fill=blue!8, minimum width=3.0cm, minimum height=1.1cm] (N)
+       {$N=\text{alf}^{\,\text{long}}$\\[2pt]{\scriptsize espacio de claves}};
+  % multiplicador del salt
+  \node[box, fill=red!8, right=1.6cm of N, minimum height=1.1cm, text width=2.4cm] (salt)
+       {$\times\, 2^{\text{bits de salt}}$\\[2pt]{\scriptsize costo extra del atacante}};
+  \node[box, fill=gray!12, right=1.6cm of salt, minimum height=1.1cm, text width=3.0cm] (cost)
+       {cómputo total que\\ debe hacer el atacante};
+  \draw[arr] (N) -- (salt);
+  \draw[arr] (salt) -- (cost);
+\end{tikzpicture}
+\end{center}
+\diagcaption{El espacio de claves crece como $\text{alfabeto}^{\text{longitud}}$. El salt \emph{no} agranda ese espacio, pero multiplica el cómputo del atacante \emph{offline} por $2^{\text{bits de salt}}$ (no puede paralelizar entre cuentas).}
+
 \begin{examen}
 \textbf{EL ejercicio que ``entra siempre''.} El profe lo dijo: es fácil de hacer, fácil de chequear y permite ``darle vueltas de rosca''. Es la \textbf{segunda unidad más recurrente}.
 
@@ -242,6 +294,38 @@ Cuando la clave se da \textbf{en bits}, $N=2^{\text{bits}}$. Conviene trabajar c
 \textbf{Método:} introducir una perturbación distinta por cuenta:
 $$f(a) = x \;\|\; f'(a,x)$$
 donde $x$ es el salt (elegido aleatoriamente y embebido en el hash). Cada $c$ se calcula con una perturbación diferente, por lo que el atacante \textbf{no puede reutilizar} $f(a)$ para buscar varias cuentas en paralelo, y debe obtener el salt de cada usuario.
+
+\begin{center}
+\begin{tikzpicture}[
+  node distance=0.65cm and 0.9cm,
+  box/.style={rectangle, rounded corners, draw=black!70, thick, fill=gray!10,
+              align=center, font=\footnotesize, minimum height=0.85cm, inner sep=4pt},
+  hash/.style={rectangle, rounded corners, draw=blue!60!black, thick, fill=blue!10,
+               align=center, font=\footnotesize, minimum height=0.85cm},
+  store/.style={rectangle, rounded corners, draw=green!45!black, thick, fill=green!10,
+                align=center, font=\footnotesize, minimum height=0.85cm},
+  arr/.style={-{Stealth[length=2.5mm]}, thick}]
+  % Almacenamiento (alta)
+  \node[box] (pw)   {password};
+  \node[box, right=of pw] (salt) {salt $x$\\{\scriptsize (aleatorio)}};
+  \node[hash, right=of salt] (h) {hash\\ $h(\text{pw}\,\|\,x)$};
+  \node[store, right=of h] (st) {se guarda\\ $(x,\ h)$};
+  \draw[arr] (pw) -- (h.west |- pw) ;
+  \draw[arr] (salt) -- (h);
+  \draw[arr] (h) -- (st);
+  \node[font=\scriptsize\itshape, above=1pt of pw] {ALMACENAR};
+  % Verificación (baja)
+  \node[box, below=1.1cm of pw] (pw2) {password\\ ingresada};
+  \node[store, below=1.1cm of salt] (rd) {leo $x$\\ guardado};
+  \node[hash, below=1.1cm of h] (h2) {$h(\text{pw}\,\|\,x)$};
+  \node[box, below=1.1cm of st] (cmp) {¿$=$ hash\\ guardado?};
+  \draw[arr] (pw2) -- (h2.west |- pw2);
+  \draw[arr] (rd) -- (h2);
+  \draw[arr] (h2) -- (cmp);
+  \node[font=\scriptsize\itshape, above=1pt of pw2] {VERIFICAR};
+\end{tikzpicture}
+\end{center}
+\diagcaption{La contraseña nunca se guarda: se almacena $(salt,\ hash)$. Al verificar se recalcula el hash con el mismo salt y se compara. El salt hace que dos passwords iguales den hashes distintos.}
 
 \begin{destacado}
 \textbf{Qué hace y qué NO hace el salt (aclaración del profe):}
@@ -296,6 +380,26 @@ El parámetro $c$ (cantidad de \textbf{rondas}/iteraciones) es ajustable: a más
   \item $B \to A$: un challenge $\{r\}$.
   \item $A \to B$: $f(k,r)$ (aplica una función preacordada sobre su clave $k$ y el challenge $r$).
 \end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[
+  actor/.style={font=\bfseries},
+  msg/.style={-{Stealth[length=2.5mm]}, thick},
+  note/.style={font=\scriptsize\itshape, midway, above}]
+  % lifelines
+  \node[actor] (A) at (0,0) {Cliente $A$};
+  \node[actor] (B) at (8,0) {Servidor $B$};
+  \draw[dashed, gray] (A) -- (0,-3.4);
+  \draw[dashed, gray] (B) -- (8,-3.4);
+  % messages
+  \draw[msg] (0,-0.6) -- node[note]{pedido de autenticación} (8,-0.6);
+  \draw[msg] (8,-1.5) -- node[note]{challenge: nonce $r$} (0,-1.5);
+  \draw[msg] (0,-2.4) -- node[note]{respuesta $f(k,r)$} (8,-2.4);
+  \node[font=\scriptsize, text width=3.2cm, align=center, red!60!black] at (4,-3.1)
+    {el secreto $k$ \textbf{nunca viaja} por la red};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Challenge-response: el servidor manda un desafío único $r$ (nonce); el cliente responde $f(k,r)$ probando que conoce el secreto $k$ sin enviarlo. El nonce evita reutilizar respuestas capturadas.}
 Así el usuario valida que conoce el secreto sin enviarlo. (Las \emph{passkeys} actuales siguen esta idea: el servidor manda un challenge, el cliente lo firma con una clave protegida por biometría/PIN, y el servidor verifica; hay un esquema de clave pública/privada de fondo y no se envía ningún dato secreto.)
 
 \paragraph{EKE (Encrypted Key Exchange).} Objetivo: impedir que un atacante adivine claves capturadas en la red. Mecanismo: hacer el diálogo en un \textbf{canal encriptado} (con clave $k_s$), de modo que el atacante \textbf{no tiene forma de saber si una clave es correcta}.
@@ -338,6 +442,42 @@ La complejidad frente a fuerza bruta es la misma aunque el código rote: si son 
   \item Ejemplo de entrelazamiento que rompe la independencia: poder \textbf{recuperar el password por el segundo canal} (SMS) $\Rightarrow$ ``dos llaves para la misma cerradura'', ya no hay independencia real.
 \end{itemize}
 \end{examen}
+
+\begin{center}
+\begin{tikzpicture}[
+  fac/.style={rectangle, rounded corners, draw, thick, align=center, font=\footnotesize,
+              text width=2.2cm, minimum height=1.0cm},
+  ok/.style={fac, draw=green!50!black, fill=green!10},
+  bad/.style={fac, draw=red!60!black, fill=red!8},
+  lock/.style={rectangle, rounded corners, draw=black!70, thick, fill=gray!12,
+               align=center, font=\footnotesize, minimum height=1.0cm, text width=1.8cm},
+  arr/.style={-{Stealth[length=2.5mm]}, thick}]
+  % CASO OK
+  \node[ok] (f1) {factor 1\\ password};
+  \node[ok, below=0.5cm of f1] (f2) {factor 2\\ token / TOTP};
+  \node[lock, right=1.3cm of $(f1)!0.5!(f2)$] (l1) {cerradura};
+  \draw[arr] (f1) -- (l1);
+  \draw[arr] (f2) -- (l1);
+  \node[font=\scriptsize\bfseries, green!45!black, above=2pt of f1] {MULTIFACTOR (ok)};
+  \node[font=\scriptsize\itshape, below=0.3cm of l1, text width=2.6cm, align=center]
+    {dos canales\\ independientes};
+  % separador
+  \draw[gray, dashed] (5.2,1.0) -- (5.2,-2.4);
+  % CASO MALO
+  \node[bad, right=2.0cm of l1] (g1) {factor 1\\ password};
+  \node[bad, below=0.5cm of g1] (g2) {2.º canal\\ SMS};
+  \node[lock, right=1.3cm of $(g1)!0.5!(g2)$] (l2) {misma\\ cerradura};
+  \draw[arr] (g1) -- (l2);
+  \draw[arr] (g2) -- (l2);
+  % flecha de entrelazamiento: SMS recupera el password
+  \draw[arr, red!70!black, dashed] (g2) to[bend left=35]
+        node[font=\scriptsize, right, text width=2cm]{recupera el\\ password} (g1);
+  \node[font=\scriptsize\bfseries, red!60!black, above=2pt of g1] {MULTICANAL entrelazado};
+  \node[font=\scriptsize\itshape, red!60!black, below=0.3cm of l2, text width=2.8cm, align=center]
+    {se rompe la\\ independencia};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Izq.: dos factores independientes, hay que comprometer dos canales distintos. Der.: si el 2.º canal (SMS) sirve para recuperar el password, ambos factores quedan entrelazados ---``dos llaves para la misma cerradura''--- y se pierde la independencia.}
 
 \begin{ojo}
 Error típico: decir que multifactor ``es seguro'' sin notar que \textbf{factores entrelazados rompen la independencia}. Hay que señalar la dependencia (segundo factor recuperable por el primero, ambos en el mismo dispositivo, etc.).

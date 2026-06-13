@@ -1,10 +1,32 @@
 \documentclass[../main.tex]{subfiles}
 \begin{document}
+% Babel (spanish) hace activos los caracteres < y >, lo que rompe la sintaxis
+% de flechas de TikZ (->, >=Stealth). Los desactivamos como shorthand en esta unidad.
+\shorthandoff{<>}
 \section{Principios de Diseño de Seguridad y Vulnerabilidades}
 
 \subsection{Introducción: qué son los principios de diseño}
 
 Los \textbf{principios de diseño} son bases que promueven un diseño que tenga como resultado un sistema \textbf{robusto y seguro}. Son principios guía de \emph{alto nivel} que deben adaptarse a las necesidades puntuales de cada sistema, se basan en las recomendaciones de los modelos de seguridad y deben aplicarse en \textbf{todas las capas} en donde funciona el sistema (políticas/procesos, físico, red, computadora, aplicación, dispositivo). Son simples y restrictivos.
+
+\begin{center}
+\begin{tikzpicture}
+  % Capas concéntricas: del perímetro (externo) al dato (núcleo)
+  \def\rA{2.7} \def\rB{2.2} \def\rC{1.7} \def\rD{1.2} \def\rE{0.7}
+  \filldraw[fill=blue!12,draw=blue!50] (0,0) circle (\rA);
+  \filldraw[fill=blue!20,draw=blue!50] (0,0) circle (\rB);
+  \filldraw[fill=blue!30,draw=blue!55] (0,0) circle (\rC);
+  \filldraw[fill=blue!45,draw=blue!60] (0,0) circle (\rD);
+  \filldraw[fill=blue!65,draw=blue!70] (0,0) circle (\rE);
+  \node[white] at (0,0) {\scriptsize\textbf{Dispositivo}};
+  \node[white] at (0,{(\rD+\rE)/2}) {\scriptsize\textbf{Aplicación}};
+  \node at (0,{(\rC+\rD)/2}) {\scriptsize\textbf{Computadora}};
+  \node at (0,{(\rB+\rC)/2}) {\scriptsize\textbf{Red}};
+  \node at (0,{(\rA+\rB)/2}) {\scriptsize\textbf{Físico}};
+  \node at (0,{\rA+0.28}) {\scriptsize\textbf{Políticas, Procesos \& Concientización}};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Los principios se aplican en \emph{todas} las capas en las que vive el sistema, del perímetro (políticas/procesos) hacia el núcleo (el dato/dispositivo).}
 
 \begin{destacado}
 Que un sistema sea \textbf{robusto} significa que pueda aguantar cambios. El primer requisito de seguridad es que el sistema \textbf{esté disponible}: un ataque que tira el sistema (DoS) \emph{es} un ataque de seguridad, aunque no comprometa confidencialidad ni integridad.
@@ -99,6 +121,25 @@ Ejemplo (fuente de bugs/vulnerabilidades): un \textbf{flag} que originalmente in
 \textbf{Defensa en profundidad} (remarcado en la clase de consulta): encadenar controles para \textbf{maximizar cuántas cosas hay que romper} para vulnerar el sistema. Ejemplo del PDF: se hace segregación de tareas + mínimos privilegios, pero una vulnerabilidad permite llevar adelante una venta sin autorizaciones $\Rightarrow$ ¿qué controles se agregan para monitorearla? ¿alertas que bloqueen la transacción? ¿una confirmación?
 \end{examen}
 
+\begin{center}
+\begin{tikzpicture}[
+    ctrl/.style={draw=blue!60,fill=blue!12,rounded corners=2pt,
+                 minimum width=5.2cm,minimum height=0.62cm,font=\footnotesize}]
+  \node[ctrl] (c1) {Mínimo privilegio};
+  \node[ctrl,below=2pt of c1] (c2) {Segregación de tareas};
+  \node[ctrl,below=2pt of c2] (c3) {Mediación completa};
+  \node[ctrl,below=2pt of c3] (c4) {Monitoreo / alertas que bloquean};
+  \node[ctrl,below=2pt of c4] (c5) {Confirmación / compensación};
+  \node[draw=red!70,fill=red!12,rounded corners=2pt,minimum width=5.2cm,
+        minimum height=0.55cm,font=\footnotesize\bfseries,below=4pt of c5] (act) {ACTIVO a proteger};
+  % El atacante debe romper TODAS las capas
+  \draw[->,red!70,thick] (-3.6,0.3) node[left,font=\scriptsize,red!70]{atacante} -- (-3.0,0.3);
+  \draw[decorate,decoration={brace,amplitude=5pt},blue!60]
+        (3.1,0.45) -- (3.1,{-0.62*5 -2pt*5 -0.4}) node[midway,right=4pt,font=\scriptsize,align=left]{hay que\\ romper\\ \emph{todas}};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Defensa en profundidad: se \textbf{encadenan} controles independientes. Si uno falla o es superado, otro lo compensa; el atacante debe vulnerar todas las capas para llegar al activo.}
+
 \subsubsection{8. Menor asombro / Aceptación psicológica (Psychological acceptability)}
 \begin{itemize}
   \item El \textbf{peor enemigo} de cualquier diseño de seguridad es el \textbf{usuario no alineado}; el mejor aliado es el usuario comprometido con la seguridad.
@@ -176,6 +217,42 @@ Clasifica las amenazas en \textbf{6 categorías}. La idea del modelo: por cada s
 \end{tabular}
 \end{center}
 
+\begin{center}
+\begin{tikzpicture}[
+    letter/.style={minimum width=0.7cm,minimum height=0.72cm,font=\bfseries\large,
+                   text=white,anchor=center},
+    cell/.style={minimum height=0.72cm,font=\footnotesize,anchor=west,text=white,
+                 inner sep=4pt},
+    row/.style={draw=white,line width=1.2pt}]
+  \def\h{0.78}
+  % colores por categoría (estilo slide), como nombres simples para poder mezclarlos
+  \colorlet{colS}{blue!75!cyan}
+  \colorlet{colT}{red!75!orange}
+  \colorlet{colR}{orange!85!yellow}
+  \colorlet{colI}{green!60!black}
+  \colorlet{colD}{black!55}
+  \colorlet{colE}{violet!70}
+  \foreach \i/\L/\col/\amen/\prop in {
+      0/S/colS/Spoofing/{Autenticación},
+      1/T/colT/Tampering/{Integridad},
+      2/R/colR/Repudiation/{No repudio},
+      3/I/colI/Information Disclosure/{Confidencialidad},
+      4/D/colD/Denial of Service/{Disponibilidad},
+      5/E/colE/Elevation of Privilege/{Autorización}}{
+    \fill[\col] (0,-\i*\h) rectangle (0.85,-\i*\h-0.72);
+    \fill[\col!85] (0.9,-\i*\h) rectangle (4.5,-\i*\h-0.72);
+    \fill[\col!70] (4.55,-\i*\h) rectangle (7.3,-\i*\h-0.72);
+    \node[letter] at (0.42,-\i*\h-0.36) {\L};
+    \node[cell] at (0.95,-\i*\h-0.36) {\amen};
+    \node[cell] at (4.6,-\i*\h-0.36) {\prop};
+  }
+  \node[font=\scriptsize\bfseries] at (0.42,0.28) {};
+  \node[font=\scriptsize\bfseries,anchor=west] at (0.95,0.28) {AMENAZA};
+  \node[font=\scriptsize\bfseries,anchor=west] at (4.6,0.28) {PROPIEDAD VIOLADA};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Las 6 categorías STRIDE y la propiedad de seguridad que viola cada una (memorizar: cada letra $\leftrightarrow$ su propiedad).}
+
 \subsubsection{DFD (Data Flow Model) + STRIDE}
 El DFD representa las partes de un sistema y los riesgos de cada una. Analiza elementos de cada categoría:
 \begin{itemize}
@@ -185,6 +262,50 @@ El DFD representa las partes de un sistema y los riesgos de cada una. Analiza el
   \item \textbf{Almacenamientos de datos}: archivos, bases de datos, secretos.
 \end{itemize}
 Para cada elemento se \textbf{cruza con las amenazas STRIDE} (matriz), y por cada riesgo identificado se define cómo gestionarlo: \textbf{eliminarlo, mitigarlo, compensarlo o aceptarlo}. (También se dibuja como árbol: amenazas $\rightarrow$ 6 categorías $\rightarrow$ ejemplos $\rightarrow$ recursos.) OWASP tiene su versión (casi igual a la de Microsoft, pero con manual gratuito). Hay industrias reguladas (pagos) que exigen demostrar estos ejercicios.
+
+\begin{center}
+\begin{tikzpicture}[
+    ext/.style={draw,rectangle,minimum width=1.6cm,minimum height=0.8cm,
+                font=\scriptsize,align=center,fill=gray!10},
+    proc/.style={draw,circle,minimum size=1.2cm,font=\scriptsize,align=center,fill=blue!12},
+    store/.style={font=\scriptsize,align=center},
+    flow/.style={->,thick}]
+  % Entidad externa (fuera del límite de confianza)
+  \node[ext] (user) {Entidad\\externa\\(usuario)};
+  % Proceso
+  \node[proc,right=2.4cm of user] (app) {Proceso\\(app)};
+  % Almacenamiento de datos (dos líneas paralelas)
+  \node[right=2.4cm of app] (db) {};
+  \node[store] at (db) {Almacén\\de datos};
+  \draw (db.north west) ++(-0.55,0.35) -- ++(1.1,0);
+  \draw (db.south west) ++(-0.55,-0.35) -- ++(1.1,0);
+  % Flujos de datos
+  \draw[flow] (user) -- node[above,font=\scriptsize]{flujo} (app);
+  \draw[flow] (app) -- node[above,font=\scriptsize]{flujo} ($(db.west)+(-0.55,0)$);
+  % Límite de confianza (trust boundary)
+  \draw[red!70,dashed,thick] ($(user.east)+(0.55,1.5)$) -- ($(user.east)+(0.55,-1.5)$);
+  \node[red!70,font=\scriptsize,align=center] at ($(user.east)+(0.55,1.85)$) {límite de\\confianza};
+\end{tikzpicture}
+\end{center}
+\diagcaption{DFD: entidades externas, procesos, flujos y almacenes de datos. El \textbf{límite de confianza} (trust boundary, línea roja) marca dónde cambia el nivel de confianza: los datos que lo cruzan deben validarse.}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+\textbf{Elemento} & \textbf{S} & \textbf{T} & \textbf{R} & \textbf{I} & \textbf{D} & \textbf{E} \\
+\hline
+Entidad externa & \checkmark & & \checkmark & & & \\
+\hline
+Proceso & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+\hline
+Almacén de datos & & \checkmark & ? & \checkmark & \checkmark & \\
+\hline
+Flujo de datos & & \checkmark & & \checkmark & \checkmark & \\
+\hline
+\end{tabular}
+\end{center}
+\diagcaption{Matriz DFD\,$\times$\,STRIDE: a qué amenazas es susceptible cada tipo de elemento (los procesos, a todas). Por cada \checkmark\ se decide eliminar / mitigar / compensar / aceptar.}
 
 \subsection{Amenazas y Vulnerabilidades}
 
@@ -248,6 +369,40 @@ Escritura en memoria fuera de los límites originalmente definidos del buffer. L
 
 El peligro mayor: si el buffer está en el \textbf{stack}, este contiene los datos de la última llamada a función y la \textbf{dirección de retorno}. Un atacante puede escribir el buffer de forma que inyecte su código y pise la dirección de retorno para que el flujo salte a ese código. Hay contramedidas en compiladores, pero \textbf{ninguna es 100\% efectiva}. Lenguajes de más alto nivel (Java, etc.) se volvieron populares en parte porque eliminan la aritmética de punteros y este tipo de errores.
 
+\begin{center}
+\begin{tikzpicture}[
+    cellN/.style={draw,minimum width=2.6cm,minimum height=0.7cm,font=\scriptsize,
+                  fill=gray!8,anchor=south},
+    cellH/.style={draw,minimum width=2.6cm,minimum height=0.7cm,font=\scriptsize,
+                  fill=red!18,anchor=south},
+    cellP/.style={draw,minimum width=2.6cm,minimum height=0.7cm,font=\scriptsize\bfseries,
+                  fill=red!45,anchor=south}]
+  % ===== Caso NORMAL =====
+  \node[font=\footnotesize\bfseries] at (-1.3,4.1) {Input normal};
+  \node[cellN] (n1) at (-1.3,0.0) {buffer (var. locales)};
+  \node[cellN] (n2) at (-1.3,0.7) {buffer (var. locales)};
+  \node[cellN] (n3) at (-1.3,1.4) {saved EBP};
+  \node[cellN,fill=blue!15] (n4) at (-1.3,2.1) {return address};
+  \node[cellN] (n5) at (-1.3,2.8) {args de la función};
+  \draw[->,blue!60,thick] (n4.east) .. controls +(0.9,0.0) and +(0.9,-0.4) .. ($(n4.east)+(0.05,0.7)$);
+  \node[font=\scriptsize,blue!60,align=left,anchor=west] at ($(n4.east)+(0.55,0.45)$) {retorno\\legítimo};
+  % flecha de crecimiento del input
+  \draw[->,gray] (-3.0,0.05) -- (-3.0,2.0) node[midway,left,font=\scriptsize,align=center,rotate=90,anchor=south]{escritura};
+
+  % ===== Caso OVERFLOW =====
+  \node[font=\footnotesize\bfseries] at (3.6,4.1) {Input largo (overflow)};
+  \node[cellH] (o1) at (3.6,0.0) {\texttt{AAAA} + shellcode};
+  \node[cellH] (o2) at (3.6,0.7) {\texttt{AAAAAAAAAAAA}};
+  \node[cellH] (o3) at (3.6,1.4) {\texttt{AAAA} (pisó EBP)};
+  \node[cellP] (o4) at (3.6,2.1) {dir. del shellcode};
+  \node[cellN] (o5) at (3.6,2.8) {args de la función};
+  \draw[->,red!75,very thick] (o4.east) ++(0.1,0.35) .. controls +(1.4,0.0) and +(1.4,-2.0) .. (o1.east)
+        node[pos=0.5,right=2pt,font=\scriptsize,red!75,align=left]{¡salta al\\ código\\ inyectado!};
+  \node[font=\scriptsize,red!75,align=center] at (3.6,-0.55) {un input que excede el buffer\\sobrescribe la \textbf{return address}};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Stack smashing: el input que desborda el buffer sigue escribiendo hacia las direcciones superiores hasta \textbf{pisar la dirección de retorno}; el atacante la reemplaza por la dirección de su propio código (shellcode) y el flujo salta ahí.}
+
 \begin{destacado}
 \textbf{Von Neumann}: datos y código viven en el mismo espacio de memoria, lo que \textbf{habilita la inyección de código} (caso iOS, 2018). La generalización del problema de inyección es que el canal de datos de control del sistema (un nivel) queda \textbf{mezclado} con el canal de datos del usuario (otro nivel) sin lograr separarlos. Esto aplica también a los LLM (prompt injection / poisoning): no hay un mecanismo \emph{exclusivo} que separe el canal de control del de la pregunta del usuario.
 \end{destacado}
@@ -269,12 +424,43 @@ Falta de control en el ingreso de los usuarios que permite ejecutar código SQL 
   \item Muy peligrosa: hay herramientas automatizadas que, dado un parámetro vulnerable, averiguan el motor, el esquema y hacen \emph{dump} de cualquier tabla. Basta 1 query mal sanitizada entre cientos para comprometer todo.
 \end{itemize}
 
+\begin{center}
+\begin{tikzpicture}[
+    box/.style={draw,rounded corners=2pt,minimum height=0.8cm,font=\scriptsize,align=center},
+    node distance=0.7cm]
+  \node[box,fill=blue!12] (user) {Usuario\\(input)};
+  \node[box,fill=orange!25,right=1.0cm of user,minimum width=3.6cm] (q)
+        {\textbf{Query SQL}\\ \texttt{...WHERE u='}\textcolor{red!80!black}{\texttt{[input]}}\texttt{'}};
+  \node[box,fill=green!15,right=1.0cm of q] (db) {Base de\\datos};
+  \draw[->] (user) -- node[above,font=\scriptsize]{\texttt{' OR 1=1 --}} (q);
+  \draw[->] (q) -- node[above,font=\scriptsize,align=center,red!75]{el dato se\\interpreta como\\\textbf{comando}} (db);
+  \node[font=\scriptsize,red!75,align=center,below=0.3cm of q] {sin escapar/parametrizar, los datos del usuario se mezclan con el comando SQL};
+\end{tikzpicture}
+\end{center}
+\diagcaption{SQL Injection (CWE-89): el input no sanitizado se concatena en la query y la BD lo \textbf{ejecuta como comando}. Defensa: \emph{prepared statements} (parámetros separados del comando).}
+
 \subsubsection{Cross-Site Scripting / XSS (CWE-79)}
 Inyección de código malicioso (JavaScript) en un link o requerimiento que termina siendo \textbf{ejecutado por la víctima / el browser}. Ocurre al hacer render de HTML mezclando un dato (que controla el usuario) con código sin escaparlo, de modo que el dato puede ser código.
 \begin{itemize}
   \item \textbf{Aprovecha la confianza} entre el sitio y el browser/sesión: si se ejecuta JS en la máquina de la víctima, se le puede \textbf{robar la sesión}.
   \item \textbf{Defensa}: sanitizar/escapar todas las salidas (\emph{escape on output}) o usar frameworks de componentes que sanitizan automáticamente. Mismo problema que SQLi: basta olvidarse de uno entre 999.
 \end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[
+    box/.style={draw,rounded corners=2pt,minimum height=0.85cm,font=\scriptsize,align=center},
+    node distance=1.0cm]
+  \node[box,fill=red!18] (atk) {Atacante};
+  \node[box,fill=orange!22,right=1.2cm of atk,minimum width=2.7cm] (srv)
+        {Sitio vulnerable\\(guarda/refleja\\el dato sin escapar)};
+  \node[box,fill=blue!12,right=1.2cm of srv] (vic) {Browser de\\la víctima};
+  \draw[->] (atk) -- node[above,font=\scriptsize,align=center]{inyecta\\\texttt{<script>}} (srv);
+  \draw[->] (srv) -- node[above,font=\scriptsize,align=center]{render HTML\\con el dato} (vic);
+  \draw[->,red!75,thick] (vic.south) ++(0,-0.05) .. controls +(0,-0.7) and +(0,-0.7) ..
+        node[below,font=\scriptsize,red!75,align=center]{el JS se \textbf{ejecuta} en la víctima $\Rightarrow$ robo de sesión} (atk.south);
+\end{tikzpicture}
+\end{center}
+\diagcaption{XSS (CWE-79): el dato controlado por el atacante termina siendo \textbf{ejecutado como código (JS) por el browser de la víctima}, aprovechando la confianza del sitio en su sesión.}
 
 \subsubsection{CSRF (Cross-Site Request Forgery)}
 \begin{examen}
@@ -286,6 +472,27 @@ Inyección de código malicioso (JavaScript) en un link o requerimiento que term
   \item \textbf{NO sirve banear la IP}: el usuario es legítimo (la petición se ejecuta en su nombre).
 \end{itemize}
 \end{examen}
+
+\begin{center}
+\begin{tikzpicture}[
+    actor/.style={font=\footnotesize\bfseries,align=center},
+    msg/.style={->,thick,font=\scriptsize}]
+  % lifelines
+  \node[actor] (V) at (0,3.4) {Víctima\\(browser)};
+  \node[actor] (M) at (4,3.4) {Sitio\\malicioso};
+  \node[actor] (S) at (8,3.4) {Sitio legítimo\\(con sesión)};
+  \foreach \n in {V,M,S}{ \draw[gray,dashed] (\n) ++(0,-0.55) -- ++(0,-4.4); }
+  % secuencia
+  \draw[msg] (0,2.6) -- node[above]{visita} (4,2.6);
+  \draw[msg] (4,1.6) -- node[above,align=center]{HTML con request\\forjado} (0,1.6);
+  \draw[msg,red!75] (0,0.4) -- node[above,align=center,red!75]{request \textbf{forjado} (con la cookie de sesión)} (8,0.4);
+  % defensa: token anti-CSRF
+  \draw[msg,green!50!black,line width=1pt] (8,-0.6) -- node[above,align=center,green!50!black]{¿trae el NONCE / token?} (0,-0.6);
+  \node[draw=green!50!black,fill=green!12,rounded corners=2pt,font=\scriptsize,align=center]
+        at (4,-1.5) {Sin el token aleatorio fresco $\Rightarrow$ el sitio legítimo \textbf{rechaza} el pedido};
+\end{tikzpicture}
+\end{center}
+\diagcaption{CSRF: el sitio malicioso hace que el browser de la víctima dispare un request al sitio legítimo \emph{con su cookie de sesión}. El \textbf{nonce/token anti-CSRF} (valor aleatorio único en el formulario) lo frena: el atacante no lo conoce, y evita el \emph{replay}.}
 
 \subsubsection{OS Command / Shell Injection (CWE-78)}
 Falta de control en el ingreso que permite ejecutar comandos del sistema operativo. Genera \emph{backdoors} para ignorar controles de red o autenticación. Ejemplo: una app PHP que delega a \emph{ImageMagick} pasándole el nombre del archivo sin sanitizar; si el nombre contiene \texttt{;\,rm -fr ...} se ejecutan otros comandos.
