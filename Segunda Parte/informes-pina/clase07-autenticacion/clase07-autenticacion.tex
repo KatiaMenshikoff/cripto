@@ -1,0 +1,978 @@
+% !TEX program = pdflatex
+%=====================================================================
+%  Criptografía y Seguridad - ITBA
+%  Clase 7 — Autenticación (Seguridad en aplicaciones)
+%  Apunte integral: teoría + práctica
+%=====================================================================
+\documentclass[11pt,a4paper]{article}
+
+%---------------------------------------------------------------------
+%  Paquetes
+%---------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla,es-noshorthands]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{geometry}
+\geometry{a4paper,margin=2.4cm,headheight=22pt}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{caption}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,shapes.misc,shapes.symbols,arrows.meta,positioning,calc,
+                fit,backgrounds,decorations.pathmorphing,shadows.blur,chains}
+
+%---------------------------------------------------------------------
+%  Paleta de color (inspirada en las diapositivas de la cátedra)
+%---------------------------------------------------------------------
+\definecolor{itbaCyan}{HTML}{6EC6D9}
+\definecolor{itbaCyanDark}{HTML}{2E8B9E}
+\definecolor{itbaBlue}{HTML}{AEDCEA}
+\definecolor{boxBlue}{HTML}{BBD4F0}
+\definecolor{slideGray}{HTML}{ECECEC}
+\definecolor{practGreen}{HTML}{4F8A3D}
+\definecolor{practGreenL}{HTML}{E2EFD9}
+\definecolor{attackRed}{HTML}{C0392B}
+\definecolor{codeBg}{HTML}{F5F5F5}
+
+%---------------------------------------------------------------------
+%  Hipervínculos
+%---------------------------------------------------------------------
+\hypersetup{
+  colorlinks=true,
+  linkcolor=itbaCyanDark,
+  urlcolor=itbaCyanDark,
+  citecolor=itbaCyanDark,
+  pdftitle={Clase 7 - Autenticacion},
+  pdfauthor={Criptografia y Seguridad - ITBA}
+}
+
+%---------------------------------------------------------------------
+%  Encabezados y pies
+%---------------------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\textsc{Criptografía y Seguridad — ITBA}}
+\rhead{\small Clase 7 · Autenticación}
+\cfoot{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{itbaCyanDark}\leaders\hrule height \headrulewidth\hfill}}
+
+%---------------------------------------------------------------------
+%  Títulos de sección con barra de color (estilo diapositiva)
+%---------------------------------------------------------------------
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{itbaCyanDark}}
+  {\thesection}{0.6em}{}
+  [\vspace{-0.4em}{\color{itbaCyan}\titlerule[2pt]}]
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{itbaCyanDark}}
+  {\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{black}}
+  {\thesubsubsection}{0.6em}{}
+
+%---------------------------------------------------------------------
+%  Cajas reutilizables
+%---------------------------------------------------------------------
+% Caja "diapositiva" (recuadro gris de las slides)
+\newtcolorbox{slidebox}[1][]{
+  enhanced, colback=slideGray, colframe=black!55, boxrule=0.5pt,
+  arc=1pt, left=6pt,right=6pt,top=4pt,bottom=4pt, #1}
+
+% Caja de definición
+\newtcolorbox{defbox}[1]{
+  enhanced, breakable, colback=itbaBlue!25, colframe=itbaCyanDark,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+% Caja de nota práctica
+\newtcolorbox{practbox}[1]{
+  enhanced, breakable, colback=practGreenL, colframe=practGreen,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+% Caja de atención / ataque
+\newtcolorbox{warnbox}[1]{
+  enhanced, breakable, colback=attackRed!8, colframe=attackRed,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+%---------------------------------------------------------------------
+%  Estilo de código
+%---------------------------------------------------------------------
+\lstdefinestyle{java}{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{codeBg},
+  keywordstyle=\color{itbaCyanDark}\bfseries,
+  commentstyle=\color{practGreen}\itshape,
+  stringstyle=\color{attackRed},
+  language=Java, breaklines=true, frame=single, rulecolor=\color{black!30},
+  showstringspaces=false, columns=fullflexible, tabsize=2,
+  xleftmargin=10pt, framexleftmargin=8pt}
+
+%---------------------------------------------------------------------
+%  Macros matemáticos
+%---------------------------------------------------------------------
+\newcommand{\Aset}{\mathcal{A}}
+\newcommand{\Cset}{\mathcal{C}}
+\newcommand{\Fset}{\mathcal{F}}
+\newcommand{\Lset}{\mathcal{L}}
+\newcommand{\Sset}{\mathcal{S}}
+\DeclareMathOperator{\Trunc}{Truncate}
+\DeclareMathOperator{\HMACSHA}{HMAC\text{-}SHA1}
+\DeclareMathOperator{\PRF}{PRF}
+
+\newcommand{\factor}[1]{\textcolor{itbaCyanDark}{\textbf{#1}}}
+
+%=====================================================================
+\begin{document}
+%=====================================================================
+
+%---------------------------------------------------------------------
+%  Portada
+%---------------------------------------------------------------------
+\begin{titlepage}
+\centering
+\vspace*{1.2cm}
+
+\begin{tikzpicture}
+  \node[rounded corners=2pt, fill=itbaCyan, text=black, inner sep=14pt,
+        minimum width=0.8\textwidth, align=center] (t)
+        {\Huge\bfseries Criptografía y Seguridad};
+\end{tikzpicture}
+
+\vspace{0.6cm}
+{\LARGE Seguridad en aplicaciones}\\[0.25cm]
+{\Huge\bfseries\color{itbaCyanDark} Autenticación}
+
+\vspace{0.8cm}
+
+% Ilustración: bóveda / caja fuerte (recreación del icono de portada)
+\begin{tikzpicture}[scale=1.0]
+  % marco de la bóveda
+  \fill[black!12] (-3.2,-2.4) rectangle (3.2,2.8);
+  \draw[line width=2pt, black!55] (-3.2,-2.4) rectangle (3.2,2.8);
+  % puerta blindada
+  \fill[itbaCyanDark!75] (-2.4,-2.0) rectangle (2.4,2.4);
+  \draw[line width=3pt, black!70] (-2.4,-2.0) rectangle (2.4,2.4);
+  \draw[line width=1.2pt, itbaCyan] (-2.0,-1.6) rectangle (2.0,2.0);
+  % bisagra central
+  \draw[line width=2pt, black!70] (0,-2.0) -- (0,2.4);
+  % volante / rueda
+  \foreach \a in {0,45,...,315}{
+    \draw[line width=2pt, black!70] (-1.1,0.2) -- ++(\a:0.6);
+  }
+  \draw[line width=2.5pt, black!70] (-1.1,0.2) circle (0.42);
+  \fill[itbaCyan] (-1.1,0.2) circle (0.16);
+  \draw[line width=2.5pt, black!70] (1.1,0.2) circle (0.42);
+  \fill[itbaCyan] (1.1,0.2) circle (0.16);
+  % pernos
+  \foreach \y in {-1.2,-0.4,0.8,1.6}{
+     \fill[black!70] (-2.2,\y) circle (0.07);
+     \fill[black!70] (2.2,\y) circle (0.07);
+  }
+\end{tikzpicture}
+
+\vfill
+{\large Apunte integral — Teoría + Práctica}\\[0.2cm]
+{\normalsize Clase 7 \quad·\quad Capítulos 12--13, \emph{Computer Security: Art and Science} (M.~Bishop)}\\[0.4cm]
+{\small Instituto Tecnológico de Buenos Aires (ITBA)}
+
+\vspace{0.6cm}
+{\footnotesize\itshape Documento elaborado a partir de las transcripciones de la clase
+teórica (Prof.\ Leandro Suárez) y de la clase práctica, junto con las diapositivas oficiales de ambas.}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+%=====================================================================
+\section{Introducción y contexto}
+%=====================================================================
+
+Esta clase abre el bloque de \textbf{Seguridad en aplicaciones} y se concentra en la
+\textbf{autenticación}. Conviene situarla respecto de lo visto previamente.
+
+\begin{defbox}{Tríada CIA — el marco de toda la seguridad}
+Toda política de seguridad busca \emph{forzar} el cumplimiento de tres propiedades sobre
+la información de un sistema:
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Confidencialidad} (\emph{Confidentiality}): protege las \emph{lecturas};
+        que quien lee la información sea quien debe ser.
+  \item \textbf{Integridad} (\emph{Integrity}): protege las \emph{modificaciones/escrituras};
+        que nadie sin permiso pueda alterar la información.
+  \item \textbf{Disponibilidad} (\emph{Availability}): que quien debe acceder pueda hacerlo
+        \emph{en el momento} en que lo necesita.
+\end{itemize}
+\end{defbox}
+
+De las políticas de seguridad surgen los \textbf{modelos de seguridad} y los esquemas de
+\textbf{control de acceso} (mandatorios —MAC— y discrecionales —DAC—), vistos en la clase
+anterior. En el fondo, el control de acceso es un conjunto de reglas que definen
+\emph{si un sujeto puede acceder a un objeto y de qué forma}.
+
+\medskip
+Pero esas reglas presuponen algo: que en el sistema hay \textbf{sujetos} (entidades
+externas, normalmente físicas: personas, dispositivos) que interactúan con él. Para poder
+aplicar las reglas, primero hay que \emph{representar internamente} a esas entidades y, sobre
+todo, \emph{comprobar que cada sujeto es quien dice ser}. Ese es exactamente el problema de
+la autenticación.
+
+\begin{warnbox}{¿Por qué importa tanto?}
+La autenticación es uno de los aspectos \textbf{más atacados} de un sistema. Una vez que un
+atacante logra impersonar a un usuario, el sistema —que rara vez tiene mecanismos fuertes
+para detectar que ``ese ya no sos vos''— le permite hacer todo lo que el usuario legítimo
+podría. Es un punto crítico de la seguridad de las aplicaciones.
+\end{warnbox}
+
+%=====================================================================
+\section{Conceptos fundamentales}
+%=====================================================================
+
+\begin{defbox}{Autenticación}
+\textbf{Autenticación} es el proceso de \textbf{asociar una identidad a un principal}.
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Entidad}: el sujeto externo y físico (una persona, un dispositivo).
+  \item \textbf{Identidad}: la representación computacional de una entidad dentro del
+        sistema (p.\ ej.\ un usuario en el sistema \emph{Pampero}).
+  \item \textbf{Principal}: la entidad única ya representada internamente (usuario, sujeto).
+        \emph{Un mismo principal puede tener distintas identidades} (roles), porque los
+        permisos dependen del rol que cumple en cada momento.
+\end{itemize}
+La identidad se usa luego para el \textbf{control de accesos} y la \textbf{asignación de
+recursos}.
+\end{defbox}
+
+\subsection{Autenticación ${\neq}$ Autorización}
+Son dos momentos distintos, ambos deben estar bien resueltos:
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Autenticación}: ¿\emph{quién sos}? Verifica la identidad.
+  \item \textbf{Autorización}: ya autenticado, ¿podés acceder a \emph{este} recurso?
+        Pertenece al control de acceso. \emph{Estoy autenticado pero no necesariamente
+        autorizado para todo.}
+\end{itemize}
+
+% ---- Diagrama: identidad ↔ principal (recreación slide 2) ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth]
+  % Entorno
+  \node[draw, rounded corners, minimum width=5.2cm, minimum height=4.2cm,
+        fill=black!3, label=above:{\bfseries Entorno}] (env) at (0,0) {};
+  % Sistema
+  \node[draw, rounded corners, minimum width=6.0cm, minimum height=4.2cm,
+        fill=black!3, label=above:{\bfseries Sistema}] (sys) at (8.0,0) {};
+
+  % Entidad externa (carita)
+  \node[circle,draw,fill=itbaBlue,minimum size=0.9cm] (face) at (-1.4,0.2) {};
+  \node[font=\scriptsize] at (-1.4,0.25) {\raisebox{2pt}{$\smallsmile$}};
+  \node[font=\scriptsize,gray] at (-1.4,-0.9) {Entidad externa};
+
+  % Identidad (nube)
+  \node[cloud, draw, fill=itbaBlue!70, cloud puffs=11, minimum width=2.6cm,
+        minimum height=1.6cm, aspect=1.4] (id) at (1.1,0.2) {Identidad};
+
+  % autenticador
+  \node[circle,draw,fill=itbaBlue,minimum size=0.6cm] (auth) at (5.6,0.2) {};
+  \node[font=\scriptsize] at (5.6,-0.55) {autenticador};
+
+  % principals
+  \node[draw,fill=boxBlue,minimum width=1.8cm] (u1) at (9.4,1.0) {Usuario1};
+  \node[draw,fill=boxBlue,minimum width=1.8cm] (u2) at (9.4,0.1) {Usuario2};
+  \node[draw,fill=boxBlue,minimum width=1.8cm] (s1) at (9.4,-0.8) {Sistema1};
+
+  \draw[->,gray,line width=1pt] (face) -- (id);
+  \draw[->,line width=1pt] (id) -- (auth);
+  \draw[->,line width=1pt] (auth) -- (u2);
+\end{tikzpicture}
+\caption{La entidad externa proyecta una \emph{identidad}; el \emph{autenticador} la asocia
+a un \emph{principal} interno del sistema. \textit{(Recreación de la diapositiva 2.)}}
+\end{figure}
+
+\subsection{El proceso de autenticación}
+La entidad debe \textbf{brindar información que confirme su identidad}. Los pasos:
+\begin{enumerate}[leftmargin=1.6em,itemsep=2pt]
+  \item La entidad \textbf{provee} la información que acredita su identidad
+        (p.\ ej.\ la contraseña).
+  \item Se \textbf{analiza} esa información comparándola con la que el sistema tiene guardada.
+  \item Se \textbf{determina} si la información está asociada a esa entidad
+        $\Rightarrow$ verdadero / falso.
+\end{enumerate}
+Como \emph{consecuencias}, el sistema debe (a) \textbf{almacenar} información de cada entidad
+y (b) \textbf{contar con mecanismos} para procesar esa información y hacer la corroboración.
+
+%=====================================================================
+\section{Sistema de autenticación}
+%=====================================================================
+
+Una cosa es el \emph{proceso} de autenticación y otra, más amplia, el \emph{sistema}. El
+sistema de autenticación se modela —al igual que un criptosistema— como una \textbf{tupla de
+cinco componentes}. \textbf{Si cualquiera de ellos falla, falla todo el sistema.}
+
+\begin{defbox}{Componentes del sistema de autenticación}
+\[
+  \langle\, \Aset,\ \Cset,\ \Fset,\ \Lset,\ \Sset \,\rangle
+\]
+\begin{description}[leftmargin=2.6em,style=nextline,itemsep=3pt]
+  \item[$\Aset = \{a\}$] \textbf{Información de autenticación.} La que provee la entidad
+        externa para probar su identidad (contraseña, huella, token). \emph{El sistema no la
+        controla: viene dada desde afuera.}
+  \item[$\Cset = \{c\}$] \textbf{Información complementaria.} La que el sistema
+        \emph{almacena} para identificar al principal (p.\ ej.\ el \emph{hash} de la
+        contraseña, o las \emph{minucias} de una huella).
+  \item[$\Fset = \{f : \Aset \to \Cset\}$] \textbf{Funciones de complementación.} Derivan
+        $c$ a partir de $a$. Idealmente \emph{no invertibles} (de $c$ no se debe poder volver
+        a $a$).
+  \item[$\Lset = \{\ell : \Aset\times\Cset \to \{0,1\}\}$] \textbf{Funciones de
+        autenticación.} Dado un $a$ y el $c$ guardado, deciden si la asociación es válida.
+        Es la parte con la que el usuario \emph{interactúa} (el \emph{login}).
+  \item[$\Sset = \{s\}$] \textbf{Funciones de selección.} Crean o alteran $\Aset$ y $\Cset$
+        (alta de usuario, cambio de contraseña). Son las más \emph{administrativas}.
+\end{description}
+\end{defbox}
+
+\begin{practbox}{Distinción $F$ vs.\ $L$ (consulta de la clase teórica)}
+\begin{itemize}[leftmargin=1.3em,itemsep=2pt]
+  \item $F$ \textbf{deriva}: a partir de la información de autenticación produce la
+        complementaria ($A \to C$). Ej.: ``calculá el hash de la contraseña''.
+  \item $L$ \textbf{corrobora}: dada una \emph{nueva} información de autenticación, verifica
+        si existe una complementaria correspondiente en el sistema ($A\times C\to\{T,F\}$).
+\end{itemize}
+\end{practbox}
+
+\subsection{Ejemplo: autenticación con contraseñas}
+Modelo ilustrativo (\emph{no} el ideal de almacenamiento, como veremos):
+\[
+\begin{aligned}
+  \Aset &= \{x \mid x \text{ es una clave}\} & \Lset &= \{\,==\,\}
+     \quad(\text{válido si } F(a)=c)\\
+  \Cset &= h(\Aset) & \Sset &= \{\texttt{adduser()},\ \texttt{removeuser()},\ \texttt{passwd()}\}\\
+  \Fset &= \{\,h(x)\,\} \text{ (función de hash)} &
+\end{aligned}
+\]
+En la práctica se escribe equivalentemente: $H : \Aset\to\Cset,\ H(p)=\mathrm{hash}(p)$ y
+$\mathrm{eq}:\Aset\times\Cset\to\{\text{true},\text{false}\}$ con
+$\mathrm{eq}(p,h)=\text{true} \iff \mathrm{hash}(p)=h$.
+
+%=====================================================================
+\section{Información de autenticación: los factores}
+%=====================================================================
+
+La información de autenticación es provista por la entidad externa y posee
+\textbf{distintos grados de confianza}. No es lo mismo que alguien diga una contraseña
+(que pudo haber escuchado) a que muestre su cara. Las \textbf{fuentes} o \textbf{factores}
+indican la \emph{naturaleza} de la información. Hay tres factores clásicos —``algo que sé /
+tengo / soy''— más el contexto.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{>{\bfseries}p{3.0cm} p{6.0cm} p{4.6cm}}
+\toprule
+Factor & Se basa en\dots & Ejemplos \\
+\midrule
+Algo que conozco & un \emph{secreto compartido} & clave, \emph{passphrase}, pregunta secreta\\
+Algo que tengo & un \emph{elemento físico} (posesión) & smart card / USB token, RSA-ID, celular, tarjeta de coordenadas (token grid)\\
+Algo que soy & características \emph{intrínsecas} (biométrico) & huella, retina, voz, cara\\
+Contexto & el \emph{contexto} de la conexión & red de origen, país/ciudad/geo, host/terminal, día y hora, \emph{velocity}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Algo que conozco (conocimiento compartido)}
+Es el factor más antiguo, estudiado y atacado. Basa la identificación en un \textbf{secreto
+compartido} entre las dos partes (clásicamente, la contraseña).
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Requiere \textbf{almacenar de manera segura} el secreto y depende de su
+        \textbf{confidencialidad}.
+  \item Sirve de \textbf{base} a muchos otros mecanismos.
+  \item Las \emph{pass-phrases} y \emph{preguntas secretas} están quedando en desuso (mala
+        práctica: a veces son \emph{más} adivinables que una contraseña).
+  \item Si el usuario anota la clave y un tercero la ve, se \textbf{vulneró al usuario, no al
+        sistema}. Distinto —y grave— es que se infiera la clave de la información
+        \emph{almacenada}.
+\end{itemize}
+
+\subsection{Algo que tengo (posesión física)}
+Análogo a la llave de una casa: basa la autenticación en un elemento físico que se posee.
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Requiere el \textbf{cuidado} del elemento; puede \textbf{dañarse, robarse o
+        clonarse}, y la información \emph{en tránsito} puede ser suplantada.
+  \item Ejemplos: \emph{Smart cards}, \emph{YubiKey} (USB que se conecta y habilita el
+        acceso), el celular, y los \textbf{tokens físicos} tipo RSA con un visor que muestra
+        un código que \emph{rota} cada cierto tiempo.
+  \item La rotación del código mitiga el robo: si se intercepta, tiene una ventana muy corta
+        para operar.
+\end{itemize}
+
+\subsection{Algo que soy (biométrico / inherente)}
+Características físicas \textbf{difíciles de modificar o perder}.
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{No son 100\,\% eficaces}: no hay lector perfecto, y un mismo $C$ podría
+        validar dos $A$ distintos (caso del hermano/primo que desbloquea el celular).
+  \item Las primeras huellas en celulares fallaban tanto que se \emph{aumentaba el umbral}
+        de error y se aceptaban lecturas imperfectas $\Rightarrow$ menos seguridad.
+  \item \textbf{Asumen que el dispositivo de lectura no puede ser manipulado.} Por eso se
+        agregan cámaras u otros mecanismos contra suplantación (foto ante un lector de cara,
+        intercepción del dispositivo, etc.).
+\end{itemize}
+
+\begin{practbox}{El chip biométrico del celular}
+Los celulares tienen un \textbf{chip dedicado} para leer y almacenar la información
+biométrica, \emph{por fuera del kernel} del sistema operativo. El SO \textbf{no puede
+acceder} a ese chip: solo recibe un \texttt{OK} / \texttt{FAIL}. Cuando ponés la cara, el SO
+solo le pregunta a ese subsistema si la información coincide y toma una decisión.
+\end{practbox}
+
+\subsection{Contexto}
+No suele usarse como factor único sino como \textbf{complemento}. Basa la identificación en
+el contexto de la conexión y aplica \textbf{reglas positivas o negativas}:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Positiva}: ``un operador de un centro de cómputos debe conectarse desde la
+        red privada''.
+  \item \textbf{Negativa} (\emph{velocity}): si me conecto en Buenos Aires y dos horas después
+        desde Ámsterdam (a $\sim$8\,h de vuelo), \emph{hay menos chances de que sea yo}
+        $\Rightarrow$ se pide una habilitación o un factor adicional.
+\end{itemize}
+
+%=====================================================================
+\section{Claves (contraseñas)}
+%=====================================================================
+
+Las claves se estudian en profundidad por ser el mecanismo \textbf{más utilizado}. A
+diferencia de las claves criptográficas, \textbf{no son controladas por el sistema sino por
+el usuario} y \emph{no} suelen generarse aleatoriamente. Por eso el sistema toma decisiones
+(restricciones) para resguardarse de ataques.
+
+\subsection{Tipos de claves}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Secuencias de caracteres}: con restricciones (largo mínimo, dígitos,
+        mayúsculas, símbolos); generadas aleatoriamente, por el usuario o de manera asistida
+        (el navegador ofrece generarlas y guardarlas).
+  \item \textbf{Secuencias de palabras} (\emph{pass-phrases}): más largas; en desuso porque
+        suelen ser \emph{más adivinables}.
+  \item \textbf{Algorítmicas}:
+        \emph{pregunta--respuesta} (challenge--response) y
+        \emph{claves de un solo uso} (OTP — \emph{one time passwords}).
+\end{itemize}
+
+\begin{warnbox}{OTP $\neq$ One Time Pad}
+La sigla OTP de ``\emph{one time password}'' \textbf{no} es el \emph{One Time Pad} (cifrado
+de Vernam). Tampoco hay que confundir las OTP con los \emph{recovery codes}: estos últimos
+son códigos de un solo uso que se ``van quemando'' para recuperar la cuenta si se pierde el
+dispositivo del segundo factor.
+\end{warnbox}
+
+\subsection{Almacenamiento de claves}
+
+\subsubsection{Texto plano — \textcolor{attackRed}{NO RECOMENDADO}}
+Puede estar en un archivo o base de datos y ser accedido por fuera del sistema; no puede
+garantizarse la confidencialidad. Si se roba la base, se llevan \emph{todas} las contraseñas.
+Riesgo adicional poco mencionado: los \textbf{propios administradores/desarrolladores} con
+acceso a la base podrían leer secretos y hacer ``ataques hormiga'' imperceptibles. La
+mitigación de fondo es organizacional: \textbf{concientización}, políticas que fuercen
+buenas prácticas, y herramientas que \emph{detectan secretos en plano} en bases y
+repositorios.
+
+\subsubsection{Archivo cifrado}
+Requiere una clave para acceder a las contraseñas. Esa clave puede estar en un archivo de
+configuración, en el propio ejecutable, ingresarse al iniciar el sistema, o vivir en un
+\textbf{HSM} (\emph{Hardware Security Module}, dispositivo criptográfico especializado).
+\begin{slidebox}
+\textbf{Solo recomendado si es requisito acceder a la clave \emph{original}} — por ejemplo,
+para reenviarla a un sistema \emph{legacy} (típico en bancos, PCI/tarjetas de crédito) que
+exige recibir la contraseña original y validarla.
+\end{slidebox}
+
+\subsubsection{Ejemplo: sistema Unix (legacy)}
+Unix marcó un precedente: en vez de cifrar, empezó a guardar una \textbf{prueba de que se
+conoce el secreto, sin guardar el secreto}. Se almacena por cada usuario el resultado de
+\textbf{una de 4096 funciones de hash}, elegida aleatoriamente:
+\[
+\begin{aligned}
+\Aset &= \{\text{secuencias de hasta 8 caracteres}\}\\
+\Cset &= \{\underbrace{\texttt{xx}}_{\text{función }(0\text{--}4095)\,-\,2\text{ char}}
+              \underbrace{\texttt{HHHHHHHHHHH}}_{\text{resultado}\,-\,11\text{ char}}\}\\
+\Fset &= \{\,\mathrm{DES}_{\texttt{xx}}(\cdot)\,\}\quad(\text{variante de DES \emph{no} reversible})\\
+\Lset &= \{\texttt{login},\ \texttt{su},\ \texttt{sudo},\dots\}\qquad
+\Sset = \{\texttt{passwd},\ \texttt{adduser},\dots\}
+\end{aligned}
+\]
+El indicador \texttt{xx} señala \emph{qué} función se usó; el resultado se obtiene con una
+variante de DES \emph{no} invertible. Más adelante surgieron algoritmos que emulan este
+comportamiento.
+
+%=====================================================================
+\section{Ataques a un sistema de autenticación}
+%=====================================================================
+
+\begin{defbox}{Objetivos enfrentados}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Del sistema}: identificar \emph{correctamente} a las entidades.
+  \item \textbf{Del atacante}: ser identificado como una entidad que no es
+        (\textbf{impersonarla}).
+\end{itemize}
+\textbf{Mecanismo del atacante}: encontrar $a\in\Aset$ tal que, para algún $f\in\Fset$,
+$f(a)=c$ y $c$ esté asociado a una entidad.
+\end{defbox}
+
+% ---- Diagrama: ataques online vs offline (recreación slide 15) ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth,node distance=4mm]
+  \node[draw,rounded corners,fill=black!4,align=left,minimum width=8.5cm] (verif)
+  {\textbf{Verificación (lo que prueba el atacante):}\\[2pt]
+   $\bullet$\ Probar varios $a$, computar $f(a)$ y comparar con $c$\\
+   $\bullet$\ Intentar autenticar vía $\ell(a)\in\Lset$};
+  \node[draw,rounded corners,fill=boxBlue,right=2.2cm of verif.north east,anchor=north west,
+        align=center,minimum width=2.2cm] (off) {Ataques\\ \textbf{offline}};
+  \node[draw,rounded corners,fill=boxBlue,right=2.2cm of verif.south east,anchor=south west,
+        align=center,minimum width=2.2cm] (on) {Ataques\\ \textbf{online}};
+  \draw[->] (off) -- ($(verif.east)+(0,0.45)$);
+  \draw[->] (on) -- ($(verif.east)+(0,-0.45)$);
+\end{tikzpicture}
+\caption{Atacar la función $f$ (offline) o la función $\ell$ (online).
+\textit{(Recreación de la diapositiva 15.)}}
+\end{figure}
+
+\subsection{Adivinando claves: offline vs.\ online}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Offline}: se conoce $f$ y $c$ y se prueban distintos $a$ hasta que $f(a)=c$.
+        Caso típico: \emph{me robé la base de datos} (que contiene la información
+        complementaria, p.\ ej.\ los hashes, no las contraseñas). Herramientas: \texttt{crack},
+        \texttt{John the Ripper} (archivo \texttt{/etc/shadow} de Linux), \texttt{ophcrack}
+        (archivo \texttt{SAM} de Windows).
+  \item \textbf{Online}: se ataca directamente la función $\ell$ (el \emph{login}), probando
+        distintos $a$ hasta pasar la autenticación —típicamente con cuentas conocidas
+        (\texttt{root}, \texttt{administrator}, \texttt{guest})—. Se juega con el inspector,
+        con un cliente tipo \emph{Postman}, buscando vulnerabilidades del servidor.
+\end{itemize}
+
+\subsection{Cómo se ``mejoran'' los ataques}
+Como las claves \emph{no} son aleatorias, el atacante tiene una posición ventajosa
+(``hasta ahora se asumía búsqueda aleatoria''):
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Diccionarios de palabras}: la gente usa palabras existentes, nombres propios.
+  \item \textbf{Diccionarios de claves descubiertas}: históricamente hubo \emph{leaks/breaches}
+        de bases con contraseñas; muchas se reutilizan. Existen diccionarios especializados.
+  \item \textbf{Transformaciones simples}: sufijos, prefijos, reemplazos
+        (\texttt{l}$\to$\texttt{1}, \texttt{o}$\to$\texttt{0}, vocales por números), palabras
+        espejadas, dos palabras combinadas. ``Somos humanos, tenemos las mismas ideas.''
+  \item \textbf{Información de contexto} (la peor): nombre, usuario, DNI, fecha de nacimiento.
+\end{itemize}
+
+% ---- Tabla resumen de ataques (práctica, slide ATAQUES) ----
+\begin{practbox}{Catálogo de ataques (clase práctica)}
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{>{\bfseries}p{3.6cm} p{9.0cm}}
+\toprule
+Ingeniería social & \emph{Phishing}, \emph{man-in-the-middle}. El más frecuente y el que más
+``hace caer'' a la gente: termina en una impersonación del usuario.\\
+Fuerza bruta & Prueba exhaustiva de todas las claves posibles. Poco frecuente por su costo.\\
+Diccionario & Lista de palabras comunes (más frecuente que la fuerza bruta pura).\\
+Tablas arcoíris (\emph{Rainbow}) & Diccionario \emph{de hashes ya calculados}.\\
+\emph{Password stuffing} & Reutilizar credenciales robadas (por phishing, MIM, ingeniería
+social) en otros sitios donde la víctima repitió la contraseña.\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{practbox}
+
+%=====================================================================
+\section{Prevenciones}
+%=====================================================================
+
+\subsection{Prevenciones generales}
+\textbf{Esconder información} para que $a$, $c$ o $f$ no sean conocidas
+\emph{simultáneamente}:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Por lo general $f$ \textbf{es conocida o puede conocerse} (hay pocos algoritmos
+        estándar; incluso por \emph{reverse engineering}).
+  \item Es más fácil proteger $c$ que $a$ (que está en manos de la entidad externa).
+        Ejemplo: \texttt{/etc/shadow} en Unix, accesible solo por \texttt{root}.
+\end{itemize}
+\textbf{Prevenir el uso de la función de autenticación} $\ell$ (ataques \emph{online}):
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Exponential back-off}: ante cada falla se aumenta exponencialmente el tiempo
+        de reintento (1\,s, 10\,s, \dots) para frenar la fuerza bruta.
+  \item \textbf{Deshabilitar principales} forzados (\emph{brute-forced}). Mecanismo ``borde'':
+        un malicioso puede afectar la \emph{disponibilidad} de un usuario solo para molestar
+        (algunos bancos aún bloquean tras 5 intentos).
+  \item \textbf{Jailing / Honeypot}: al detectar un ataque, se \emph{switchea} la función de
+        autenticación por otra falsa que deja pasar al atacante a un \textbf{ambiente
+        controlado} mientras el equipo de seguridad lo \emph{tracea}. (``El bote de miel para
+        el oso.'') Costoso; lo usan agencias gubernamentales y grandes corporaciones.
+  \item \textbf{Captchas}: baratos (se ofrecen como servicio), pero cada vez más vulnerados
+        por bots e IA.
+\end{itemize}
+
+\subsection{Subir la complejidad: fórmula de Anderson}
+\begin{defbox}{Fórmula de Anderson}
+\[
+  P \;=\; \frac{T\cdot G}{N}
+\]
+\begin{tabular}{@{}ll@{\hspace{2em}}ll@{}}
+$P$ & probabilidad de adivinar una clave &
+$T$ & tiempo dedicado a las pruebas\\
+$G$ & número de pruebas por segundo &
+$N$ & tamaño del espacio de claves\\
+\end{tabular}\\[4pt]
+Permite \textbf{estimar el tiempo} de un ataque (o derivar requisitos de longitud).
+\end{defbox}
+
+\paragraph{Ejercicio 1.} Claves numéricas de 10 dígitos ($N=10^{10}$), $G=10\,000$ claves/s,
+$P\ge 0.5$:
+\[
+  P \ge \frac{TG}{N} \;\Rightarrow\; T \le \frac{P\,N}{G}
+     = \frac{0.5\cdot 10^{10}}{10^{4}} = 5\times10^{5}\ \text{s} \approx \mathbf{6\ días}.
+\]
+
+\paragraph{Ejercicio 2.} Claves de 8 letras (26 caracteres, $N=26^{8}$), $G=10\,000$/s,
+$P\ge0.5$:
+\[
+  T \le \frac{0.5\cdot 26^{8}}{10^{4}} \approx 1\,044\,135\ \text{s}
+     \approx \mathbf{121\ días}.
+\]
+\emph{Con menos longitud pero mayor alfabeto, la complejidad sube muchísimo.}
+
+\paragraph{Ejercicio 3.} ¿Qué \textbf{longitud mínima} $L$ se requiere con claves
+alfanuméricas (36 caracteres) y $G=100\,000$/s para que $P<0.5$ de hallarla en
+\emph{menos de un año}?
+\[
+  P \ge \frac{TG}{N} \;\Rightarrow\; N \ge \frac{T\,G}{P}
+   = \frac{(365\cdot24\cdot60\cdot60)\cdot 10^{5}}{0.5}
+   \;\Rightarrow\; N = 36^{L} \ge 6.3\times10^{12}
+\]
+\[
+  L \ge \log_{36}\!\bigl(6.3\times10^{12}\bigr) \approx 8.22
+  \;\Rightarrow\; \boxed{L \ge 9}.
+\]
+
+\subsection{Selección de claves — alternativas}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Selección aleatoria}: condición ideal (toda clave equiprobable), pero
+        difícil de memorizar (\texttt{fL3K\&8\%j}).
+  \item \textbf{Claves pronunciables}: palabras sin sentido formadas por fonemas
+        (\emph{helgoret}, \emph{mipoterjo}, \emph{jusacila}); fáciles de memorizar pero
+        \textbf{reducen mucho el espacio} de claves.
+  \item \textbf{Permitir que el usuario elija}: tiende a claves fáciles de adivinar.
+        Los \emph{password managers} ayudan, pero concentran el riesgo en la
+        \textbf{clave maestra} (si la roban, caen todas).
+\end{itemize}
+
+\subsection{Revisión proactiva de claves}
+Analizar la clave \textbf{al momento de crearla} para detectar y rechazar claves ``fáciles''.
+Debería: aplicar reglas sobre palabras, buscar en diccionarios y en \emph{leaks/breaches},
+detectar patrones y usar información del usuario y del contexto (rechazar nombre/fecha de
+nacimiento).
+
+\subsection{Expiración de claves}
+Forzar el cambio tras cierto tiempo o evento \textbf{limita el daño} de una clave
+comprometida. Requisitos:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Evitar el \textbf{reúso} (recordar y bloquear las $N$ últimas).
+  \item Evitar cambiarla varias veces seguidas para ``saltear'' el bloqueo.
+  \item \textbf{Dar tiempo} para pensar una nueva: \emph{no} forzar el cambio en el login y
+        \textbf{avisar con anticipación}.
+\end{itemize}
+\begin{warnbox}{El riesgo de la rotación mal hecha}
+Un usuario apurado al que se le venció la clave elige una \emph{sencilla} sin pensarla
+$\Rightarrow$ \textbf{perjudica} la seguridad en lugar de ayudarla. De ahí la importancia del
+preaviso (``en 7 días vence tu contraseña\dots'').
+\end{warnbox}
+
+%=====================================================================
+\section{Almacenamiento seguro: Salting y PBKDF2}
+%=====================================================================
+
+\subsection{Salting}
+Práctica \textbf{obligatoria} hoy: agregar una \emph{perturbación} (\emph{salt}) a la
+información que se guarda de forma complementaria.
+
+\begin{defbox}{Salting}
+\textbf{Escenario}: un atacante consigue $c_1, c_2,\dots,c_n$. Sin salt, cada prueba
+$a_i\mapsto f(a_i)$ puede compararse \emph{en paralelo} contra todos los $c_j$.\\[4pt]
+\textbf{Objetivo}: aumentar el tiempo requerido para adivinar claves.\\[4pt]
+\textbf{Método}: introducir una perturbación
+\[
+  f(a) = x \,\|\, f'(a, x)
+\]
+donde cada $c$ se calcula con una perturbación $x$ \emph{distinta}. Así el atacante
+\textbf{no puede reutilizar} $f(a)$ para buscar varias cuentas en paralelo.
+\end{defbox}
+
+Beneficios concretos:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{No hay patrones}: dos contraseñas iguales \emph{no} producen el mismo $c$.
+  \item Hay que obtener el salt \textbf{de cada} usuario; el ataque \textbf{no se
+        paraleliza}.
+  \item El salt suele elegirse aleatoriamente y \textbf{embeberse} en el hash.
+  \item Estos algoritmos están \emph{diseñados para ser costosos} (p.\ ej.\ $\ge100$\,ms por
+        evaluación): al usuario solo le importa una vez, al atacante le complica todo.
+\end{itemize}
+
+\subsection{PBKDF2 (PKCS \#5 v2.0)}
+\emph{Password-Based Key Derivation Function 2}: \textbf{no es un hash}, es una
+\textbf{función de derivación}. Muy usada y robusta (junto con \emph{bcrypt}, \emph{scrypt}).
+
+\begin{defbox}{PBKDF2 — Idea y algoritmo}
+Sea \emph{pass} una contraseña, $S$ un \emph{salt} y $\PRF$ una función pseudoaleatoria
+(criptosistema simétrico o MAC). Se aplica \textbf{iterativamente}:
+\[
+  u_1 = \PRF(\text{pass}, S),\quad
+  u_2 = \PRF(\text{pass}, u_1),\ \dots,\
+  u_j = \PRF(\text{pass}, u_{j-1})
+\]
+\[
+  \text{Resultado: } u_1 \oplus u_2 \oplus \cdots \oplus u_j
+\]
+\textbf{Forma general:} $K = \mathrm{PBKDF2}(\text{prf},\text{pass},\text{salt},c,\text{len})$,
+con $K = T_1 \| T_2 \| \cdots \| T_n$ \ ($n=\text{len}/|\text{prf}|$) y
+\[
+  T_i = u_1 \oplus u_2 \oplus \cdots \oplus u_c,\qquad
+  u_1 = \PRF(\text{Pass},\ \text{Salt}\,\|\,\mathrm{INT32\_BE}(i)),\quad
+  u_k = \PRF(\text{Pass}, u_{k-1}).
+\]
+\end{defbox}
+
+El número de \textbf{rondas} $c$ (la $J$) es un parámetro: a más rondas, más costo para el
+atacante (al usuario solo le cuesta una vez). El \emph{XOR} final ayuda a \textbf{uniformizar}
+los bits y evitar patrones detectables.
+
+\begin{slidebox}
+\textbf{TIP — en Java, JCE implementa PBKDF2:}
+\begin{lstlisting}[style=java]
+PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, bytes * 8);
+SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+byte[] key = skf.generateSecret(spec).getEncoded();
+\end{lstlisting}
+No hay que implementar nada: la librería estándar de seguridad ya lo provee.
+\end{slidebox}
+
+%=====================================================================
+\section{Protocolos sin transmitir la clave}
+%=====================================================================
+
+\textbf{Problema}: autenticar a un usuario remoto suele requerir \emph{enviar} la clave; aun
+sobre un canal seguro, descubrir una comunicación antigua puede comprometerla.
+\textbf{Solución}: \emph{no enviar la clave}.
+
+\subsection{Challenge--Response (pregunta--respuesta)}
+Se valida que el usuario \emph{conoce} el secreto \textbf{sin transmitirlo}.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth]
+  % A y B columnas
+  \node (A0) at (0,0) {\textbf{A}};   \node (B0) at (8,0) {\textbf{B}};
+  \node (A1) at (0,-1.5) {\textbf{A}};\node (B1) at (8,-1.5) {\textbf{B}};
+  \node (A2) at (0,-3) {\textbf{A}};  \node (B2) at (8,-3) {\textbf{B}};
+  \draw[->] (A0) -- node[above]{\{pedido de autenticación\}} (B0);
+  \draw[<-] (A1) -- node[above]{\{\,$r$\,\}} (B1);
+  \node[draw,fill=slideGray,rounded corners,font=\scriptsize] (ch) at (6.6,-0.85) {Challenge};
+  \draw[->,gray] (ch) -- (4.3,-1.45);
+  \draw[->] (A2) -- node[above]{$f(k,r)$} (B2);
+\end{tikzpicture}
+\caption{$B$ envía un \emph{challenge} aleatorio $r$; $A$ responde $f(k,r)$ aplicando una
+función preacordada sobre su clave $k$ y $r$, sin enviar $k$.
+\textit{(Recreación de la diapositiva 29.)}}
+\end{figure}
+
+\subsection{EKE — Encrypted Key Exchange}
+\textbf{Objetivo}: impedir que un atacante adivine claves capturadas en la red.
+\textbf{Mecanismo}: realizar el diálogo \emph{challenge--response} sobre un \textbf{canal
+encriptado} con clave $k_s$. Así el atacante \textbf{no tiene forma de saber si una clave
+es correcta}.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth]
+  \node (A0) at (0,0) {\textbf{A}};   \node (B0) at (8,0) {\textbf{B}};
+  \node (A1) at (0,-1.5) {\textbf{A}};\node (B1) at (8,-1.5) {\textbf{B}};
+  \node (A2) at (0,-3) {\textbf{A}};  \node (B2) at (8,-3) {\textbf{B}};
+  \draw[->] (A0) -- node[above]{$\{$pedido de autenticación$\}\,k_s$} (B0);
+  \draw[<-] (A1) -- node[above]{$\{\,r\,\}\,k_s$} (B1);
+  \draw[->] (A2) -- node[above]{$\{\,f(k,r)\,\}\,k_s$} (B2);
+\end{tikzpicture}
+\caption{Todo el intercambio viaja cifrado bajo $k_s$.
+\textit{(Recreación de la diapositiva 30.)}}
+\end{figure}
+
+\begin{practbox}{Passkeys (mención)}
+Las \emph{passkeys} —cada vez más relevantes— son un caso de challenge--response: el sistema
+te envía un \emph{token} único que firmás con un secreto que solo vos comprobás (PIN, cara,
+huella). \textbf{No enviás ningún dato secreto}: solo devolvés el challenge firmado, y el
+servidor lo verifica. Por debajo hay un esquema de \textbf{clave pública/privada}.
+\end{practbox}
+
+%=====================================================================
+\section{OTP — Claves de un solo uso}
+%=====================================================================
+
+\begin{defbox}{Concepto de OTP}
+Generar claves que sirven \textbf{una única vez} (válidas para una sola sesión/transacción).
+$A$ y $B$ comparten una clave $K$ y un contador $C$:
+\[
+  (K, C) \;\longrightarrow\; \text{OTP} \;\longrightarrow\; (\text{otp},\, C')
+\]
+\textbf{Cuestiones a resolver}: la \emph{generación pseudoaleatoria} y la
+\emph{sincronización} entre usuario y sistema. Dos variantes estandarizadas:
+\textbf{HOTP} (\emph{hmac based}) y \textbf{TOTP} (\emph{time based}).
+La clave secreta es criptográfica, generada aleatoriamente; al enrolar se escanea el QR (o
+se ingresa el código), que es la \emph{representación de la clave}.
+\end{defbox}
+
+\subsection{HOTP — RFC 4226 (basado en HMAC)}
+\[
+  \mathrm{HOTP}(K, C) = \Trunc\bigl(\HMACSHA(K, C)\bigr)
+\]
+\textbf{Truncate} extrae 32 bits de los 160 del MAC:
+\[
+\begin{aligned}
+  \text{offset} &= \mathrm{mac}[19]\ \&\ \texttt{0xf} &&\leftarrow \text{4 bits del último byte}\\
+  \text{bin} &= \mathrm{mac}[\text{offset}\dots\text{offset}{+}3]\ \&\ \texttt{0x7fffffff}\\
+  \text{Result} &= \text{bin}\ \%\ 10^{n} &&(n = \text{cantidad de dígitos})
+\end{aligned}
+\]
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item El \textbf{contador se incrementa en cada uso} $\Rightarrow$ cambia el código.
+  \item Requiere \textbf{sincronización} (\emph{look-ahead}): el servidor calcula varios
+        intentos hacia adelante. Si se desincroniza (p.\ ej.\ pidiendo muchos códigos), suele
+        haber que \emph{borrar y reasociar}.
+  \item Se aconseja \textbf{throttling} del lado del servidor (no actualiza solo).
+  \item Genera códigos de 1 a 9 dígitos; \textbf{se recomienda al menos 6}.
+\end{itemize}
+
+\subsection{TOTP — RFC 6238 (basado en tiempo)}
+Es lo más usado hoy (\emph{authenticators} que cambian solos). Usa un \emph{timestamp} en
+lugar del contador:
+\[
+  \mathrm{TOTP}(K) = \mathrm{HOTP}(K, T),\qquad
+  T = \left\lfloor \frac{\text{current unix time} - T_0}{X} \right\rfloor
+\]
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item $T_0$: tiempo de referencia (\emph{usualmente} $T_0=0$, el \emph{epoch} Unix:
+        1/1/1970 00:00:00).
+  \item $X$: segundos de vida de cada código (\emph{usualmente} $X=30$).
+  \item \textbf{No requiere contador}. Se aconseja un \textbf{drift-window} (cantidad de
+        \emph{ticks} desfasados aceptados, hacia atrás y adelante) por des-sincronización de
+        relojes, más \textbf{throttling}.
+  \item Genera códigos de 1 a 9 dígitos; \textbf{se recomienda al menos 6} (la complejidad de
+        fuerza bruta es la misma que en HOTP: depende solo de la cantidad de dígitos).
+\end{itemize}
+
+%=====================================================================
+\section{Autenticación multifactor (MFA)}
+%=====================================================================
+
+Consiste en requerir \textbf{dos o más factores de distinto tipo}. \emph{Racional}: cada tipo
+de factor requiere comprometer \textbf{distintos assets}, lo que dificulta al atacante
+comprometerlos a la vez. Lo ideal es combinar factores de \textbf{distinta naturaleza}:
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{ll}
+\toprule
+\textbf{Combinación} & \textbf{Ejemplo} \\
+\midrule
+Algo que conozco + algo que tengo & contraseña + SMS/WhatsApp/OTP al celular \\
+Algo que conozco + algo que soy & contraseña + Face ID / huella \\
+Algo que tengo + algo que soy & el celular (concentra ambos) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{warnbox}{El celular concentra dos factores\dots\ y el riesgo}
+El celular combina ``algo que tengo'' (el dispositivo) y ``algo que soy'' (la cara/huella
+leída por él). Es \emph{ventajoso} (dos factores en un dispositivo) pero \emph{endeble}: si
+\textbf{comprometen/clonan el celular}, caen \textbf{ambos factores a la vez}.
+\end{warnbox}
+
+\paragraph{Step-up authentication.} En la práctica se suele pedir \textbf{un solo factor}
+(p.\ ej.\ la clave) y \textbf{elevar} a un segundo factor solo ante \textbf{anomalías de
+contexto} (geolocalización distinta, primer ingreso tras mucho tiempo). Se enrolan múltiples
+factores pero se piden selectivamente, balanceando \textbf{seguridad y usabilidad}. La
+exigencia varía según la \textbf{criticidad de los activos} detrás del usuario.
+
+%=====================================================================
+\section{Autenticación remota y federada (SSO)}
+%=====================================================================
+
+Muchas empresas \textbf{delegan} la autenticación en sistemas externos especializados
+(más robustos) para enfocarse en su negocio. Implica una \textbf{relación de confianza}.
+
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Productos propietarios}: Active Directory Federation Services (ADFS), CAS,
+        Siteminder. \emph{Active Directory} es el estándar de Microsoft (p.\ ej.\ los usuarios
+        del ITBA viven en AD como recursos).
+  \item \textbf{Tecnologías abiertas}:
+        \begin{itemize}[leftmargin=1.2em,itemsep=1pt]
+          \item \textbf{OAuth 2}: protocolo de \emph{autorización}.
+          \item \textbf{OpenID Connect (OIDC)}: agrega la \textbf{capa de autenticación}
+                sobre OAuth\,2 (saber \emph{quién} sos: nombre, foto). OpenID 1 y 2 quedaron
+                obsoletos. Es lo que hay detrás de ``Iniciar sesión con Google/Facebook/Apple''.
+          \item \textbf{SAML} (\emph{Security Assertion Markup Language}): estándar para
+                intercambiar datos entre IdP y SP (autenticar / comunicar que está
+                autenticado).
+        \end{itemize}
+\end{itemize}
+
+\begin{defbox}{SSO y Autenticación Federada}
+\textbf{SSO} (\emph{Single Sign On}): un \textbf{único inicio de sesión} habilita el acceso a
+\textbf{múltiples aplicaciones}. En la \textbf{autenticación federada} colaboran:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Proveedores de Identidad (IdPs)}: autentican al usuario.
+  \item \textbf{Proveedores de Servicios (SPs)}: confían en el IdP.
+\end{itemize}
+El SP \textbf{no} necesita crear un usuario propio: se integra con el sistema de
+autenticación del IdP (login federado).
+\end{defbox}
+
+\begin{practbox}{Autenticación federada en el S.O.}
+Un único conjunto de credenciales permite acceder a múltiples \emph{servidores}.
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{LDAP} (\emph{Lightweight Directory Access Protocol}): permite búsquedas y
+        \textbf{almacena información de autenticación}.
+  \item \textbf{Active Directory} usa LDAP.
+\end{itemize}
+\end{practbox}
+
+%=====================================================================
+\section*{Lectura recomendada}
+\addcontentsline{toc}{section}{Lectura recomendada}
+%=====================================================================
+\begin{center}
+\begin{tcolorbox}[enhanced,colback=itbaBlue!20,colframe=itbaCyanDark,boxrule=1pt,
+  arc=3pt,width=0.85\textwidth,halign=center]
+\large\textbf{Capítulos 12--13}\\[4pt]
+\emph{Computer Security: Art and Science}\\[2pt]
+Matt Bishop
+\end{tcolorbox}
+\end{center}
+\noindent Cubre estos temas y profundiza más (cap.\ 12 — \emph{Authentication}; cap.\ 13 —
+\emph{Design Principles} relacionados). Para SSO/federación, los temas de OAuth2/OIDC/SAML
+exceden el libro y corresponden al estado del arte actual.
+
+%---------------------------------------------------------------------
+\vfill
+\begin{center}\small\itshape\color{black!60}
+Apunte integral de la Clase 7 — Autenticación · Criptografía y Seguridad, ITBA.\\
+Síntesis de teoría (transcripciones + diapositivas) y práctica.
+\end{center}
+
+\end{document}
