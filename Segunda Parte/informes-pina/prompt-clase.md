@@ -76,5 +76,6 @@ de Criptografía y Seguridad, integrando **parte teórica y práctica**.
 | Clase | Tema | Estado |
 |-------|------|--------|
 | 7 | Autenticación | ✅ hecho — `clase07-autenticacion/` |
+| 8 | Principios de Diseño de Seguridad y Flujo de Información | ✅ hecho — `clase08-principios-diseno-seguridad/` |
 
 (ir completando a medida que se generen)
