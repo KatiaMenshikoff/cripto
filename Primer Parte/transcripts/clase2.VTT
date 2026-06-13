@@ -1,0 +1,5734 @@
+WEBVTT
+
+1
+00:00:04.530 --> 00:00:15.219
+Pablo Eduardo Abad: Bien la clase pasada introdujimos un escenario nuevo de ataque.
+
+2
+00:00:15.960 --> 00:00:29.519
+Pablo Eduardo Abad: se acuerdan los primeros escenarios que vimos de ataques o de seguridad tenían que ver con atacantes pasivos, con un atacante que conseguía el texto cifrado o un atacante que conseguía varios textos cifrados.
+
+3
+00:00:30.550 --> 00:00:39.210
+Pablo Eduardo Abad: con la misma clave, la clase pasada vimos un escenario distinto, un atacante activo, un atacante que
+
+4
+00:00:39.920 --> 00:00:45.150
+Pablo Eduardo Abad: o o un escenario que simula un atacante que tiene la capacidad de
+
+5
+00:00:47.400 --> 00:01:02.439
+Pablo Eduardo Abad: elegir o o o de engañar al sistema en el que esté funcionando. Está la el el criptosistema para poder cifrar textos arbitrarios. Y entonces, conceptualmente ganar pares de texto, plan y cifrado
+
+6
+00:01:02.620 --> 00:01:05.119
+Pablo Eduardo Abad: que saben que fueron cifrados con la misma clave
+
+7
+00:01:05.730 --> 00:01:12.230
+Pablo Eduardo Abad: y utilizar esa información para descifrar otros mensajes o u obtener la clave.
+
+8
+00:01:12.740 --> 00:01:24.749
+Pablo Eduardo Abad: Esto les decía, era era un escenario súper importante, porque cuando empezamos a usar criptografía en protocolos en comunicaciones bidireccionales. Esto aparece aparece
+
+9
+00:01:25.120 --> 00:01:28.219
+Pablo Eduardo Abad: de distinta forma, pero aparece como escenario
+
+10
+00:01:28.650 --> 00:01:41.970
+Pablo Eduardo Abad: el ejemplo más fácil es un email cifrado en tránsito. Yo puedo mandar un email a la dirección que sea, y yo puedo definir el cuerpo del email, que es la cifra en algún momento y tengo acceso al texto, plano
+
+11
+00:01:42.110 --> 00:01:43.400
+Pablo Eduardo Abad: y el texto cifrado.
+
+12
+00:01:43.980 --> 00:01:53.499
+Pablo Eduardo Abad: La prueba de seguridad C, P. A Shows, and plain text indistinguible, Hability modelaba ese caso y era muy parecida a a las pruebas que venimos viendo.
+
+13
+00:01:53.820 --> 00:01:57.470
+Pablo Eduardo Abad: Salvo que el atacante, tenía acceso a
+
+14
+00:01:57.870 --> 00:02:03.320
+Pablo Eduardo Abad: un oráculo. Lo llamábamos acceso a la función de cifrado. El atacante nunca conoce la clave.
+
+15
+00:02:03.590 --> 00:02:11.110
+Pablo Eduardo Abad: Lo que tiene a su disposición es una función que le permite cifrar mensajes arbitrarios y obtener la contraparte cifrada. Obviamente.
+
+16
+00:02:12.100 --> 00:02:13.010
+Pablo Eduardo Abad: sí.
+
+17
+00:02:13.910 --> 00:02:17.670
+Pablo Eduardo Abad: Esto Si hago un repaso muy rápido, da origen a
+
+18
+00:02:18.000 --> 00:02:23.859
+Pablo Eduardo Abad: toda una familia nueva de criptosistemas que que vimos en los criptosistemas de bloque
+
+19
+00:02:24.150 --> 00:02:28.349
+Pablo Eduardo Abad: eran criptosistemas que, a diferencia de lo que veníamos trabajando antes.
+
+20
+00:02:28.400 --> 00:02:35.660
+Pablo Eduardo Abad: que veían el mensaje como una secuencia potencialmente infinita, trabajan con mensajes de de longitud fija.
+
+21
+00:02:35.700 --> 00:02:49.800
+Pablo Eduardo Abad: sí a través de algunas propiedades y recurriendo a mecanismos que llamábamos de encadenamiento, nosotros podíamos construir criptosistemas chiquititos de bloque que operaban sobre mensajes de tamaño fijo
+
+22
+00:02:50.570 --> 00:02:57.080
+Pablo Eduardo Abad: y usarlos como bloque básico para construir un criptosistema que cifra cualquier cosa de tamaño arbitrario.
+
+23
+00:02:57.730 --> 00:03:04.779
+Pablo Eduardo Abad: La importancia de esos criptosistemas de bloques que, a diferencia de los de flujo, están muy pensados para ser calculados
+
+24
+00:03:05.160 --> 00:03:11.549
+Pablo Eduardo Abad: en una computadora donde no existe la capacidad, tener números que cuenten hasta infinito, sino que las
+
+25
+00:03:12.000 --> 00:03:21.449
+Pablo Eduardo Abad: las operaciones y los valores están agotados también. Por eso son, en general, mucho más rápidos y, en general, son mucho más usados.
+
+26
+00:03:24.930 --> 00:03:27.799
+Pablo Eduardo Abad: Los criptosistemas C. P. A, secure
+
+27
+00:03:28.910 --> 00:03:33.960
+Pablo Eduardo Abad: terminaban siendo sistemas con o los que habíamos visto con modificaciones
+
+28
+00:03:34.200 --> 00:03:42.100
+Pablo Eduardo Abad: o los de bloques nuevos con modos de encadenamiento en los criptosistemas de flujo. Necesitábamos
+
+29
+00:03:42.460 --> 00:03:49.090
+Pablo Eduardo Abad: que el criptosistema sea no determinista. Así que se le agregan tweets si es un parámetro extra, que es lo que llamamos Iber.
+
+30
+00:03:51.650 --> 00:03:57.520
+Pablo Eduardo Abad: Se acuerdan que hace que si cifrábamos el mismo mensaje con la misma clave, la salida sea distinta.
+
+31
+00:03:57.820 --> 00:04:01.550
+Pablo Eduardo Abad: Pero si ves acuérdense, no son la clave. Es información pública
+
+32
+00:04:01.940 --> 00:04:06.229
+Pablo Eduardo Abad: donde se usa un nivel. El eback forma parte del texto cifrado
+
+33
+00:04:06.470 --> 00:04:08.610
+Pablo Eduardo Abad: y el atacante lo tiene a su disposición
+
+34
+00:04:09.750 --> 00:04:20.409
+Pablo Eduardo Abad: dentro de los criptosistemas de bloque que vimos también un criptosistema de bloque usado en algunos de los 4 modos de encadenamiento que vimos, que eran seguros, o algunos de los que no vimos
+
+35
+00:04:20.660 --> 00:04:22.649
+Pablo Eduardo Abad: que también sue son seguros.
+
+36
+00:04:25.450 --> 00:04:27.130
+Pablo Eduardo Abad: Es: C, V, ¿A Secure.
+
+37
+00:04:27.290 --> 00:04:34.790
+Pablo Eduardo Abad: Sí, esto es el mejor tipo de pruebas de escenarios de seguridad que tenemos hasta ahora.
+
+38
+00:04:35.650 --> 00:04:44.090
+Pablo Eduardo Abad: Vamos a ver un tipo nuevo de ataque como para introducir otro escenario más de seguridad en esta línea de que no hay una única definición
+
+39
+00:04:44.940 --> 00:04:52.120
+Pablo Eduardo Abad: supóngase que nosotros ya tenemos cryptosistemas. Vimos de hecho, al final de la clase pasada algunos criptosistemas
+
+40
+00:04:52.680 --> 00:04:57.970
+Pablo Eduardo Abad: que se usan en la actualidad a I, C, por ejemplo. Así que ya tenemos nuestro arsenal A es
+
+41
+00:04:59.050 --> 00:05:11.779
+Pablo Eduardo Abad: este: o tenemos cripto sistemas de flujo que vamos a usar acá en el ejemplo, porque son más fáciles para para seguir esta idea de ataque, como puede ser Rabi, por ejemplo. Entonces supongo que estamos usando Rabbi.
+
+42
+00:05:12.690 --> 00:05:24.899
+Pablo Eduardo Abad: Y estamos haciendo un sistema de recursos humanos que va a tener la información de de nómina de pago donde va a estar la información personal de los empleados de una empresa y el sueldo. Sí,
+
+43
+00:05:25.190 --> 00:05:32.339
+Pablo Eduardo Abad: supongamos, paremos un segundo por el sueldo. Es muy normal que los sueldos de los empleados sean super sensibles.
+
+44
+00:05:32.710 --> 00:05:37.940
+Pablo Eduardo Abad: O sea, nadie quiere que se publiquen los sueldos de todo el mundo, muy pocas empresas, por lo menos este
+
+45
+00:05:38.420 --> 00:05:43.269
+Pablo Eduardo Abad: aceptan eso. Y cuando estamos desarrollando un sistema.
+
+46
+00:05:43.660 --> 00:05:56.790
+Pablo Eduardo Abad: digo, va a haber un actor que pueda acceder a los datos, siempre por afuera del sistema, que es el administrador de o de la infraestructura de la base de datos. Entonces suele aparecer como requisito. Bueno, necesitamos que ni siquiera esa persona tenga acceso a los sueldos.
+
+47
+00:05:57.060 --> 00:06:00.009
+Pablo Eduardo Abad: ¿y cómo resolvemos eso? Bueno, ya tenemos herramientas.
+
+48
+00:06:00.750 --> 00:06:06.330
+Pablo Eduardo Abad: podemos cifrar esa información. Entonces, tranquilamente, podemos decir que hay
+
+49
+00:06:06.610 --> 00:06:16.550
+Pablo Eduardo Abad: en alguna base de datos alguna tabla si donde tienen que tiene varios campos pero que para simplificarlo, tendrá un identificador que por ahí es el legajo del empleado.
+
+50
+00:06:16.930 --> 00:06:18.869
+Pablo Eduardo Abad: el la idea del empleado
+
+51
+00:06:19.650 --> 00:06:28.520
+Pablo Eduardo Abad: y entre varios campos habrá un campo que es sueldo donde no vamos a poner el valor, sino que ya sabemos cómo resolverlo. Ponemos el valor cifrado.
+
+52
+00:06:29.010 --> 00:06:36.880
+Pablo Eduardo Abad: Sí, esto es lo que estamos recolectando, acá Sí, una tabla donde tenemos los sueldos de los empleados
+
+53
+00:06:37.270 --> 00:06:40.030
+Pablo Eduardo Abad: asociados a cada empleado. Y 1 dice
+
+54
+00:06:40.640 --> 00:06:47.840
+Pablo Eduardo Abad: con esto, me quedo tranquilo si se les ocurre alguna forma de averiguar el sueldo de alguno de esos 4 empleados que está ahí.
+
+55
+00:06:56.960 --> 00:07:01.660
+NICOLÁS CANZONIERI: No sé encriptar sueldos qué sé yo o encriptar números.
+
+56
+00:07:02.420 --> 00:07:05.980
+NICOLÁS CANZONIERI: se mantiene alguna relación de mayor y menor entre ellos o no.
+
+57
+00:07:06.220 --> 00:07:15.369
+Pablo Eduardo Abad: Encriptar números. Mira, pero pero que interesante. Supongamos por un segundo que esto es un como dice ahí el La primera, un criptosistema de flujo que es. C, P: Ahí se equiu.
+
+58
+00:07:15.720 --> 00:07:16.560
+Pablo Eduardo Abad: Sí.
+
+59
+00:07:17.890 --> 00:07:23.810
+Pablo Eduardo Abad: Suponete que yo te digo, voy a ir un poco más allá. Te voy a decir que 1 de esos sueldos es un 1 000 000 de pesos.
+
+60
+00:07:25.370 --> 00:07:31.120
+Pablo Eduardo Abad: Sí, podrías con esa información, tratar de decirme cuál de los 4 es
+
+61
+00:07:48.300 --> 00:07:55.439
+Pablo Eduardo Abad: necesitarías saber la semilla primero de la la semilla del generador pseudo aleatorio, así Joaquín. Porque es un criptosistema de flujo.
+
+62
+00:07:57.910 --> 00:08:02.150
+Pablo Eduardo Abad: ¿qué pasa? Que la semilla depende de la clave. Y la clave como atacante no la vas a saber.
+
+63
+00:08:03.270 --> 00:08:07.099
+Pablo Eduardo Abad: La pregunta es sin saber la clave se les ocurre alguna forma?
+
+64
+00:08:25.030 --> 00:08:26.710
+Pablo Eduardo Abad: Nadie se anima a jugársela.
+
+65
+00:08:32.909 --> 00:08:40.249
+Pablo Eduardo Abad: La respuesta, desde un punto de vista teórico sería, ah, perdón icono, ¿no? Itu tu mensaje si.
+
+66
+00:08:41.049 --> 00:08:43.690
+Pablo Eduardo Abad: o me lo perdí.
+
+67
+00:08:44.250 --> 00:08:47.349
+Pablo Eduardo Abad: no. Hablaste Ok.
+
+68
+00:08:49.150 --> 00:09:03.589
+Pablo Eduardo Abad: encriptar un montón de mensajes y hacer un short para ver? La respuesta es no, No Deberían poder, incluso. Fíjense, Fíjense que les tiró un escenario un poco más ventajoso para ustedes. Una de esas 4 filas tiene encriptado el valor un 1 000 000.
+
+69
+00:09:04.210 --> 00:09:13.809
+Pablo Eduardo Abad: ¿por qué no podrían? Porque incluso si ustedes se encriptan un 1 000 000 por ser un criptosistema. Si piensas cure el criptosistema es no determinístico.
+
+70
+00:09:14.540 --> 00:09:17.800
+Pablo Eduardo Abad: lo cual ustedes pueden gritar el valor un 1 000 000 y no va a ser
+
+71
+00:09:18.010 --> 00:09:24.660
+Pablo Eduardo Abad: ninguno de esos 4 con una probabilidad terriblemente alta, y pueden encriptar
+
+72
+00:09:24.800 --> 00:09:34.020
+Pablo Eduardo Abad: 1 000 000 de veces el valor un 1 000 000, y no deberían llegar a ninguno de esos 4 me siguen
+
+73
+00:09:40.450 --> 00:09:48.399
+Pablo Eduardo Abad: perfecto, o sea, la parte de criptografía que vimos, o sea, es realmente segura. No se puede correcto, o sea. A falta de otro problema, no se puede.
+
+74
+00:09:48.650 --> 00:10:00.530
+Pablo Eduardo Abad: sí, Así que lo que vimos bastante hasta antes estaba bien. O sea, si ustedes consiguen esto, no pueden extraer información, no pueden saber ni ni aproximar un sueldo ni saber si es alto bajo ni sacar el número.
+
+75
+00:10:01.240 --> 00:10:08.559
+Pablo Eduardo Abad: No, no pueden extraer ningún tipo de información sobre la premisa que estamos usando: un criptosistema, C, D, seguro.
+
+76
+00:10:10.550 --> 00:10:15.200
+Pablo Eduardo Abad: Así que estamos tranquilos, o sea, mandamos el sistema de producción y lo usamos
+
+77
+00:10:17.440 --> 00:10:20.450
+Pablo Eduardo Abad: hasta que un día el administrador
+
+78
+00:10:22.280 --> 00:10:24.679
+Pablo Eduardo Abad: dice Okay. Yo no puedo saberlo.
+
+79
+00:10:28.100 --> 00:10:30.190
+Pablo Eduardo Abad: pero lo cambió de alguna manera.
+
+80
+00:10:31.190 --> 00:10:35.630
+Pablo Eduardo Abad: El punto es a veces para montar un ataque.
+
+81
+00:10:36.010 --> 00:10:40.360
+Pablo Eduardo Abad: No necesitamos conocer el valor o el ataque. No está en extraer el valor.
+
+82
+00:10:41.020 --> 00:10:42.000
+Pablo Eduardo Abad: Sí.
+
+83
+00:10:42.420 --> 00:10:46.840
+Pablo Eduardo Abad: ¿qué es lo que estamos haciendo? Acá? Fíjense en esto.
+
+84
+00:10:47.980 --> 00:10:48.860
+Pablo Eduardo Abad: Mhm.
+
+85
+00:10:50.040 --> 00:11:00.969
+Pablo Eduardo Abad: Supongamos que el atacante conoce cuál es su legajo el número de legas azules es información pública y el de su jefe, cosa que 1 también se entera. Sí, Normalmente, el jefe de 1 cobra más que 1 a
+
+86
+00:11:01.860 --> 00:11:07.909
+Pablo Eduardo Abad: sí. Entonces, ¿qué puede hacer alguien que tenga acceso a la base de datos o o que administre la base de datos.
+
+87
+00:11:08.370 --> 00:11:13.820
+Pablo Eduardo Abad: y no tiene idea cuánto gana el jefe, pero podría tomar el valor y hacer un update y
+
+88
+00:11:14.030 --> 00:11:20.470
+Pablo Eduardo Abad: plancharse ese mismo valor y voil aumento de sueldo instantáneo.
+
+89
+00:11:25.100 --> 00:11:30.449
+Pablo Eduardo Abad: Y esto podría ocurrir, Funcionaría en en el esquema que habíamos definido.
+
+90
+00:11:43.220 --> 00:11:46.749
+Pablo Eduardo Abad: ¿podría ¿Podría lo de ganancias. Es es un tema aparte.
+
+91
+00:11:47.470 --> 00:11:54.260
+Pablo Eduardo Abad: pero bueno, se supone que ya nadie cobra menos por pagar ganancias simplemente que cobras menos de de lo que esperarías.
+
+92
+00:11:54.820 --> 00:12:00.719
+Pablo Eduardo Abad: pero no no existen más los saltos. Este que había antes discretos donde te aumentaban y cobrabas menos que antes.
+
+93
+00:12:01.130 --> 00:12:12.470
+Pablo Eduardo Abad: Bueno, volviendo a esto Esto podría ocurrir. ¿sí? Y fíjense que desde el punto de vista del escenario, C, P. A, la propia se sigue manteniendo el atacante nunca
+
+94
+00:12:13.150 --> 00:12:16.519
+Pablo Eduardo Abad: pudo acceder o extraer información del contenido.
+
+95
+00:12:16.830 --> 00:12:20.480
+Pablo Eduardo Abad: pero conocí información a priori en este caso que
+
+96
+00:12:20.650 --> 00:12:23.340
+Pablo Eduardo Abad: la cuarta columna correspondía a alguien
+
+97
+00:12:23.630 --> 00:12:28.590
+Pablo Eduardo Abad: más jerárquico que teóricamente tiene un sueldo más grande. Y eso es esa información. Para montar el ataque.
+
+98
+00:12:30.150 --> 00:12:32.219
+Pablo Eduardo Abad: ¿cómo se puede solucionar esto
+
+99
+00:12:32.520 --> 00:12:37.179
+Pablo Eduardo Abad: si si nos interesa que esto no se pueda hacer, a alguien se le ocurre alguna idea.
+
+100
+00:12:43.850 --> 00:12:48.890
+NICOLÁS CANZONIERI: Y controlar el acceso a la base de datos. Entonces que no.
+
+101
+00:12:48.890 --> 00:12:58.760
+Pablo Eduardo Abad: Siempre hay alguien que la tiene que administrar, que tiene que hacer los backups. Digo, siempre va a haber alguien que que tenga. En general, está súper restringido el acceso a una base de datos en un sistema productivo.
+
+102
+00:12:59.020 --> 00:13:05.040
+Pablo Eduardo Abad: pero siempre hay alguien que pueda ser loguear todo. Ok, es una solución paliativa.
+
+103
+00:13:06.070 --> 00:13:07.240
+Pablo Eduardo Abad: Sí.
+
+104
+00:13:07.240 --> 00:13:08.109
+Enrique Castillo Colombás: Depende de cada 1.
+
+105
+00:13:08.110 --> 00:13:14.090
+Pablo Eduardo Abad: Implica que alguien tiene que estar monitoreando. Leo: si no, no, no sirve
+
+106
+00:13:14.430 --> 00:13:19.430
+Pablo Eduardo Abad: asociar el legajo. Me gusta más porque es como una solución más de tratar de atacar el problema de fondo.
+
+107
+00:13:19.690 --> 00:13:21.460
+Pablo Eduardo Abad: Asociar el legajo. De hecho.
+
+108
+00:13:23.510 --> 00:13:31.290
+Pablo Eduardo Abad: me leíste. La mente es es una forma de tratar de evitar esto. Si yo podría cifrar en vez de solo el sueldo.
+
+109
+00:13:32.000 --> 00:13:35.449
+Pablo Eduardo Abad: podría cifrar cifrar el par empleado sueldo.
+
+110
+00:13:35.810 --> 00:13:41.820
+Pablo Eduardo Abad: Sí vamos a necesitar tener empleado en una en un lugar afuera por un tema de poder llegar a la
+
+111
+00:13:42.130 --> 00:13:48.510
+Pablo Eduardo Abad: a la dupla que tiene esta información? ¿no? Pero el el pelo, la parte cifrada dentro podría tener el
+
+112
+00:13:49.100 --> 00:13:54.529
+Pablo Eduardo Abad: el legajo que nos permitiría hacer esto, porque esto evitaría el problema de antes.
+
+113
+00:13:59.640 --> 00:14:05.100
+NICOLÁS CANZONIERI: Porque el atacante no sabe en realidad qué es el texto plano del del A ver.
+
+114
+00:14:07.450 --> 00:14:14.289
+Pablo Eduardo Abad: A ver Lo que sí sé es correcto, pero no explica por qué esto funcionaría. Hay Filipo. Lo hay. Hay filipo puso una respuesta
+
+115
+00:14:14.590 --> 00:14:21.489
+Pablo Eduardo Abad: que que hace sentido, porque podríamos agregar un chequeo en el mismo sistema automáticamente que verifique que, al descifrar
+
+116
+00:14:22.380 --> 00:14:27.209
+Pablo Eduardo Abad: la el el el resultado de esa columna cheque
+
+117
+00:14:28.140 --> 00:14:37.589
+Pablo Eduardo Abad: que el sueldo del texto plano corre que el perdón, que el legajo del texto plano corresponde al legajo del empleado. Entonces, si yo trato de hacer lo que hacía antes de copiar
+
+118
+00:14:39.540 --> 00:14:42.389
+Pablo Eduardo Abad: una columna en otra, cuando se descifre
+
+119
+00:14:43.010 --> 00:14:48.689
+Pablo Eduardo Abad: este texto cifrado va a tener el legajo de la columna original y el sistema podría darse cuenta que pasó algo.
+
+120
+00:14:53.060 --> 00:14:54.050
+Pablo Eduardo Abad: ¿sí?
+
+121
+00:14:56.290 --> 00:15:03.480
+Pablo Eduardo Abad: Y ahí 1 ya se queda más tranquilo, dice, ya está ya estoy cubierto de todo. Ni siquiera el administrador de la base de datos puede puede ir así.
+
+122
+00:15:03.650 --> 00:15:13.459
+Pablo Eduardo Abad: Resulta que en seguridad el quedarse tranquilo suele ser algo muy difícil, No, lo lo único que hace 1 generalmente es complicar la la la barrera del ataque.
+
+123
+00:15:13.750 --> 00:15:15.340
+Pablo Eduardo Abad: Si 1 hace esto.
+
+124
+00:15:18.450 --> 00:15:25.710
+Pablo Eduardo Abad: resulta que si le toca un administrador que sabe mucho de criptografía, el administrador se puede poner a jugar con ciertos números
+
+125
+00:15:26.290 --> 00:15:32.510
+Pablo Eduardo Abad: y de golpe, por ejemplo, se agregó o o se cambió el sueldo a un valor arbitrario.
+
+126
+00:15:32.840 --> 00:15:37.390
+Pablo Eduardo Abad: Sí, esto es mucho más elaborado. Ya digo, parece magia.
+
+127
+00:15:38.070 --> 00:15:43.289
+Pablo Eduardo Abad: Si cambiando esos 3 bits, se cambió algo. Ahora les voy a explicar rápido por qué.
+
+128
+00:15:43.770 --> 00:15:49.350
+Pablo Eduardo Abad: Pero pero esto es importante conceptualmente porque
+
+129
+00:15:52.490 --> 00:16:01.030
+Pablo Eduardo Abad: nosotros, acá al querer decir que queremos protegernos de este escenario, estamos definiendo, estamos dando otra definición de la seguridad que buscamos. Sí,
+
+130
+00:16:01.490 --> 00:16:06.509
+Pablo Eduardo Abad: Si yo me quedo en la definición informal, es muy fácil quedarse con una solución a medias.
+
+131
+00:16:07.530 --> 00:16:18.220
+Pablo Eduardo Abad: Sí, Entonces, lo que vamos a hacer ahora les cuento este galerazo de los dedos, pero lo que vamos a hacer inmediatamente después es: vamos a construir una definición formal de este escenario
+
+132
+00:16:18.350 --> 00:16:21.960
+Pablo Eduardo Abad: para entender cómo tenemos que protegernos y que no queden huecos.
+
+133
+00:16:22.640 --> 00:16:30.770
+Pablo Eduardo Abad: Sí, pali curioso. ¿cómo funciona esto? Esto explota una característica que tienen varios criptosistemas que se llaman maleabilidad.
+
+134
+00:16:32.360 --> 00:16:42.149
+Pablo Eduardo Abad: que no es muy muy compleja, pero que significa que yo puedo modificar el texto cifrado y esas modificaciones se propagan de alguna manera controlable al texto plano.
+
+135
+00:16:43.090 --> 00:16:52.159
+Pablo Eduardo Abad: Sí, este tipo de ataques ya es. No es genérico. Este es súper específico del criptosistema que estemos usando. Sí, en particular.
+
+136
+00:16:52.480 --> 00:16:59.349
+Pablo Eduardo Abad: sí se necesita conocer qué es lo que está cifrado ahí, en qué formato y que se está usando.
+
+137
+00:16:59.850 --> 00:17:05.099
+Pablo Eduardo Abad: Habíamos dicho que usábamos un criptosistema de flujo. Así que Imaginémonos por un segundo que
+
+138
+00:17:05.349 --> 00:17:14.410
+Pablo Eduardo Abad: de todo el valor de esa línea. La primera parte se liber que se usó para cifrar esa línea. Sí. Y después hay 4 Byte que usamos
+
+139
+00:17:17.530 --> 00:17:21.150
+Pablo Eduardo Abad: para contener el el íntegrar, el entero de
+
+140
+00:17:23.890 --> 00:17:30.940
+Pablo Eduardo Abad: del Legajo y otros 4 Byte que usamos para simplificar como entero también para el sueldo.
+
+141
+00:17:31.200 --> 00:17:35.460
+Pablo Eduardo Abad: Sí, está esto como para para desarrollar ataque.
+
+142
+00:17:35.920 --> 00:17:36.970
+Pablo Eduardo Abad: ¿qué pasa
+
+143
+00:17:38.230 --> 00:17:46.519
+Pablo Eduardo Abad: como es un criptosistema de flujo? Nosotros sabemos que va a haber una secuencia de de bits que usamos como clave que salen de una función generadora. ¿sí?
+
+144
+00:17:47.230 --> 00:17:56.420
+Pablo Eduardo Abad: Y eso va a ser el el texto cifrado? No. Ahora, supóngase que nosotros al texto cifrado, le hacemos short contra un patrón X cualquiera.
+
+145
+00:17:56.970 --> 00:18:12.280
+Pablo Eduardo Abad: un Sórbita Bit contra un patrón. Si Si nosotros desciframos este se prima modificado, si el descifrar que es hacer un sórbitabit de vuelta contra Jedx. Lo que vamos a recuperar es el texto plano original, sor
+
+146
+00:18:13.360 --> 00:18:15.310
+Pablo Eduardo Abad: la modificación que le pusimos
+
+147
+00:18:17.820 --> 00:18:24.669
+Pablo Eduardo Abad: sí. Esta es la propiedad. En este caso particular de maleabilidad que vamos a usar para construir un ataque.
+
+148
+00:18:25.200 --> 00:18:31.019
+Pablo Eduardo Abad: Y cómo funciona la idea de este ataque, que parece todavía magia negra.
+
+149
+00:18:31.820 --> 00:18:45.530
+Pablo Eduardo Abad: Fíjense, yo sé que los últimos 4, los últimos 4 Byte de de esto cifrado son el sueldo. Sí,
+
+150
+00:18:45.630 --> 00:19:01.630
+Pablo Eduardo Abad: supongamos por un segundo que nadie tiene un sueldo tan alto como para usar el cuarto byte este. Así que ya lo restringimos a 3, porque sabemos que el otro vale 0 no importa. Estos son los últimos 3 Byte del pelo, sí que representan el sueldo. Si esta es su representación en binaria.
+
+151
+00:19:01.920 --> 00:19:08.659
+Pablo Eduardo Abad: Nosotros sabemos que descifrando esto, porque es mi sueldo, y yo sé cuánto vale. Si Supongamos que a modo de ejemplo.
+
+152
+00:19:09.050 --> 00:19:11.149
+Pablo Eduardo Abad: mi sueldo es 1, 3, 4, 5,
+
+153
+00:19:12.170 --> 00:19:22.480
+Pablo Eduardo Abad: sí. Estos datos que yo conozco a priori porque es mi sueldo el que estoy modificando. Yo lo sé porque me llega el recibo de sueldo en plano. ¿sí? Y sé que esa tabla tiene que tener ese valor.
+
+154
+00:19:23.800 --> 00:19:28.560
+Pablo Eduardo Abad: ¿qué puedo hacer yo. Entonces, sobre este texto cifrado, Bueno, yo podría aplicarle un short
+
+155
+00:19:28.720 --> 00:19:33.350
+Pablo Eduardo Abad: con un X que vale, es el mismo valor, 1, 3, 4, 5,
+
+156
+00:19:33.910 --> 00:19:37.250
+Pablo Eduardo Abad: ¿Sí? O sea, podría ser un sórbita bit de esto.
+
+157
+00:19:37.540 --> 00:19:43.159
+Pablo Eduardo Abad: ¿sí? Y si llamamos, se prima al resultado de hacer eso, si yo lo descifro. ¿qué voy a obtener?
+
+158
+00:19:43.620 --> 00:19:48.059
+Pablo Eduardo Abad: Voy a obtener el resultado de sor del mensaje original.
+
+159
+00:19:48.260 --> 00:19:52.500
+Pablo Eduardo Abad: Uno, 3, 4, 5 y la perturbación. Uno hace 4, 5,
+
+160
+00:19:52.640 --> 00:19:56.689
+Pablo Eduardo Abad: el sordo de los mensajes iguales se anula, se hacen todos bits en 0. Así que
+
+161
+00:19:56.960 --> 00:20:03.130
+Pablo Eduardo Abad: el descifrar esta parte del mensaje me va a dar una secuencia de todos bits en 0. Ok.
+
+162
+00:20:03.390 --> 00:20:14.860
+Pablo Eduardo Abad: Tomo nota. ¿y qué puedo hacer ahora? Bueno, este es un se prima. Si supongamos que estamos acá, si lo vuelve a perturbar, lo puedo volver a modificar el 0. Fue más que nada, hacerme como una plantilla
+
+163
+00:20:15.320 --> 00:20:20.549
+Pablo Eduardo Abad: de punto de partida para poner el valor que quiera. ¿no? Entonces supongamos que le quiero poner 100 000
+
+164
+00:20:21.210 --> 00:20:24.419
+Pablo Eduardo Abad: si hago la representación en binario del 100 000.
+
+165
+00:20:25.440 --> 00:20:30.099
+Pablo Eduardo Abad: ¿y qué hago a un sórbita bit de este. Se prima
+
+166
+00:20:30.630 --> 00:20:33.699
+Pablo Eduardo Abad: con la representación de 1 000 para obtener que un C segunda.
+
+167
+00:20:33.870 --> 00:20:36.070
+Pablo Eduardo Abad: que es este valor que figura acá abajo
+
+168
+00:20:37.480 --> 00:20:42.090
+Pablo Eduardo Abad: y de vuelta cuando yo descifre Ese segunda va a ser el descifrado se prima.
+
+169
+00:20:43.000 --> 00:20:48.529
+Pablo Eduardo Abad: o sea, todos ceros. Sor 100 000, que son 100 100 1 000.
+
+170
+00:20:49.180 --> 00:20:55.850
+Pablo Eduardo Abad: O sea que si el modifico, el texto cifrado de este valor a este valor.
+
+171
+00:20:57.720 --> 00:21:03.399
+Pablo Eduardo Abad: Yo sé que al descifrarlo pasa de 1, 3, 4, 5 a 100 000,
+
+172
+00:21:08.990 --> 00:21:16.600
+Pablo Eduardo Abad: y esto pasaría toda la verificación que hicimos. Y este ataque ya es mucho más complicado de de resolver.
+
+173
+00:21:20.630 --> 00:21:30.939
+Pablo Eduardo Abad: Se entiende la idea de esto. Este es un ataque ya súper específico, O sea, si tuviésemos otro tipo de criptosistema, se puede montar un ataque parecido, pero va por otro lado.
+
+174
+00:21:31.410 --> 00:21:33.290
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y.
+
+175
+00:21:33.500 --> 00:21:35.350
+Pablo Eduardo Abad: En.
+
+176
+00:21:35.350 --> 00:21:37.020
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Lo que hiciste. Acá te.
+
+177
+00:21:37.020 --> 00:21:37.580
+Pablo Eduardo Abad: Sabes.
+
+178
+00:21:37.580 --> 00:21:43.040
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Oye, tú sabías el texto plano del escrito que estabas cobrando y sabías.
+
+179
+00:21:43.040 --> 00:21:43.470
+Pablo Eduardo Abad: Mhm.
+
+180
+00:21:43.660 --> 00:21:51.439
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Cifrado de lo que estabas cobrando fue hacer un short de el cifrado.
+
+181
+00:21:51.910 --> 00:21:57.630
+Pablo Eduardo Abad: Sistema de flujo no tiene esta. Esto tiene esta forma.
+
+182
+00:21:58.040 --> 00:22:04.469
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Del cifrado con lo que estás cobrando. Y después hiciste otro short de eso
+
+183
+00:22:04.750 --> 00:22:07.620
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: con lo que vos querías con lo que vos querías cobrar.
+
+184
+00:22:08.390 --> 00:22:18.039
+Pablo Eduardo Abad: Sí. El primero es más que nada para anularlo y dejar que el texto cifrado sea 0. Se podría hacer todo esto en un solo paso, que es lo que figura en la planilla, Es el flexor entre
+
+185
+00:22:18.610 --> 00:22:21.480
+Pablo Eduardo Abad: los 3 valores. Esto es más que nada para explicarlo.
+
+186
+00:22:23.080 --> 00:22:32.340
+Pablo Eduardo Abad: O sea, no, no estás obligado a hacer el paso intermedio. Pero está bueno para entender el el ataque. Todo esto porque de vuelta por ser un grito sistema de flujo, tiene esta propiedad de maleabilidad.
+
+187
+00:22:32.870 --> 00:22:34.320
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Pero ¿cómo anulas.
+
+188
+00:22:34.320 --> 00:22:39.000
+Pablo Eduardo Abad: Cifrado, y lo modifico, esa modificación se propaga al texto plano.
+
+189
+00:22:40.140 --> 00:22:44.520
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: El cómo anular, porque estás anulando el 1, 2, 3, 4, 5. Si no se anula en todos los
+
+190
+00:22:45.970 --> 00:22:47.300
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: los ceros.
+
+191
+00:22:47.550 --> 00:22:48.209
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: No sé, no pasa.
+
+192
+00:22:48.210 --> 00:22:48.680
+Pablo Eduardo Abad: Los ojos.
+
+193
+00:22:48.680 --> 00:22:49.590
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: A su madre.
+
+194
+00:22:49.590 --> 00:22:56.119
+Pablo Eduardo Abad: En algunas sacadas, el texto cifrado equivalente, el ce prima no vale 0. El descifrado de ce prima vale 0.
+
+195
+00:22:57.770 --> 00:22:58.670
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Okay.
+
+196
+00:23:00.580 --> 00:23:10.749
+Pablo Eduardo Abad: Si vos vas a tener un valor de ese prima que va a ser, no va a ser 2 0, va a ser 0, 0, 1 0, 1 1, 1, no
+
+197
+00:23:10.950 --> 00:23:14.570
+Pablo Eduardo Abad: 1 1 1 en 1, o sea, vas a lisor entre estas 2 líneas.
+
+198
+00:23:15.130 --> 00:23:16.929
+Pablo Eduardo Abad: Ese es un texto cifrado, eso
+
+199
+00:23:17.170 --> 00:23:20.440
+Pablo Eduardo Abad: una jeringosa que nadie entiende, porque no tenemos la clave.
+
+200
+00:23:20.690 --> 00:23:29.369
+Pablo Eduardo Abad: Lo que sabemos por la propiedad esta de acá arriba es que cuando lo descifremos, el resultado va a ser el exor del mensaje original, 1 entre 4, 5
+
+201
+00:23:29.990 --> 00:23:35.460
+Pablo Eduardo Abad: y la perturbación que metimos, que es esta línea. Uno, 3, 4, 5, va a ser un solo resultado.
+
+202
+00:23:35.710 --> 00:23:36.300
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Por eso que me.
+
+203
+00:23:36.300 --> 00:23:36.810
+Pablo Eduardo Abad: En el.
+
+204
+00:23:36.810 --> 00:23:43.840
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Por 10 vos empezas con el binario, ese 12 de F, 79, ¿correcto?
+
+205
+00:23:43.840 --> 00:23:45.140
+Pablo Eduardo Abad: Un texto cifrado.
+
+206
+00:23:45.330 --> 00:23:47.609
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí es el cifrado, haces un short.
+
+207
+00:23:47.970 --> 00:23:49.010
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: ¿con qué.
+
+208
+00:23:50.220 --> 00:23:53.669
+Pablo Eduardo Abad: Con la representación en binario de 1, 2, 3, 4, 5.
+
+209
+00:23:54.690 --> 00:23:56.010
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Qué es lo que estás cobrando.
+
+210
+00:23:57.680 --> 00:23:59.800
+Pablo Eduardo Abad: Que sería lo que estoy cobrando. Sí,
+
+211
+00:24:01.100 --> 00:24:07.599
+Pablo Eduardo Abad: ¿Por qué? Porque cuando yo descifra ahora el sol entre estos 2 me va a dar otro texto cifrado, llamémoslo, se prima.
+
+212
+00:24:08.150 --> 00:24:08.950
+Pablo Eduardo Abad: Sí,
+
+213
+00:24:09.930 --> 00:24:15.879
+Pablo Eduardo Abad: Este es el prima. Es el resultado haber tomado, se y haberlo hecho sor con un valor arbitrario, X.
+
+214
+00:24:16.400 --> 00:24:17.150
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí.
+
+215
+00:24:17.480 --> 00:24:26.549
+Pablo Eduardo Abad: El de arriba. La propiedad que tiene de maleabilidad de esto es que cuando yo descifre este texto modificado, el resultado de esto, el resultado va a ser
+
+216
+00:24:27.040 --> 00:24:31.830
+Pablo Eduardo Abad: el texto original. Este 1 345 sor
+
+217
+00:24:32.820 --> 00:24:35.219
+Pablo Eduardo Abad: La modificación que le puse al texto cifrado.
+
+218
+00:24:38.060 --> 00:24:43.279
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Entonces el el mensaje da el cifrado y la modificación. Acá El cifrado es el 12 B,
+
+219
+00:24:44.020 --> 00:24:47.730
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: 7 F, nue, F: ¿Siete? Nueve o no.
+
+220
+00:24:48.510 --> 00:24:51.899
+Pablo Eduardo Abad: Ese es el cifrado original. Lo que arriba llamaríamos de
+
+221
+00:24:52.330 --> 00:24:54.930
+Pablo Eduardo Abad: el X es el 1, 4, 5.
+
+222
+00:24:55.730 --> 00:24:56.460
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Okay.
+
+223
+00:24:58.190 --> 00:25:04.610
+Pablo Eduardo Abad: Sí te va a dar un se prima que acá no lo tengo anotado, que sería el resultado del orbital entre estas partes.
+
+224
+00:25:05.180 --> 00:25:05.900
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Entonces.
+
+225
+00:25:06.260 --> 00:25:12.880
+Pablo Eduardo Abad: Lo que sí sabés es que cuando lo decifres, el resultado va a ser 1, 3, 4, 5, shor, una o 3, 4, 5,
+
+226
+00:25:13.680 --> 00:25:16.350
+Pablo Eduardo Abad: o sea, todos ceros.
+
+227
+00:25:19.150 --> 00:25:21.480
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Okay. Y después haces.
+
+228
+00:25:22.610 --> 00:25:35.730
+Pablo Eduardo Abad: Míralo Ahora, si quieres, lo vamos a hacer ahora, le queremos dar un valor arbitrario. Es más fácil partir de 0 para darle un valor arbitrario, entonces este es el prima que llamamos Acá Sería como el C. Vamos a modificarlo de vuelta por el valor que queremos tener
+
+229
+00:25:37.720 --> 00:25:43.780
+Pablo Eduardo Abad: 100 000. Si hacemos un sorbithabit de vuelta entre
+
+230
+00:25:44.390 --> 00:25:50.310
+Pablo Eduardo Abad: lo que eran los Beats del ce prima, y este valor nuevo, ¿no? Y esto es lo que llamamos C. Segunda.
+
+231
+00:25:51.910 --> 00:25:52.550
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Lo que.
+
+232
+00:25:52.550 --> 00:25:57.809
+Pablo Eduardo Abad: Y acá pasa lo mismo cuando yo. Esto es un texto cifrado super aleatorio, si es el de acá abajo. Dicho.
+
+233
+00:25:59.240 --> 00:26:03.610
+Pablo Eduardo Abad: pero cuando yo lo descifre, yo sé que va a ser el se prima sor
+
+234
+00:26:04.670 --> 00:26:06.660
+Pablo Eduardo Abad: el valor por el que lo modifiqué,
+
+235
+00:26:07.870 --> 00:26:12.920
+Pablo Eduardo Abad: o sea 100 000, en este caso, porque puse 100 000, podría haber puesto cualquier otro valor acá.
+
+236
+00:26:17.690 --> 00:26:20.049
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Ahora me está quedando un poco más claro. Gracias.
+
+237
+00:26:22.260 --> 00:26:24.440
+Pablo Eduardo Abad: De nada.
+
+238
+00:26:27.180 --> 00:26:40.980
+Pablo Eduardo Abad: Es un ataque que obviamente se le tiene que ocurrir a alguien no. Si nunca había encima la La idea de maleabilidad es complicado, pero pe a ver. Pero esto es lo que pasa también cuando 1 construye seguridad de de manera informal, ¿no? O sea, es es muy normal
+
+239
+00:26:42.010 --> 00:26:47.789
+Pablo Eduardo Abad: que 1 caiga en la solución ingenieril. Ahora, tengo este problema. Listo. Le agrego información, esta me quedé tranquilo.
+
+240
+00:26:48.020 --> 00:26:52.079
+Pablo Eduardo Abad: El punto acá. Es en seguridad. Eso no alcanza.
+
+241
+00:26:53.060 --> 00:26:53.660
+Pablo Eduardo Abad: Sí.
+
+242
+00:26:53.660 --> 00:26:55.559
+MARTÍN GALLARDO BERTUZZI: Profe, una consulta.
+
+243
+00:26:56.110 --> 00:26:56.780
+Pablo Eduardo Abad: Sí.
+
+244
+00:26:57.080 --> 00:27:00.139
+MARTÍN GALLARDO BERTUZZI: Me podrías repetir bien la definición de maleabilidad.
+
+245
+00:27:01.020 --> 00:27:01.979
+MARTÍN GALLARDO BERTUZZI: Y por qué.
+
+246
+00:27:01.980 --> 00:27:11.299
+Pablo Eduardo Abad: Empleabilidad. Cuando una modificación en el texto cifrado se puede programar de forma sistemática alguna modificación en el texto, plano
+
+247
+00:27:13.960 --> 00:27:20.449
+Pablo Eduardo Abad: muy, muy simple, o sea, yo le cambio un vida al texto cifrado. Y ese dice cambiante plano.
+
+248
+00:27:21.490 --> 00:27:22.960
+MARTÍN GALLARDO BERTUZZI: Perfecto.
+
+249
+00:27:22.960 --> 00:27:25.750
+Pablo Eduardo Abad: La más básica. Hay otras más complejas, pero.
+
+250
+00:27:25.750 --> 00:27:26.190
+MARTÍN GALLARDO BERTUZZI: Ves.
+
+251
+00:27:26.190 --> 00:27:27.359
+Pablo Eduardo Abad: Variabilidad es eso?
+
+252
+00:27:27.460 --> 00:27:29.939
+MARTÍN GALLARDO BERTUZZI: Entendido. Sí. Gracias.
+
+253
+00:27:30.700 --> 00:27:31.600
+Pablo Eduardo Abad: Nada.
+
+254
+00:27:36.880 --> 00:27:44.460
+Pablo Eduardo Abad: ¿cómo es la forma ordenada de hacer esto? Bueno, definamos, definamos la seguridad que queremos sacar.
+
+255
+00:27:44.740 --> 00:27:56.619
+Pablo Eduardo Abad: Sí, que ¿cuál es cuál es el el problema que que queremos resolver acá? De alguna manera que contra qué nos estábamos previniendo? Porque lo que dijimos al principio es en este ataque en particular.
+
+256
+00:27:57.360 --> 00:28:05.339
+Pablo Eduardo Abad: Nunca rompimos esta idea de que el atacante no pueda obtener información que no conoce a partir del texto cifrado.
+
+257
+00:28:05.960 --> 00:28:08.989
+Pablo Eduardo Abad: Sí, ¿de qué nos queremos cubrir en este ataque?
+
+258
+00:28:09.360 --> 00:28:14.620
+Pablo Eduardo Abad: ¿los queremos cubrir de modificaciones al texto cifrado. Esta es una modificación total.
+
+259
+00:28:15.030 --> 00:28:20.609
+Pablo Eduardo Abad: Esta es una modificación parcial, pero las 2 cosas son modificaciones al texto cifrado.
+
+260
+00:28:21.420 --> 00:28:26.599
+Pablo Eduardo Abad: el formalismo, La prueba de seguridad para ese ataque se conoce como
+
+261
+00:28:29.770 --> 00:28:41.370
+Pablo Eduardo Abad: escenario de texto cifrado y elegido. Si 8 encifer Text, un ataque de texto cifrado escogido
+
+262
+00:28:43.570 --> 00:28:52.149
+Pablo Eduardo Abad: es muy parecido cuando lo llevamos a una prueba de seguridad, o sea, a la mínima expresión, en el mejor escenario para el atacante a los que vimos.
+
+263
+00:28:52.510 --> 00:29:02.870
+Pablo Eduardo Abad: Fíjense que sigue la misma dinámica de Vamos a generar un par de mensajes como atacante. Se va a elegir. Uno se lo va a cifrar, y tenemos que entender que averiguar o o decir
+
+264
+00:29:03.280 --> 00:29:08.670
+Pablo Eduardo Abad: si el mensaje recibido es correspondido al primero o al segundo, sí,
+
+265
+00:29:09.070 --> 00:29:18.279
+Pablo Eduardo Abad: como en el escenario de texto plano escogido. Tenemos acceso a un oráculo de cifrado, a una función a la cual le podemos mandar mensajes planos y obtener el mensaje de
+
+266
+00:29:21.330 --> 00:29:22.450
+Pablo Eduardo Abad: que
+
+267
+00:29:22.560 --> 00:29:35.170
+Pablo Eduardo Abad: el mensaje cifrado tal cual está, ¿Cuál es la diferencia en un ataque si si hay, de hecho, es un Cyfar Text que, además el atacante tiene acceso a un oráculo de descifrado.
+
+268
+00:29:35.280 --> 00:29:40.770
+Pablo Eduardo Abad: Puede, para textos cifrados, arbitrarios, obtener el descifrado
+
+269
+00:29:41.770 --> 00:29:52.920
+Pablo Eduardo Abad: sí, y la prueba de seguridad es la misma con una salvedad para que no haya un atacante trivial, no una vez que 1 recibe el texto cifrado no puede pedir el descifrado de ese texto.
+
+270
+00:29:55.110 --> 00:30:02.660
+Pablo Eduardo Abad: Sí, pero la prueba es la misma. La prueba es bueno si tenés acceso tanto para cifrar como para descifrar
+
+271
+00:30:05.250 --> 00:30:12.699
+Pablo Eduardo Abad: que no puedas extraer ningún tipo de
+
+272
+00:30:13.740 --> 00:30:24.549
+Pablo Eduardo Abad: de información. Si porque si pudieses extraer tipo de información En este escenario, quiere decir que Vos podés hacer una modificación en la cual la modificación tenga sentido para Vos
+
+273
+00:30:28.510 --> 00:30:38.239
+Pablo Eduardo Abad: es un poco más largo el trecho, porque este ataque es un poco más cubre contra otros escenarios. Es una versión más paranoica, o sea, no cubre sólo contra este problema.
+
+274
+00:30:38.510 --> 00:30:41.550
+Pablo Eduardo Abad: Pude encontrar cualquier familia de modificaciones.
+
+275
+00:30:42.860 --> 00:30:49.549
+Pablo Eduardo Abad: Tenemos esta prueba de seguridad. Así que la buena noticia es: en vez de estar jugando gato y ratón de
+
+276
+00:30:50.310 --> 00:30:59.400
+Pablo Eduardo Abad: o sale el problema, lo arreglo me encuentran. Otro problema. Lo arreglo me encuentran otro. Tenemos una prueba de seguridad abarcativa que nos cubría de todos estos tipos de problemas.
+
+277
+00:31:00.760 --> 00:31:08.169
+Pablo Eduardo Abad: La mala noticia es que ningún criptosistema de los que vimos hasta el momento es sí, si hay sequío.
+
+278
+00:31:10.500 --> 00:31:21.040
+Pablo Eduardo Abad: Así que de todo lo que vimos hasta ahora, ninguno de los criptosistemas pasa esta prueba sí y, en particular, y en particular, porque ocurre eso porque
+
+279
+00:31:21.750 --> 00:31:33.820
+Pablo Eduardo Abad: los criptosistemas, el cifrado de información está pensado para resolver problemas de confidencialidad, de transferencia de información
+
+280
+00:31:33.940 --> 00:31:42.000
+Pablo Eduardo Abad: y estos ataques no se basan en transferencia de información, se basan en manipulación, en modificaciones de la información, sí,
+
+281
+00:31:42.570 --> 00:31:47.689
+Pablo Eduardo Abad: así que ningún criptosistema de los que vimos y de los que no vimos resuelve este problema.
+
+282
+00:31:47.970 --> 00:31:57.580
+Pablo Eduardo Abad: Para poder entender cómo resolver este problema vamos a pasar a otro tipo de funciones de criptografía, sí que
+
+283
+00:31:58.170 --> 00:32:04.100
+Pablo Eduardo Abad: atañen a otro de los grandes problemas de seguridad. Si el el hasta Ahora estuvimos viendo
+
+284
+00:32:04.650 --> 00:32:13.020
+Pablo Eduardo Abad: criptosistemas que nos ayudan a 1 de los grandes problemas de seguridad, que es la confidencialidad. ¿cómo controlamos la diseminación de información.
+
+285
+00:32:13.400 --> 00:32:16.450
+Pablo Eduardo Abad: El ataque que vimos recién es un problema de integridad.
+
+286
+00:32:16.660 --> 00:32:19.840
+Pablo Eduardo Abad: ¿cómo confiamos
+
+287
+00:32:21.470 --> 00:32:28.310
+Pablo Eduardo Abad: en la información que estamos usando, ¿Cómo confiamos en que no fue modificada. Aunque el origen es el
+
+288
+00:32:28.460 --> 00:32:34.340
+Pablo Eduardo Abad: el origen de de la información es confiable, ¿sí?
+
+289
+00:32:37.340 --> 00:32:44.980
+Pablo Eduardo Abad: Así que por un segundo borrón y cuenta nueva, vimos criptosistemas, vimos cripto sistemas de flujo, vimos cripto sistemas de bloque.
+
+290
+00:32:45.070 --> 00:32:57.780
+Pablo Eduardo Abad: Llegamos como a un límite donde los criptosistemas se nos quedan cortos si vamos a hacer una pausa de criptosistemas, después vamos a volver si y vamos a pasar a otro campo de la criptografía, si vamos a entrar en el mundo de la integridad
+
+291
+00:32:58.070 --> 00:33:04.840
+Pablo Eduardo Abad: y la primera función criptográfica o primitiva criptográfica que vamos a ver en este campo se llaman Mac
+
+292
+00:33:05.780 --> 00:33:13.099
+Pablo Eduardo Abad: Mac no tiene nada que ver con las direcciones de red que que van a ver o vieron en redes y protocolos.
+
+293
+00:33:13.380 --> 00:33:14.549
+Pablo Eduardo Abad: sino que es
+
+294
+00:33:14.700 --> 00:33:26.339
+Pablo Eduardo Abad: el acrónimo de mesach autentication code o código de autenticación de mensajes, y refleja un poco conceptualmente la idea de cómo se van a usar este tipo de primitivas.
+
+295
+00:33:28.660 --> 00:33:34.250
+Pablo Eduardo Abad: La definición formal de un Mac es una terna de algoritmos.
+
+296
+00:33:34.390 --> 00:33:46.770
+Pablo Eduardo Abad: sí parecido a a lo que vimos. Uno de esos algoritmos es el generador de clave igual a como venía con los criptosistemas. Pero ahí se acaba la similitud. Si las
+
+297
+00:33:47.040 --> 00:33:54.279
+Pablo Eduardo Abad: los macs tienen 2 operaciones: una función de etiquetado y una función de verificación.
+
+298
+00:33:55.010 --> 00:34:03.420
+Pablo Eduardo Abad: la función de etiquetado, parte de un mensaje arbitrario o mensajes planos y una clave, y genera una etiqueta
+
+299
+00:34:04.830 --> 00:34:11.999
+Pablo Eduardo Abad: y la función de verificación parte de una clave, un mensaje plano y una etiqueta. Y básicamente
+
+300
+00:34:12.679 --> 00:34:19.219
+Pablo Eduardo Abad: es un booliano que dice: pasa la verificación o no pasa. La verificación sí
+
+301
+00:34:19.480 --> 00:34:28.679
+Pablo Eduardo Abad: parecido a a a cómo funcionan los criptosistemas. La propiedad básica que relaciona a a las 2 funciones principales
+
+302
+00:34:29.060 --> 00:34:30.200
+Pablo Eduardo Abad: a las 3
+
+303
+00:34:30.310 --> 00:34:41.049
+Pablo Eduardo Abad: es que para cualquier mensaje y clave válidos. La etiqueta que genera un mensaje pasa a la verificación de ese mismo mensaje con la etiqueta.
+
+304
+00:34:42.810 --> 00:34:50.320
+Pablo Eduardo Abad: Sí, entonces tenemos una función en la cual, con una clave dada, le tiro, un mensaje me genera una etiqueta.
+
+305
+00:34:50.510 --> 00:34:55.339
+Pablo Eduardo Abad: Si un valor arbitrario que representaría al mensaje de alguna manera.
+
+306
+00:34:55.560 --> 00:35:01.279
+Pablo Eduardo Abad: Y tenemos una función que le pasó con la clave. El mensaje y la etiqueta, y me dice si son válidos o no
+
+307
+00:35:02.670 --> 00:35:09.359
+Pablo Eduardo Abad: así funciona o así es la idea del Mac. Esta es la propiedad básica parecido a como
+
+308
+00:35:10.580 --> 00:35:19.689
+Pablo Eduardo Abad: hablábamos en los criptosistemas. Hay un montón de funciones que van a pasar esta prueba. De hecho, podríamos decir que la función identidad
+
+309
+00:35:19.820 --> 00:35:21.490
+Pablo Eduardo Abad: como etiquetadora
+
+310
+00:35:22.030 --> 00:35:28.899
+Pablo Eduardo Abad: y la función de igualdad como verificadora cumple con estas propiedades, llama en un mensaje. Y la etiqueta es el mismo mensaje.
+
+311
+00:35:29.090 --> 00:35:33.959
+Pablo Eduardo Abad: Y para verificarlos, compara el mensaje y la etiqueta y veo si son iguales, cumpliría esta propiedad?
+
+312
+00:35:34.380 --> 00:35:36.990
+Pablo Eduardo Abad: No nos suena muy seguro. No
+
+313
+00:35:38.860 --> 00:35:48.690
+Pablo Eduardo Abad: vamos a definir el escenario de seguridad si la propiedad de seguridad que tienen los Macs. Se llama resistencia a falsificaciones.
+
+314
+00:35:51.540 --> 00:35:52.630
+Pablo Eduardo Abad: Sí,
+
+315
+00:35:53.250 --> 00:36:00.389
+Pablo Eduardo Abad: es bastante elocuente el nombre, pero tiene que ver con con el el para que vamos a usar los Macs.
+
+316
+00:36:00.540 --> 00:36:10.420
+Pablo Eduardo Abad: que sería una falsificación en la terminología de Max, sería que alguien genere sin conocer la clave, un mensaje y una etiqueta que pase la verificación.
+
+317
+00:36:10.670 --> 00:36:14.320
+Pablo Eduardo Abad: Y eso es literalmente lo que recoge la prueba.
+
+318
+00:36:14.800 --> 00:36:20.560
+Pablo Eduardo Abad: Fíjense cómo funciona la prueba de Mcforge de falsificaciones de backs
+
+319
+00:36:21.330 --> 00:36:29.150
+Pablo Eduardo Abad: que de vuelta, pone a competir a un criptosistema, perdón, un mac en este caso, tengo que corregirlo
+
+320
+00:36:29.290 --> 00:36:32.030
+Pablo Eduardo Abad: y un adversario.
+
+321
+00:36:32.630 --> 00:36:35.010
+Pablo Eduardo Abad: Sí, la la prueba
+
+322
+00:36:35.230 --> 00:36:40.230
+Pablo Eduardo Abad: tiene una estructura un poco distinta a las que vimos, si es se va a elegir una clave.
+
+323
+00:36:40.530 --> 00:36:46.860
+Pablo Eduardo Abad: El adversario obtiene un oráculo etiquetador. O sea, tiene acceso a una función.
+
+324
+00:36:47.500 --> 00:37:04.930
+Pablo Eduardo Abad: Yo les digo: para nosotros los ingenieros, es fácil verlo, como imagínense que hay una función remota a la que puede llamar. Pero es como una caja negra. No tiene acceso adentro, como funciona. Entonces, en particular, no tiene acceso a la clave el atacante, pero el atacante puede conseguir la etiqueta de los mensajes que quiera
+
+325
+00:37:06.810 --> 00:37:11.709
+Pablo Eduardo Abad: sí y, de hecho, a a se le permite realizar las evaluaciones que quiera.
+
+326
+00:37:12.450 --> 00:37:13.390
+Pablo Eduardo Abad: Sí
+
+327
+00:37:14.430 --> 00:37:21.310
+Pablo Eduardo Abad: y se le pide que, después de hacer las evaluaciones que se le ocurran emita un mensaje y una etiqueta
+
+328
+00:37:25.810 --> 00:37:31.129
+Pablo Eduardo Abad: ganando la prueba. Si ese mensaje y esa etiqueta pasan la verificación.
+
+329
+00:37:31.420 --> 00:37:41.240
+Pablo Eduardo Abad: Sí, acá. También aparece una restricción extra para no hacer trivial el ataque, que es si el atacante pidió
+
+330
+00:37:41.400 --> 00:37:47.600
+Pablo Eduardo Abad: distintas evaluaciones de de de muchos valores, no puede emitir un mensaje que sea 1 de esos valores.
+
+331
+00:37:47.710 --> 00:37:54.029
+Pablo Eduardo Abad: Si yo pedí la etiqueta del mensaje, Hola, no puedo emitir Hola. Y la etiqueta que me dio la función.
+
+332
+00:37:54.650 --> 00:37:57.710
+Pablo Eduardo Abad: Sí, la Y la idea es salir de esos escenarios triviales.
+
+333
+00:37:58.170 --> 00:38:04.819
+Pablo Eduardo Abad: porque en en el mundo real no va a tener esta posibilidad del atacante.
+
+334
+00:38:08.090 --> 00:38:10.999
+Pablo Eduardo Abad: Se entiende la idea de la prueba de seguridad.
+
+335
+00:38:12.970 --> 00:38:17.030
+Pablo Eduardo Abad: Después es más o menos la misma idea, salvo que acá
+
+336
+00:38:17.950 --> 00:38:23.409
+Pablo Eduardo Abad: si el Mac fuese infalsificable, si lo que va a ocurrir es que, a
+
+337
+00:38:24.030 --> 00:38:30.249
+Pablo Eduardo Abad: a diferencia de antes que tenía que elegir un valor entre 0 y 1 acá tiene que me tiro un par de etiquetas válidas. Sí,
+
+338
+00:38:30.520 --> 00:38:32.969
+Pablo Eduardo Abad: si A no tiene forma
+
+339
+00:38:33.610 --> 00:38:39.819
+Pablo Eduardo Abad: de hacer falsificaciones. La cantidad de veces que el atacante gana la prueba va a tender a 0,
+
+340
+00:38:40.520 --> 00:38:44.709
+Pablo Eduardo Abad: que es lo que se recoge en en la definición de infalsificable.
+
+341
+00:38:46.520 --> 00:38:49.320
+Pablo Eduardo Abad: Sí, ¿Qué significa esto en criollo?
+
+342
+00:38:50.990 --> 00:39:01.330
+Pablo Eduardo Abad: Si lo importante de la prueba de seguridad es que nos dice para qué podemos usar la función. Entonces, ¿qué nos dice la prueba de seguridad que si tenemos un Mac que que es infalsificable.
+
+343
+00:39:01.800 --> 00:39:07.439
+Pablo Eduardo Abad: Sí, yo, para generar una etiqueta y para validarla necesito conocer la clave.
+
+344
+00:39:08.360 --> 00:39:15.199
+Pablo Eduardo Abad: ¿sí? Y teniendo un mensaje y su etiqueta, nadie que no tenga la clave, puede validarlos.
+
+345
+00:39:19.310 --> 00:39:21.030
+Pablo Eduardo Abad: porque si pudiese hacerlo.
+
+346
+00:39:22.860 --> 00:39:31.049
+Pablo Eduardo Abad: podría emitir una falsificación. Nadie puede, con un mensaje y su etiqueta, modificar el mensaje de tal forma que cuando yo lo valide
+
+347
+00:39:31.320 --> 00:39:33.119
+Pablo Eduardo Abad: la verificación siga pasando.
+
+348
+00:39:34.550 --> 00:39:39.920
+Pablo Eduardo Abad: Porque si yo, como atacante, tengo un mensaje y una validación que lo podría conseguir
+
+349
+00:39:40.610 --> 00:39:45.449
+Pablo Eduardo Abad: en el paso 3 y logro: producir un mensaje distinto.
+
+350
+00:39:46.810 --> 00:39:56.610
+Pablo Eduardo Abad: Con una etiqueta válida estaría ganando la prueba de autenticación de de falsificación, entonces
+
+351
+00:39:57.290 --> 00:40:05.260
+Pablo Eduardo Abad: no sabemos qué forma tienen, pero créanme que existen funciones Mac infalsificables
+
+352
+00:40:05.520 --> 00:40:13.669
+Pablo Eduardo Abad: desde un punto de vista de uso práctico, significan que yo las puedo utilizar para generar etiquetas, y voy a tener la garantía de que sin la clave
+
+353
+00:40:14.260 --> 00:40:18.700
+Pablo Eduardo Abad: nadie va a poder modificar el mensaje o la etiqueta
+
+354
+00:40:20.170 --> 00:40:23.009
+Pablo Eduardo Abad: y que pase la validación cuando yo lo valida.
+
+355
+00:40:23.330 --> 00:40:26.980
+Pablo Eduardo Abad: Entonces se convierten en un mecanismo muy duro
+
+356
+00:40:27.660 --> 00:40:31.930
+Pablo Eduardo Abad: para poder detectar modificaciones no autorizadas de información.
+
+357
+00:40:35.570 --> 00:40:41.920
+Pablo Eduardo Abad: Sí, el problema: integridad lo vamos a volver a ver en la segunda parte de la materia.
+
+358
+00:40:42.770 --> 00:40:47.559
+Pablo Eduardo Abad: Uno 1 lo puede explicar muy, muy ingenuamente, como
+
+359
+00:40:50.080 --> 00:40:55.119
+Pablo Eduardo Abad: el problema de evitar la modificación de informa de información.
+
+360
+00:40:55.350 --> 00:41:02.290
+Pablo Eduardo Abad: La realidad es que evitar la modificación es algo demasiado abierto y demasiado complejo. Se imagínense
+
+361
+00:41:02.980 --> 00:41:10.639
+Pablo Eduardo Abad: que ustedes están mandando un mensaje por Internet, Sí, y necesitan.
+
+362
+00:41:12.260 --> 00:41:16.600
+Pablo Eduardo Abad: Voy a poner entre comillas, garantizar que nadie modifique esa información.
+
+363
+00:41:16.710 --> 00:41:20.780
+Pablo Eduardo Abad: Para hacer eso, necesitan controlar todos los lugares por donde va yendo el mensaje.
+
+364
+00:41:22.370 --> 00:41:36.519
+Pablo Eduardo Abad: si cuando el canal de comunicaciones no es seguro. Quiere decir que alguien se puede parar en el medio, podría estar modificando los mensajes. Entonces, en general. En general, el problema de integridad no es evitar la modificación, porque muchas veces no se puede
+
+365
+00:41:36.840 --> 00:41:38.180
+Pablo Eduardo Abad: sino detectarla.
+
+366
+00:41:39.010 --> 00:41:48.549
+Pablo Eduardo Abad: pues si nosotros podemos detectar una modificación. Podemos definir después qué hacer, retransmitir el mensaje, mandar una alerta, abortar la operación.
+
+367
+00:41:49.090 --> 00:42:01.259
+Pablo Eduardo Abad: pero en general excede a a nuestras capacidades, porque muchas de estas cosas después se pueden tocar en el mundo físico, también exceda al sistema el poder evitar que la información sea cambiada.
+
+368
+00:42:02.400 --> 00:42:12.809
+Pablo Eduardo Abad: Si si volvemos al ejemplo de la base de datos, yo puedo tener mi sistema, mi sistema graba cifra de cifra, yo no puedo evitar dentro del sistema que alguien entre a la base de datos por afuera.
+
+369
+00:42:13.340 --> 00:42:17.470
+Pablo Eduardo Abad: Es más, y si yo cierro la base de datos. Y no sé este
+
+370
+00:42:17.720 --> 00:42:27.439
+Pablo Eduardo Abad: en un ataque de locura le le saco la clave y ni la administrador puede hacer. Yo no puedo evitar que alguien entre al servidor y toque el disco rígido en lugar donde están los datos.
+
+371
+00:42:28.250 --> 00:42:32.459
+Pablo Eduardo Abad: siempre hay una forma de de eventualmente modificar los datos.
+
+372
+00:42:34.370 --> 00:42:42.290
+Pablo Eduardo Abad: Entonces, cuando hablemos de integridad, vamos a centrarnos más que nada en cómo detectar ese tipo de modificaciones, porque evitarlas termina siendo una
+
+373
+00:42:42.880 --> 00:42:44.320
+Pablo Eduardo Abad: una imposibilidad
+
+374
+00:42:48.200 --> 00:42:49.040
+Pablo Eduardo Abad: mhm.
+
+375
+00:42:56.670 --> 00:43:09.569
+Pablo Eduardo Abad: Dos observaciones de la prueba de seguridad. Sí, el La primera es por tener acceso a este oráculo, el adversario podría elegir arbitrariamente cualquier mensaje para para cifrar. Si.
+
+376
+00:43:10.800 --> 00:43:23.439
+Pablo Eduardo Abad: y esto esto tuvo importancia por un hecho que ocurre. Histórico. Se considera roto el Mac, o sea, se considera falsificable. Si el adversario puede falsificar cualquier mensaje, o sea, puede generar un M y T.
+
+377
+00:43:24.860 --> 00:43:29.939
+Pablo Eduardo Abad: Este que pase de la validación, independientemente si tiene sentido o no.
+
+378
+00:43:30.050 --> 00:43:37.409
+Pablo Eduardo Abad: Sí. Y esto es importante porque en en el 2 004
+
+379
+00:43:37.570 --> 00:43:45.180
+Pablo Eduardo Abad: Sí, un grupo de matemáticos encontró una: un nuevo tipo de ataque sobre los Macs.
+
+380
+00:43:47.120 --> 00:43:52.299
+Pablo Eduardo Abad: Un ataque matemático bastante bastante sofisticado
+
+381
+00:43:53.640 --> 00:43:59.900
+Pablo Eduardo Abad: a a nivel Breakfrie, O sea, fue un cambio radical. Este que redefinió toda toda esta parte de la criptografía
+
+382
+00:44:00.420 --> 00:44:06.730
+Pablo Eduardo Abad: en particular afectaba a cosas complicadas, como la autenticación de usuario de Windows.
+
+383
+00:44:07.000 --> 00:44:13.520
+Pablo Eduardo Abad: La primera respuesta de todas las empresas fue ese ataque. Es teórico.
+
+384
+00:44:14.740 --> 00:44:30.589
+Pablo Eduardo Abad: podés generar falsificaciones, pero la falsificación no tiene sentido. Sí, el problema es que el ataque no se quedó ahí, o sea, generar una de esas falsificaciones era caro, costaba como 5 h de procesamiento en una de las supercomputadoras más más potentes de
+
+385
+00:44:31.220 --> 00:44:32.489
+Pablo Eduardo Abad: de ese tiempo.
+
+386
+00:44:33.430 --> 00:44:42.800
+Pablo Eduardo Abad: ¿qué pasó? O sea, cuando cuando los como es cuando los tiburones huelen sangre, van derecho ahí, o sea, ese paper muy seminal de Wang
+
+387
+00:44:43.020 --> 00:44:56.839
+Pablo Eduardo Abad: en el 2 004 dio origen a más de 40 papers de gente que siguió perfeccionando el ataque. Entonces lo que primero costaba 5 h, una supercomputadora pasa a costar. Tres después pasó a costar. Una
+
+388
+00:44:57.080 --> 00:44:59.949
+Pablo Eduardo Abad: después se pudo ejecutar en una computadora común.
+
+389
+00:45:00.330 --> 00:45:05.730
+Pablo Eduardo Abad: Después se automatizó una parte manual que había y se lo volvió totalmente genérico al ataque.
+
+390
+00:45:06.830 --> 00:45:18.830
+Pablo Eduardo Abad: Después se lo siguió acelerando. Después se le encontró trabajo si, y después de un par de años más o menos por el 2 007. Básicamente, teníamos la capacidad de generar 1 000 000 de falsificaciones
+
+391
+00:45:19.650 --> 00:45:22.550
+Pablo Eduardo Abad: por segundo en una notebook común y corriente
+
+392
+00:45:23.400 --> 00:45:37.130
+Pablo Eduardo Abad: cruzado ese umbral que pasó. Alguien dijo, bueno, está bien, yo genero cosas sin sentido, pero en en lugares donde esto está restringido donde, por ejemplo, este Mac protegía la contraseña de un usuario.
+
+393
+00:45:39.070 --> 00:45:45.640
+Pablo Eduardo Abad: yo necesito que la contraseña termine siendo una serie de caracteres que pueda escribir desde un teclado con el que sea Naski.
+
+394
+00:45:46.480 --> 00:45:53.229
+Pablo Eduardo Abad: Me pongo a generar después generar, No sé, 1 000 000 000 de combinaciones, algunas seguro que le pegan y empezaron a salir
+
+395
+00:45:53.780 --> 00:45:58.020
+Pablo Eduardo Abad: este ataques reales ya usando eso. Entonces
+
+396
+00:45:59.400 --> 00:46:07.649
+Pablo Eduardo Abad: esto es muy común. Digo la la la primera respuesta de alguien que imagínense, dedicó toda su vida a crear algún tipo de función de este tipo. Es
+
+397
+00:46:07.820 --> 00:46:13.859
+Pablo Eduardo Abad: cuando aparece un ataque. Es nada. Ese ataque es teórico. Ese ataque no sirve como que atacaron a a su razón de ser.
+
+398
+00:46:14.010 --> 00:46:22.950
+Pablo Eduardo Abad: La historia nos demostró que 1 no puede tomar a la ligera un ataque publicado una vez que se demuestra que el ataque es real, aunque sea teórico.
+
+399
+00:46:23.980 --> 00:46:29.959
+Pablo Eduardo Abad: En la clase pasada hablábamos de criptosistemas seguros, por un lado, quebrados
+
+400
+00:46:30.120 --> 00:46:36.639
+Pablo Eduardo Abad: y hablamos de un limbo en el medio que son los debilitados, sí, este es el problema de la de la zona gris de
+
+401
+00:46:36.930 --> 00:46:38.480
+Pablo Eduardo Abad: de criptosistemas
+
+402
+00:46:38.650 --> 00:46:49.430
+Pablo Eduardo Abad: debilitados acá pasó con con el Mac. Si que hoy esté debilitado, no quiere decir que los ataques que se descubrieron no vayan a mejorar. Y si mejoran lo suficiente, pasamos de debilitado a quebrado.
+
+403
+00:46:50.040 --> 00:46:55.059
+Pablo Eduardo Abad: entonces es como señal de advertencia. No hay que correr de hoy para mañana.
+
+404
+00:46:55.540 --> 00:47:02.249
+Pablo Eduardo Abad: pero vayamos pensando si si nos pasa que en algún sistema que tenemos la función criptográfica que sea
+
+405
+00:47:02.780 --> 00:47:05.210
+Pablo Eduardo Abad: que ha debilitado por un ataque publicado
+
+406
+00:47:08.550 --> 00:47:09.280
+Pablo Eduardo Abad: Mhm.
+
+407
+00:47:13.120 --> 00:47:20.399
+Pablo Eduardo Abad: Vamos a Vamos a pensar un poco así así. De paso, No los duermo.
+
+408
+00:47:21.420 --> 00:47:25.969
+Pablo Eduardo Abad: Tres ejemplos de posibles candidatos de función de Mac.
+
+409
+00:47:26.180 --> 00:47:32.420
+Pablo Eduardo Abad: Sí, y vamos a evaluar la seguridad de estos de acuerdo a la prueba de falsificación que vimos.
+
+410
+00:47:32.850 --> 00:47:33.890
+Pablo Eduardo Abad: Te parece.
+
+411
+00:47:34.640 --> 00:47:41.160
+Pablo Eduardo Abad: Fíjense el el primer Mac defina la función de etiquetado. Como
+
+412
+00:47:41.350 --> 00:47:48.089
+Pablo Eduardo Abad: el resultado va a ser un sorbida bit entre el mensaje
+
+413
+00:47:48.630 --> 00:47:53.700
+Pablo Eduardo Abad: y la secuencia. Un general pseudo aleatoria Sí, es una forma
+
+414
+00:47:54.930 --> 00:47:59.830
+Pablo Eduardo Abad: rimbombante de decir, tomamos un grito de sistema de flujo. Y lo usamos como si fuese un Mac.
+
+415
+00:48:02.550 --> 00:48:07.279
+Pablo Eduardo Abad: la función Mac que devuelve devuelve una etiqueta. ¿se acuerdan. Entonces.
+
+416
+00:48:09.780 --> 00:48:19.750
+Pablo Eduardo Abad: ¿cuál es la idea. Acá. Entonces tenemos un mensaje y su etiqueta va a ser tan larga como el mensaje y va a ser el resultado de haber hecho un sorbitabit contra las claves generadas.
+
+417
+00:48:20.720 --> 00:48:25.159
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Pero si las claves generales de un generador de laboratorio, el primer
+
+418
+00:48:25.300 --> 00:48:28.440
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: el vector de iniciarización, el primero va a ser siempre el mismo.
+
+419
+00:48:32.300 --> 00:48:33.780
+Pablo Eduardo Abad: Ahí va buenísimo.
+
+420
+00:48:34.280 --> 00:48:47.280
+Pablo Eduardo Abad: perfecto. Perfecto. La idea, la idea de este ejercicio mental es discutir ese tipo de cosas. Sí, lo que decís es correcto, o sea, el la salida de este generador. Lo que vemos acá. Como Gk es determinística.
+
+421
+00:48:47.700 --> 00:48:48.980
+Pablo Eduardo Abad: Entonces.
+
+422
+00:48:52.570 --> 00:48:59.089
+Pablo Eduardo Abad: si yo averiguo a ver. Fíjense que etiquetar algo es hacerle short contra esta salida. Si yo llego a averiguar gd
+
+423
+00:49:00.500 --> 00:49:03.680
+Pablo Eduardo Abad: en i mover, o sea puede etiquetar cualquier mensaje
+
+424
+00:49:04.700 --> 00:49:09.430
+Pablo Eduardo Abad: si se supone que yo, para averiguar G Dk: para generar la secuencia necesito la clave.
+
+425
+00:49:10.360 --> 00:49:15.190
+Pablo Eduardo Abad: pero hay otros mecanismos, porque vayamos a lo que pueda hacer el adversario. El adversario
+
+426
+00:49:15.660 --> 00:49:20.169
+Pablo Eduardo Abad: en una de estas pruebas puede evaluar y obtener el Mac de lo que quiera
+
+427
+00:49:20.440 --> 00:49:24.540
+Pablo Eduardo Abad: mientras no se ajuste a lo que emite entonces en este caso.
+
+428
+00:49:24.650 --> 00:49:28.160
+Pablo Eduardo Abad: ¿Qué pasa si yo pido el Mac del mensaje, que son todos ceros.
+
+429
+00:49:30.020 --> 00:49:32.159
+Pablo Eduardo Abad: un mensaje que evita vid. Lo miro.
+
+430
+00:49:32.160 --> 00:49:33.530
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí.
+
+431
+00:49:35.860 --> 00:49:40.149
+Pablo Eduardo Abad: Toda esta parte va a dar 0, entonces el resultado, el Mac de ese mensaje que va a ser
+
+432
+00:49:42.330 --> 00:49:43.530
+Pablo Eduardo Abad: a ser.
+
+433
+00:49:43.530 --> 00:49:44.890
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Claro, sí.
+
+434
+00:49:45.260 --> 00:49:57.219
+Pablo Eduardo Abad: Pero si yo tengo. G, D. K, Ya está y modern. A partir de ahí emite el mensaje que quiera. Me invento un mensaje. Ahora no sé todos unos, por decir algo. Y la etiqueta. ¿eso qué va a ser el G Dk: que averigüe shore todos unos
+
+435
+00:49:58.320 --> 00:50:01.290
+Pablo Eduardo Abad: y emití un mensaje distinto al que evalué
+
+436
+00:50:01.660 --> 00:50:04.050
+Pablo Eduardo Abad: con una etiqueta que va a pasar la verificación.
+
+437
+00:50:06.090 --> 00:50:06.740
+Pablo Eduardo Abad: Sí.
+
+438
+00:50:07.170 --> 00:50:12.460
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Para entonces vos lo que haces es mandas eme igual a todos ceros.
+
+439
+00:50:12.600 --> 00:50:17.019
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y el sol te da igual a la G, de K. ¿y vos con eso? ¿qué hacés que la.
+
+440
+00:50:17.580 --> 00:50:18.640
+Pablo Eduardo Abad: Ahora
+
+441
+00:50:20.620 --> 00:50:27.210
+Pablo Eduardo Abad: paso al paso 4. Voy a emitir un mensaje distinto a 0. Yo no puedo emitir un mensaje y una etiqueta de 0 porque evalué.
+
+442
+00:50:27.560 --> 00:50:28.120
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí.
+
+443
+00:50:28.120 --> 00:50:30.149
+Pablo Eduardo Abad: La etiqueta de 0 en el paso 3.
+
+444
+00:50:31.020 --> 00:50:36.900
+Pablo Eduardo Abad: Entonces me invento. Un mensaje distinto supone que todos unos sí.
+
+445
+00:50:37.120 --> 00:50:37.760
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Mhm.
+
+446
+00:50:39.860 --> 00:50:49.470
+Pablo Eduardo Abad: Ahora no voy a calcular la etiqueta, pero yo ya tengo. G. K, Porque lo averigüé Entonces lo que voy a hacer es emitir un mensaje, sea todos unos y la etiqueta va a ser el G. K averigüe
+
+447
+00:50:49.660 --> 00:50:53.710
+Pablo Eduardo Abad: sor todos unos y eso va a ser una etiqueta válida.
+
+448
+00:50:54.780 --> 00:50:59.189
+Pablo Eduardo Abad: porque si nos da la función, la construyó de la forma que va va a quedar con el mismo valor.
+
+449
+00:51:00.250 --> 00:51:01.880
+Pablo Eduardo Abad: Hice una falsificación ahí,
+
+450
+00:51:07.290 --> 00:51:07.849
+Pablo Eduardo Abad: pero no.
+
+451
+00:51:07.850 --> 00:51:09.190
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Te va a dar.
+
+452
+00:51:10.170 --> 00:51:11.150
+Pablo Eduardo Abad: Déjenme.
+
+453
+00:51:13.260 --> 00:51:14.420
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: ¿cómo puedes estar seguro.
+
+454
+00:51:14.420 --> 00:51:20.220
+Pablo Eduardo Abad: Con un pincharrón. Déjeme ver si hacemos.
+
+455
+00:51:20.220 --> 00:51:22.499
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí deben ser presencial. Esta clase profe.
+
+456
+00:51:24.240 --> 00:51:25.420
+Pablo Eduardo Abad: Vamos a.
+
+457
+00:51:27.650 --> 00:51:33.800
+Pablo Eduardo Abad: Vamos a ver si esto funciona, O sea, vamos a
+
+458
+00:51:34.260 --> 00:51:37.189
+Pablo Eduardo Abad: hacer la versión pobre de un pizarrón.
+
+459
+00:51:38.490 --> 00:51:41.229
+Pablo Eduardo Abad: Se ve ahí ahora.
+
+460
+00:51:42.620 --> 00:51:45.500
+Pablo Eduardo Abad: Y más o menos, sabes, Okay, déjenme.
+
+461
+00:51:46.900 --> 00:51:47.310
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí, Sí, Sí.
+
+462
+00:51:47.310 --> 00:51:52.710
+Pablo Eduardo Abad: Nosotros habíamos dicho: no estamos. Acá.
+
+463
+00:51:53.120 --> 00:51:59.020
+Pablo Eduardo Abad: Habíamos dicho qué pasa si tenemos un Mac de
+
+464
+00:51:59.560 --> 00:52:08.410
+Pablo Eduardo Abad: que está formado por g un generador pseudo aleatorio de la clave. Sor: M Sí.
+
+465
+00:52:09.580 --> 00:52:10.560
+Pablo Eduardo Abad: Mhm.
+
+466
+00:52:12.320 --> 00:52:16.979
+Pablo Eduardo Abad: Y la pregunta en el fondo, es: ¿es infalsificable.
+
+467
+00:52:17.120 --> 00:52:23.769
+Pablo Eduardo Abad: Sí, acá lo que no estamos explicando. Estamos dando sólo la definición de la función magno, el
+
+468
+00:52:24.310 --> 00:52:38.339
+Pablo Eduardo Abad: el mac completo. Son 3 funciones: una elegir clave, que es la que por ahora no nos interesa. Es una clave del azar, pero está la de verificación también, no por ahí, ayuda como sería la verificación de esto, o sea, un k, un eme y una etiqueta.
+
+469
+00:52:39.220 --> 00:52:43.300
+Pablo Eduardo Abad: Si se supone que esto de acá es lo que llamamos etiqueta.
+
+470
+00:52:44.530 --> 00:52:46.930
+Pablo Eduardo Abad: ¿cómo podría ser la validación de esto?
+
+471
+00:52:50.540 --> 00:52:57.080
+Pablo Eduardo Abad: Bueno, yo tendría que verificar si hay varias formas de hacerlo, pero en general, lo que voy a chequear es si
+
+472
+00:52:58.390 --> 00:53:01.579
+Pablo Eduardo Abad: Fíjense cómo se armó la etiqueta, ¿no? Si yo la etiqueta
+
+473
+00:53:02.090 --> 00:53:05.699
+Pablo Eduardo Abad: le hago off shorts con la información de la clave.
+
+474
+00:53:06.950 --> 00:53:11.490
+Pablo Eduardo Abad: Esto: cuánto tendría que valer si se formó con la función de arriba.
+
+475
+00:53:12.810 --> 00:53:13.510
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: M.
+
+476
+00:53:13.910 --> 00:53:16.840
+Pablo Eduardo Abad: M: Mi verificación puede ser algo así.
+
+477
+00:53:18.350 --> 00:53:21.059
+Pablo Eduardo Abad: Estoy usando el igual igual deseo. Dejaba de
+
+478
+00:53:24.540 --> 00:53:27.220
+Pablo Eduardo Abad: sí, Esta es una posible función de verificación.
+
+479
+00:53:28.440 --> 00:53:32.059
+Pablo Eduardo Abad: Sí, hay otras personas equivalentes.
+
+480
+00:53:32.300 --> 00:53:37.440
+Pablo Eduardo Abad: Entonces la pregunta es: ¿es infalsificable.
+
+481
+00:53:40.120 --> 00:53:41.270
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y no porque si yo.
+
+482
+00:53:41.270 --> 00:53:44.380
+Pablo Eduardo Abad: Es muy difícil demostrar que es infalible.
+
+483
+00:53:45.470 --> 00:53:46.690
+Pablo Eduardo Abad: Cómo perdón.
+
+484
+00:53:46.690 --> 00:53:52.569
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Si yo saco G, K, Puedo mandar lo que quiera con la G. K. S, Y me va a verificar.
+
+485
+00:53:53.050 --> 00:53:55.489
+Pablo Eduardo Abad: Claro a ver esto. Esto es importante.
+
+486
+00:53:57.200 --> 00:54:03.500
+Pablo Eduardo Abad: Es muy difícil demostrar que algo es infalsificable. Como es muy difícil demostrar que un criptosistema es seguro porque
+
+487
+00:54:04.450 --> 00:54:16.359
+Pablo Eduardo Abad: porque nosotros deberíamos cubrirnos de todos los posibles adversarios. El contraejemplo, o sea, demostrar que es falsificable o que no cumple la propiedad Suele ser más fácil porque necesitamos encontrar un único adversario.
+
+488
+00:54:17.060 --> 00:54:21.620
+Pablo Eduardo Abad: Estos casos, en particular, son todos para ejercitar el el crear un adversario.
+
+489
+00:54:23.230 --> 00:54:30.910
+Pablo Eduardo Abad: Entonces yo estaba yendo y viniendo en la presentación, pero ustedes no la están viendo. No importa, entonces
+
+490
+00:54:33.100 --> 00:54:38.739
+Pablo Eduardo Abad: vamos a presumir que falsificable. Y como lo demostramos construyendo un adversario.
+
+491
+00:54:45.850 --> 00:54:47.890
+Pablo Eduardo Abad: ¿cómo funcionaba la prueba?
+
+492
+00:54:51.820 --> 00:54:58.609
+Pablo Eduardo Abad: La prueba de seguridad. Tenía un paso, un primer paso que era, se genera una clave.
+
+493
+00:54:59.290 --> 00:55:02.720
+Pablo Eduardo Abad: Tenía un segundo paso que era.
+
+494
+00:55:04.090 --> 00:55:14.099
+Pablo Eduardo Abad: obtiene un F de X que sería mac ¿Qué goma X,
+
+495
+00:55:14.530 --> 00:55:25.540
+Pablo Eduardo Abad: sí. El tercer paso es a evalúa efe Px en los valores que quiera.
+
+496
+00:55:26.420 --> 00:55:31.420
+Pablo Eduardo Abad: El cuarto paso es a emite m como a T
+
+497
+00:55:33.930 --> 00:55:47.980
+Pablo Eduardo Abad: tal que M no es ninguno de los valores que evalúan evaluó en el punto 3.
+
+498
+00:55:50.410 --> 00:55:54.510
+Pablo Eduardo Abad: Sí, esta es la prueba de seguridad. Sí, sí.
+
+499
+00:55:55.270 --> 00:56:07.570
+Pablo Eduardo Abad: La verificación de M con la clave de M y T es 1 a gana la prueba. Y
+
+500
+00:56:10.530 --> 00:56:22.270
+Pablo Eduardo Abad: el Mac es si Fi tablet, o sea, no segura, ¿Correcto?
+
+501
+00:56:27.880 --> 00:56:29.939
+Pablo Eduardo Abad: ¿está bien. Ahí la letra o está muy Chica.
+
+502
+00:56:30.690 --> 00:56:31.969
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: No, no, Ahí está bien.
+
+503
+00:56:32.360 --> 00:56:34.690
+Pablo Eduardo Abad: Se ve bien súper?
+
+504
+00:56:35.420 --> 00:56:36.840
+Pablo Eduardo Abad: Bueno.
+
+505
+00:56:37.070 --> 00:56:51.000
+Pablo Eduardo Abad: Bien, si copié la prueba de seguridad, porque yo me la acuerdo de memoria de tantas veces que la vi, pero ustedes la vieron hace un momento por por primera vez. Así no tengo que estar yendo y volviendo. Sí. Escribamos el adversario. Fíjense que punto de vista del adversario
+
+506
+00:56:55.600 --> 00:56:56.730
+Pablo Eduardo Abad: tengo.
+
+507
+00:56:58.530 --> 00:57:07.180
+Pablo Eduardo Abad: F. X, Sí, hago evaluaciones.
+
+508
+00:57:09.850 --> 00:57:10.970
+Pablo Eduardo Abad: Emito
+
+509
+00:57:16.690 --> 00:57:19.880
+Pablo Eduardo Abad: a cómo a ver. Sí, esto es lo que hace el adversario.
+
+510
+00:57:20.060 --> 00:57:23.919
+Pablo Eduardo Abad: Sí recibe, Fx, evalúa lo que quiera
+
+511
+00:57:24.190 --> 00:57:30.329
+Pablo Eduardo Abad: y después tiene que emitir. Entonces éste en particular lo que decíamos es: ¿qué pasa si evalúa Fd.
+
+512
+00:57:31.440 --> 00:57:34.509
+Pablo Eduardo Abad: un mensaje que sea 0, 2 ceros.
+
+513
+00:57:37.510 --> 00:57:39.570
+Pablo Eduardo Abad: Fíjense que esto va a ser. ¿qué cosa
+
+514
+00:57:39.690 --> 00:57:45.720
+Pablo Eduardo Abad: va a ser el Mac. Lo voy a escribir largo una vez para para que lo vayamos viendo, no de de qué cosa
+
+515
+00:57:46.240 --> 00:57:53.329
+Pablo Eduardo Abad: con la clave de este mensaje de todos ceros, ¿sí? Y el Mac que estaba definido acá. Arriba
+
+516
+00:57:56.960 --> 00:57:59.850
+Pablo Eduardo Abad: es G Dksore, el mensaje
+
+517
+00:58:03.660 --> 00:58:04.989
+Pablo Eduardo Abad: en todo esto.
+
+518
+00:58:06.040 --> 00:58:11.150
+Pablo Eduardo Abad: Vamos a llevarlo múltiples niñas. Así se ve mejor.
+
+519
+00:58:12.300 --> 00:58:19.029
+Pablo Eduardo Abad: Y todo esto a que es igual bueno. Cualquier valor. Sor todos Ceros es ese mismo valor. Sí,
+
+520
+00:58:21.030 --> 00:58:30.280
+Pablo Eduardo Abad: Entonces, si evaluó el mensaje que vale 0, Cero, tengo esto. ¿y por qué me sirve esto? En particular porque ahora puedo emitir un mensaje cualquiera, por ejemplo.
+
+521
+00:58:30.590 --> 00:58:36.420
+Pablo Eduardo Abad: vamos a emitir un mensaje que sean 2. Uno, sí.
+
+522
+00:58:37.180 --> 00:58:47.309
+Pablo Eduardo Abad: ¿y ¿cuál sería una etiqueta válida? Fíjense, yo no tengo acceso acá como es al valor de K. Pero sé que la función es así. Y yo calculé los bits de G Dk.
+
+523
+00:58:47.710 --> 00:58:48.939
+Pablo Eduardo Abad: Pues lo tengo. Acá.
+
+524
+00:58:50.980 --> 00:58:51.920
+Pablo Eduardo Abad: Entonces
+
+525
+00:58:53.350 --> 00:59:01.030
+Pablo Eduardo Abad: la forma más correcta de decirlo, si quieren, sería, voy a evaluar F en 0 0, 0, o sea el resultado lo evaluado.
+
+526
+00:59:03.080 --> 00:59:06.779
+Pablo Eduardo Abad: sor el mensaje.
+
+527
+00:59:08.750 --> 00:59:18.360
+Pablo Eduardo Abad: Si yo emito este par de mensajes etiqueta, pasa la verificación.
+
+528
+00:59:19.830 --> 00:59:31.679
+Pablo Eduardo Abad: veamos que sería ver la verificación con la clave de 1 1 1 y F 0. Uno
+
+529
+00:59:35.260 --> 00:59:39.649
+Pablo Eduardo Abad: a ver la verificación sería si vuelvo arriba a esta parte.
+
+530
+00:59:41.250 --> 00:59:48.819
+Pablo Eduardo Abad: sería tomar la etiqueta. La etiqueta es todo esto. Vamos a hacerlo multilínea. Así que es más fácil de ver.
+
+531
+00:59:50.110 --> 00:59:53.670
+Pablo Eduardo Abad: Sería la etiqueta, o sea, la etiqueta es todo esto acá?
+
+532
+00:59:55.210 --> 00:59:57.160
+Pablo Eduardo Abad: Sor Gd.
+
+533
+01:00:03.240 --> 01:00:05.000
+Pablo Eduardo Abad: Sí, y queremos ver
+
+534
+01:00:06.050 --> 01:00:11.229
+Pablo Eduardo Abad: a cuánto vale eso. Ahora, F: de 0 0 0 que va a ser. Va a ser el Gd
+
+535
+01:00:12.650 --> 01:00:15.880
+Pablo Eduardo Abad: Uno, Uno: 1. Short Edk.
+
+536
+01:00:21.900 --> 01:00:25.109
+Pablo Eduardo Abad: Esto a que es igual, es igual a 1, 1, 1
+
+537
+01:00:25.920 --> 01:00:31.690
+Pablo Eduardo Abad: sí y perdón. Y nuestra verificación era ver si todo esto era igual a que al mensaje al 1 1 1 1
+
+538
+01:00:41.780 --> 01:00:43.439
+Pablo Eduardo Abad: se entiende lo que hicimos.
+
+539
+01:00:46.100 --> 01:00:50.630
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí, Sí, Ahora sí, no me voy a quedar claro como funciona.
+
+540
+01:00:50.630 --> 01:01:01.900
+Pablo Eduardo Abad: Gracias por preguntar perdón porque a a mí a veces, de tanto verlo me parece me parece fácil conectarlo, pero y me cuesta poner en su lugar. Así que ¡1 000 gracias por por preguntarlo.
+
+541
+01:01:03.530 --> 01:01:11.009
+Pablo Eduardo Abad: Si así les sirve. Después les le le subo esto a Kambus para que lo tengan así escrito y no tengan que copiarlo. Así que no, no se preocupen.
+
+542
+01:01:11.270 --> 01:01:16.190
+MARTÍN GALLARDO BERTUZZI: Así. Así quedó mucho más claro. Gracias.
+
+543
+01:01:16.590 --> 01:01:22.159
+Pablo Eduardo Abad: Espectacular. Vamos a empezar a hacer esto si se pierde mucho en alguna dado que funciona bien.
+
+544
+01:01:23.070 --> 01:01:26.409
+Pablo Eduardo Abad: tenemos un nuevo recurso como para
+
+545
+01:01:27.640 --> 01:01:34.950
+Pablo Eduardo Abad: para seguir probando. Ahora déjenme ver cómo de acá puedo pasar a la presentación un segundo
+
+546
+01:01:38.290 --> 01:01:39.140
+Pablo Eduardo Abad: bien.
+
+547
+01:01:40.960 --> 01:01:47.899
+Pablo Eduardo Abad: Entonces esta función en particular. Parece ser que no estuvo tan piola, ¿sí? Y
+
+548
+01:01:49.140 --> 01:02:00.509
+Pablo Eduardo Abad: no vamos a hacer la demostración formal de por qué, Pero el problema de Esto tiene que ver con este determinismo que hubo acá. O sea, como esta cosa que se mezcla determinista. Nosotros podíamos
+
+549
+01:02:01.010 --> 01:02:04.520
+Pablo Eduardo Abad: extraerla en un mensaje y usarla en otra. Y eso es un problema.
+
+550
+01:02:05.050 --> 01:02:11.740
+Pablo Eduardo Abad: Jack. Aprendimos esa esa mini lección Si veamos la lección del segundo Mac.
+
+551
+01:02:11.900 --> 01:02:15.099
+Pablo Eduardo Abad: este dice: ¿qué pasa si usamos un Mac como
+
+552
+01:02:16.760 --> 01:02:24.760
+Pablo Eduardo Abad: el resultado de hacer un short de los bits de la clave con los primeros cavits? Imagínense que la clave tiene una longitud fija.
+
+553
+01:02:25.870 --> 01:02:29.469
+Pablo Eduardo Abad: Vamos a hacer casos chicos para probar la la k a d 4 bits.
+
+554
+01:02:29.860 --> 01:02:37.080
+Pablo Eduardo Abad: Si ignoramos por un segundo que eso sería corto. ¿sí? Entonces esto sería hacer un sol entre los primeros 4 bits de M.
+
+555
+01:02:38.500 --> 01:02:39.490
+Pablo Eduardo Abad: Y la clave.
+
+556
+01:02:43.030 --> 01:02:50.829
+Pablo Eduardo Abad: Y si quieren la verificación, la forma fácil de verificar es con el mensaje. Y la clave, recalculamos esto y lo comparamos con la etiqueta que teníamos.
+
+557
+01:02:51.800 --> 01:02:56.610
+Pablo Eduardo Abad: Les parece que es seguro. Este Este tipo de de Mac.
+
+558
+01:02:57.700 --> 01:03:04.890
+NICOLÁS CANZONIERI: No, esto hace pan o de irme? Ohh.
+
+559
+01:03:06.120 --> 01:03:13.550
+Pablo Eduardo Abad: No le expande. ¿es así. O sea, la longitud tiene una. La clave. Tiene cierta longitud. Es un sórbita bit de los primeros bits del mensaje
+
+560
+01:03:14.530 --> 01:03:16.079
+Pablo Eduardo Abad: con claramente la clave.
+
+561
+01:03:17.200 --> 01:03:21.140
+NICOLÁS CANZONIERI: Yo mandaría un mensaje de que son todos eros de.
+
+562
+01:03:21.140 --> 01:03:21.740
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: A ver.
+
+563
+01:03:22.370 --> 01:03:25.120
+NICOLÁS CANZONIERI: Claro es toda la clave o no.
+
+564
+01:03:26.090 --> 01:03:30.330
+Pablo Eduardo Abad: Y tendrías la clave Okay y después que mandarías para falsificarlo.
+
+565
+01:03:40.700 --> 01:03:42.979
+NICOLÁS CANZONIERI: Claro, falta saber lo de la etiqueta.
+
+566
+01:03:42.980 --> 01:03:47.339
+Pablo Eduardo Abad: Vamos si quieren, al al pizarrón de vuelta y y lo probamos.
+
+567
+01:03:49.730 --> 01:03:59.950
+Pablo Eduardo Abad: Veamos este otro era Mac de la clave con el mensaje va a ser igual a K Shor, Pues
+
+568
+01:04:02.260 --> 01:04:11.859
+Pablo Eduardo Abad: perdón, Beats de M Sí, lo que me decían es como adversario. Vamos a ir al adversario directamente.
+
+569
+01:04:16.010 --> 01:04:18.970
+Pablo Eduardo Abad: Calculo. F: D:
+
+570
+01:04:22.010 --> 01:04:23.879
+Pablo Eduardo Abad: Un mensaje que sean todos ceros.
+
+571
+01:04:26.640 --> 01:04:29.150
+Pablo Eduardo Abad: porque el resultado que va a ser K,
+
+572
+01:04:29.770 --> 01:04:32.900
+Pablo Eduardo Abad: son los primeros cabs de algo que son todos ceros.
+
+573
+01:04:34.600 --> 01:04:35.909
+Pablo Eduardo Abad: y esto es igual a K.
+
+574
+01:04:42.270 --> 01:04:46.879
+Pablo Eduardo Abad: Y ahora el atacante tiene un paso más, que es emitir.
+
+575
+01:04:47.540 --> 01:04:52.590
+Pablo Eduardo Abad: Necesitamos emitir un mensaje distinto a 0 0 0 y una etiqueta que pase la verificación.
+
+576
+01:04:57.920 --> 01:05:00.179
+Pablo Eduardo Abad: ¿qué se les ocurre que podemos.
+
+577
+01:05:00.180 --> 01:05:08.159
+NICOLÁS CANZONIERI: Agarramos un Eme y hacemos K, sor kil Kabis de M o no.
+
+578
+01:05:08.900 --> 01:05:09.660
+NICOLÁS CANZONIERI: En Argentina.
+
+579
+01:05:09.660 --> 01:05:11.519
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y no podemos permitir todos unos.
+
+580
+01:05:12.720 --> 01:05:16.460
+Pablo Eduardo Abad: Por ejemplo, o sea, la idea, es que hay que emitir 1. En concreto.
+
+581
+01:05:16.920 --> 01:05:24.380
+Pablo Eduardo Abad: a mí me gusta ir a los mensajes más simples cuando son concretos, podemos complicarnos todos los que quieran, pero emitimos un mensaje que sean 2. Uno, ponerle, por ejemplo.
+
+582
+01:05:25.300 --> 01:05:33.129
+Pablo Eduardo Abad: Sí. ¿y qué hacemos? Acá. Bueno, el kak averiguamos porque lo averiguamos, acá Esto sería el F B.
+
+583
+01:05:33.350 --> 01:05:34.830
+Pablo Eduardo Abad: Cero Cero Cero
+
+584
+01:05:38.680 --> 01:05:45.079
+Pablo Eduardo Abad: Sort, los primeros cavits, que es algo que se puede calcular de
+
+585
+01:05:45.330 --> 01:05:51.730
+Pablo Eduardo Abad: 1 1. Uno. De hecho, los primeros que bits de esto van a ser simplemente k bits en 1.
+
+586
+01:05:53.270 --> 01:05:56.569
+Pablo Eduardo Abad: Y esto va a pasar. La verificación.
+
+587
+01:05:57.670 --> 01:05:59.630
+Pablo Eduardo Abad: o sea, es una falsificación válida.
+
+588
+01:06:04.110 --> 01:06:19.210
+Pablo Eduardo Abad: Si les voy a ser sinceros, no era la lección que quería. Aprender. Lo loco es que en muchos años de dar esto es la primera vez que van por este camino que funciona perfectamente. Hay un camino todavía más fácil este para generar una falsificación.
+
+589
+01:06:24.500 --> 01:06:28.579
+Pablo Eduardo Abad: Fíjense que esto lo que hace de alguna manera es todo un mensaje.
+
+590
+01:06:29.050 --> 01:06:32.729
+Pablo Eduardo Abad: ¿sí? Y se queda con los primeros cabits del mensaje.
+
+591
+01:06:33.340 --> 01:06:36.360
+Pablo Eduardo Abad: Entonces, ¿qué pasa si yo tomo un mensaje más largo?
+
+592
+01:06:40.140 --> 01:06:42.519
+Pablo Eduardo Abad: Le calculo el Mac y después
+
+593
+01:06:43.130 --> 01:06:48.829
+Pablo Eduardo Abad: utilizo la misma etiqueta con un mensaje al que le agrego un carácter adicional o un valor adicional
+
+594
+01:06:53.010 --> 01:06:56.940
+Pablo Eduardo Abad: cuando cortemos el mensaje va a quedar igual.
+
+595
+01:06:59.050 --> 01:07:06.479
+Pablo Eduardo Abad: Si digo esto porque la elección de esto es el el El problema de este Mac en particular es que considera parte del mensaje, y no todo el mensaje.
+
+596
+01:07:07.480 --> 01:07:13.170
+Pablo Eduardo Abad: Un Mac que no considere la totalidad del mensaje es trivialmente falsificable.
+
+597
+01:07:13.640 --> 01:07:18.499
+Pablo Eduardo Abad: porque yo modifico la parte que quedó afuera la que no está chequeando y usa la misma etiqueta.
+
+598
+01:07:24.180 --> 01:07:28.360
+Pablo Eduardo Abad: La falsificación que hicimos está perfecta. No es que esté mal. Este
+
+599
+01:07:28.810 --> 01:07:37.290
+Pablo Eduardo Abad: Esta es otra falsificación, porque es la lección un poco de acá. El el Mac, para ser seguro, tiene que tomar en cuenta todos los bits del mensaje.
+
+600
+01:07:37.840 --> 01:07:43.289
+Pablo Eduardo Abad: Si ignorase algún bit, yo simplemente genera una falsificación modificando ese bit.
+
+601
+01:07:48.240 --> 01:07:55.800
+Pablo Eduardo Abad: sí. Y algo parecido me ha llevado al extremo. Es el tercer ejemplo. El tercer ejemplo dice: ¿qué pasa si el Mac de un mensaje M es
+
+602
+01:07:56.770 --> 01:08:04.949
+Pablo Eduardo Abad: el resultado de cifrar con un criptosistema que sea. Si piensas Key, 1, o sea, de los más robustos que vimos hasta ahora la longitud del mensaje.
+
+603
+01:08:11.850 --> 01:08:19.149
+Pablo Eduardo Abad: ¿qué va a pasar si yo lo miro desde afuera? ¿va a pasar algo interesante si yo sí, ¿Qué pasa si yo etiquetó 2 mensajes de la misma longitud a
+
+604
+01:08:24.500 --> 01:08:26.380
+Pablo Eduardo Abad: en este tercer escenario?
+
+605
+01:08:26.380 --> 01:08:29.460
+NICOLÁS CANZONIERI: Tienen el mismo Mac, o sea.
+
+606
+01:08:31.529 --> 01:08:36.139
+NICOLÁS CANZONIERI: todo un mensaje distinto del mismo largo.
+
+607
+01:08:36.149 --> 01:08:46.479
+Pablo Eduardo Abad: En realidad no. Si lo miro desde afuera como esto, sí que dice libres, No terminístico, entonces voy a estar cifrando el mismo valor con la misma clave, pero me va a dar 2 valores distintos.
+
+608
+01:08:49.609 --> 01:08:53.379
+Pablo Eduardo Abad: Me siguen hasta allí, acuérdense de siempre.
+
+609
+01:08:53.380 --> 01:08:53.910
+NICOLÁS CANZONIERI: Mhm.
+
+610
+01:08:54.540 --> 01:09:00.119
+Pablo Eduardo Abad: En prácticamente todo, especialmente lo que si te dice dior, esto ya es nada terminístico. O sea que si yo cifro
+
+611
+01:09:00.279 --> 01:09:09.530
+Pablo Eduardo Abad: 2 mensajes de la misma longitud, esto dar 2 valores distintos, 2 etiquetas distintos. Pero, ¿cómo sería la verificación? ¿cómo podemos verificar una etiqueta que se genera de esta manera.
+
+612
+01:09:09.859 --> 01:09:12.620
+Pablo Eduardo Abad: Y voy a tener que descifrar la etiqueta
+
+613
+01:09:13.700 --> 01:09:18.070
+Pablo Eduardo Abad: y ver si la longitud coincide, coincide. Y qué pasa ahí.
+
+614
+01:09:18.930 --> 01:09:26.169
+Pablo Eduardo Abad: Digo, no importa si es el cifrado A o el cifrado B, que tienen valores distintos, textos cifrados. Los 2 se van a descifrar el mismo valor.
+
+615
+01:09:28.060 --> 01:09:31.260
+Pablo Eduardo Abad: entonces yo puedo pedir el etiquetado de un mensaje.
+
+616
+01:09:31.899 --> 01:09:37.280
+Pablo Eduardo Abad: el etiquetado de otro y, por ejemplo, intercambiar las etiquetas y van a pasar la validación
+
+617
+01:09:37.720 --> 01:09:39.790
+Pablo Eduardo Abad: por más que tengan valores distintos.
+
+618
+01:09:44.240 --> 01:09:51.069
+Pablo Eduardo Abad: Sí, y eso tiene que ver con el hecho de que, en este caso, la etiqueta no depende del contenido del mensaje.
+
+619
+01:09:52.910 --> 01:10:00.830
+Pablo Eduardo Abad: El se se si si quieren. La La idea original de de de estos 3 casos es mostrarles propiedades que tienen que ocurrir.
+
+620
+01:10:00.970 --> 01:10:06.720
+Pablo Eduardo Abad: que tienen pruebas formales, pero pero me gusta más mostrarlo así intuitivamente de del problema que generan.
+
+621
+01:10:06.830 --> 01:10:07.980
+Pablo Eduardo Abad: Si el Mac
+
+622
+01:10:10.190 --> 01:10:16.329
+Pablo Eduardo Abad: trata uniformemente a todo el mensaje, usa parte del mensaje, o ni siquiera usa el contenido del mensaje.
+
+623
+01:10:17.570 --> 01:10:23.380
+Pablo Eduardo Abad: Esas 3. Esos 3 casos son casos donde el M A, C va a ser falsificable de forma muy fácil.
+
+624
+01:10:23.670 --> 01:10:33.309
+Pablo Eduardo Abad: Y esta es la idea. Un Mac robusto, un Maggins falsificable siempre va a ser resultado de procesar la totalidad del contenido del mensaje.
+
+625
+01:10:34.940 --> 01:10:35.510
+Pablo Eduardo Abad: Sí.
+
+626
+01:10:35.510 --> 01:10:36.240
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Pablo.
+
+627
+01:10:37.190 --> 01:10:38.090
+Pablo Eduardo Abad: Sí.
+
+628
+01:10:38.090 --> 01:10:42.299
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: No entendí por qué. El último no es el último. Es, no es injusificable.
+
+629
+01:10:44.640 --> 01:10:48.069
+Pablo Eduardo Abad: Porque no es infalsificable el.
+
+630
+01:10:48.180 --> 01:10:49.040
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Cómo se rompe.
+
+631
+01:10:50.780 --> 01:10:55.480
+Pablo Eduardo Abad: A ver, nuestro back acá es también el aviso Renaul.
+
+632
+01:10:57.140 --> 01:11:01.069
+Pablo Eduardo Abad: el resultado de cifrar la longitud.
+
+633
+01:11:01.430 --> 01:11:02.529
+Pablo Eduardo Abad: Los mensajes.
+
+634
+01:11:04.520 --> 01:11:08.229
+Pablo Eduardo Abad: Sí, vamos a poner un algoritmo. Atacante acá.
+
+635
+01:11:09.320 --> 01:11:22.859
+Pablo Eduardo Abad: Suponete que, como algoritmo atacante, yo voy a procesar. Vamos a Vamos a hacer mensajes Chiquititos para el mensaje 0, Cero mensajes de David. Vamos a ser así. Y esto que va a ser, va a ser el resultado de cifrar con clave.
+
+636
+01:11:23.480 --> 01:11:30.910
+Pablo Eduardo Abad: la longitud? Dos: si yo calculo f de 1,
+
+637
+01:11:31.150 --> 01:11:40.640
+Pablo Eduardo Abad: esto va a ser el resultado. Descifrar con la clave, 2 sí. Ahora, ahora
+
+638
+01:11:41.080 --> 01:11:51.040
+Pablo Eduardo Abad: F de 0 0 es distinto a F 1 porque Enk es no de terminístico
+
+639
+01:11:55.100 --> 01:11:56.210
+Pablo Eduardo Abad: correcto.
+
+640
+01:11:58.470 --> 01:12:01.580
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí, Sí. C. P: Asequible, porque no es determinístico.
+
+641
+01:12:01.920 --> 01:12:08.699
+Pablo Eduardo Abad: Exacto, o sea, por más que tenga la misma pinta, es la misma función que los mismos parámetros.
+
+642
+01:12:08.850 --> 01:12:11.990
+Pablo Eduardo Abad: Estos 2 valores van a ser distintos.
+
+643
+01:12:12.180 --> 01:12:16.319
+Pablo Eduardo Abad: Sí, pero ¿qué pasa si este es el Mac?
+
+644
+01:12:16.480 --> 01:12:19.179
+Pablo Eduardo Abad: ¿cómo es la verificación? ¿cómo puedo verificar
+
+645
+01:12:19.350 --> 01:12:24.240
+Pablo Eduardo Abad: con una clave, un mensaje y una etiqueta si son válidas o no.
+
+646
+01:12:26.430 --> 01:12:34.349
+Pablo Eduardo Abad: Yo no podría partir del mensaje y volver a cifrarlo, porque cada vez llegó un valor distinto. Lo que sí puedo hacer es partir de la etiqueta
+
+647
+01:12:34.700 --> 01:12:36.020
+Pablo Eduardo Abad: y descifrarla.
+
+648
+01:12:36.450 --> 01:12:38.400
+Pablo Eduardo Abad: Si yo descifro la etiqueta.
+
+649
+01:12:39.680 --> 01:12:45.760
+Pablo Eduardo Abad: ahí, voy a volver siempre al mismo valor que si la etiqueta era válida, debería ser la longitud del mensaje.
+
+650
+01:12:50.110 --> 01:12:50.710
+Pablo Eduardo Abad: Sí.
+
+651
+01:12:50.710 --> 01:12:54.250
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Ahí ya me perdiste, claro.
+
+652
+01:12:54.250 --> 01:12:58.090
+Pablo Eduardo Abad: Grabar cómo es la función de verificación. Dejemos eso ahí.
+
+653
+01:12:59.120 --> 01:13:03.860
+Pablo Eduardo Abad: ¿cómo verificamos un Mac generado con esta función
+
+654
+01:13:04.870 --> 01:13:14.339
+Pablo Eduardo Abad: para construir que por ahí quedaba medio implícita la función de verificación. Yo no podría decir a ver. Quiero volver a cifrar con la clave, la
+
+655
+01:13:15.510 --> 01:13:21.679
+Pablo Eduardo Abad: la longitud del mensaje. Si yo quisiese hacer esto, podría ser mi primera, mi primera aproximación
+
+656
+01:13:21.910 --> 01:13:24.039
+Pablo Eduardo Abad: y ver si esto es igual a T,
+
+657
+01:13:24.540 --> 01:13:30.300
+Pablo Eduardo Abad: ¿Por qué? Por lo mismo que pasa acá cuando yo cifré la longitud del mensaje.
+
+658
+01:13:30.630 --> 01:13:37.140
+Pablo Eduardo Abad: No importa que el mensaje que esto haya sido un mensaje válido. Así que esto, por ejemplo, sea 2: dejar siempre valores distintos a te.
+
+659
+01:13:37.880 --> 01:13:38.580
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí.
+
+660
+01:13:39.560 --> 01:13:43.580
+Pablo Eduardo Abad: Si la forma sistemática de poder resolver eso es
+
+661
+01:13:43.920 --> 01:13:47.860
+Pablo Eduardo Abad: el lugar donde se resuelve la esa ambigua. Yo sé que si tomo
+
+662
+01:13:48.920 --> 01:13:57.099
+Pablo Eduardo Abad: el resultado de haber cifrado, este tiene 1 000 valores posibles. Cada vez tiene un valor posible, pero yo sé que si lo descifro con la misma clave.
+
+663
+01:13:59.140 --> 01:14:01.539
+Pablo Eduardo Abad: Si descifroté con la misma clave.
+
+664
+01:14:01.750 --> 01:14:06.009
+Pablo Eduardo Abad: o sea que voy a volver, voy a volver al texto plano, que era esto.
+
+665
+01:14:10.040 --> 01:14:12.869
+Pablo Eduardo Abad: Entonces mi verificación. ¿cómo funciona.
+
+666
+01:14:14.150 --> 01:14:15.330
+Pablo Eduardo Abad: Esta es la que
+
+667
+01:14:16.610 --> 01:14:21.800
+Pablo Eduardo Abad: se las dejo ahí para que les quede, pero vamos a tacharla para que no confunda
+
+668
+01:14:25.560 --> 01:14:29.590
+Pablo Eduardo Abad: como queda. Si yo descifro, te
+
+669
+01:14:30.580 --> 01:14:32.650
+Pablo Eduardo Abad: sí acuérdense. ¿que ¿qué es esto?
+
+670
+01:14:34.370 --> 01:14:40.530
+Pablo Eduardo Abad: Si yo descifro esto, ¿qué valor me tiene que dar siempre.
+
+671
+01:14:46.410 --> 01:14:46.799
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Si vos.
+
+672
+01:14:46.800 --> 01:14:47.330
+Pablo Eduardo Abad: El el.
+
+673
+01:14:47.330 --> 01:14:48.130
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Perdón.
+
+674
+01:14:50.400 --> 01:14:57.570
+Pablo Eduardo Abad: La etiqueta, que es eso. Si yo descifro con K, el resultado de cifrar con cada la longitud de M,
+
+675
+01:14:58.050 --> 01:14:58.880
+Pablo Eduardo Abad: cuándo lo.
+
+676
+01:14:58.880 --> 01:14:59.540
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí.
+
+677
+01:15:00.000 --> 01:15:00.880
+Pablo Eduardo Abad: La longitud de E. M.
+
+678
+01:15:01.500 --> 01:15:05.600
+Pablo Eduardo Abad: Entonces, si el M a X se crea de esta manera, sí
+
+679
+01:15:05.920 --> 01:15:15.180
+Pablo Eduardo Abad: la verificación que podemos hacer que sea realmente determinística, que siempre funcione bien. Es Esta es lo descifro, ¿sí?
+
+680
+01:15:16.130 --> 01:15:24.019
+Pablo Eduardo Abad: Y me fijo que sea de mí la idea atrás de por qué esto, si bien no es un Max seguro, podría funcionar. Es porque.
+
+681
+01:15:24.850 --> 01:15:31.110
+Pablo Eduardo Abad: al hacer esto, yo elimino cualquier posibilidad de que el atacante a partir de la etiqueta extra información de él.
+
+682
+01:15:31.290 --> 01:15:34.819
+Pablo Eduardo Abad: porque el cifrado me da confidencialidad. No se puede extraer nada, Entonces.
+
+683
+01:15:35.220 --> 01:15:42.660
+Pablo Eduardo Abad: para poder recuperar a partir de un texto cifrado, el valor original necesito la clave y la clave no la tiene nunca el atacante.
+
+684
+01:15:44.710 --> 01:15:57.700
+Pablo Eduardo Abad: Esa es la idea por la cual alguien tal vez se le ocurrió esto en algún momento, sí, pero bueno, contra esta función de verificación, sabiendo cómo se verifica. Yo. Ahora vuelvo al ejercicio como atacante. Puedo evaluar una o 2 veces esto
+
+685
+01:15:58.290 --> 01:15:59.220
+Pablo Eduardo Abad: sí,
+
+686
+01:15:59.430 --> 01:16:06.730
+Pablo Eduardo Abad: pero ¿qué hago ahora el atacante. Acuérdense hace evaluaciones y después emite en qué puedo emitir? Tengo que emitir un mensaje.
+
+687
+01:16:06.890 --> 01:16:09.449
+Pablo Eduardo Abad: ¿qué pasa si emito un mensaje
+
+688
+01:16:13.570 --> 01:16:20.010
+Pablo Eduardo Abad: de 2 caracteres para que sea de longitud, Dos: por ejemplo, el 1 a 1.
+
+689
+01:16:20.610 --> 01:16:27.559
+Pablo Eduardo Abad: Sí, tengo forma de generar una etiqueta que sea válida que pase esta verificación.
+
+690
+01:16:28.960 --> 01:16:29.780
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: No.
+
+691
+01:16:35.600 --> 01:16:36.460
+Pablo Eduardo Abad: ¿por qué no?
+
+692
+01:16:49.470 --> 01:16:54.689
+Pablo Eduardo Abad: ¿cuánto es el resultado de cifrar con K F de 0 0.
+
+693
+01:16:57.600 --> 01:16:58.410
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Dos.
+
+694
+01:17:02.450 --> 01:17:09.590
+Pablo Eduardo Abad: Yo. ¿qué necesito para que esto valide? Necesito algo que cuando se descifre con Ga.
+
+695
+01:17:09.840 --> 01:17:13.500
+Pablo Eduardo Abad: con la clave que no tengo me de la longitud de esto, que es.
+
+696
+01:17:15.870 --> 01:17:17.170
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Dado de vuelta.
+
+697
+01:17:17.520 --> 01:17:19.599
+Pablo Eduardo Abad: Dos. Entonces, si yo hago esto.
+
+698
+01:17:24.190 --> 01:17:26.549
+Pablo Eduardo Abad: esto pasa a la validación, ese bap.
+
+699
+01:17:33.330 --> 01:17:35.230
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí, eso pasa la variación.
+
+700
+01:17:35.970 --> 01:17:48.640
+Pablo Eduardo Abad: Si quieren acá el Trick está en que los criptosistemas no determinísticos, si mapean un único texto plano a múltiples textos cifrados, pero al descifrar, siempre vuelven a un único texto plano.
+
+701
+01:17:49.850 --> 01:17:52.929
+Pablo Eduardo Abad: entonces no importa que
+
+702
+01:17:53.040 --> 01:17:59.499
+Pablo Eduardo Abad: estos 2 valores sean distintos. Yo puedo elegir cualquiera de los 2, y cuando lo descifre tienen que forzosamente volver al 2.
+
+703
+01:18:02.440 --> 01:18:11.719
+Pablo Eduardo Abad: Si entonces, si yo miro esto de afuera y me quedo. Me me quedo con una inspección así. Solamente ocular desde afuera, Digo, no, este Mac es mucho más robusto, mira
+
+704
+01:18:11.840 --> 01:18:15.379
+Pablo Eduardo Abad: cifras, mensajes y y son totalmente distintos.
+
+705
+01:18:16.890 --> 01:18:20.330
+Pablo Eduardo Abad: Check Ahora, sabiendo el algoritmo
+
+706
+01:18:20.600 --> 01:18:27.840
+Pablo Eduardo Abad: y acuérdense que la seguridad de un criptosistema o de una función criptográfica no puede depender
+
+707
+01:18:28.150 --> 01:18:36.580
+Pablo Eduardo Abad: de que el atacante desconozca el algoritmo. Eso es un problema concreto. Conociendo el algoritmo, yo sí
+
+708
+01:18:37.040 --> 01:18:44.350
+Pablo Eduardo Abad: me puedo inventar la falsificación, No sé si quedó claro ahora, porque la
+
+709
+01:18:47.900 --> 01:18:50.120
+Pablo Eduardo Abad: por qué esta falsificación funciona.
+
+710
+01:18:51.350 --> 01:18:58.409
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí a mí lo que no me queda tan claro es bien cómo funciona la función de verificación en general, no en específico, acá.
+
+711
+01:19:01.110 --> 01:19:08.830
+Pablo Eduardo Abad: La función de verificación es una función que, dada la clave, un mensaje y una etiqueta.
+
+712
+01:19:10.810 --> 01:19:13.090
+Pablo Eduardo Abad: Necesitas mínimo que te dé,
+
+713
+01:19:13.280 --> 01:19:19.060
+Pablo Eduardo Abad: o sea, te te vuelve un valor 1 a 0, verdadero o falso. Si 1 pasa la verificación 0 no la pasa.
+
+714
+01:19:19.780 --> 01:19:24.789
+Pablo Eduardo Abad: Entonces pensa que la primera propiedad que vos necesitas que se cumpla, que es la básica.
+
+715
+01:19:25.170 --> 01:19:27.350
+Pablo Eduardo Abad: vamos a volver un segundo a
+
+716
+01:19:30.880 --> 01:19:38.719
+Pablo Eduardo Abad: vos. Lo que necesitas es que si yo le calculo un mensaje, la etiqueta con una clave y la verifico con esa misma clave, me tiene que decir que es válido.
+
+717
+01:19:41.470 --> 01:19:46.730
+Pablo Eduardo Abad: ¿sí? Y esto se suele usar para entender en estos casos donde, para estar en el Mac como verificarlo.
+
+718
+01:19:47.820 --> 01:19:48.700
+Pablo Eduardo Abad: Sí,
+
+719
+01:19:51.830 --> 01:19:56.430
+Pablo Eduardo Abad: Esa es la propiedad que se tiene que cumplir. Sí, después viene la de seguridad que
+
+720
+01:19:56.900 --> 01:20:00.650
+Pablo Eduardo Abad: necesitas que se cumpla para usarlo, pero es la que es más triqui de de probar.
+
+721
+01:20:00.650 --> 01:20:02.710
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y cómo me doy cuenta si da 1 o no.
+
+722
+01:20:07.720 --> 01:20:14.800
+Pablo Eduardo Abad: Por cómo se construye para no se si te sigo la pregunta, vos decís.
+
+723
+01:20:14.800 --> 01:20:17.350
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Cuando me da 1. Y cuando me da 0.
+
+724
+01:20:19.190 --> 01:20:22.329
+Pablo Eduardo Abad: Perdón. Yo lo pasé muy rápido. Cuando pongo en igual, igual, es
+
+725
+01:20:23.250 --> 01:20:30.640
+Pablo Eduardo Abad: es como una expresión en Seu en Java. Si los valores al costado del a los costados del igual igual son iguales desapareciendo a 1,
+
+726
+01:20:31.130 --> 01:20:32.319
+Pablo Eduardo Abad: si no de acero.
+
+727
+01:20:38.900 --> 01:20:41.160
+Pablo Eduardo Abad: te perdí más todavía.
+
+728
+01:20:42.450 --> 01:20:46.020
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: O sea, ahora me un poquito menos o sea vosaístas diciendo que hay.
+
+729
+01:20:46.020 --> 01:20:48.339
+Pablo Eduardo Abad: A ver esto. ¿qué significa? ¿sí?
+
+730
+01:21:06.050 --> 01:21:10.569
+Pablo Eduardo Abad: O sea, esto es sí, porque así vamos a poner entre paréntesis.
+
+731
+01:21:10.790 --> 01:21:19.709
+Pablo Eduardo Abad: estamos comparando el lado izquierdo y derecho de la igualdad. Si son iguales y la expresión es 1 verdadero.
+
+732
+01:21:19.970 --> 01:21:21.450
+Pablo Eduardo Abad: Si no es 0, falso.
+
+733
+01:21:22.220 --> 01:21:22.610
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Okay.
+
+734
+01:21:22.610 --> 01:21:24.609
+Pablo Eduardo Abad: Formación de programador, perdón que.
+
+735
+01:21:25.190 --> 01:21:34.529
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Entonces vos cuando haces verifi de M. Ma Km: En lo que en realidad lo que estás haciendo.
+
+736
+01:21:35.280 --> 01:21:43.060
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: lo que el salto lógico que me falta es como pasamos de Mc Kmma. Beck.
+
+737
+01:21:43.180 --> 01:21:46.099
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: K. T. Igual igual a módulo. M.
+
+738
+01:21:46.560 --> 01:21:48.339
+Pablo Eduardo Abad: De cuál perdón, de dónde.
+
+739
+01:21:48.340 --> 01:21:52.829
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Pasamos de la definición teórica a algo práctico
+
+740
+01:21:53.190 --> 01:21:56.989
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: como que me falta eso. Si tuviéramos presencia, te lo podré explicar mucho mejor.
+
+741
+01:21:58.500 --> 01:22:02.309
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Ahí está. Te lo tratan por el chat.
+
+742
+01:22:03.370 --> 01:22:03.900
+Pablo Eduardo Abad: Vale.
+
+743
+01:22:03.900 --> 01:22:05.309
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Ya sería.
+
+744
+01:22:06.590 --> 01:22:11.050
+Pablo Eduardo Abad: El resto. El resto está igual de perdido o más o menos no.
+
+745
+01:22:11.050 --> 01:22:11.500
+MARTÍN GALLARDO BERTUZZI: La propiedad.
+
+746
+01:22:11.500 --> 01:22:12.030
+Pablo Eduardo Abad: Claro.
+
+747
+01:22:12.730 --> 01:22:13.480
+MARTÍN GALLARDO BERTUZZI: Una cosa es.
+
+748
+01:22:13.480 --> 01:22:14.130
+NICOLÁS CANZONIERI: Creo que lo entiendo.
+
+749
+01:22:14.130 --> 01:22:15.080
+MARTÍN GALLARDO BERTUZZI: Y, por lo tanto.
+
+750
+01:22:15.080 --> 01:22:15.670
+Pablo Eduardo Abad: Mhm.
+
+751
+01:22:16.040 --> 01:22:16.780
+MARTÍN GALLARDO BERTUZZI: Sabes.
+
+752
+01:22:16.880 --> 01:22:28.500
+MARTÍN GALLARDO BERTUZZI: el error en este caso sería el común el el que la persona que hizo, digamos, el el Mac. Este solo está utilizando en el mensaje de la longitud.
+
+753
+01:22:28.500 --> 01:22:29.090
+Pablo Eduardo Abad: No.
+
+754
+01:22:29.090 --> 01:22:29.450
+MARTÍN GALLARDO BERTUZZI: Ok? Claro.
+
+755
+01:22:29.450 --> 01:22:35.980
+Pablo Eduardo Abad: No está basándose en el contenido, entonces yo puedo, claro por eso una etiqueta que cumplan las mismas propiedades que utilizó.
+
+756
+01:22:35.980 --> 01:22:37.000
+MARTÍN GALLARDO BERTUZZI: Por favor.
+
+757
+01:22:37.000 --> 01:22:39.500
+Pablo Eduardo Abad: El contenido es distinto. Es un mensaje distinto.
+
+758
+01:22:39.500 --> 01:22:42.800
+MARTÍN GALLARDO BERTUZZI: Claro ahí ahí como que estaría el error.
+
+759
+01:22:42.800 --> 01:22:46.080
+Pablo Eduardo Abad: Error del conceptual del diseño ¿Es ese correcto?
+
+760
+01:22:46.080 --> 01:22:47.610
+MARTÍN GALLARDO BERTUZZI: Perfecto. Diez puntos.
+
+761
+01:22:57.330 --> 01:23:03.120
+Pablo Eduardo Abad: ¿cómo pasas de la definición de verificación? A ver la definición de verificación depende del Mac.
+
+762
+01:23:03.910 --> 01:23:06.850
+Pablo Eduardo Abad: En ese caso en particular, déjame volver.
+
+763
+01:23:06.850 --> 01:23:07.720
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí.
+
+764
+01:23:08.040 --> 01:23:08.560
+Pablo Eduardo Abad: Hasta acá.
+
+765
+01:23:08.560 --> 01:23:11.309
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: A cómo le aplico al mar, al.
+
+766
+01:23:11.310 --> 01:23:16.699
+Pablo Eduardo Abad: ¿para qué es esto? Tu Mac te dice la etiqueta a partir de un mensaje es el resultado de cifrar. Esto
+
+767
+01:23:17.010 --> 01:23:25.569
+Pablo Eduardo Abad: vos tenés que construir la verificación de tal manera que puedas a partir de un mensaje y una etiqueta que se generó de esta manera.
+
+768
+01:23:26.020 --> 01:23:33.580
+Pablo Eduardo Abad: poder determinar si es sí o no. Entonces la construcción está muy definida en función de cómo verificas
+
+769
+01:23:33.840 --> 01:23:35.509
+Pablo Eduardo Abad: la asociación en esto.
+
+770
+01:23:36.550 --> 01:23:43.349
+Pablo Eduardo Abad: al construir la función de verificación, no te interesa la seguridad. La seguridad se evalúa en la prueba de seguridad que si quieres es toda esta parte.
+
+771
+01:23:44.110 --> 01:23:52.200
+Pablo Eduardo Abad: Entonces acá yo lo que tengo es, en muchos casos, En muchos casos, la verificación de un Mac es recalculo, la etiqueta y me fijo si es igual a la etiqueta.
+
+772
+01:23:53.480 --> 01:24:00.190
+Pablo Eduardo Abad: Este que me vino para verificar, sí, o sea, uso M Y K,
+
+773
+01:24:00.530 --> 01:24:08.649
+Pablo Eduardo Abad: en la función de arriba calculo, la etiqueta y la comparo con la que me dieron. Si eso funciona, si de un M y un K. La etiqueta siempre la misma.
+
+774
+01:24:09.220 --> 01:24:14.929
+Pablo Eduardo Abad: La diferencia que tenemos en este caso en particular es que si yo repito esto, lo que hacíamos, acá.
+
+775
+01:24:15.370 --> 01:24:19.960
+Pablo Eduardo Abad: La etiqueta es siempre distinta. Así que tengo que ir a una verificación un poco más elaborada.
+
+776
+01:24:24.240 --> 01:24:31.339
+Pablo Eduardo Abad: ¿sí? Pero si querés acá. Yo, como el ejemplo era muy simple, lo di por implícito. Pero cuando te definen un algoritmo.
+
+777
+01:24:31.680 --> 01:24:34.539
+Pablo Eduardo Abad: un Mac te tienen que definir las 2 funciones.
+
+778
+01:24:35.770 --> 01:24:39.290
+Pablo Eduardo Abad: No, no es que te lo inventas tampoco. La verificación es parte del diseño.
+
+779
+01:24:40.480 --> 01:24:49.460
+Pablo Eduardo Abad: Es muy parecido a que en muchos casos vieron que cuando veíamos criptosistemas, usábamos solo la función de cifrado, y ahora de cifrado está ahí y existe y tiene que estar definida.
+
+780
+01:25:06.210 --> 01:25:10.640
+Pablo Eduardo Abad: Bien, entonces nada.
+
+781
+01:25:11.530 --> 01:25:18.220
+Pablo Eduardo Abad: Tres max de juguete, llamémoslo como vimos desde la primera clase de los criptosistemas. Estos son Max.
+
+782
+01:25:18.720 --> 01:25:28.449
+Pablo Eduardo Abad: que 1 no debería usar Si cada 1 con alguna falla muy conceptual, vamos a hacer una pausa
+
+783
+01:25:29.120 --> 01:25:33.469
+Pablo Eduardo Abad: y y a la vuelta vamos a ver cómo se construyen max reales.
+
+784
+01:25:38.390 --> 01:25:45.799
+Pablo Eduardo Abad: Bien, vimos entonces 3 ejemplos de problemas conceptuales con los macs.
+
+785
+01:25:46.170 --> 01:25:52.749
+Pablo Eduardo Abad: Hay Hay 2 grandes construcciones que se utilizan en la actualidad para
+
+786
+01:25:53.640 --> 01:25:57.150
+Pablo Eduardo Abad: como base para para construir Max infalsificables.
+
+787
+01:25:58.480 --> 01:26:04.889
+Pablo Eduardo Abad: La primera es utilizando como base una primitiva de cifrado de bloque.
+
+788
+01:26:05.410 --> 01:26:10.329
+Pablo Eduardo Abad: sí, pero no de forma tan ingenua si quieren, Como el tercer ejemplo que vimos acá.
+
+789
+01:26:11.130 --> 01:26:20.559
+Pablo Eduardo Abad: Esta forma de construir un mac. Se llama Cbs Mac y aplica a cualquier función de cifrado del bloque. Existe el C. B. C. Mac
+
+790
+01:26:20.890 --> 01:26:25.460
+Pablo Eduardo Abad: Triple Ds. Existe el Cbsc Mac Idea, Cbs, Mac Aes.
+
+791
+01:26:25.860 --> 01:26:33.600
+Pablo Eduardo Abad: con cualquier función primitiva de cifrado de bloque se puede construir un mac infalsificable.
+
+792
+01:26:35.170 --> 01:26:44.850
+Pablo Eduardo Abad: La primera aproximación a este Mac el Cbc Mac común tiene una particularidad, que es que solo sirve para mensajes de cierto tamaño fijo.
+
+793
+01:26:46.090 --> 01:26:51.099
+Pablo Eduardo Abad: Sí, ahora vamos a ver por qué y cómo lo salvamos eso. Pero la idea es.
+
+794
+01:26:51.770 --> 01:26:58.480
+Pablo Eduardo Abad: imagínense por un segundo. Tenemos una primitiva de cifrado de bloque, así que vamos a hacer algo parecido a lo que hacemos
+
+795
+01:26:58.970 --> 01:27:04.509
+Pablo Eduardo Abad: si quisiésemos cifrar un mensaje en vez de etiquetarlo. Si lo vamos a dividir en partes.
+
+796
+01:27:04.980 --> 01:27:08.170
+Pablo Eduardo Abad: Si a la última parte la vamos a
+
+797
+01:27:11.010 --> 01:27:14.400
+Pablo Eduardo Abad: la vamos a extender, le vamos a aplicar un Padding.
+
+798
+01:27:14.820 --> 01:27:24.760
+Pablo Eduardo Abad: el que quieran. Acá. Podría ser tranquilamente un Padding ambiguo, porque nunca vamos a recuperar mensaje original. ¿y cómo funciona ahora? Fíjense lo que vamos a ir haciendo es
+
+799
+01:27:27.070 --> 01:27:32.080
+Pablo Eduardo Abad: tomar el primer bloque del mensaje, lo vamos a mezclar
+
+800
+01:27:33.810 --> 01:27:36.099
+Pablo Eduardo Abad: con el valor del blog anterior.
+
+801
+01:27:36.370 --> 01:27:37.300
+Pablo Eduardo Abad: ¿sí?
+
+802
+01:27:39.370 --> 01:27:46.030
+Pablo Eduardo Abad: Y vamos a cifrar eso, y eso va a formar el Estado. Siguiente: el Estado, 1 va hacer tomar el Estado 0,
+
+803
+01:27:46.410 --> 01:27:50.680
+Pablo Eduardo Abad: mezclarlo con el mensaje, y eso cifrarlo.
+
+804
+01:27:50.980 --> 01:28:01.060
+Pablo Eduardo Abad: Si en vez de estado yo les digo texto cifrado. Si esto sería el texto cifrado del bloque, 1 sería el mensaje, 1 sor
+
+805
+01:28:01.300 --> 01:28:05.670
+Pablo Eduardo Abad: El texto cifrado del bloque 0 que no existe sería el I B.
+
+806
+01:28:06.440 --> 01:28:14.759
+Pablo Eduardo Abad: El del bloque 2 va a ser tomar el cifrado del bloque. Uno, hacerle un short con el mensaje 2 y cifrarlo
+
+807
+01:28:15.060 --> 01:28:25.180
+Pablo Eduardo Abad: de esta forma de encadenamiento. Y no es casualidad que el nombre sea así. Es una de las que vimos la clase pasada es la de cyfor blockchain, Cbc.
+
+808
+01:28:26.050 --> 01:28:32.009
+Pablo Eduardo Abad: ¿cuál es la idea conceptual? Acá? Vamos a tomar todo el mensaje, vamos a cifrarlo encadenando los bloques
+
+809
+01:28:32.320 --> 01:28:40.910
+Pablo Eduardo Abad: Sí, bloque a bloque, pero acá no nos interesa recuperar el mensaje. Así que lo que vamos a hacer es tirar todos los resultados intermedios y quedarnos con
+
+810
+01:28:41.040 --> 01:28:42.819
+Pablo Eduardo Abad: el cifrado del último bloque
+
+811
+01:28:43.660 --> 01:28:49.430
+Pablo Eduardo Abad: que, como vino encadenado por todos los bloques anteriores, es como que depende de todos los bloques anteriores, ¿no?
+
+812
+01:28:49.620 --> 01:28:57.400
+Pablo Eduardo Abad: Y como acá no estamos cifrando, entonces no tiene tanto interés el valor, la el valor aleatorio que le vamos a dar
+
+813
+01:29:00.130 --> 01:29:07.520
+Pablo Eduardo Abad: el primer bloque que sería el I B en la definición del Cbs Mac al valor inicial al I B del Cbc Mac.
+
+814
+01:29:07.870 --> 01:29:09.370
+Pablo Eduardo Abad: Lo ponemos todo en 0.
+
+815
+01:29:14.170 --> 01:29:16.799
+Pablo Eduardo Abad: Fíjense de vuelta. Entonces, con esta idea. Es.
+
+816
+01:29:16.950 --> 01:29:24.350
+Pablo Eduardo Abad: tengo un mensaje, lo parto en pedazos del mismo tamaño que la función que voy a usar. Sí,
+
+817
+01:29:24.460 --> 01:29:28.540
+Pablo Eduardo Abad: cifro el primer bloque con 0. Así que cifro el primer bloque
+
+818
+01:29:28.820 --> 01:29:41.519
+Pablo Eduardo Abad: a ese resultado lo mezclo con el segundo bloque. Y lo vuelvo a cifrar a ese resultado. Lo mezclo con el tercer bloque, Y lo vuelvo a cifrar, y así hasta llegar a a ese ante último resultado, lo mezclo con el último bloque.
+
+819
+01:29:42.100 --> 01:29:43.449
+Pablo Eduardo Abad: Y lo vuelvo a cifrar.
+
+820
+01:29:43.940 --> 01:29:46.840
+Pablo Eduardo Abad: Ese último resultado es el Mac.
+
+821
+01:29:48.330 --> 01:29:52.329
+Pablo Eduardo Abad: Sí, ¿Cuál es la forma de verificar este tipo de Mac?
+
+822
+01:29:53.010 --> 01:29:57.730
+Pablo Eduardo Abad: Básicamente se recalcula, o sea, nos dan
+
+823
+01:29:58.160 --> 01:30:04.749
+Pablo Eduardo Abad: el mensaje y la etiqueta a partir del mensaje. Y la clave, volvemos a calcular esta etiqueta. Acuérdense que
+
+824
+01:30:04.890 --> 01:30:10.409
+Pablo Eduardo Abad: F d k una primitiva de ciclado de bloque es determinista, es deterministica.
+
+825
+01:30:10.950 --> 01:30:21.270
+Pablo Eduardo Abad: Entonces volvemos a calcular el mismo Mac. Y vemos, si es igual que la etiqueta, esta es una forma.
+
+826
+01:30:22.150 --> 01:30:27.510
+Pablo Eduardo Abad: Hay que tener cuidado, porque esta forma, casualmente, porque
+
+827
+01:30:28.230 --> 01:30:31.990
+Pablo Eduardo Abad: por usar este tipo de de funciones separadas de bloque
+
+828
+01:30:33.460 --> 01:30:44.190
+Pablo Eduardo Abad: es infalsificable si Solo si nosotros podemos acotar el dominio, el tipo de mensajes a mensajes de una longitud concreta y ni más grandes ni más chicos.
+
+829
+01:30:45.880 --> 01:30:50.929
+Pablo Eduardo Abad: ¿por qué? Porque empiezan a aparecer ataques que se llaman ataques de extensión.
+
+830
+01:30:51.280 --> 01:30:58.620
+Pablo Eduardo Abad: Si Si permitimos otros usos que van a usar la información que podemos capturar en mensajes más chicos o prefijos
+
+831
+01:30:59.020 --> 01:31:04.580
+Pablo Eduardo Abad: para falsificar mensajes más grandes. Si acá tienen un ejemplo de una de esas falsificaciones.
+
+832
+01:31:04.890 --> 01:31:15.560
+Pablo Eduardo Abad: Supongamos que usamos esta construcción que vemos acá el Cds Mac para mensajes de tamaño variable, cualquier tipo de mensaje arbitrario. Si Entonces imagínense que
+
+833
+01:31:16.300 --> 01:31:21.039
+Pablo Eduardo Abad: creamos 2 bloques, o sea, 2 partecitas que tienen el tamaño exacto de un bloque
+
+834
+01:31:21.300 --> 01:31:25.869
+Pablo Eduardo Abad: con valores constantes. A 1 lo llamamos a y otra vez, no importa los valores que tengan si
+
+835
+01:31:26.200 --> 01:31:33.129
+Pablo Eduardo Abad: y vamos a construir 2 mensajes, un mensaje que es bloque a seguido del bloque ve y otro que va a ser bloqueado.
+
+836
+01:31:34.460 --> 01:31:41.989
+Pablo Eduardo Abad: Sí, nosotros podemos calcular el Mac de estos valores.
+
+837
+01:31:42.230 --> 01:31:44.840
+Pablo Eduardo Abad: No podemos calcular el
+
+838
+01:31:47.980 --> 01:31:49.979
+Pablo Eduardo Abad: el resultado de calcular el Mac
+
+839
+01:31:50.350 --> 01:31:54.879
+Pablo Eduardo Abad: de el primer mensaje. El resultado: calcular el Mac del segundo mensaje.
+
+840
+01:31:55.360 --> 01:32:05.030
+Pablo Eduardo Abad: Sí, bueno, ¿qué pasa si después de hacer eso tomamos el primer mensaje y hacemos
+
+841
+01:32:05.220 --> 01:32:11.540
+Pablo Eduardo Abad: toda esta construcción, construimos un mensaje ahora de 3 bloques. Una extensión del mensaje largo que sea esto
+
+842
+01:32:12.950 --> 01:32:15.369
+Pablo Eduardo Abad: me van a decir es un galerazo.
+
+843
+01:32:15.740 --> 01:32:27.900
+Pablo Eduardo Abad: La mayoría de los ataques parece galerazo. O sea, generalmente nos muestran el resultado y no nos muestran el el camino a llegar no es muy distinto a muchas demostraciones matemáticas que han visto en la carrera que 1 dice
+
+844
+01:32:27.970 --> 01:32:36.800
+Pablo Eduardo Abad: cómo se le ocurrió. Y claro, cuando 1 la ve, parece súper genial. Este cierra todo llegar a esto no es trivial, pero pero es interesante ver
+
+845
+01:32:37.290 --> 01:32:38.800
+Pablo Eduardo Abad: por qué funciona esto.
+
+846
+01:32:40.530 --> 01:32:46.120
+Pablo Eduardo Abad: Voy a asumir que les está costando ver eso. Así que vamos a volver a la pizarra un segundo y ver.
+
+847
+01:32:46.120 --> 01:32:48.450
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí me está costando.
+
+848
+01:32:48.860 --> 01:32:52.790
+Pablo Eduardo Abad: Después a ver si puedo copiar el texto. Así me ahorro entrar en copiarlo
+
+849
+01:33:11.300 --> 01:33:16.599
+Pablo Eduardo Abad: usando un Css Mac con mensajes de tamaño variable.
+
+850
+01:33:16.960 --> 01:33:17.840
+Pablo Eduardo Abad: ¿sí?
+
+851
+01:33:18.110 --> 01:33:20.229
+Pablo Eduardo Abad: Entonces definimos 2 mensajes.
+
+852
+01:33:22.620 --> 01:33:32.669
+Pablo Eduardo Abad: ¿sí? Y le calculamos las etiquetas. Sí, vamos a expandir un poco qué son estas etiquetas como para entenderlas. Sí, vamos con la del mensaje más chico, si quiere
+
+853
+01:33:34.110 --> 01:33:36.210
+Pablo Eduardo Abad: esto, que va a ser igual. Bueno.
+
+854
+01:33:37.760 --> 01:33:42.870
+Pablo Eduardo Abad: el mensaje 2 es solo a. Así que esto va a ser el resultado de evaluar la función Esta.
+
+855
+01:33:43.010 --> 01:33:47.510
+Pablo Eduardo Abad: la función que se usó para el C. C. Mac sobre a Sor.
+
+856
+01:33:49.830 --> 01:33:52.789
+Pablo Eduardo Abad: el bloque 0 que vale 0, O sea que esto es?
+
+857
+01:33:52.890 --> 01:33:53.819
+Pablo Eduardo Abad: F D A:
+
+858
+01:33:57.500 --> 01:33:58.530
+Pablo Eduardo Abad: Sí.
+
+859
+01:34:00.020 --> 01:34:04.489
+Pablo Eduardo Abad: Entonces, calcular sobre T, 2. ¿qué va a pasar cuando calculemos sobre T 1? Bueno.
+
+860
+01:34:04.590 --> 01:34:10.690
+Pablo Eduardo Abad: estos son 2 bloques, Así que esto tiene como varias partes. No va a estar el primer bloque intermedio
+
+861
+01:34:12.230 --> 01:34:15.060
+Pablo Eduardo Abad: que va a ser igual a que a calcular F
+
+862
+01:34:16.020 --> 01:34:19.180
+Pablo Eduardo Abad: de a sor 0 0 0 0.
+
+863
+01:34:21.250 --> 01:34:22.240
+Pablo Eduardo Abad: ¿sí?
+
+864
+01:34:24.080 --> 01:34:28.390
+Pablo Eduardo Abad: Y después va a estar el segundo bloque el T. Uno. Llamémoslo 2,
+
+865
+01:34:29.720 --> 01:34:32.150
+Pablo Eduardo Abad: que va a ser el resultado de que.
+
+866
+01:34:35.010 --> 01:34:40.339
+Pablo Eduardo Abad: de cifrar el blog anterior, o sea, de 1 ión. Uno. Shor.
+
+867
+01:34:41.430 --> 01:34:42.220
+Pablo Eduardo Abad: Ves
+
+868
+01:34:43.920 --> 01:34:51.579
+Pablo Eduardo Abad: aplicando la definición del Cbs magno. Y acá lo que va a ocurrir es que lo que llamamos T. Uno va a ser el último bloque
+
+869
+01:35:04.650 --> 01:35:10.269
+Pablo Eduardo Abad: a ver a ver a ver. Entonces, veamos, vamos vamos a expandir un poquito esto. Entonces? Té. Uno.
+
+870
+01:35:11.090 --> 01:35:13.780
+Pablo Eduardo Abad: digo, T, 2, es esto. T, 2 va a ser
+
+871
+01:35:14.250 --> 01:35:17.559
+Pablo Eduardo Abad: el cifrado con la clave que se está usando de Ap
+
+872
+01:35:22.410 --> 01:35:30.410
+Pablo Eduardo Abad: como para que les quede fe de X es igual a Es un car de X,
+
+873
+01:35:36.420 --> 01:35:38.640
+Pablo Eduardo Abad: Ya les queda cuando lo miran después. Bien.
+
+874
+01:35:40.370 --> 01:35:42.780
+Pablo Eduardo Abad: vamos a escribir un poco mejor.
+
+875
+01:35:44.750 --> 01:35:48.010
+Pablo Eduardo Abad: pero 1 entonces va a ser igual a F de
+
+876
+01:35:48.200 --> 01:35:55.580
+Pablo Eduardo Abad: Tengo 1 a 1 que es F de a Sort, Ver No.
+
+877
+01:35:58.150 --> 01:36:03.990
+Pablo Eduardo Abad: Sí. Y F de A primera línea es lo mismo que te 2. Así que esto es F. D
+
+878
+01:36:04.320 --> 01:36:07.420
+Pablo Eduardo Abad: de 2 Shor B
+
+879
+01:36:11.070 --> 01:36:12.130
+Pablo Eduardo Abad: Okay.
+
+880
+01:36:17.330 --> 01:36:20.759
+Pablo Eduardo Abad: Fíjense que la la idea de ir
+
+881
+01:36:22.090 --> 01:36:30.319
+Pablo Eduardo Abad: de ir procesando estos mensajes de alguna manera es es como que vamos pasando a un estado intermedio, ¿no? O sea que nuestro mensaje es A, B, C.
+
+882
+01:36:36.220 --> 01:36:41.189
+Pablo Eduardo Abad: Yo tengo una suerte de estado inicial que es 0, 0, 0 0
+
+883
+01:36:41.630 --> 01:36:53.460
+Pablo Eduardo Abad: de acá Pasamos a el Estado 1 que es. F, D, zero más a perdón, son a
+
+884
+01:36:53.810 --> 01:36:56.120
+Pablo Eduardo Abad: y acá pasamos a de 2,
+
+885
+01:37:02.300 --> 01:37:08.140
+Pablo Eduardo Abad: que es igual a F, D, de 1. Shor.
+
+886
+01:37:08.660 --> 01:37:14.320
+Pablo Eduardo Abad: Y acá pasamos a 3 que es.
+
+887
+01:37:14.770 --> 01:37:19.350
+Pablo Eduardo Abad: F, E, P, 2 sobre C.
+
+888
+01:37:20.020 --> 01:37:23.170
+Pablo Eduardo Abad: Ven que vamos pasando como Estados y nos quedamos.
+
+889
+01:37:26.440 --> 01:37:28.389
+Pablo Eduardo Abad: Nos quedamos con el último. Siempre.
+
+890
+01:37:30.890 --> 01:37:31.960
+Pablo Eduardo Abad: Sí.
+
+891
+01:37:32.140 --> 01:37:34.140
+Pablo Eduardo Abad: ¿qué pasa? La
+
+892
+01:37:35.490 --> 01:37:44.469
+Pablo Eduardo Abad: La dificultad de un atacante de poder falsificar radica en que todos estos estados intermedios, en este caso el de una y el T 2
+
+893
+01:37:44.750 --> 01:37:47.989
+Pablo Eduardo Abad: se eliminan después es información que se tira a la basura.
+
+894
+01:37:50.820 --> 01:37:58.930
+Pablo Eduardo Abad: ¿por qué? Porque si yo conozco el estado T, 1
+
+895
+01:38:01.060 --> 01:38:04.609
+Pablo Eduardo Abad: perdona o el estado T, 2 o el Estado T, Uno o ambos.
+
+896
+01:38:04.950 --> 01:38:09.669
+Pablo Eduardo Abad: puedo llegar a hacer algún tipo de trampa para
+
+897
+01:38:10.580 --> 01:38:16.130
+Pablo Eduardo Abad: calcular directamente el estado. Y eso es de alguna manera lo que hace el ataque. Fíjense, el ataque plantea
+
+898
+01:38:18.790 --> 01:38:26.369
+Pablo Eduardo Abad: un mensaje que tiene una forma rara. Tiene siquiera en los 2 primeros bloques hay B, igual que mensaje 1 y lo extiende
+
+899
+01:38:27.300 --> 01:38:28.310
+Pablo Eduardo Abad: con esto.
+
+900
+01:38:30.320 --> 01:38:34.310
+Pablo Eduardo Abad: Y después dice: resorte 2.
+
+901
+01:38:35.800 --> 01:38:37.689
+Pablo Eduardo Abad: ¿cuál es la idea de esto.
+
+902
+01:38:37.840 --> 01:38:43.260
+Pablo Eduardo Abad: Fíjense que de 1 de 1
+
+903
+01:38:44.720 --> 01:38:52.900
+Pablo Eduardo Abad: es el resultado de haber procesado los bloques A y B: Sí, entonces si yo miro
+
+904
+01:38:53.170 --> 01:38:56.520
+Pablo Eduardo Abad: un mensaje compuesto por 3 bloques. Sí,
+
+905
+01:38:59.620 --> 01:39:08.210
+Pablo Eduardo Abad: este valor es el inicial. Este es el resultado después de haber procesado el primer bloque. Este es el resultado de haber evaluado el segundo.
+
+906
+01:39:12.760 --> 01:39:20.530
+Pablo Eduardo Abad: Voy a hacer. Voy a hacer un cambio de variable acá porque estos tés no tienen nada que ver con los anteriores y se los van a confundir con la línea de arriba
+
+907
+01:39:21.550 --> 01:39:23.670
+Pablo Eduardo Abad: más que nada para cuando le vean ustedes después.
+
+908
+01:39:27.420 --> 01:39:31.019
+Pablo Eduardo Abad: Mhm: Fíjense. Entonces es como que pasamos
+
+909
+01:39:31.560 --> 01:39:36.550
+Pablo Eduardo Abad: de un Estado que siempre el mismo procesamos el primer bloque y estamos en un estado inicial.
+
+910
+01:39:36.660 --> 01:39:38.000
+Pablo Eduardo Abad: Una llamámoslo.
+
+911
+01:39:38.560 --> 01:39:41.679
+Pablo Eduardo Abad: Procesamos desde el doble que estamos en un estado en el medio. Entonces
+
+912
+01:39:42.810 --> 01:39:48.239
+Pablo Eduardo Abad: de 1 es el estado final. El estado después de procesar 2 bloques
+
+913
+01:39:49.210 --> 01:39:52.499
+Pablo Eduardo Abad: en el que estaríamos parados si estuviésemos procesando este bicho.
+
+914
+01:39:54.130 --> 01:40:01.009
+Pablo Eduardo Abad: ¿sí? Y fíjense que lo que vamos a hacer para calcular el siguiente es tomar el estado en el que estamos parados.
+
+915
+01:40:01.920 --> 01:40:04.509
+Pablo Eduardo Abad: Sí que vale té. Uno teóricamente.
+
+916
+01:40:05.040 --> 01:40:08.179
+Pablo Eduardo Abad: y hacerle Shorts con el próximo mensaje que venga.
+
+917
+01:40:11.210 --> 01:40:17.630
+Pablo Eduardo Abad: Sí, entonces tomemos este mensaje en particular.
+
+918
+01:40:21.860 --> 01:40:24.770
+Pablo Eduardo Abad: El primer Estado es 0.
+
+919
+01:40:25.240 --> 01:40:26.979
+Pablo Eduardo Abad: El segundo Estado. ¿qué va a ser?
+
+920
+01:40:27.200 --> 01:40:35.110
+Pablo Eduardo Abad: Va a ser. F: D Pero. F, D, A es de 2, Sí,
+
+921
+01:40:35.340 --> 01:40:41.060
+Pablo Eduardo Abad: El segundo Estado. ¿qué es? Va a ser efe de el estado anterior.
+
+922
+01:40:45.670 --> 01:40:51.680
+Pablo Eduardo Abad: Sor B, Esto es de 1, sí,
+
+923
+01:40:56.250 --> 01:41:02.669
+Pablo Eduardo Abad: y acá viene la magia. Si quieren. Lo voy a llamarse por un segundo, cuál es el tercer Estado que va a ser el final, va a ser F de
+
+924
+01:41:05.570 --> 01:41:09.629
+Pablo Eduardo Abad: el estado anterior, que era T, 1, Sor, C,
+
+925
+01:41:10.380 --> 01:41:18.459
+Pablo Eduardo Abad: Y esto es igual a lo que sea, ¿En qué consiste el ataque? El ataque consiste en definamos se de tal manera
+
+926
+01:41:19.520 --> 01:41:22.069
+Pablo Eduardo Abad: que podemos controlar qué es lo que viene? Acá.
+
+927
+01:41:22.950 --> 01:41:29.450
+Pablo Eduardo Abad: ¿sí? Y Y lo podemos controlar de qué manera. Bueno, fíjense que nosotros tenemos acá algo
+
+928
+01:41:30.730 --> 01:41:37.830
+Pablo Eduardo Abad: muy interesante para utilizar, que es que The Dos es igual a F, D, A,
+
+929
+01:41:38.010 --> 01:41:45.699
+Pablo Eduardo Abad: si yo logro hacer que la entrada de acá de esta función sea a el valor a
+
+930
+01:41:47.690 --> 01:41:53.959
+Pablo Eduardo Abad: la salida de eso la voy a conocer. Va a ser T, 2. Va a ser el resultado del de la etiqueta que calculé
+
+931
+01:41:54.360 --> 01:41:56.450
+Pablo Eduardo Abad: Sí, Entonces.
+
+932
+01:41:57.840 --> 01:42:04.460
+Pablo Eduardo Abad: si sé, es igual. Fíjense, y de ahí la forma en la que se hace no de 1. Shor. A
+
+933
+01:42:08.260 --> 01:42:09.800
+Pablo Eduardo Abad: Entonces, ¿qué va a pasar?
+
+934
+01:42:10.420 --> 01:42:16.170
+Pablo Eduardo Abad: Vamos a tener F de T, 1? Cero C, Siendo igual a F, D:
+
+935
+01:42:16.320 --> 01:42:21.079
+Pablo Eduardo Abad: Te 1. Short: Te 1, o sea, anulo, el valor lo hago. Cero
+
+936
+01:42:21.480 --> 01:42:25.690
+Pablo Eduardo Abad: Shorcé es parecido a lo que hicimos en el ataque ese de los de los valores.
+
+937
+01:42:26.220 --> 01:42:35.370
+Pablo Eduardo Abad: o sea, me invento un valor, de tal manera que yo sé que acá hay un Te 1, le hago un sordo con el mismo valor para hacerlo 0. Y después le hago un surf con el valor
+
+938
+01:42:35.780 --> 01:42:40.419
+Pablo Eduardo Abad: perdón. Este es sola con el valor arbitrario que le quiero dar.
+
+939
+01:42:40.630 --> 01:42:46.439
+Pablo Eduardo Abad: Sí, porque esto termina siendo igual a F, D, A.
+
+940
+01:42:50.530 --> 01:42:55.230
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: No, Pues que la verdad es que me estás perdiendo cada vez más. Acá
+
+941
+01:42:56.740 --> 01:42:57.580
+Pablo Eduardo Abad: A ver.
+
+942
+01:43:01.270 --> 01:43:02.639
+Pablo Eduardo Abad: déjame ver.
+
+943
+01:43:03.500 --> 01:43:05.559
+Pablo Eduardo Abad: Te perdí completo. Vamos de vuelta.
+
+944
+01:43:05.560 --> 01:43:11.789
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: En sí a ver el X 0 es el.
+
+945
+01:43:11.790 --> 01:43:13.270
+Pablo Eduardo Abad: No debo estar.
+
+946
+01:43:13.530 --> 01:43:24.310
+Pablo Eduardo Abad: Yo que tengo, acá, o sea, est, estoy buscando falsificar un C, B. S Mac: Sí,
+
+947
+01:43:24.870 --> 01:43:27.800
+Pablo Eduardo Abad: y acepta mensajes de tamaño variable.
+
+948
+01:43:31.670 --> 01:43:32.600
+Pablo Eduardo Abad: Sí,
+
+949
+01:43:38.090 --> 01:43:40.989
+Pablo Eduardo Abad: Si po por ser un C, B, C, Mac.
+
+950
+01:43:41.620 --> 01:43:43.749
+Pablo Eduardo Abad: estructura de cómo se calcula el Mac
+
+951
+01:43:49.770 --> 01:43:54.850
+Pablo Eduardo Abad: una clave y un mensaje. ¿cómo va a ser.
+
+952
+01:43:57.630 --> 01:43:59.740
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Así es el T. J, El último té.
+
+953
+01:43:59.740 --> 01:44:01.699
+Pablo Eduardo Abad: Parte del mensaje en bloques.
+
+954
+01:44:02.340 --> 01:44:02.920
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Mhm.
+
+955
+01:44:03.530 --> 01:44:04.280
+Pablo Eduardo Abad: Sí.
+
+956
+01:44:04.600 --> 01:44:07.699
+Pablo Eduardo Abad: X, Uno, X, 2, X, 3 por un la
+
+957
+01:44:10.860 --> 01:44:12.020
+Pablo Eduardo Abad: calculo.
+
+958
+01:44:13.150 --> 01:44:17.409
+Pablo Eduardo Abad: Te Uno es cifrar El primer bloque
+
+959
+01:44:18.520 --> 01:44:24.070
+Pablo Eduardo Abad: de 2 es igual cifrar el resultado de p unosor. El segundo bloque.
+
+960
+01:44:24.630 --> 01:44:25.420
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí.
+
+961
+01:44:29.170 --> 01:44:36.690
+Pablo Eduardo Abad: Te subí, va a ser igual a el resultado de cifrar te y menos 1.
+
+962
+01:44:38.610 --> 01:44:41.540
+Pablo Eduardo Abad: He querido evitar esto porque nunca me acuerdo del shortcut para.
+
+963
+01:44:41.660 --> 01:44:46.540
+Pablo Eduardo Abad: bueno lo de abajo. Y voy a estar un montón
+
+964
+01:44:49.980 --> 01:44:51.869
+Pablo Eduardo Abad: subíndice contra el codo.
+
+965
+01:44:55.100 --> 01:45:00.000
+Pablo Eduardo Abad: Va a ser el test sub I 1 son y subir.
+
+966
+01:45:02.310 --> 01:45:07.049
+Pablo Eduardo Abad: Me quedó todo chiquito. No es algo raro.
+
+967
+01:45:09.990 --> 01:45:11.260
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí, sí. Hasta ello.
+
+968
+01:45:13.760 --> 01:45:18.300
+Pablo Eduardo Abad: Okay. Bien, sí, eso eso es por como se arma. Ahora, el ataque.
+
+969
+01:45:19.200 --> 01:45:22.189
+Pablo Eduardo Abad: o sea, el algoritmo atacante, Es a calcula
+
+970
+01:45:29.840 --> 01:45:35.719
+Pablo Eduardo Abad: el Mac de un mensaje que s que sea un bloque, cualquiera que llamemos a
+
+971
+01:45:36.560 --> 01:45:41.290
+Pablo Eduardo Abad: el Mac de un bloque que sea a a ver, sí.
+
+972
+01:45:41.290 --> 01:45:41.670
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí.
+
+973
+01:45:41.670 --> 01:45:45.730
+Pablo Eduardo Abad: Vemos, no como le llamamos arriba. T: Dos.
+
+974
+01:45:46.440 --> 01:45:53.250
+Pablo Eduardo Abad: Este lo llamamos T. Dos, y este lo llamamos T, Uno porque lo decidimos llamar así, Sí.
+
+975
+01:45:53.830 --> 01:45:54.260
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí.
+
+976
+01:45:54.260 --> 01:45:59.499
+Pablo Eduardo Abad: Y el ataque es ida de vuelta a ver. Es muy difícil llegar al ataque si nunca lo hicieron. Sí,
+
+977
+01:46:04.270 --> 01:46:08.089
+Pablo Eduardo Abad: emite este mensaje con esta etiqueta?
+
+978
+01:46:09.120 --> 01:46:15.989
+Pablo Eduardo Abad: Sí, este mensaje es distinto a los 2 que evaluó, así que cumple las condiciones
+
+979
+01:46:16.280 --> 01:46:22.330
+Pablo Eduardo Abad: con esta etiqueta. La pregunta es: ¿por qué esto valida o si esto valí y pasa a la validación. Y entonces
+
+980
+01:46:23.170 --> 01:46:25.569
+Pablo Eduardo Abad: consideremos que sería el Mac de esto.
+
+981
+01:46:35.090 --> 01:46:40.219
+Pablo Eduardo Abad: cuánto vale ese mac a ver, pensemoslo. O sea, hay que calcular el mac
+
+982
+01:46:42.680 --> 01:46:50.849
+Pablo Eduardo Abad: parte por parte si y acá. Es donde de vuelta. Ahora voy a usar. Yo dije, acá. Lo llamé estados intermedios.
+
+983
+01:46:51.370 --> 01:46:52.520
+Pablo Eduardo Abad: ¿
+
+984
+01:46:52.880 --> 01:46:57.520
+Pablo Eduardo Abad: El tema es que, como a estos, los llamés te se nos van a confundir y son cosas distintas.
+
+985
+01:46:57.760 --> 01:47:03.379
+Pablo Eduardo Abad: Digamos que este es, vamos a hacer así. Vamos a ver este es X 1.
+
+986
+01:47:03.660 --> 01:47:07.680
+Pablo Eduardo Abad: Y entonces seguidos son los valores que nos dio el primer Mac y el segundo que conseguimos.
+
+987
+01:47:09.680 --> 01:47:13.740
+Pablo Eduardo Abad: Y esto va a ser Ta Ta Ta ta ta ta ta tapiz. Dos.
+
+988
+01:47:14.210 --> 01:47:16.679
+Pablo Eduardo Abad: estoy cambiando variables para que no se nos mezcle.
+
+989
+01:47:23.120 --> 01:47:30.460
+Pablo Eduardo Abad: Hice lo mismo, pero cambié variables para que no se nos mezcle con la definición que puso acá de de los estados intermedios. Así podemos usar las mismas
+
+990
+01:47:30.630 --> 01:47:36.230
+Pablo Eduardo Abad: Sí, de vuelta. El atacante calcula el Mac de un mensaje que es prefijo del otro.
+
+991
+01:47:36.390 --> 01:47:41.829
+Pablo Eduardo Abad: Eso es importante, ¿sí? Y son 2 bloques completos, y después se emite un mensaje de un bloque más
+
+992
+01:47:44.570 --> 01:47:52.089
+Pablo Eduardo Abad: que parece ser que, en principio, sería una falsificación. ¿por qué vamos a calcular el Mac de todo este mensaje que quiere emitir el atacante.
+
+993
+01:47:52.400 --> 01:47:54.260
+Pablo Eduardo Abad: Sí, ¿Qué va a pasar?
+
+994
+01:47:54.650 --> 01:48:01.270
+Pablo Eduardo Abad: El primer estado que va a ser el resultado de cifrar a sí
+
+995
+01:48:01.440 --> 01:48:03.549
+Pablo Eduardo Abad: el resultado. Cifrar el primer bloque
+
+996
+01:48:07.590 --> 01:48:08.150
+Pablo Eduardo Abad: te lo.
+
+997
+01:48:08.150 --> 01:48:10.990
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Esto te va a dar F A, pero Thaishi.
+
+998
+01:48:11.440 --> 01:48:19.780
+Pablo Eduardo Abad: Esto no da. Crea el segundo que va a ser el resultado de 1, El blog anterior son B.
+
+999
+01:48:20.690 --> 01:48:27.679
+Pablo Eduardo Abad: Sí, el tercer que nos interesa, que va a ser el resultado del Mac. ¿qué va a ser? ¿va a ser F de X, 2
+
+1000
+01:48:27.960 --> 01:48:34.230
+Pablo Eduardo Abad: Sor todo el bloque cerrado que pusieron a sobre X 2
+
+1001
+01:48:37.990 --> 01:48:41.809
+Pablo Eduardo Abad: y Acá viene la magia. Expandamos expandamos el T. Tres
+
+1002
+01:48:42.830 --> 01:48:45.699
+Pablo Eduardo Abad: X 2 short a sobre X Dos.
+
+1003
+01:48:45.810 --> 01:48:49.360
+Pablo Eduardo Abad: los los X 2 soleados entre sí se van a cancelar.
+
+1004
+01:48:53.120 --> 01:48:54.140
+Pablo Eduardo Abad: Sí.
+
+1005
+01:48:59.610 --> 01:49:01.130
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí.
+
+1006
+01:49:01.690 --> 01:49:11.179
+Pablo Eduardo Abad: X 2 Shor, A sobre X 2 ósear. Es un operador lineal. Podemos cambiar los paréntesis porque es asociativo
+
+1007
+01:49:14.610 --> 01:49:18.229
+Pablo Eduardo Abad: ahora Fda F D, a
+
+1008
+01:49:23.940 --> 01:49:28.619
+Pablo Eduardo Abad: El resultado de cifrar a va a ser esto mismo? Va a ser el resultado que fue.
+
+1009
+01:49:34.330 --> 01:49:40.880
+Pablo Eduardo Abad: ¿Cómo se calcularía este X, 1 diríamos que T Uno va a ser igual A, F, D, A:
+
+1010
+01:49:41.480 --> 01:49:43.539
+Pablo Eduardo Abad: Sí. Y ahí termina el mensaje
+
+1011
+01:49:46.770 --> 01:49:49.240
+Pablo Eduardo Abad: X, Una es igual F a
+
+1012
+01:49:49.370 --> 01:49:51.740
+Pablo Eduardo Abad: sí, porque nos quedamos con ese mensaje.
+
+1013
+01:49:52.530 --> 01:49:56.969
+Pablo Eduardo Abad: Entonces, este estado final, que va a ser el resultado del Mac.
+
+1014
+01:49:58.050 --> 01:50:02.749
+Pablo Eduardo Abad: va a ser el resultado. Descifrar F de A y F de A es X. Uno
+
+1015
+01:50:03.860 --> 01:50:07.869
+Pablo Eduardo Abad: es el mismo resultado que obtuvimos al calcular el M a C de A. Es conocido.
+
+1016
+01:50:09.670 --> 01:50:14.589
+Pablo Eduardo Abad: Entonces, si yo emito este mensaje, ¿qué va a pasar cuando se procese el tercer bloque.
+
+1017
+01:50:14.590 --> 01:50:15.139
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: En la.
+
+1018
+01:50:15.140 --> 01:50:17.010
+Pablo Eduardo Abad: El valor final que queda del Mac
+
+1019
+01:50:18.120 --> 01:50:22.929
+Pablo Eduardo Abad: va a ser equis Una, si pongo ese valor como etiqueta. Esto pasa a la falsificación.
+
+1020
+01:50:36.520 --> 01:50:44.119
+Pablo Eduardo Abad: Se los escribo para que después, cuando lo lean, puedan recordar esta parte. Entonces, si el mito, ese mensaje
+
+1021
+01:50:44.520 --> 01:50:50.500
+Pablo Eduardo Abad: con la etiqueta X, 1 pasa a la validación.
+
+1022
+01:50:51.860 --> 01:50:55.540
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Para perdí un poco de vuelta cómo hiciste este 3.
+
+1023
+01:50:57.520 --> 01:51:02.599
+Pablo Eduardo Abad: Como dices de 3, lo voy construyendo iterativamente. Esto tiene 3 bloques.
+
+1024
+01:51:02.600 --> 01:51:03.590
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: En el Mac.
+
+1025
+01:51:04.150 --> 01:51:08.940
+Pablo Eduardo Abad: Es primer bloque es cifrado del y el primer bloque del mensaje.
+
+1026
+01:51:09.300 --> 01:51:15.839
+Pablo Eduardo Abad: El segundo bloque es el estado anterior, el de 1. Cifra, sor el segundo bloque.
+
+1027
+01:51:15.840 --> 01:51:17.189
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Yo creo que sí.
+
+1028
+01:51:17.190 --> 01:51:17.710
+Pablo Eduardo Abad: Prado.
+
+1029
+01:51:18.260 --> 01:51:21.100
+Pablo Eduardo Abad: El tercero es el estado anterior.
+
+1030
+01:51:22.110 --> 01:51:25.920
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y por qué? ¿para por qué te 1 absorbe? Es de 2.
+
+1031
+01:51:26.260 --> 01:51:33.470
+Pablo Eduardo Abad: Perdón, perdón, perdón, perdón. Este y esto es Ter. Eso me pasa por haber cambiado Variable Okay.
+
+1032
+01:51:33.790 --> 01:51:40.880
+Pablo Eduardo Abad: o sea, es el estado anterior, el que llamamos T 2 en la misma línea, Sor
+
+1033
+01:51:43.550 --> 01:51:49.280
+Pablo Eduardo Abad: Okay, o sea, ya ya entendido donde te perdiste, y fue culpa mía por cambiar variables ahí and the Fly.
+
+1034
+01:51:49.880 --> 01:51:51.619
+Pablo Eduardo Abad: o sea, el mensaje, lo definimos así.
+
+1035
+01:51:53.020 --> 01:51:53.940
+Pablo Eduardo Abad: Mhm.
+
+1036
+01:52:02.150 --> 01:52:06.659
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: E, I, T, Dos es F, T, Uno sorbe.
+
+1037
+01:52:07.290 --> 01:52:11.180
+Pablo Eduardo Abad: D 2 es F de 1 absorber.
+
+1038
+01:52:11.560 --> 01:52:12.200
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Okay.
+
+1039
+01:52:12.200 --> 01:52:13.020
+Pablo Eduardo Abad: El tema es
+
+1040
+01:52:16.370 --> 01:52:25.200
+Pablo Eduardo Abad: si yo calculo esto que 1 es F, de A, que da igual sí de 2,
+
+1041
+01:52:26.950 --> 01:52:29.740
+Pablo Eduardo Abad: va a ser igual a P. Uno.
+
+1042
+01:52:31.480 --> 01:52:35.770
+Pablo Eduardo Abad: Ya ahí fue.
+
+1043
+01:52:35.770 --> 01:52:36.270
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: De la.
+
+1044
+01:52:36.270 --> 01:52:39.999
+Pablo Eduardo Abad: Uno de 1. Sor B.
+
+1045
+01:52:40.290 --> 01:52:40.770
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí.
+
+1046
+01:52:40.770 --> 01:52:41.360
+Pablo Eduardo Abad: Sí.
+
+1047
+01:52:43.030 --> 01:52:46.789
+Pablo Eduardo Abad: Y ese es el resultado del Mac, Sí, o sea que X 2 va a ser
+
+1048
+01:52:52.350 --> 01:52:53.969
+Pablo Eduardo Abad: efe de un exorb.
+
+1049
+01:53:00.900 --> 01:53:06.169
+Pablo Eduardo Abad: Entonces, si querés, acá, como hice el cambio de variable, me me quedó mal el paso. Y gracias por.
+
+1050
+01:53:06.170 --> 01:53:06.860
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Mhm.
+
+1051
+01:53:07.030 --> 01:53:11.540
+Pablo Eduardo Abad: No haber levantado la mano. No lo entendí, porque es verdad. Me salté un paso.
+
+1052
+01:53:11.640 --> 01:53:15.189
+Pablo Eduardo Abad: El paso que nos falta acá. Es este X, 2 que llamamos acá.
+
+1053
+01:53:17.380 --> 01:53:29.630
+Pablo Eduardo Abad: Fíjate que X, 2 es F, D, de 1, solo. B, que es de 2.
+
+1054
+01:53:35.740 --> 01:53:41.560
+Pablo Eduardo Abad: Entonces Ahora sí podemos decir que esto es. F, D, T, Dos Sor, a Sor, T. Dos.
+
+1055
+01:53:47.900 --> 01:53:53.540
+Pablo Eduardo Abad: Es igual a F, de a sí. Y F. D, A es el X Uno.
+
+1056
+01:53:56.220 --> 01:53:57.949
+Pablo Eduardo Abad: Ahora se entiende un poco mejor.
+
+1057
+01:53:59.520 --> 01:54:00.770
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Ahora sí por.
+
+1058
+01:54:00.770 --> 01:54:04.899
+Pablo Eduardo Abad: Sobre la marcha.
+
+1059
+01:54:05.760 --> 01:54:12.349
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí me confunde, e el s. X 2 igual a T, 2, o sea, entiendo cómo llegas, pero los símbolos
+
+1060
+01:54:15.470 --> 01:54:20.349
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: de dónde sale? Es el Macbeth a a B, a B.
+
+1061
+01:54:21.990 --> 01:54:27.439
+Pablo Eduardo Abad: Estos 2 valores a a ver el cambio de variable. Lo hice porque este de 2 y este de 2 son literalmente lo mismo.
+
+1062
+01:54:28.470 --> 01:54:31.640
+Pablo Eduardo Abad: Como este mensaje es prefijo de este.
+
+1063
+01:54:31.640 --> 01:54:32.120
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Lo que.
+
+1064
+01:54:32.120 --> 01:54:38.420
+Pablo Eduardo Abad: De 1 es cifrar A. Y este de una cifra, este de 2, y este de 2 son el mismo valor.
+
+1065
+01:54:38.890 --> 01:54:39.780
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Okay Okay.
+
+1066
+01:54:41.040 --> 01:54:47.319
+Pablo Eduardo Abad: Sí, salvo que acá lo llamamos X 2, Porque, bueno, vos desde el punto de vista del atacante, le pasa este mensaje y te vuelve este valor.
+
+1067
+01:54:47.660 --> 01:54:49.729
+Pablo Eduardo Abad: Si querés, esto es más que nada
+
+1068
+01:54:50.160 --> 01:54:53.299
+Pablo Eduardo Abad: por adentro conceptualmente, cómo se construiría el valor.
+
+1069
+01:54:53.750 --> 01:55:02.269
+Pablo Eduardo Abad: vos Teóricamente no tenés acceso a T 1 cuando pedís esto, pero lo cierto es que si pedís el Mac, este conseguiste 1 de alguna manera.
+
+1070
+01:55:02.810 --> 01:55:03.390
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Mhm.
+
+1071
+01:55:04.420 --> 01:55:09.680
+Pablo Eduardo Abad: Esa es la idea. La idea es que construyendo así por prefijo podes ir accediendo a los estados intermedios
+
+1072
+01:55:11.060 --> 01:55:14.550
+Pablo Eduardo Abad: Y así. Montas. Este ataque después, este de la galera es
+
+1073
+01:55:15.700 --> 01:55:23.289
+Pablo Eduardo Abad: es un ataque parecido al que hicimos la otra vez. Vos Sabés ¿En qué estado entras acá vos sabes que de 3 entra en el estado? T. Dos.
+
+1074
+01:55:23.910 --> 01:55:33.519
+Pablo Eduardo Abad: ¿Quieres que el resultado de todo esto se evalúe a entonces de alguna manera forzas el short con dedos para anular el valor de entrada y le ponés el valor que vos querés que tenga
+
+1075
+01:55:34.190 --> 01:55:36.489
+Pablo Eduardo Abad: con esa fuerza, que tenga este valor.
+
+1076
+01:55:37.260 --> 01:55:40.379
+Pablo Eduardo Abad: que vos como atacante, lo pudiste, lo pudiste conocer.
+
+1077
+01:55:43.260 --> 01:55:51.109
+Pablo Eduardo Abad: Y por eso lo emitís como etiqueta, porque con esto, si si vos logras que el tercer Estado intermedio evalúa esto, sabes que la salida es X 1.
+
+1078
+01:55:51.390 --> 01:55:56.960
+Pablo Eduardo Abad: Y como es el último es la etiqueta. Entonces, bueno, emito este mensaje con esa etiqueta.
+
+1079
+01:56:01.580 --> 01:56:05.390
+Pablo Eduardo Abad: Si este les parece complicado, les voy a dejar de tarea el que sigue.
+
+1080
+01:56:05.680 --> 01:56:06.550
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: No.
+
+1081
+01:56:06.730 --> 01:56:09.899
+Pablo Eduardo Abad: Que es que es un poco más elaborado, Pero para que lo hagan tranquilos.
+
+1082
+01:56:10.230 --> 01:56:15.710
+Pablo Eduardo Abad: si no está en el libro, lo pueden seguir en el libro que se explaya más. No sé si está mucho más claro, pero
+
+1083
+01:56:17.160 --> 01:56:22.139
+Pablo Eduardo Abad: Mhm déjame ubicar un segundo de la presentación.
+
+1084
+01:56:23.100 --> 01:56:23.970
+Pablo Eduardo Abad: Quitamos.
+
+1085
+01:56:28.640 --> 01:56:34.639
+Pablo Eduardo Abad: Esto es, si quieren, el porque este es un ataque genérico contra usar la construcción Cbs Mac
+
+1086
+01:56:34.750 --> 01:56:37.510
+Pablo Eduardo Abad: permitiendo mensajes de distinto tamaño, Sí,
+
+1087
+01:56:37.830 --> 01:56:41.530
+Pablo Eduardo Abad: como podíamos usarlo para cifrar mensajes de 1, 2, 3, bloques.
+
+1088
+01:56:41.870 --> 01:56:54.100
+Pablo Eduardo Abad: Tenemos este ataque, ¿Cómo se resuelve, cómo se termina construyendo el Cbs Mac, que se usa en la práctica. La realidad es que no hay una única forma. Va a depender mucho de de la librería y del caso de uso. Pero hay
+
+1089
+01:56:55.800 --> 01:57:00.420
+Pablo Eduardo Abad: 3 formas distintas de solucionar el tema. Sí,
+
+1090
+01:57:00.890 --> 01:57:11.939
+Pablo Eduardo Abad: las 3 tienen que ver con si quieren, como concepto meter la longitud en el mix de lo que se evalúa y evaluar el contenido del mensaje y la longitud
+
+1091
+01:57:12.140 --> 01:57:17.389
+Pablo Eduardo Abad: para que si evalúo 2 mensajes de distinta longitud, se rompa esta idea de que 1 es prefijo del otro.
+
+1092
+01:57:19.400 --> 01:57:28.730
+Pablo Eduardo Abad: ¿sí? Y no podamos usar esta esta construcción. Como escalonada, evaluó un mensaje, evaluó ese mismo mensaje con con otro valor: evalúa ese mismo mensaje
+
+1093
+01:57:29.520 --> 01:57:37.869
+Pablo Eduardo Abad: con otro valor de ir evaluando prefijos y reconstruir los estados intermedios. Si la primera es en vez de utilizar la clave
+
+1094
+01:57:38.520 --> 01:57:48.390
+Pablo Eduardo Abad: para para todas estas iteraciones, estos bloques intermedios. Calcular una clave distinta, que es el resultado. Descifrar con la clave la longitud del mensaje.
+
+1095
+01:57:49.260 --> 01:57:58.299
+Pablo Eduardo Abad: Entonces, lo loco de esto es, vamos a ir calculando estos estados intermedios iguales. Pero si yo soy un mensaje de longitud, 1,
+
+1096
+01:57:58.830 --> 01:58:03.449
+Pablo Eduardo Abad: los estados intermedios se calculan cifrando con una clave. Si calcula de longitud, 2
+
+1097
+01:58:03.630 --> 01:58:13.110
+Pablo Eduardo Abad: van a ser los mismos bloques de mensajes, pero se van a cifrar con otra clave. Entonces, todos los Estados intermedios cambian y ya no se puede aprender de los Estados intermedios que se descartan.
+
+1098
+01:58:13.860 --> 01:58:15.209
+Pablo Eduardo Abad: Esta es una forma.
+
+1099
+01:58:15.830 --> 01:58:26.439
+Pablo Eduardo Abad: La otra forma. Esta es utilizar un mensaje, aplicar el mismo C Dsemac, pero con un mensaje que tenga como prefijo la longitud del mensaje.
+
+1100
+01:58:28.390 --> 01:58:29.580
+Pablo Eduardo Abad: cosa que
+
+1101
+01:58:29.870 --> 01:58:38.149
+Pablo Eduardo Abad: Imagínense que aparece un bloque con el número no. Y esto, en vez de ser así, sería un 2 A, B, y este sería un 1 a
+
+1102
+01:58:38.290 --> 01:58:44.659
+Pablo Eduardo Abad: entonces. Los estados intermedios son todos distintos, a pesar de que los mensajes parecen ser 1 prefijo del otro.
+
+1103
+01:58:47.210 --> 01:58:50.550
+Pablo Eduardo Abad: El tercer caso, rompe
+
+1104
+01:58:50.790 --> 01:58:59.710
+Pablo Eduardo Abad: esta posibilidad de decir, bueno, el último valor que sale es el valor que que utilizo entonces dice calcular ser ese maqui igual que lo calculabas.
+
+1105
+01:59:00.070 --> 01:59:07.690
+Pablo Eduardo Abad: pero tú, Mac, en lugar de ser la salida del último Estado, es el resultado de cifrar con una clave distinta
+
+1106
+01:59:08.710 --> 01:59:10.109
+Pablo Eduardo Abad: ese último valor.
+
+1107
+01:59:11.050 --> 01:59:17.689
+Pablo Eduardo Abad: Las 2 primeras formas rompen la posibilidad de por prefijo ver los Estados internos
+
+1108
+01:59:18.880 --> 01:59:26.860
+Pablo Eduardo Abad: que se descartan. Sí, esta última lo que rompe es la posibilidad de, conociendo los Estados internos y prediciendo el final.
+
+1109
+01:59:27.280 --> 01:59:30.030
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: O.
+
+1110
+01:59:30.030 --> 01:59:31.399
+Pablo Eduardo Abad: Con 3 formas distintas
+
+1111
+01:59:31.900 --> 01:59:38.930
+Pablo Eduardo Abad: acá depende mucho de la implementación y de la librería que estén usando. Las 3 son seguras, sí
+
+1112
+01:59:39.860 --> 01:59:47.369
+Pablo Eduardo Abad: sutileza. Si quieren, las 2 primeras requieren conocer a priori la longitud del mensaje. La tercera no, Pero la tercera requiere
+
+1113
+01:59:47.550 --> 01:59:51.400
+Pablo Eduardo Abad: 2 claves, o sea, el doble de material criptográfico de claves.
+
+1114
+01:59:52.820 --> 01:59:56.960
+Pablo Eduardo Abad: Por eso es que no hay una, porque ninguna es perfecta: sí,
+
+1115
+01:59:57.850 --> 02:00:02.450
+Pablo Eduardo Abad: esas 3 formas de extender el el algoritmo de C. D. C. Max son seguras. Ya
+
+1116
+02:00:03.770 --> 02:00:07.469
+Pablo Eduardo Abad: esto se los dejo de tarea este, pero
+
+1117
+02:00:07.720 --> 02:00:22.869
+Pablo Eduardo Abad: vieron que esta forma dice, tomá la longitud del mensaje y agrégala como prefijo. Si en términos en términos más ingenieriles, si nosotros no sabemos a prevenir la longitud, una secuencia estaría buenísimo poder agregar la longitud como sufijo.
+
+1118
+02:00:22.940 --> 02:00:29.170
+Pablo Eduardo Abad: Vamos procesando el mensaje bloque a bloque cuando terminamos de procesar ya sabemos, la longitud del del mensaje.
+
+1119
+02:00:29.310 --> 02:00:31.810
+Pablo Eduardo Abad: podríamos decir: lo hacemos al revés.
+
+1120
+02:00:31.990 --> 02:00:37.119
+Pablo Eduardo Abad: Si 1 piensa un Cbc Mac de esta manera, bueno, resulta que
+
+1121
+02:00:38.050 --> 02:00:47.569
+Pablo Eduardo Abad: no funciona es inseguro. Hay ataques de extensiones parecidos al que mostramos. Sí, esta es la idea del ataque de extensión. Se las voy a dejar
+
+1122
+02:00:48.220 --> 02:00:52.739
+Pablo Eduardo Abad: para que la la revisen o la vean de tarea. La podemos ver en la práctica si no.
+
+1123
+02:00:53.100 --> 02:00:56.010
+Pablo Eduardo Abad: pero la idea va a ser la misma. Fíjense que va a ser
+
+1124
+02:00:57.120 --> 02:01:05.129
+Pablo Eduardo Abad: generar mensajes acá con la misma longitud, generar 1 que tenga de prefijo alguno de los mensajes y después sacarse de la galera otro
+
+1125
+02:01:05.430 --> 02:01:07.110
+Pablo Eduardo Abad: con algún bloque mágico.
+
+1126
+02:01:08.970 --> 02:01:10.679
+Pablo Eduardo Abad: Pero Pero bueno.
+
+1127
+02:01:11.060 --> 02:01:18.920
+Pablo Eduardo Abad: se las dejo ahí en función de del tiempo que tenemos más que nada, cualquier cosa. Si no me escriben o en el libro está, ya pueden ver.
+
+1128
+02:01:25.640 --> 02:01:36.400
+Pablo Eduardo Abad: Mmm Command, más perdón me estaban pasando los York Gats para ser. Gracias.
+
+1129
+02:01:41.190 --> 02:01:46.570
+Pablo Eduardo Abad: Bien, los Macs, entonces los podemos construir a partir de
+
+1130
+02:01:49.530 --> 02:02:01.589
+Pablo Eduardo Abad: una primitiva de bloque de las que vimos la clase pasada, podemos construir un Cbs Mac a partir de A. Es y es súper seguro. Sí, hay otra forma de construir funciones de Mac, que es a partir de
+
+1131
+02:02:01.870 --> 02:02:07.260
+Pablo Eduardo Abad: otra función criptográfica que está relacionada con integridad, que son las funciones de Hash.
+
+1132
+02:02:07.690 --> 02:02:10.999
+Pablo Eduardo Abad: Sí, las funciones de hash criptográficas
+
+1133
+02:02:11.600 --> 02:02:16.079
+Pablo Eduardo Abad: son más simples y son distintas a todo lo que vimos porque no tienen clave.
+
+1134
+02:02:17.240 --> 02:02:18.240
+Pablo Eduardo Abad: Sí,
+
+1135
+02:02:18.390 --> 02:02:26.680
+Pablo Eduardo Abad: la función de Hash es una función. Tomó una entrada y devuelvo una etiqueta por temas históricos. A esas de A esa etiqueta se le suele llamar hash.
+
+1136
+02:02:26.850 --> 02:02:27.750
+Pablo Eduardo Abad: sí.
+
+1137
+02:02:27.960 --> 02:02:35.780
+Pablo Eduardo Abad: Y si quieren, es la variante criptográfica de las funciones que usamos para armar tablas de hash, se acuerdan de la estructura de de búsqueda de tablas de Hash.
+
+1138
+02:02:36.930 --> 02:02:44.409
+Pablo Eduardo Abad: Digamos que es la variante criptográfica de eso. Es algo que toma estructuras, mensajes arbitrarios y nos devuelve
+
+1139
+02:02:44.960 --> 02:02:49.209
+Pablo Eduardo Abad: algo que tiene como una distribución bastante uniforme entre todos los valores posibles.
+
+1140
+02:02:50.850 --> 02:02:58.360
+Pablo Eduardo Abad: Formalmente, una función de Hash es un par de algoritmos. Sí, un algoritmo de selección entre una familia de funciones
+
+1141
+02:03:00.070 --> 02:03:12.530
+Pablo Eduardo Abad: y la función que, seleccionada algoritmo dentro de la familia nos convierte un mensaje en una etiqueta. Pujash: Sí,
+
+1142
+02:03:13.050 --> 02:03:21.140
+Pablo Eduardo Abad: la diferencia más importante, si tienen que tener algo en cuenta, porque es fundamental en términos de seguridad es. Las funciones de Hash.
+
+1143
+02:03:21.570 --> 02:03:23.180
+Pablo Eduardo Abad: No tienen claves.
+
+1144
+02:03:23.620 --> 02:03:29.480
+Pablo Eduardo Abad: Si el selector ese que aparece en la generación no es una clave, es información pública
+
+1145
+02:03:30.130 --> 02:03:34.080
+Pablo Eduardo Abad: sí tiene que ver más con las pruebas formales, el el selector, ese.
+
+1146
+02:03:36.280 --> 02:03:41.990
+Pablo Eduardo Abad: pero acá. No hay claves. Así que a diferencia de los criptosistemas. A diferencia de los Macs, acá no hay clave.
+
+1147
+02:03:42.530 --> 02:03:47.710
+Pablo Eduardo Abad: Eso tiene cosas buenas y cosas malas. Vamos a ver. Sí a las funciones. Cash.
+
+1148
+02:03:48.300 --> 02:03:52.889
+Pablo Eduardo Abad: Según la literatura que vayan, también se las llama Djs o resumen
+
+1149
+02:03:53.780 --> 02:04:08.120
+Pablo Eduardo Abad: por la propiedad que tienen de que aceptan mensajes arbitrarios como entrada y generan etiquetas que típicamente son de tamaño muy reducido y fijo. Si un hash de
+
+1150
+02:04:08.950 --> 02:04:14.590
+Pablo Eduardo Abad: estándar hoy día reduce cualquier mensaje a una etiqueta de 128 bits, por ejemplo.
+
+1151
+02:04:15.520 --> 02:04:21.590
+Pablo Eduardo Abad: No importa el mensaje, el tamaño del mensaje. Pueden ser terabytes de información, nos da una etiqueta de 128 bits
+
+1152
+02:04:22.760 --> 02:04:29.429
+Pablo Eduardo Abad: Sí, porque se lo llama resumen, porque las propiedades que tiene la función de dejarse son parecidas al al Mac
+
+1153
+02:04:29.560 --> 02:04:38.619
+Pablo Eduardo Abad: en el sentido de que ese hash depende de todos y cada 1 de los bits del mensaje. Entonces, son una suerte de como resumen del mensaje
+
+1154
+02:04:39.800 --> 02:04:46.949
+Pablo Eduardo Abad: no permiten reconstruir el mensaje original, pero lo representa muy bien, O sea, podrían ser como un identificador del contenido del mensaje.
+
+1155
+02:04:52.110 --> 02:05:08.690
+Pablo Eduardo Abad: En general, bueno, lo lo que les decía es el resultado de de un hash depende de todo el mensaje, incluso con mensajes relativamente parecidos. Acá tienen mensajes que varían en 1 o 2 bits nada más entre entre un mensaje y otro. Bueno, un par de bits.
+
+1156
+02:05:08.940 --> 02:05:16.669
+Pablo Eduardo Abad: Si miramos la representación en hexadecimal de lo que serían. Las etiquetas son totalmente distintas. Sí,
+
+1157
+02:05:17.410 --> 02:05:25.460
+Pablo Eduardo Abad: se los llama etiquetadores universales. Es algo súper interesante, porque si se acuerdan los números, se acuerdan que habíamos dicho
+
+1158
+02:05:25.610 --> 02:05:30.219
+Pablo Eduardo Abad: la cantidad de átomos que hay en el universo, está en el orden de 2 a la 79 más o menos.
+
+1159
+02:05:30.390 --> 02:05:33.339
+Pablo Eduardo Abad: Si yo tengo una una función de Hash.
+
+1160
+02:05:34.880 --> 02:05:40.340
+Pablo Eduardo Abad: cuya salida tiene 128 bits. Hay 2 a las 100, 28 posibles valores.
+
+1161
+02:05:40.810 --> 02:05:52.269
+Pablo Eduardo Abad: Si esta función tuviese las propiedades ideales que le pedimos a a a las funciones de hash que usamos en las tablas de búsqueda, esta que nos distribuya media uniformemente todos los valores posibles.
+
+1162
+02:05:53.110 --> 02:05:56.170
+Pablo Eduardo Abad: Tenemos más valores que átomos en el universo, podríamos tener
+
+1163
+02:05:58.910 --> 02:06:09.440
+Pablo Eduardo Abad: metafísicamente hablando, si quieren filosóficamente hablando, una suerte de función capaz de etiquetar todos los átomos del universo, darle un un nombre único a cada átomo del universo.
+
+1164
+02:06:10.180 --> 02:06:11.910
+Pablo Eduardo Abad: Este
+
+1165
+02:06:14.190 --> 02:06:26.370
+Pablo Eduardo Abad: es casi filosófico, Pero esto que podemos pensar así para todos. Sirve para conjuntos más chicos. O sea, vamos vamos a melando un cachito, pero le le vamos a pedir a estas funciones
+
+1166
+02:06:26.710 --> 02:06:33.899
+Pablo Eduardo Abad: que tengan una dispersión tan grande que sea prácticamente imposible encontrar 2 mensajes que den el mismo valor.
+
+1167
+02:06:34.420 --> 02:06:39.049
+Pablo Eduardo Abad: Si cuando eso pasa, los podemos considerar como
+
+1168
+02:06:39.320 --> 02:06:48.679
+Pablo Eduardo Abad: una suerte de representantes del contenido. Y, por ejemplo, esto se aprovecha en sistemas de backup masivo para entender que archivos hay duplicados.
+
+1169
+02:06:49.000 --> 02:06:54.389
+Pablo Eduardo Abad: pues si yo calculo el hash de los archivos, no importa dónde estén y demás. Si el contenido es el mismo, el hash va a ser igual.
+
+1170
+02:06:54.960 --> 02:07:02.860
+Pablo Eduardo Abad: Se usan redes distribuidas. No sé, no no sé si ahora se usan tanto, pero hubo una época en que estaban en auge, las redes no se vi, corren
+
+1171
+02:07:04.040 --> 02:07:06.490
+Pablo Eduardo Abad: y Donkey Cademilia
+
+1172
+02:07:06.870 --> 02:07:20.939
+Pablo Eduardo Abad: en redes para compartir archivos. Ahora, cada 1 de los archivos los tiene con distintos nombres en distintos directorios. Y como como 1 buscaba un archivo o como 1, encontrar un archivo. Bueno a través de un hash, se representaba el contenido con un hash. Y ese era el índice
+
+1173
+02:07:21.040 --> 02:07:22.400
+Pablo Eduardo Abad: por el que se buscaban.
+
+1174
+02:07:22.550 --> 02:07:29.970
+Pablo Eduardo Abad: Y estamos hablando de sistemas que indexaban a nivel mundial en cientos de miles de computadoras, 1 000 000 de archivos distintos
+
+1175
+02:07:30.200 --> 02:07:35.540
+Pablo Eduardo Abad: y usaban el hash como indicador del del contenido mhm.
+
+1176
+02:07:37.780 --> 02:07:49.690
+Pablo Eduardo Abad: Si nosotros tenemos más mensajes que posibles valores por esto de que por ahí tamaña salida arbitrario, tamaño, entrada gigante, forzosamente. Tienen que existir
+
+1177
+02:07:49.790 --> 02:07:54.510
+Pablo Eduardo Abad: valores o documentos o mensajes que sean distintos.
+
+1178
+02:07:55.070 --> 02:07:57.010
+Pablo Eduardo Abad: pero que genera la misma etiqueta.
+
+1179
+02:07:57.920 --> 02:08:07.669
+Pablo Eduardo Abad: Sí, acá como no hay clave, no podemos hablar de que falsificamos algo, porque no hay clave. No tenemos el mismo concepto de seguridad de de falsificaciones que los Mac.
+
+1180
+02:08:07.790 --> 02:08:13.059
+Pablo Eduardo Abad: Lo que decimos es que cuando tenemos 2 mensajes distintos que generan el mismo hash.
+
+1181
+02:08:13.980 --> 02:08:20.649
+Pablo Eduardo Abad: Estamos Estamos hablando de una colisión. Si las colisiones existen por un tema de conjuntos.
+
+1182
+02:08:20.780 --> 02:08:28.179
+Pablo Eduardo Abad: Hay más valores que posibles etiquetas, así que, forzosamente, tiene que haber valores que se mapeen en la misma etiqueta.
+
+1183
+02:08:29.060 --> 02:08:36.779
+Pablo Eduardo Abad: Así que a esa a esa situación se le llama colisiones y las colisiones forzosamente existen. Sí,
+
+1184
+02:08:38.700 --> 02:08:41.780
+Pablo Eduardo Abad: ahora a una función de hash.
+
+1185
+02:08:42.450 --> 02:08:51.009
+Pablo Eduardo Abad: Podemos usar prácticamente cualquier función de hash. Pero si la queremos usar en el ámbito criptográfico, a las funciones de hash criptográficas.
+
+1186
+02:08:51.380 --> 02:09:02.439
+Pablo Eduardo Abad: se les piden conceptualmente si pienso en un modelo simple. Tres propiedades en realidad son más. Pero si quieren el modelo simple con el que nos vamos a quedar en la materia. Son estas 3
+
+1187
+02:09:04.470 --> 02:09:15.520
+Pablo Eduardo Abad: que tienen que ver Cada una de estas tiene una prueba de seguridad formal y y es una de las propiedades que después permite usarla para una cosa o para otra sí. La primera propiedad es resistencia. ¿pre ¿Imágenes?
+
+1188
+02:09:16.770 --> 02:09:19.869
+Pablo Eduardo Abad: Sí. ¿qué significa esto de resistencia.
+
+1189
+02:09:20.960 --> 02:09:25.310
+Pablo Eduardo Abad: Las 3 se llaman: Resistencia. Resistencia. ¿qué quiere decir que
+
+1190
+02:09:26.090 --> 02:09:40.820
+Pablo Eduardo Abad: la única forma de computar algún tipo de valor o cosa que hay que buscar es probando por fuerza bruta que no hay forma algorítmica de acelerar la búsqueda. Una pre imagen es básicamente a partir de
+
+1191
+02:09:42.670 --> 02:09:54.330
+Pablo Eduardo Abad: un valor del conjunto. Destino. La para imagen es el valor del conjunto origen, ¿no? Y acá esto significa que si yo les doy una etiqueta a un hash de algo. Sí,
+
+1192
+02:09:55.680 --> 02:09:59.039
+Pablo Eduardo Abad: La única forma que tendrían en principio
+
+1193
+02:09:59.150 --> 02:10:12.690
+Pablo Eduardo Abad: de encontrar el valor que lo generó es buscando por fuerza bruta. Sí, en los papers de de definición de funciones de gas, se habla de computacionalmente imposible
+
+1194
+02:10:13.250 --> 02:10:17.700
+Pablo Eduardo Abad: en el sentido de que no existe un algoritmo polinómico que permita.
+
+1195
+02:10:18.080 --> 02:10:25.369
+Pablo Eduardo Abad: o sea, no existe un adversario en una prueba de seguridad que permita a eso se lo llama computacionalmente imposible en algunos en algunos papers.
+
+1196
+02:10:27.890 --> 02:10:39.269
+Pablo Eduardo Abad: entonces una función de hash es resistente a pre imágenes. Si dado un hash dado, el resultado es computacionalmente imposible encontrar un mensaje X que llegue a eso.
+
+1197
+02:10:40.350 --> 02:10:47.430
+Pablo Eduardo Abad: Sí, fíjese que incluso no hay un único mensaje X por ahí hay muchos, Pero encontrar 1 es buscar por fuerza bruta
+
+1198
+02:10:47.730 --> 02:10:49.190
+Pablo Eduardo Abad: que sería exponencial.
+
+1199
+02:10:52.120 --> 02:10:57.420
+Pablo Eduardo Abad: La segunda propiedad es resistencia a segundas imágenes, y esto es
+
+1200
+02:10:58.250 --> 02:11:08.460
+Pablo Eduardo Abad: si yo les doy un mensaje cualquiera, es computacionalmente imposible encontrar un segundo mensaje que tenga el mismo hash.
+
+1201
+02:11:10.000 --> 02:11:12.260
+Pablo Eduardo Abad: Si yo les doy un mensaje.
+
+1202
+02:11:13.210 --> 02:11:18.620
+Pablo Eduardo Abad: Es imposible encontrar un segundo mensaje que tenga el mismo Hash, y acá
+
+1203
+02:11:19.060 --> 02:11:22.500
+Pablo Eduardo Abad: hago una pausa antes de entrar en la otra. Estas 2 propiedades
+
+1204
+02:11:23.100 --> 02:11:35.529
+Pablo Eduardo Abad: definen los usos más comunes de las funciones de Hash. Si la la resistencia pre imágenes abre todo un camino de lo que se conoce como protocolos de prueba de conocimiento.
+
+1205
+02:11:35.660 --> 02:11:44.529
+Pablo Eduardo Abad: Sí, la prueba de conocimiento es un protocolo en el cual alguien demuestra que que algo existe sin revelarlo.
+
+1206
+02:11:44.870 --> 02:11:51.249
+Pablo Eduardo Abad: Imagínense el problema, por ejemplo, de de las patentes de fórmulas. No sé
+
+1207
+02:11:51.590 --> 02:11:56.329
+Pablo Eduardo Abad: fórmulas de de algún farm medicamento nuevo. Sí,
+
+1208
+02:11:57.710 --> 02:12:11.180
+Pablo Eduardo Abad: suele haber un departamento de Patentes. Uno registra la patente, pero la idea es que la fórmula, esa patente no es pública si 1 necesita de alguna manera demostrar que que la la fórmula existe y y que la tuvo él antes.
+
+1209
+02:12:11.450 --> 02:12:19.119
+Pablo Eduardo Abad: por decirlo de alguna manera, las funciones de hash por la resistencia. Pre imágenes dan una forma digital de atacar ese tipo de problemas.
+
+1210
+02:12:19.440 --> 02:12:21.189
+Pablo Eduardo Abad: donde yo puedo
+
+1211
+02:12:22.350 --> 02:12:30.799
+Pablo Eduardo Abad: tener un documento con la fórmula de la patente de la dije del medicamento. Estaba diciendo calcular el hash, publicar el hash.
+
+1212
+02:12:31.120 --> 02:12:32.020
+Pablo Eduardo Abad: sí.
+
+1213
+02:12:32.400 --> 02:12:41.739
+Pablo Eduardo Abad: Y esta propiedad me dice que si yo, en algún momento tengo una disputa, yo puedo decir, no mira ese hash que vos conoces hace 3 años significa que yo hace 3 años que tengo este documento.
+
+1214
+02:12:42.140 --> 02:12:48.190
+Pablo Eduardo Abad: porque la propiedad de pre imágenes garantiza que yo no puedo haber inventado este documento
+
+1215
+02:12:48.430 --> 02:12:50.139
+Pablo Eduardo Abad: después de haber publicado el hash.
+
+1216
+02:12:50.430 --> 02:12:56.099
+Pablo Eduardo Abad: porque a partir del Hash ni yo ni vos podemos crear un documento X que llegue
+
+1217
+02:12:56.870 --> 02:13:03.429
+Pablo Eduardo Abad: un uso más banal de estos. Si quieren hacer juegos de apuestas donde hay apuestas por cartas.
+
+1218
+02:13:03.710 --> 02:13:15.829
+Pablo Eduardo Abad: sí hay muchos controles de integridad donde No queremos que alguien haga trampa en el sentido de que cambie localmente en su programa las cartas o en la página web que está viendo las cartas y que eso sirva para el otro.
+
+1219
+02:13:16.110 --> 02:13:26.659
+Pablo Eduardo Abad: y todos desconfían de todos. O sea, podemos usar esto para darle las cartas a una persona, volver con el al servidor y registrar el hash de
+
+1220
+02:13:26.840 --> 02:13:31.869
+Pablo Eduardo Abad: de algún agregado de todas las cartas. Y al final de la partida, demostrar que son las mismas que le dieron al principio.
+
+1221
+02:13:32.320 --> 02:13:41.700
+Pablo Eduardo Abad: por ejemplo, la segunda propiedad, resistencia segundas imágenes se usa mucho
+
+1222
+02:13:43.250 --> 02:13:50.329
+Pablo Eduardo Abad: para estas 2 para 2 cosas. Una es para para tener índices de contenido, si es un poco el ejemplo que les daba
+
+1223
+02:13:51.510 --> 02:14:00.120
+Pablo Eduardo Abad: cómo es imposible prácticamente producir un segundo mensaje que colisione con el primero que coincide en hash.
+
+1224
+02:14:00.890 --> 02:14:08.219
+Pablo Eduardo Abad: Yo puedo indexar mensajes y usar como como Id y el hash del contenido del mensaje. Entonces.
+
+1225
+02:14:08.330 --> 02:14:14.929
+Pablo Eduardo Abad: en sistemas de backups, este, en sistemas de almacenamiento masivo de imágenes.
+
+1226
+02:14:15.330 --> 02:14:24.340
+Pablo Eduardo Abad: este o el sistema donde hay que recuperar después archivos y no importa tanto el nombre. Esto puede ser una idea, una forma de de generar ideas sabiendo que
+
+1227
+02:14:24.550 --> 02:14:29.489
+Pablo Eduardo Abad: 2 archivos que aparezcan en distintos lugares con distintos nombres. Si tiene el mismo contenido, van a manchar.
+
+1228
+02:14:29.650 --> 02:14:33.340
+Pablo Eduardo Abad: Si permite hacer un match semántico por contenido exacto.
+
+1229
+02:14:37.370 --> 02:14:46.869
+Pablo Eduardo Abad: Estas son las 2 propiedades. Hay una tercera que es interesante porque engloba a las 2, o sea, un un criptosistema, perdón.
+
+1230
+02:14:47.150 --> 02:14:52.909
+Pablo Eduardo Abad: una función de Hash que cumpla con esta propiedad de resistencia a colisiones.
+
+1231
+02:14:53.480 --> 02:15:00.340
+Pablo Eduardo Abad: cumple con estas 2 y resistencia a colisiones. Es un poco más general
+
+1232
+02:15:00.920 --> 02:15:07.049
+Pablo Eduardo Abad: que que estas 2, entonces se suele atacar la prueba de seguridad. Por este lado.
+
+1233
+02:15:09.130 --> 02:15:15.280
+Pablo Eduardo Abad: una función que cumpla perdón. Esto cumple las otras 2 asintóticamente y bueno, con algunas restricciones que.
+
+1234
+02:15:15.280 --> 02:15:18.000
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí, pero esta no es la segunda vuelta.
+
+1235
+02:15:18.540 --> 02:15:33.610
+Pablo Eduardo Abad: No viene al caso. La resistencia de colisiones es parecida a la segunda propiedad, pero tiene una sutileza. Sí, esta esta. De alguna manera, 1 la puede leer como. Bueno para yo te doy un X si no encontras una colisión, resistencia de colisiones, es el mismo problema, pero con un grado más de libertad.
+
+1236
+02:15:34.110 --> 02:15:39.949
+Pablo Eduardo Abad: Yo acá te fijo un documento. Te digo, tenés el documento X, encontré el documento que exprima
+
+1237
+02:15:40.050 --> 02:15:45.769
+Pablo Eduardo Abad: en resistencia colisión. Yo te digo, inventarte 2 documentos. Cualquiera que sea en una colisión.
+
+1238
+02:15:47.790 --> 02:15:55.679
+Pablo Eduardo Abad: son problemas parecidos. De hecho, Por eso la demostración de resistencia colisiones implica las otras 2 propiedades.
+
+1239
+02:15:56.810 --> 02:16:00.589
+Pablo Eduardo Abad: La resistencia a colisiones es el escenario donde el atacante tiene mayor ventaja.
+
+1240
+02:16:00.990 --> 02:16:02.120
+Pablo Eduardo Abad: ¿por qué?
+
+1241
+02:16:03.070 --> 02:16:12.090
+Pablo Eduardo Abad: Si yo necesito encontrar una colisión? Acá yo tengo el valor X y a falta de algo mejor, ¿qué hago? Me empieza a empezar invento mensajes. Meto el mensaje X Uno.
+
+1242
+02:16:12.500 --> 02:16:16.320
+Pablo Eduardo Abad: Dahas, no en mente del X, 2, no X, 3, ¿no?
+
+1243
+02:16:16.900 --> 02:16:30.000
+Pablo Eduardo Abad: Y bueno, después de probar miles de 1 000 000 de trillones. Tal vez encuentre 1. Si cuando yo estoy buscando colisiones así de forma arbitraria, yo genero un mensaje. Ok, genero un segundo mensaje.
+
+1244
+02:16:30.250 --> 02:16:34.909
+Pablo Eduardo Abad: Y digo, los hayeks coinciden, ¿no? Ok, genera un tercer mensaje.
+
+1245
+02:16:35.120 --> 02:16:38.319
+Pablo Eduardo Abad: Y ahora compara este tercer mensaje con los 2 que generé.
+
+1246
+02:16:38.870 --> 02:16:42.780
+Pablo Eduardo Abad: Y el cuarto mensaje lo comparo con los 3 que genere bandas y el quinto
+
+1247
+02:16:43.370 --> 02:16:48.059
+Pablo Eduardo Abad: con los 4. Entonces la complejidad termina siendo la raíz cuadrada de
+
+1248
+02:16:48.820 --> 02:16:52.600
+Pablo Eduardo Abad: en cuanto a al esfuerzo de búsqueda versus el anterior.
+
+1249
+02:16:52.969 --> 02:17:06.170
+Pablo Eduardo Abad: que si lo pensamos como venimos midiendo la seguridad en cantidad de bits que se utilizan para ir a nivel de seguridad implica que la seguridad teórica de atacar este problema es la mitad el nivel de seguridad que la de los otros.
+
+1250
+02:17:06.420 --> 02:17:12.970
+Pablo Eduardo Abad: Entonces las funciones en general se miden a través del nivel de seguridad de la resistencia a colisiones.
+
+1251
+02:17:13.129 --> 02:17:19.169
+Pablo Eduardo Abad: le hace caso resistencia de colisiones. Tiene una prueba de seguridad.
+
+1252
+02:17:19.459 --> 02:17:24.479
+Pablo Eduardo Abad: Digo, es esta es la más trivial de todas se selecciona una función.
+
+1253
+02:17:25.490 --> 02:17:27.399
+Pablo Eduardo Abad: o sea, se fija una función.
+
+1254
+02:17:28.690 --> 02:17:34.660
+Pablo Eduardo Abad: y necesitamos que el algoritmo en tiempo polinómico, pudiendo hacer las evaluaciones que quiera emita 2 valores que son una colisión.
+
+1255
+02:17:34.820 --> 02:17:35.600
+Pablo Eduardo Abad: Punto
+
+1256
+02:17:36.260 --> 02:17:45.060
+Pablo Eduardo Abad: es como más el el desafío acá. Es eso. Te doy la función en el momento no puedes tener nada pre calculado. Necesito que en tiempo polinómico
+
+1257
+02:17:45.250 --> 02:17:48.040
+Pablo Eduardo Abad: materialice 2 mensajes que colisionan o no.
+
+1258
+02:17:49.090 --> 02:17:52.939
+Pablo Eduardo Abad: Mhm: Me voy a saltar esto un segundo quería.
+
+1259
+02:17:53.990 --> 02:17:59.070
+Pablo Eduardo Abad: Las funciones de Cash se pueden utilizar por sí solas, o sea, ya yo
+
+1260
+02:17:59.420 --> 02:18:05.610
+Pablo Eduardo Abad: tie tienen varios usos, pero también son la segunda forma que tenemos de construir Max.
+
+1261
+02:18:06.000 --> 02:18:09.960
+Pablo Eduardo Abad: Sí, hay una construcción que se llama Hache Mak Hash Mac.
+
+1262
+02:18:10.610 --> 02:18:14.020
+Pablo Eduardo Abad: que a partir de una función dejase libre de colisiones.
+
+1263
+02:18:14.129 --> 02:18:16.830
+Pablo Eduardo Abad: Nos permite construir un macking falsificable.
+
+1264
+02:18:18.680 --> 02:18:23.059
+Pablo Eduardo Abad: Sí, porque es por porque tenemos 2.
+
+1265
+02:18:24.510 --> 02:18:32.400
+Pablo Eduardo Abad: Primero, porque el cuando empezamos a hablar de magia. Históricamente, lo lo primero que se hizo fue adaptar los criptosistemas, así que nacen los Cbs Max.
+
+1266
+02:18:32.870 --> 02:18:36.759
+Pablo Eduardo Abad: pero las funciones de Hash. Y esta construcción hereda. Eso
+
+1267
+02:18:36.969 --> 02:18:43.070
+Pablo Eduardo Abad: están diseñadas para procesar un volumen de datos muy grande en muy poco tiempo. Son mucho más eficientes
+
+1268
+02:18:43.760 --> 02:18:46.349
+Pablo Eduardo Abad: que cifrar un mensaje.
+
+1269
+02:18:46.780 --> 02:18:52.259
+Pablo Eduardo Abad: El Mac, basado en una función de Hash suele ser 1 o 2 órdenes de magnitud más rápido
+
+1270
+02:18:52.719 --> 02:18:54.989
+Pablo Eduardo Abad: que un C. B. S. Mac: Entonces
+
+1271
+02:18:55.990 --> 02:19:08.389
+Pablo Eduardo Abad: depende mucho el contexto. Si están en una en un servidor muy pulenta y no es algo que estén haciendo todo el tiempo. Da exactamente lo mismo si están en un ambiente un poco más restringido o van a estar a escala.
+
+1272
+02:19:08.490 --> 02:19:13.530
+Pablo Eduardo Abad: No sé a escala Google, cifrando terabytes de información, hackleando a través de información.
+
+1273
+02:19:13.760 --> 02:19:16.969
+Pablo Eduardo Abad: Los H. Max son mucho más eficientes.
+
+1274
+02:19:18.120 --> 02:19:26.210
+Pablo Eduardo Abad: Sí, la construcción del Hachemac está especificada. Es una R, F, C, Este y es esto es.
+
+1275
+02:19:29.799 --> 02:19:33.410
+Pablo Eduardo Abad: se da una función de Hash: Sí, Y
+
+1276
+02:19:33.510 --> 02:19:38.490
+Pablo Eduardo Abad: como esto va a ser una chemak. Va a tener una clave en algún momento es.
+
+1277
+02:19:40.170 --> 02:19:45.230
+Pablo Eduardo Abad: se toma la clave, se le hace un short con una constante, ¿sí?
+
+1278
+02:19:45.549 --> 02:19:50.549
+Pablo Eduardo Abad: Y se calcula el hash de esa clave, ese prefijo con el mensaje.
+
+1279
+02:19:51.380 --> 02:19:58.980
+Pablo Eduardo Abad: Fíjense, acá aparece de vuelta la estructura, poner un prefijo para romper que mensajes iguales, este
+
+1280
+02:19:59.870 --> 02:20:06.309
+Pablo Eduardo Abad: terminan romp dándonos este estados intermedios. Si bien acá. Es una función de hash.
+
+1281
+02:20:06.850 --> 02:20:22.110
+Pablo Eduardo Abad: bueno a la salida de esto, que es una etiqueta. Si se la vuelve a hachear, se vuelve a hachear la misma clave con otra constante, distinta y autor Pad son valores constantes y siempre los mismos.
+
+1282
+02:20:22.920 --> 02:20:30.770
+Pablo Eduardo Abad: Sí, Entonces se calcula un hash y hace hash, se le vuelve a calcular otro hash.
+
+1283
+02:20:31.040 --> 02:20:37.430
+Pablo Eduardo Abad: Si si 1 lo mira rápido, aparece medio raro como que hay que calcular, hay hay que parsar el mensaje 2 veces.
+
+1284
+02:20:37.540 --> 02:20:41.770
+Pablo Eduardo Abad: La realidad es que el mensaje se procesa en este hash en el liner
+
+1285
+02:20:41.890 --> 02:20:45.910
+Pablo Eduardo Abad: y el autor pade es siempre el resultado. Debe procesar
+
+1286
+02:20:46.340 --> 02:20:49.519
+Pablo Eduardo Abad: la etiqueta nada más. Entonces el mensaje se procesa una sola vez
+
+1287
+02:20:49.660 --> 02:20:52.880
+Pablo Eduardo Abad: cuando 1 lo mira detenidamente, es súper eficiente
+
+1288
+02:20:53.020 --> 02:20:57.780
+Pablo Eduardo Abad: y hay una demostración formal de que si H es libre de colisiones, este Mac es infalsificable.
+
+1289
+02:21:00.560 --> 02:21:01.590
+Pablo Eduardo Abad: Mhm.
+
+1290
+02:21:02.810 --> 02:21:07.490
+Pablo Eduardo Abad: La cómo hace tiempo a ver
+
+1291
+02:21:08.080 --> 02:21:12.150
+Pablo Eduardo Abad: si pensamos en funciones de hash. Para cerrar el tema de funciones de hash.
+
+1292
+02:21:12.600 --> 02:21:19.050
+Pablo Eduardo Abad: hablamos de 3 propiedades: resistencia para imágenes resistencia a segundas imágenes y colisiones.
+
+1293
+02:21:20.440 --> 02:21:38.090
+Pablo Eduardo Abad: ¿cuál es el objetivo del atacante en cada una? Bueno, en pre imágenes es dado un I, un valor de hash encontrar el X. Si la búsqueda por fuerza bruta, que es cuando no existe un mejor ataque, requiere, en promedio, tantos intentos como a
+
+1294
+02:21:39.170 --> 02:21:41.550
+Pablo Eduardo Abad: posibles valores. De Hash. Ahí
+
+1295
+02:21:41.710 --> 02:21:50.429
+Pablo Eduardo Abad: sí. Si la función, esta es, por ejemplo, una función que emite una salida de 128 bits, hay 2 a las 100, 28 posibles valores.
+
+1296
+02:21:50.740 --> 02:21:53.669
+Pablo Eduardo Abad: La complejidad de buscar una preimagen.
+
+1297
+02:21:53.840 --> 02:21:56.779
+Pablo Eduardo Abad: en promedio, requiere 2 a las 100. 28 búsquedas
+
+1298
+02:21:59.140 --> 02:22:03.119
+Pablo Eduardo Abad: segundas pre imágenes. Es parecido. O sea, si yo les doy un X
+
+1299
+02:22:03.670 --> 02:22:08.860
+Pablo Eduardo Abad: con su I, encuentren otro. Buscar por fuerza bruta requiere también
+
+1300
+02:22:10.460 --> 02:22:13.389
+Pablo Eduardo Abad: intentos, en función de la cantidad posibles valores de Hash.
+
+1301
+02:22:13.560 --> 02:22:21.229
+Pablo Eduardo Abad: Hallar 2 colisiones. Era lo que les decía antes. Como yo puedo empezar a comparar cada mensaje que género con todos los anteriores.
+
+1302
+02:22:21.340 --> 02:22:26.430
+Pablo Eduardo Abad: Tiene una complejidad que está en el orden de la raíz cuadrada de eso. Si lo medimos en bits.
+
+1303
+02:22:26.580 --> 02:22:28.280
+Pablo Eduardo Abad: serían la mitad de bits.
+
+1304
+02:22:28.410 --> 02:22:37.939
+Pablo Eduardo Abad: Sí, este esta esta optimización se suele ver también en probabilidad. Lo menciono porque por ahí la vieron como la paradoja del cumpleaños.
+
+1305
+02:22:38.830 --> 02:22:49.059
+Pablo Eduardo Abad: que es el hecho, este de que una cosa es chequear contra anclar 1 y ver la probabilidad de que alguien mache contra 1, otra es en un grupo, la probabilidad que cualquiera mache con cualquiera
+
+1306
+02:22:56.430 --> 02:22:58.339
+Pablo Eduardo Abad: funciones de calle en la práctica.
+
+1307
+02:22:59.440 --> 02:23:05.710
+Pablo Eduardo Abad: O sea, vimos. Vimos por un lado a los macs, no Mac y las funciones de bloque Mac A es Macbeth.
+
+1308
+02:23:06.410 --> 02:23:14.950
+Pablo Eduardo Abad: Vimos funciones de Hash funciona de cash. En la práctica, el tamaño mínimo de salida que tiene las funciones de que se usan hoy día son 160 bits
+
+1309
+02:23:15.580 --> 02:23:19.480
+Pablo Eduardo Abad: para que la búsqueda de colisiones requiera más de 2 80 operaciones.
+
+1310
+02:23:20.030 --> 02:23:20.940
+Pablo Eduardo Abad: Sí,
+
+1311
+02:23:23.250 --> 02:23:38.509
+Pablo Eduardo Abad: funciones de Hash, muy conocidas M de 5 hoy día, está quebrada, no deberían usarla. Pero hay protocolos viejos donde todavía aparece la pueden encontrar. Si ya 1 160 bits a borde ahí medio complicado.
+
+1312
+02:23:38.780 --> 02:23:48.939
+Pablo Eduardo Abad: Ya 2 fue durante mucho tiempo la alternativa. Estos son estándares, así que eran funciones con otro nombre que se estandarizaron. Ya es la abreviatura de Secure Hash algoritm.
+
+1313
+02:23:49.300 --> 02:23:52.809
+Pablo Eduardo Abad: Son estándares a los A. S. D. Que le cambian el nombre
+
+1314
+02:23:53.540 --> 02:24:02.910
+Pablo Eduardo Abad: ya 2. Durante mucho tiempo fue la la la función recomendada un poco, porque los tamaños que soporta son 3. Tiene 3 variantes.
+
+1315
+02:24:03.220 --> 02:24:09.690
+Pablo Eduardo Abad: Este son son mejores que ya 1 en términos de dejarnos tranquilos
+
+1316
+02:24:09.890 --> 02:24:21.169
+Pablo Eduardo Abad: ya 2. Lo que tiene es un orden de magnitud más lento, que ya 1 es bastante lento. En algún momento se hizo un concurso abierto para encontrar los sucesores de ella. Dos.
+
+1317
+02:24:21.590 --> 02:24:25.149
+Pablo Eduardo Abad: Sí, el ganador fue una función que se llamaba Kekac.
+
+1318
+02:24:26.410 --> 02:24:30.280
+Pablo Eduardo Abad: hecha incidentalmente por el mismo autor que hizo aes.
+
+1319
+02:24:31.610 --> 02:24:38.479
+Pablo Eduardo Abad: Pero, bueno, son pocos los criptógrafos que trabajan en serio en este tipo de cosas. Es tema muy complicado.
+
+1320
+02:24:38.720 --> 02:24:45.600
+Pablo Eduardo Abad: pero bueno, que C, A, C. S. Se estandarizó como ya 3, tiene los mismos tamaños que ya 2, pero la velocidad es ya 1
+
+1321
+02:24:46.920 --> 02:24:54.949
+Pablo Eduardo Abad: si quieren, Entre Entre otras cosas, tiene una estructura distinta también. Así que es es más difícil que un ataque pueda romperse a 1, y ya 3 al mismo tiempo.
+
+1322
+02:24:55.760 --> 02:25:00.350
+Pablo Eduardo Abad: Y ya 3 es el estándar hoy recomendado Si tienen que usar funciones de calle.
+
+1323
+02:25:02.870 --> 02:25:05.669
+Pablo Eduardo Abad: 256 alcanza y sobra.
+
+1324
+02:25:05.920 --> 02:25:08.309
+Pablo Eduardo Abad: Los otros están por si acaso.
+
+1325
+02:25:10.960 --> 02:25:15.669
+Pablo Eduardo Abad: sobre estas funciones de hash, se construyen los H Mat. Entonces, en
+
+1326
+02:25:15.990 --> 02:25:23.890
+Pablo Eduardo Abad: sistemas van a encontrar hablar de H. Max, Uno. H. Mac Md, Cinco. Ojalá no se encuentren. H. Max: 3
+
+1327
+02:25:24.360 --> 02:25:26.060
+Pablo Eduardo Abad: hay otras funciones de hash.
+
+1328
+02:25:26.560 --> 02:25:32.949
+Pablo Eduardo Abad: Estas son las que se aceptan universalmente el resto. Tienen que averiguar un poco más si les toca alguna
+
+1329
+02:25:33.740 --> 02:25:34.840
+Pablo Eduardo Abad: ver qué son?
+
+1330
+02:25:35.270 --> 02:25:37.759
+Pablo Eduardo Abad: Y estamos llegando. Al final.
+
+1331
+02:25:40.920 --> 02:25:43.839
+Pablo Eduardo Abad: ¿Se acuerdan que al empezar la clase
+
+1332
+02:25:44.780 --> 02:25:52.429
+Pablo Eduardo Abad: estábamos hablando de criptosistemas, tiramos un problema y nos chocamos con este límite que tenían los criptosistemas. No voy a
+
+1333
+02:25:53.020 --> 02:26:07.029
+Pablo Eduardo Abad: volver muy rápido. Vimos este ataque, Vimos que lo podíamos modelar con esta prueba de seguridad? Sí, pero les adelanté, o les conté. Ninguno de los criptosistemas que habíamos visto, pasaban esta prueba. Si.
+
+1334
+02:26:07.770 --> 02:26:12.499
+Pablo Eduardo Abad: y acto seguido es como que ignoramos este tema y empezamos a hablar de
+
+1335
+02:26:13.140 --> 02:26:19.620
+Pablo Eduardo Abad: Coach después como construirlo después, Mac y demás. Vamos a volver a este tema Ahora.
+
+1336
+02:26:23.370 --> 02:26:31.130
+Pablo Eduardo Abad: ¿qué pasa cuando necesitamos las 2 cosas? Necesitamos la confidencialidad que nos podría dar en principio, un criptosistema
+
+1337
+02:26:31.700 --> 02:26:41.449
+Pablo Eduardo Abad: y la integridad. Esta capacidad de detectar alguna modificación que en principio nos dan los Mac o los cash. Si si pudiésemos usarlo sin clave
+
+1338
+02:26:42.220 --> 02:26:44.430
+Pablo Eduardo Abad: cuando necesitamos las 2 cosas.
+
+1339
+02:26:45.320 --> 02:26:56.710
+Pablo Eduardo Abad: Digo, 1 se podría poner más creativo, pero tenemos 2 funciones que resuelven cada 1 de los problemas. Veamos cómo combinarlas. No hay como 3 formas de de encarar esto. La primera es
+
+1340
+02:26:58.240 --> 02:27:07.559
+Pablo Eduardo Abad: en paralelo, o sea, ciframos por un lado y etiquetamos por el otro, sí, es cifraría auténtica.
+
+1341
+02:27:08.710 --> 02:27:12.719
+Pablo Eduardo Abad: La segunda y tercera forma son encadenarlas. ¿podemos
+
+1342
+02:27:14.880 --> 02:27:19.059
+Pablo Eduardo Abad: etiquetar el mensaje para autenticarlo, sí y cifrar
+
+1343
+02:27:19.300 --> 02:27:21.209
+Pablo Eduardo Abad: tanto el mensaje como la etiqueta.
+
+1344
+02:27:22.060 --> 02:27:29.490
+Pablo Eduardo Abad: La tercera forma sería esas mismas operaciones. Pero al revés, podemos cifrar el mensaje y etiquetar el texto cifrado.
+
+1345
+02:27:31.030 --> 02:27:38.690
+Pablo Eduardo Abad: Dos de estas 3 formas son seguras. Una no segura. La primera no funciona porque
+
+1346
+02:27:39.660 --> 02:27:44.050
+Pablo Eduardo Abad: no hay ninguna garantía de que la etiqueta de un mensaje
+
+1347
+02:27:45.140 --> 02:27:48.119
+Pablo Eduardo Abad: no revela información sobre el mensaje.
+
+1348
+02:27:48.570 --> 02:28:07.449
+Pablo Eduardo Abad: Sí, eso es una prueba de seguridad que cubre los criptosistemas. Entonces, si yo les publico de un mismo mensaje, la etiqueta y el y el texto cifrado puede ser que la etiqueta esté revelando información del mensaje. Entonces, si lo hacen por separado, no podemos garantizar la confidencialidad de la información.
+
+1349
+02:28:10.550 --> 02:28:13.970
+Pablo Eduardo Abad: Autenticar y luego cifrar puede ser seguro.
+
+1350
+02:28:14.890 --> 02:28:16.770
+Pablo Eduardo Abad: Sí, O sea.
+
+1351
+02:28:17.360 --> 02:28:26.919
+Pablo Eduardo Abad: ¿qué hacemos? Acá. Bueno, si la etiqueta del mensaje, el Mac puede revelar información, Cifrémosla. Entonces, está protegida la confidencialidad.
+
+1352
+02:28:27.240 --> 02:28:35.480
+Pablo Eduardo Abad: La realidad es que esto puede ser seguro. Esto se Usa Ssh. H, Por ejemplo, el protocolo de determinadas remotas usa este modo de
+
+1353
+02:28:36.650 --> 02:28:39.859
+Pablo Eduardo Abad: de descifrado y y etiquetado.
+
+1354
+02:28:41.070 --> 02:28:51.989
+Pablo Eduardo Abad: Pero no hay una prueba de seguridad genérica. Hay pruebas que garantizan la seguridad para un criptosistema dado combinado con un Mac, dado.
+
+1355
+02:28:52.090 --> 02:28:59.200
+Pablo Eduardo Abad: no hay pruebas de seguridad que que lo demuestren. Y, en particular, 1 tiene que tener mucho cuidado
+
+1356
+02:28:59.500 --> 02:29:01.920
+Pablo Eduardo Abad: si el Mac es un Cbc Mac
+
+1357
+02:29:02.020 --> 02:29:06.050
+Pablo Eduardo Abad: generado o utilizando la misma función de cifrado como bloque.
+
+1358
+02:29:06.440 --> 02:29:12.399
+Pablo Eduardo Abad: Ahí. Hay temas, medios complicados de que se pueden explotar ciertas simetrías entre las operaciones
+
+1359
+02:29:12.790 --> 02:29:20.639
+Pablo Eduardo Abad: son ataques, superavanzados, pero Pero el punto es esto puede ser seguro.
+
+1360
+02:29:20.950 --> 02:29:24.640
+Pablo Eduardo Abad: Requiere bastante trabajo para para demostrarlo
+
+1361
+02:29:24.860 --> 02:29:30.089
+Pablo Eduardo Abad: de la tercera cifra y luego te indicar: hay una demostración general que garantiza que siempre sea seguro.
+
+1362
+02:29:30.930 --> 02:29:31.930
+Pablo Eduardo Abad: Así que.
+
+1363
+02:29:33.970 --> 02:29:46.289
+Pablo Eduardo Abad: ante la duda, la tercera, de hecho es tan importante eso que eso tiene un nombre. Si se a ese tipo de construcción, si fraile, luego autenticar, se le conoce como cifrado autenticado.
+
+1364
+02:29:46.560 --> 02:29:55.739
+Pablo Eduardo Abad: ¿sí? Y es la combinación sistemática de eso. Un cifrado autenticado requiere un criptosistema que sea C, P, a Secure y un Mac que sea infalsificable.
+
+1365
+02:29:56.620 --> 02:30:02.269
+Pablo Eduardo Abad: Sí, y a partir de eso se construye un nuevo criptosistema que tiene esta forma
+
+1366
+02:30:03.830 --> 02:30:08.939
+Pablo Eduardo Abad: se Ge. La generación de clave implica la generación de las 2 claves, la del Mac y la del
+
+1367
+02:30:09.220 --> 02:30:13.089
+Pablo Eduardo Abad: criptosistema interno. Si el cifrado
+
+1368
+02:30:13.930 --> 02:30:27.300
+Pablo Eduardo Abad: es el tercer modo, el que siempre es seguro es se cifra el mensaje original y se lo acompaña con la etiqueta del texto cifrado y la verificación. La del descifrado tiene una particularidad superinteresante que es.
+
+1369
+02:30:27.690 --> 02:30:30.220
+Pablo Eduardo Abad: Primero se verifica el texto cifrado.
+
+1370
+02:30:30.330 --> 02:30:39.349
+Pablo Eduardo Abad: Y si la verificación pasa se descifra, sino aparece un estado nuevo, algo que no pasaba antes cuando desciframos, que es que la operación puede fallar
+
+1371
+02:30:40.040 --> 02:30:50.060
+Pablo Eduardo Abad: si los criptosistemas autenticados tienen la particularidad de que si alguien modifica el texto cifrado al intentar descifrado. Lo que vamos a tener es una falla.
+
+1372
+02:30:50.280 --> 02:30:56.079
+Pablo Eduardo Abad: La falla puede ser un error. Una excepción depende del lenguaje donde esté implementado esto. Pero
+
+1373
+02:30:56.220 --> 02:31:05.299
+Pablo Eduardo Abad: este lo que caracteriza el cifrado autenticado es que si alguien manipula el texto cifrado de alguna manera, el descifrado va a fallar.
+
+1374
+02:31:06.060 --> 02:31:17.380
+Pablo Eduardo Abad: Eso es algo que antes no pasaba en el descifrado común. Si alguien manipulaba el texto cifrado por ahí al descifrarlo, quedaba basura. O quedaba algo parecido. Depende cuán maleable o no era
+
+1375
+02:31:17.550 --> 02:31:20.710
+Pablo Eduardo Abad: el criptosistema autoindicado detecta esa operación y Falla
+
+1376
+02:31:23.820 --> 02:31:24.720
+Pablo Eduardo Abad: Mhm
+
+1377
+02:31:28.250 --> 02:31:34.990
+Pablo Eduardo Abad: perdón. Hay mensajes que vi este Joaquín M. Cinco mató a mi computadora. Una vez
+
+1378
+02:31:35.690 --> 02:31:41.560
+Pablo Eduardo Abad: de haber una buena historia detrás de eso, supongo que no es el algoritmo. Pero lo que vino atrás o de la mano del algoritmo.
+
+1379
+02:31:41.810 --> 02:31:49.199
+Pablo Eduardo Abad: ya 2. No sé si es la que pedían para los T Ps. Para puede ser para tepes tranquilamente. Puede ser ya 2 o ya 3
+
+1380
+02:31:49.480 --> 02:31:56.130
+Pablo Eduardo Abad: ahí. Según la universidad, no está en las librerías notas nuevas por ahí no está implementado. Ya 3. Ya tiene tantos años que está en todos lados
+
+1381
+02:31:57.060 --> 02:31:57.940
+Pablo Eduardo Abad: en
+
+1382
+02:31:59.260 --> 02:32:05.580
+Pablo Eduardo Abad: en proyectos nuevos. Ojalá lo tengan a disposición deberían estar usando ya 3 que ya tiene un par de años estatalizado.
+
+1383
+02:32:06.790 --> 02:32:16.020
+Pablo Eduardo Abad: Mhm, El criptosistema, el cifrado autenticado es una construcción genérica
+
+1384
+02:32:16.550 --> 02:32:25.670
+Pablo Eduardo Abad: que aplica para cualquier criptosistema. Y para cualquier este Mac y está disponible. Sí, hay
+
+1385
+02:32:28.300 --> 02:32:39.460
+Pablo Eduardo Abad: con el tiempo, se descubrieron o se inventaron modos de encadenamiento. ¿se acuerdan criptosistemas del bloque que tienen los modos de encadenamiento. Esto de o F, B. S. F. B Counter.
+
+1386
+02:32:39.580 --> 02:32:48.340
+Pablo Eduardo Abad: Bueno, en los últimos años se definieron modos de encadenamiento nuevos que permiten convertir una primitiva de bloque.
+
+1387
+02:32:49.790 --> 02:33:02.099
+Pablo Eduardo Abad: Con estos modos, en un criptosistema autenticado sin todo el overgente de doble clave, doble función y demás. Si son como el estado del arte En este tema, sí, Y hay
+
+1388
+02:33:02.190 --> 02:33:10.440
+Pablo Eduardo Abad: 2 grandes construcciones. Sí. La primera es el modo de encadenamiento Ccm, que es la abreviatura de Si de Counter, Wit Cibisimac
+
+1389
+02:33:12.460 --> 02:33:19.110
+Pablo Eduardo Abad: y que el único catch que tienes, si quieren, es que sigue
+
+1390
+02:33:19.690 --> 02:33:23.540
+Pablo Eduardo Abad: la variante, 2, autenticar y luego cifrar. Entonces
+
+1391
+02:33:24.340 --> 02:33:30.089
+Pablo Eduardo Abad: este funciona porque tiene una prueba de seguridad específica para esta forma de combinarla
+
+1392
+02:33:30.250 --> 02:33:37.200
+Pablo Eduardo Abad: conceptualmente. Lo que hacemos es, calculamos el Cbs Mac del mensaje y lo usamos como prefijo
+
+1393
+02:33:37.640 --> 02:33:40.700
+Pablo Eduardo Abad: cifrando S, S, C. B. S. Mac: y el mensaje.
+
+1394
+02:33:40.880 --> 02:33:49.129
+Pablo Eduardo Abad: ¿Cuál es el catch que podemos evaluar el Cvs Mac en paralelo a ir descifrando cada bloque del mensaje. Entonces esto que se ve así
+
+1395
+02:33:49.240 --> 02:33:55.390
+Pablo Eduardo Abad: tiene una forma de implementación que pasa por el mensaje una única vez, procesando cada bloque 2 veces.
+
+1396
+02:33:56.070 --> 02:34:00.730
+Pablo Eduardo Abad: Pero pasa una sola vez. No es que tiene que pasar por el mensaje para calcular el Mac y después
+
+1397
+02:34:01.350 --> 02:34:06.860
+Pablo Eduardo Abad: este calcular lo otro sí y en particular, no menor, Uso una sola clave
+
+1398
+02:34:07.160 --> 02:34:10.259
+Pablo Eduardo Abad: si este mecanismo requiere 2 claves.
+
+1399
+02:34:10.460 --> 02:34:16.660
+Pablo Eduardo Abad: Si son 2 claves. 128 bits desde afuera se ve como un criptosistema que requiere claves de 256.
+
+1400
+02:34:17.560 --> 02:34:19.350
+Pablo Eduardo Abad: Esto usa la misma clave.
+
+1401
+02:34:19.880 --> 02:34:28.980
+Pablo Eduardo Abad: tiene una prueba de seguridad específica que no me acuerdo. Si está en algún apéndice del libro, es medio avanzada. Esta, pero puede ser que esté.
+
+1402
+02:34:29.080 --> 02:34:37.400
+Pablo Eduardo Abad: Y si el ibe que aparece al cifrar y el nonce
+
+1403
+02:34:37.780 --> 02:34:44.590
+Pablo Eduardo Abad: que aparece en el modo counter de del cifrado, no se repiten.
+
+1404
+02:34:44.720 --> 02:34:48.629
+Pablo Eduardo Abad: La construcción es C. C. I, Se pasa la prueba
+
+1405
+02:34:49.520 --> 02:34:53.329
+Pablo Eduardo Abad: de integridad y confidencialidad usando la misma clave.
+
+1406
+02:34:54.710 --> 02:35:01.800
+Pablo Eduardo Abad: De hecho, ahí está, está, no está en el libro, pero después les ponemos un apunte que tenemos con la demostración para el que quiera profundizar.
+
+1407
+02:35:02.710 --> 02:35:03.650
+Pablo Eduardo Abad: Mhm.
+
+1408
+02:35:06.140 --> 02:35:14.950
+Pablo Eduardo Abad: El otro mecanismo bastante estandarizado. Se llama Gsm. Es otro modo de encadenamiento. G. S. M: Es la abreviatura de Galois. Cantar mode
+
+1409
+02:35:18.060 --> 02:35:24.649
+Pablo Eduardo Abad: es un esquema un poco más complicado o parece más complicado. Lo que tiene en particular es que
+
+1410
+02:35:25.350 --> 02:35:34.370
+Pablo Eduardo Abad: utiliza el modo Counder para ir chiflando, bloque a bloque y de los resultados cifrados de cada bloque, los combina en una función de hash específica que se llama Gi Hash.
+
+1411
+02:35:34.760 --> 02:35:36.910
+Pablo Eduardo Abad: que lo que tienes, que es muy rápida de calcular.
+
+1412
+02:35:37.090 --> 02:35:38.460
+Pablo Eduardo Abad: Sí, es una.
+
+1413
+02:35:39.470 --> 02:35:49.070
+Pablo Eduardo Abad: Es una una función de Hash que se calcula multiplicando valores en en aritmética de polinomios.
+
+1414
+02:35:50.100 --> 02:35:58.430
+Pablo Eduardo Abad: No importa, es parecido a a como está construido a ese en algunas partes. Lo que tiene este modo, Gsm es que es terriblemente más rápido
+
+1415
+02:35:58.690 --> 02:36:06.460
+Pablo Eduardo Abad: que el C B C, más que requiere cifrar 2 veces cada bloque acá se cifra una vez cada bloque y esta operación es despreciable. Por eso es el cifrado
+
+1416
+02:36:07.020 --> 02:36:08.190
+Pablo Eduardo Abad: quincem.
+
+1417
+02:36:09.590 --> 02:36:15.630
+Pablo Eduardo Abad: Si está disponible, debería ser el método para utilizar, entonces
+
+1418
+02:36:16.700 --> 02:36:19.830
+Pablo Eduardo Abad: no sé si lo tengo escrito, pero yo lo que recomiendo siempre es.
+
+1419
+02:36:20.300 --> 02:36:27.369
+Pablo Eduardo Abad: van vayan juntando y acordándose de los acrónimos, pero si necesitan cifrar Hoy día, algo que sí pongo acá es
+
+1420
+02:36:28.350 --> 02:36:34.289
+Pablo Eduardo Abad: en general cuando escuchen a nivel requerimientos de un sistema que se necesita confidencialidad.
+
+1421
+02:36:35.570 --> 02:36:43.429
+Pablo Eduardo Abad: 99 por 100 de chances de que implícito. También necesitan integridad sobre eso. Es el ejemplo que dijimos de no. Los sueldos son confidenciales.
+
+1422
+02:36:44.370 --> 02:36:47.879
+Pablo Eduardo Abad: bueno, pero es un problema también que alguien los modifique, entonces
+
+1423
+02:36:48.100 --> 02:36:58.109
+Pablo Eduardo Abad: el cifrado normal, el cifrado común puede ser manipulado si en general, en una aplicación real. Si necesitan confidencialidad, necesitan integridad, también
+
+1424
+02:36:58.400 --> 02:37:04.069
+Pablo Eduardo Abad: se serían muy Son muy excepcionales. Los casos entonces conviene prepararse siempre.
+
+1425
+02:37:04.250 --> 02:37:07.089
+Pablo Eduardo Abad: porque no van a tener tanto control de
+
+1426
+02:37:07.400 --> 02:37:13.209
+Pablo Eduardo Abad: de cómo se va a poder o no manipular ese texto cifrado donde va a estar almacenado. Entonces.
+
+1427
+02:37:14.490 --> 02:37:21.410
+Pablo Eduardo Abad: si se tienen que llevar algo es en sistemas reales, usen criptosistemas autenticados.
+
+1428
+02:37:21.720 --> 02:37:22.530
+Pablo Eduardo Abad: Sí,
+
+1429
+02:37:22.650 --> 02:37:30.780
+Pablo Eduardo Abad: si tengo que darles un nombre en particular para que se lleven a es que es el estándar actual de cifrado del bloque lo más rápido que hay. Y lo más estandarizado
+
+1430
+02:37:31.180 --> 02:37:38.620
+Pablo Eduardo Abad: modo. Gsm: Hay modo. Gsm es un criptosistema autenticado, libre de patentes. Se puede usar en cualquier lado sin tener que pagar
+
+1431
+02:37:38.950 --> 02:37:45.940
+Pablo Eduardo Abad: implementado por prácticamente todas las librerías serias de seguridad y autenticado.
+
+1432
+02:37:50.000 --> 02:37:58.850
+Pablo Eduardo Abad: Bien, con esto terminamos la clase de hoy que barre el apartado de integridad
+
+1433
+02:37:59.300 --> 02:38:06.150
+Pablo Eduardo Abad: dentro de lo que es criptografía. Esto se ve en el capítulo 4 del libro de Cats, aproximadamente para el que quiera profundizar.
+

@@ -1,0 +1,639 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+\section{Cifrado}
+
+Esta unidad recorre el camino que va desde la \textbf{seguridad incondicional}
+(secreto perfecto, one-time pad) hacia la \textbf{seguridad computacional}
+(indistinguibilidad, CPA, CCA), y de ahí a las construcciones prácticas:
+cifrado de flujo, cifrado de bloque y modos de encadenamiento.
+
+\begin{examen}
+Es una de las unidades \textbf{más evaluadas} del parcial. Los tres núcleos
+recurrentes son: (1) \textbf{demostración formal de secreto perfecto} sobre un
+esquema dado; (2) \textbf{variantes de CBC y propagación de errores}; (3)
+\textbf{experimentos PrivK} (eav / CPA) mostrando que un esquema determinista
+no es seguro. Conviene dominar los tres.
+\end{examen}
+
+%======================================================================
+\subsection{Cifrado simétrico (criptosistema)}
+
+Un criptosistema es una \textbf{terna de algoritmos} $(\text{Gen}, \text{Enc}, \text{Dec})$:
+
+\begin{definicion}{Criptosistema simétrico}
+\begin{itemize}[nosep]
+  \item $\text{Gen}: () \to K$ \quad — generador de clave. En general es una
+        función \emph{no determinística} que elige una clave al azar del
+        espacio de claves con distribución uniforme.
+  \item $\text{Enc}: K \times P \to C$ \quad — cifrado, $e_k(m)=c$.
+  \item $\text{Dec}: K \times C \to P$ \quad — descifrado, $d_k(c)=m$.
+\end{itemize}
+\textbf{Propiedad básica (corrección):} para todo $m$ y $k$ válidos
+$$d_k(e_k(m)) = m.$$
+\end{definicion}
+
+\textbf{Conjuntos involucrados:}
+\begin{itemize}[nosep]
+  \item $K$: espacio de claves — todas las claves posibles.
+  \item $P$ (o $M$): espacio plano — todos los mensajes posibles.
+  \item $C$: espacio cifrado — todos los mensajes cifrados posibles.
+\end{itemize}
+
+\begin{ojo}
+La propiedad básica habla solo de la \emph{relación} entre las funciones
+(que Dec invierte a Enc); \textbf{no dice nada sobre seguridad}. No hay una
+única definición de seguridad: cada modelo (secreto perfecto, eav, CPA, CCA)
+define un escenario distinto.
+\end{ojo}
+
+%======================================================================
+\subsection{Secreto perfecto (Shannon)}
+
+\begin{definicion}{Secreto perfecto (Shannon)}
+Dado un criptosistema $(\text{Gen}, e, d)$, posee \textbf{secreto perfecto} si
+para toda distribución de probabilidades sobre $M$, para cada mensaje $m$ y
+cada cifrado $c$ con $\Pr[C=c]>0$:
+$$\Pr[M=m \mid C=c] = \Pr[M=m].$$
+\end{definicion}
+
+Intuición: \textbf{conocer el texto cifrado no aporta ninguna información
+extra sobre el texto plano} que no se tuviera a priori. La tabla de
+probabilidades de los mensajes no cambia al conocer $c$.
+
+\begin{destacado}
+\textbf{La paradoja del secreto perfecto.} Como $c=e_k(m)$, las variables
+aleatorias $C$ y $M$ están \emph{relacionadas} por una función (no son
+independientes). Sin embargo, la condición de secreto perfecto, leída
+probabilísticamente, dice exactamente que $M$ y $C$ son estadísticamente
+\emph{independientes}. El ``truco'' que lo hace posible: las ecuaciones no
+miran las claves; \textbf{la clave aleatoria es la que introduce esa
+independencia} a pesar de la relación funcional.
+\end{destacado}
+
+\textbf{Definición alternativa (por encripción).} Equivalente a la de Shannon:
+para todo par de mensajes $m, m'$ y todo cifrado $c$,
+$$\Pr[\,\text{Enc}_k(m)=c\,] = \Pr[\,\text{Enc}_k(m')=c\,].$$
+Es decir, la distribución del cifrado es la misma sin importar qué mensaje se
+cifró.
+
+\subsubsection{Teorema (condición necesaria): $\#K \ge \#M$}
+
+\begin{destacado}
+\textbf{Secreto perfecto} $\Rightarrow \#K \ge \#C \ge \#M$
+(equivalentemente $|K| \ge |M|$).\\
+Resultados teóricos asociados:
+\begin{itemize}[nosep]
+  \item Cualquier criptosistema con secreto perfecto es \textbf{reducible al
+        OTP} (existe un isomorfismo con el one-time pad).
+  \item Cualquier sistema que \emph{no} sea reducible al OTP \textbf{no} posee
+        secreto perfecto.
+  \item Consecuencia: el secreto perfecto es demasiado impráctico; se necesitan
+        otras construcciones.
+\end{itemize}
+\end{destacado}
+
+Cuando además $\#K = \#M$, el secreto perfecto exige (teorema de Shannon):
+\begin{enumerate}[nosep]
+  \item las claves se eligen con distribución \textbf{uniforme}, y
+  \item para cada par $(m,c)$ existe una \textbf{única} clave $k$ tal que
+        $e_k(m)=c$.
+\end{enumerate}
+
+\subsubsection{Método para demostrar secreto perfecto (PASO A PASO)}
+
+\begin{examen}
+\textbf{Cómo se pide (2015, 2016, 2017, 2025-2):} dado un esquema concreto,
+demostrar si tiene o no secreto perfecto. Método esperado:
+\begin{enumerate}
+  \item \textbf{Calcular los cardinales} $\#M$, $\#K$, $\#C$. Si $\#K < \#M$,
+        \emph{ya} se concluye que NO hay secreto perfecto (por el teorema).
+  \item \textbf{Enunciar la definición usada:}
+        \begin{itemize}[nosep]
+          \item Shannon: $\Pr[M=m\mid C=c]=\Pr[M=m]\ \forall m,c$; \emph{o bien}
+          \item por encripción: $\Pr[\text{Enc}_k(m)=c]=\Pr[\text{Enc}_k(m')=c]$.
+        \end{itemize}
+  \item \textbf{Verificar el teorema:} $\#K \ge \#M$; con $\#K=\#M$ chequear
+        claves uniformes y unicidad de la clave que lleva cada $m$ a cada $c$.
+  \item \textbf{Concluir.} Si todo se cumple, hay secreto perfecto; si falla
+        algún paso, exhibir el contraejemplo (un $m,c$ donde
+        $\Pr[M=m\mid C=c]\neq\Pr[M=m]$).
+\end{enumerate}
+\end{examen}
+
+\paragraph{Lema auxiliar (probabilidad del cifrado).}
+Para calcular $\Pr[C=c]$ se barren todas las claves (eventos disjuntos, porque
+la clave no toma dos valores a la vez):
+$$\Pr[C=c] = \sum_{k} \Pr[C=c \cap K=k].$$
+Como clave y mensaje se eligen de forma \emph{independiente},
+$\Pr[C=c\cap K=k]=\Pr[M = d_k(c)]\cdot \Pr[K=k]$.
+
+\subsubsection{Ejemplo trabajado: clave NO aleatoria (rompe el secreto perfecto)}
+
+Esquema tipo OTP sobre mensajes de 2 bits, pero con clave \textbf{sesgada}:
+$$\Pr[k{=}00]{=}0{,}3,\quad \Pr[k{=}01]{=}0{,}1,\quad \Pr[k{=}10]{=}0{,}4,\quad \Pr[k{=}11]{=}0{,}2.$$
+Distribución del texto plano:
+$$\Pr[m{=}00]{=}0{,}60,\ \Pr[m{=}01]{=}0{,}15,\ \Pr[m{=}10]{=}0{,}10,\ \Pr[m{=}11]{=}0{,}15.$$
+Se intercepta $c=01$. Queremos $\Pr[M{=}00 \mid C{=}01]$.
+
+Usamos la igualdad de probabilidades condicionales:
+$$\Pr[M{=}00\mid C{=}01]\cdot \Pr[C{=}01] = \Pr[C{=}01\mid M{=}00]\cdot \Pr[M{=}00].$$
+
+\textbf{(a) Calcular $\Pr[C{=}01]$} (sumando sobre las claves, usando $c=m\oplus k$):
+\begin{align*}
+\Pr[C{=}01] &= \sum_k \Pr[M{=}01\oplus k]\cdot\Pr[K{=}k]\\
+&= \Pr[M{=}01]\Pr[K{=}00] + \Pr[M{=}00]\Pr[K{=}01]\\
+&\quad + \Pr[M{=}11]\Pr[K{=}10] + \Pr[M{=}10]\Pr[K{=}11]\\
+&= 0{,}15\cdot0{,}3 + 0{,}6\cdot0{,}1 + 0{,}15\cdot0{,}4 + 0{,}1\cdot0{,}2 = \mathbf{0{,}185}.
+\end{align*}
+
+\textbf{(b) Calcular $\Pr[C{=}01\mid M{=}00]$.} Si $m=00$, la única clave que da
+$c=01$ es $k=01$, luego $\Pr[C{=}01\mid M{=}00]=\Pr[K{=}01]=\mathbf{0{,}1}$.
+
+\textbf{(c) Despejar:}
+$$\Pr[M{=}00\mid C{=}01] = \frac{0{,}1\cdot 0{,}6}{0{,}185} = \mathbf{0{,}32} \;\neq\; 0{,}6 = \Pr[M{=}00].$$
+
+\begin{ojo}
+Como $0{,}32 \neq 0{,}6$, \textbf{NO hay secreto perfecto}: se extrajo
+información (saber que $c=01$ vuelve \emph{menos} probable que el mensaje fuera
+$00$). El secreto perfecto se rompe \textbf{en cuanto la clave no es uniforme}.
+\end{ojo}
+
+\begin{destacado}
+Si en cambio la clave fuese uniforme ($\Pr[K{=}k]=1/N$ con $N=2^n$), se
+obtiene $\Pr[C{=}c]=1/N$ \emph{independientemente del mensaje}, y entonces
+$\Pr[M{=}m\mid C{=}c]=\Pr[M{=}m]$ — es el caso del OTP con secreto perfecto.
+\end{destacado}
+
+%======================================================================
+\subsection{One-Time Pad (OTP) / Vernam}
+
+Atribuido a Vernam (1917). Es la transformación más simple posible y, sin
+embargo, alcanza el máximo teórico de seguridad.
+
+\begin{definicion}{One-Time Pad}
+\begin{align*}
+\text{Gen}&:\ k \leftarrow \{0,1\}^n,\quad n=|m| \quad(\text{clave uniforme})\\
+\text{Enc}&:\ e_k(m) = m \oplus k\\
+\text{Dec}&:\ d_k(c) = c \oplus k
+\end{align*}
+El cifrado es un XOR bit a bit entre mensaje y clave. Descifrar es el mismo
+XOR (en $\mathbb{Z}_2$ el XOR es lineal e involutivo: es su propia inversa).
+\end{definicion}
+
+\prof{El OTP aplica la transformación más simple y tonta que se les puede ocurrir: un XOR bit a bit entre cada bit del mensaje y cada bit de la clave. Y ahí se acabó la magia.}
+
+\subsubsection{El OTP tiene secreto perfecto (demostración)}
+
+Sea $|k|=n$, $N=2^n=\#K$. Queremos probar $\Pr[M{=}m\mid C{=}c]=\Pr[M{=}m]$.
+
+\textbf{Lema 1 — $\Pr[C{=}c]=1/N$.}
+\begin{align*}
+\Pr[C{=}c] &= \sum_k \Pr[C{=}c \cap K{=}k]\\
+\Pr[C{=}c \cap K{=}k] &= \Pr[M{=}c\oplus k \cap K{=}k]
+   = \Pr[M{=}c\oplus k]\cdot \Pr[K{=}k] \quad(\text{indep.})\\
+   &= \Pr[M{=}c\oplus k]\cdot \tfrac{1}{N}.
+\end{align*}
+Entonces
+$$\Pr[C{=}c] = \frac{1}{N}\sum_k \Pr[M{=}c\oplus k] = \frac{1}{N}\cdot 1 = \frac{1}{N}.$$
+La suma da $1$ porque al recorrer todas las claves $k$, $c\oplus k$ recorre
+\emph{todos} los mensajes posibles (sin repetir), y la suma de las
+probabilidades de todos los valores de una v.a.\ es $1$. Notar que $\Pr[C{=}c]$
+\textbf{no depende del mensaje}.
+
+\textbf{Parte 2 — conclusión.} Por probabilidades condicionales:
+\begin{align*}
+\Pr[M{=}m\mid C{=}c]\cdot \Pr[C{=}c] &= \Pr[C{=}c \cap M{=}m]\\
+&= \Pr[K{=}c\oplus m \cap M{=}m]\\
+&= \Pr[K{=}c\oplus m]\cdot \Pr[M{=}m] \quad(\text{indep.})\\
+&= \tfrac{1}{N}\cdot \Pr[M{=}m].
+\end{align*}
+Como $\Pr[C{=}c]=1/N$ (Lema 1), se cancelan los $1/N$:
+$$\boxed{\Pr[M{=}m\mid C{=}c] = \Pr[M{=}m].}\qquad\blacksquare$$
+
+\subsubsection{Limitaciones del OTP (las malas noticias)}
+
+\begin{destacado}
+\begin{enumerate}[nosep]
+  \item \textbf{Clave tan larga como el mensaje:} $\#K \ge \#C$. Para una novela
+        de bits hace falta una clave de la misma cantidad de bits. No achica el
+        problema: proteger la clave cuesta lo mismo que proteger el mensaje.
+  \item \textbf{No reutilizar la clave (one-time).} Si se cifran dos mensajes
+        con la misma clave:
+        \begin{align*}
+        c_1 = m_1 \oplus k,\qquad c_2 = m_2 \oplus k
+        \;\Rightarrow\; c_1 \oplus c_2 = m_1 \oplus m_2.
+        \end{align*}
+        Se cancela la clave y se filtra el XOR de los planos $\Rightarrow$
+        se pierde el secreto perfecto (queda como un cifrado por sustitución).
+  \item \textbf{La clave DEBE ser verdaderamente aleatoria.} La demostración
+        usa $\Pr[K{=}k]=1/N$ (distribución uniforme). Los generadores reales
+        son \emph{pseudo}aleatorios (algorítmicos, deterministas): si se rompe
+        la hipótesis de aleatoriedad, se cae la demostración.
+\end{enumerate}
+\end{destacado}
+
+\prof{En escenarios donde podamos satisfacer todas las condiciones del one-time pad, tenemos garantías absolutas de seguridad.}
+
+Usos documentados reales: cifrado en papel en la 2.\textsuperscript{a} Guerra
+Mundial y el ``teléfono rojo'' Washington--Moscú durante la Guerra Fría (clave
+generada midiendo decaimiento radiactivo, distribuida en maletas). Fuera de
+esos escenarios acotados, es impráctico (p.\ ej.\ comercio electrónico).
+
+%======================================================================
+\subsection{Seguridad computacional}
+
+El secreto perfecto $=$ \textbf{seguridad incondicional} (sin condiciones sobre
+el adversario). Como es impráctico, se relajan dos cosas para pasar a la
+\textbf{seguridad computacional}:
+
+\begin{enumerate}[nosep]
+  \item \textbf{Limitar escenarios:} el adversario tiene poder de cómputo muy
+        grande pero \emph{acotado} (especialmente en \textbf{tiempo}). Se lo
+        modela como algoritmo \textbf{PPT} (Probabilistic Polynomial Time). Con
+        poder de cómputo infinito, ``game over''.
+  \item \textbf{Limitar garantías:} se acepta una \textbf{pequeña probabilidad
+        de éxito} para el atacante (se abandona la infalibilidad). Como el
+        cifrado deja de ser ``aleatorio puro'', la fuerza bruta siempre es
+        posible (analogía: comprar todos los números de la lotería, o tener
+        suerte y acertar al primer intento).
+\end{enumerate}
+
+\begin{definicion}{Función despreciable y nivel de seguridad}
+El \textbf{nivel de seguridad} $n$ relaciona la cota del poder del adversario
+con su probabilidad de éxito. Dado $n$ se espera que:
+\begin{itemize}[nosep]
+  \item el adversario corra algoritmos de orden $\text{PPT}(n)$;
+  \item su probabilidad de éxito $\varepsilon(n)$ sea \textbf{despreciable}:
+        $\varepsilon(n)$ es despreciable $\iff \varepsilon(n) < 1/n^k$
+        (para todo polinomio, a partir de cierto $n$).
+\end{itemize}
+\end{definicion}
+
+\subsubsection{Pruebas de seguridad (experimentos)}
+
+Una prueba de seguridad es una serie de pasos que pone a prueba un
+\textbf{algoritmo $A$ que representa un ataque}. El atacante gana o pierde; se
+puede repetir muchas veces e interesa su \textbf{probabilidad de éxito}.
+
+\paragraph{PrivK-eav (Eavesdropping / indistinguibilidad).}
+\begin{definicion}{Experimento $\text{Eav}_{A,\Pi}$}
+Dado un adversario $A(n)$ y un criptosistema $\Pi(n)$:
+\begin{enumerate}[nosep]
+  \item $A$ genera $m_0$ y $m_1$ arbitrariamente.
+  \item Se genera una clave $k \leftarrow K$.
+  \item Se genera $b \leftarrow \{0,1\}$.
+  \item $A$ recibe $c = e_k(m_b)$.
+  \item $A$ emite $b' \in \{0,1\}$.
+\end{enumerate}
+$\text{Eav}_{A,\Pi}=1$ si $b=b'$ ($A$ gana).\\
+$\Pi$ es \textbf{indistinguible ante observadores} si
+$\Pr[\text{Eav}_{A,\Pi}{=}1] = 0{,}5 + \varepsilon(n)$ con $\varepsilon$
+despreciable.
+\end{definicion}
+
+\paragraph{PrivK-mult (múltiples cifrados).}
+\begin{definicion}{Experimento $\text{Mul}_{A,\Pi}$}
+Igual que eav pero $A$ genera dos \emph{vectores} de mensajes
+$(m_{00},\dots,m_{0i})$ y $(m_{10},\dots,m_{1i})$; recibe $(c_0,\dots,c_i)$ con
+$c_j=\text{Enc}_k(m_{bj})$; emite $b'$. $\Pi$ es indistinguible bajo múltiples
+cifrados si $\Pr[\text{Mul}_{A,\Pi}{=}1]=0{,}5+\varepsilon(n)$.
+\end{definicion}
+
+\paragraph{PrivK-CPA (Chosen Plaintext Attack).}
+\begin{definicion}{Experimento $\text{CPA}_{A,\Pi}$}
+\begin{enumerate}[nosep]
+  \item Se genera una clave $k \leftarrow K$.
+  \item $A$ obtiene un \textbf{oráculo} $f(x)=e_k(x)$ (puede cifrar lo que
+        quiera) y genera $(m_0, m_1)$.
+  \item Se genera $b \leftarrow \{0,1\}$.
+  \item $A$ recibe $c = e_k(m_b)$.
+  \item $A$ emite $b' \in \{0,1\}$.
+\end{enumerate}
+$\text{CPA}_{A,\Pi}=1$ si $b=b'$. $\Pi$ es \textbf{CPA-Secure} si
+$\Pr[\text{CPA}_{A,\Pi}{=}1]=0{,}5+\varepsilon(n)$.
+\end{definicion}
+
+\subsubsection{Propiedades CPA y necesidad de cifrado probabilístico}
+
+\begin{destacado}
+\begin{itemize}[nosep]
+  \item \textbf{Un criptosistema determinista NO puede ser CPA-Secure} (ni
+        seguro bajo múltiples cifrados). El adversario aprovecha que
+        $e_k(x)$ es constante.
+  \item Si un criptosistema es CPA-Secure para un mensaje, lo es para
+        múltiples.
+  \item Un CPA-Secure de tamaño limitado ($n$ bits) puede extenderse:
+        $m=m_0\|m_1\|\dots\|m_i$ y
+        $\text{enc}_k(m)=\text{enc}_k(m_0)\|\dots\|\text{enc}_k(m_i)$.
+\end{itemize}
+\end{destacado}
+
+\begin{examen}
+\textbf{Por qué un esquema determinista no es CPA-seguro (ataque típico, 2018,
+2023, 2025-1).} El adversario:
+\begin{enumerate}[nosep]
+  \item Pide al oráculo $c_0 = e_k(m_0)$ y $c_1 = e_k(m_1)$ con $m_0\neq m_1$.
+  \item Recibe el desafío $c = e_k(m_b)$.
+  \item Compara: si $c=c_0$ responde $b'{=}0$; si $c=c_1$ responde $b'{=}1$.
+        Como el cifrado es determinista, \textbf{acierta siempre}
+        ($\Pr=1$).
+\end{enumerate}
+\textbf{Ejemplo: cifrado afín} $c=\langle r,\ a r + b + m\rangle$. Si se fija
+$r=(a+b)$ (o cualquier $r$ constante) el esquema se vuelve \emph{determinista}
+$\Rightarrow$ el adversario pide cifrado de $m_0$ y $m_1$, compara y gana.\\
+\textbf{Conclusión:} CPA-Secure $\Rightarrow$ el cifrado debe ser
+\textbf{probabilístico}. Forma canónica (2016): $c=\langle r,\ F_k(r)\oplus m\rangle$
+con $r$ aleatorio por mensaje.
+\end{examen}
+
+\begin{ojo}
+\textbf{Errores típicos:}
+\begin{itemize}[nosep]
+  \item Olvidar que un esquema \textbf{determinista nunca es CPA-seguro}.
+  \item \textbf{Confundir secreto perfecto con seguridad computacional}: el
+        primero es incondicional (no asume límite de cómputo); el segundo
+        admite adversarios PPT con probabilidad de éxito despreciable.
+\end{itemize}
+\end{ojo}
+
+\paragraph{Evitar reutilizar la clave (nonce / IV).}
+Para volver probabilístico al cifrado de flujo se agrega a la función
+generadora un valor que \textbf{no debe repetirse con la misma clave}
+(\emph{nonce} o IV). Dos formas:
+\begin{itemize}[nosep]
+  \item \textbf{Modo sincronizado:} un único IV, $G$ produce un keystream
+        largo $G(S)$ que se va XOR-eando con $M_0, M_1, \dots$
+  \item \textbf{Modo no sincronizado:} un IV por mensaje
+        ($IV_0$ con $M_0$, $IV_1$ con $M_1$, $\dots$), generando $G(S), G(S'),\dots$
+\end{itemize}
+
+%======================================================================
+\subsection{Cifrado de flujo}
+
+Intercambia la clave del OTP por la salida de un \textbf{generador
+pseudoaleatorio} $G$:
+\begin{align*}
+\text{Gen}&:\ k \leftarrow K\\
+\text{Enc}&:\ e_k(m) = G(k) \oplus m\\
+\text{Dec}&:\ d_k(c) = G(k) \oplus c
+\end{align*}
+
+\begin{destacado}
+\textbf{La gran diferencia con el OTP:} $|K| \lll |M|$. Por ejemplo
+$|K|=2^{128}$ y $|M|=|K|^{128}$. La clave (chica, p.\ ej.\ 128 bits) actúa como
+\textbf{semilla} (\emph{seed}); $G$ la expande a tantos bits como tenga el
+mensaje.
+\end{destacado}
+
+\begin{definicion}{Generador pseudoaleatorio (PRG)}
+Es un algoritmo \textbf{determinístico} que expande una semilla y cuya salida
+``parece aleatoria''. Formalmente, sea $D=\{f:\{0,1\}^n\to\{0,1\}\}$ una familia
+de funciones. $G:\{0,1\}^s\to\{0,1\}^n$ con $s<n$ es PRG respecto de $D$ si para
+toda $f\in D$:
+$$\Pr\big(f(G(r^s)) \neq f(r^n)\big) = \varepsilon \quad(\text{despreciable}),$$
+donde $r^n$ es una secuencia \emph{realmente} aleatoria. Misma semilla
+$\Rightarrow$ misma secuencia.
+\end{definicion}
+
+\begin{destacado}
+\textbf{Teorema:} si $G(\cdot)$ es un generador pseudoaleatorio, entonces el
+cifrado de flujo es \textbf{indistinguible ante observadores} (pasa la prueba
+eav).
+\end{destacado}
+
+\begin{examen}
+\textbf{Ejercicio recurrente:} demostrar que si es posible \emph{distinguir}
+$G(\cdot)$ de una secuencia aleatoria, entonces el cifrado de flujo basado en
+$G$ \textbf{no pasa la prueba eav}. (Basta exhibir un \emph{distinguisher}:
+mostrar que existe una función que separa la salida de $G$ de una secuencia
+realmente aleatoria implica que hay ataque potencial — explotarlo es otra
+cuestión.)
+\end{examen}
+
+\begin{examen}
+\textbf{Los cifrados de flujo NO son seguros bajo múltiples cifrados con la
+misma clave} (igual que el OTP reusado):
+$$c_1 = m_1\oplus G(s),\quad c_2 = m_2\oplus G(s)\;\Rightarrow\; c_1\oplus c_2 = m_1\oplus m_2.$$
+\textbf{Ataque que gana la prueba MUL:}
+$$A \to (m_{00}{=}0\dots0,\ m_{01}{=}0\dots0),\quad (m_{10}{=}0\dots0,\ m_{11}{=}1\dots1).$$
+$A$ obtiene $c_0, c_1$ y calcula $X=c_0\oplus c_1$. Si $X=0\dots0 \Rightarrow b'{=}0$;
+si no $\Rightarrow b'{=}1$. Acierta siempre.
+\end{examen}
+
+\paragraph{Generadores recomendados.} Quebrados / no recomendados: RC4
+(https, WEP), CSS (DVDs), A5/1 y A5/2 (GSM), E0 (Bluetooth). Recomendados:
+\textbf{Salsa20} ($\{0,1\}^{128\text{ o }256}\times\{0,1\}^{64}\to\{0,1\}^n$,
+$n=2^{64}\cdot2^9$) y \textbf{Rabbit}
+($\{0,1\}^{128}\times\{0,1\}^{64}\to\{0,1\}^n$, $n=2^{128}$); el segundo
+argumento es el IV.
+
+%======================================================================
+\subsection{Cifrado de bloque}
+
+\begin{definicion}{Primitiva de cifrado de bloque}
+Definida para mensajes de \textbf{tamaño FIJO}: $K=\{0,1\}^n$, $C=P=\{0,1\}^b$.
+$\text{Gen}: k\leftarrow K$, $\text{Enc}: e_k(m)=c$, $\text{Dec}: d_k(c)=m$.
+\end{definicion}
+
+Son \textbf{funciones pseudoaleatorias}: para cada $k$, $f(x)=\text{Enc}_k(x)$
+es indistinguible de una función tomada al azar del conjunto de funciones del
+mismo dominio (es un PRG). Las pruebas de seguridad de los modos son
+\textbf{por reducción} a esta propiedad.
+
+\begin{ojo}
+Las primitivas de bloque son \textbf{determinísticas} $\Rightarrow$ por sí
+solas \textbf{no pasan la prueba Mul}. Se combinan con \textbf{mecanismos de
+encadenamiento} (modos) para formar criptosistemas seguros. (No está demostrado
+que existan las funciones pseudoaleatorias.)
+\end{ojo}
+
+\subsubsection{DES, 3-DES, AES}
+
+\textbf{DES (Data Encryption Standard).} Desarrollado por IBM, adoptado por
+EE.UU.\ (primera función de cifrado pública apoyada por un gobierno).
+Entrada/salida 64 bits, clave 64 bits (\textbf{56 efectivos}, 8 de paridad). Es
+una \textbf{red de Feistel}: se parte el bloque en dos mitades, se transforma
+una mitad con parte de la clave, se intercambian las mitades, y se repite la
+ronda 16 veces. La función de ronda: \textbf{E} (expansión 32$\to$48), XOR con
+la subclave, \textbf{S-boxes} (sustituciones 6$\to$4 bits), \textbf{P}
+(permutación). Subclaves: PC1 selecciona 56 bits, desplazamientos $\lll$ y PC2
+genera cada subclave de 48 bits.
+\begin{itemize}[nosep]
+  \item Nivel teórico: 56 bits ($2^{56}$ claves por fuerza bruta).
+  \item 1990 — criptoanálisis diferencial: ataca DES en $2^{47}$.
+  \item 1992 — criptoanálisis lineal: ataca DES en $2^{43}$.
+\end{itemize}
+
+\textbf{3-DES.} Variante fuerte: $c = \text{Enc}_{k_1}(\text{Dec}_{k_2}(\text{Enc}_{k_3}(p)))$
+con 3 claves independientes. Seguridad $\sim$112 bits (menor a 168 por el
+ataque \emph{meet-in-the-middle}). Inmune a criptoanálisis diferencial y
+lineal, pero 3$\times$ más lento que DES.
+
+\textbf{AES.} Reemplazo de DES, elegido por concurso internacional abierto.
+Bloques de 128 bits, clave de 128/192/256 bits. \textbf{Es la primitiva
+recomendada hoy.} 4 etapas por ronda: \emph{ByteSub} (sustitución vía tabla
+derivada de invertir en $GF(2^8)$), \emph{ShiftRow} (permutación),
+\emph{MixColumn} (transformación lineal invertible) y \emph{AddRoundKey} (XOR
+con la subclave). Asimetrías: la 1.\textsuperscript{a} ronda solo tiene
+AddRoundKey; la última no tiene MixColumn.
+
+\paragraph{Tamaños y recomendados.} Espacios de clave $>64$ bits (AES: 128/192/256);
+espacio de mensajes $\ge 128$ bits. Para comparar: partículas en el universo
+$\sim 2^{88}$, edad del universo $\sim 2^{58}$ s. Recomendados:
+\textbf{AES-CBC, AES-CTR} (proyectos nuevos), IDEA, 3-DES; DES queda obsoleto.
+
+%======================================================================
+\subsection{Modos de encadenamiento}
+
+Cuando el mensaje no entra en un bloque:
+\begin{itemize}[nosep]
+  \item \textbf{Más chico que el bloque} — \emph{padding}. \emph{Simple Pad:}
+        completar con ceros (hay que conocer el tamaño real). \emph{Des Pad:}
+        agregar un bit 1 y luego ceros (puede agregar un bloque completo).
+  \item \textbf{Más grande} — dividir en bloques, extender el último y
+        transformar cada uno según un \textbf{modo de encadenamiento}.
+\end{itemize}
+Objetivo del modo: extender una primitiva a mensajes mayores a su tamaño. Hay
+varios modos con propiedades distintas; no todos sirven para cada problema.
+
+\subsubsection{ECB (Electronic Codebook)}
+
+Trata el mensaje como bloques \textbf{independientes}: $c_i = e_k(m_i)$.
+
+\begin{ojo}
+\textbf{ECB NO es CPA-Secure (NO UTILIZAR).} Al ser determinista, bloques de
+texto plano \emph{iguales} producen cifrados \emph{iguales} $\Rightarrow$
+\textbf{revela patrones} (el clásico ejemplo del pingüino). Esto se pregunta en
+recuperatorios (2025): identificar por qué ECB filtra estructura.
+\end{ojo}
+
+\subsubsection{CBC (Cipher Block Chaining)}
+
+Usa la salida de un bloque como entrada del siguiente. \textbf{Disminuye el
+traspaso de información} y requiere un \textbf{IV aleatorio} (a menudo se lo
+nota $C_0=IV$).
+
+\begin{definicion}{CBC — cifrado y descifrado}
+\textbf{Cifrado:} $\quad C_i = E_k(M_i \oplus C_{i-1}),\qquad C_0 = IV.$\\[2pt]
+\textbf{Descifrado:} despejando $M_i$ (invertir $E_k$ con $D_k$ y deshacer el XOR):
+$$M_i = D_k(C_i) \oplus C_{i-1}.$$
+\end{definicion}
+
+CBC con primitiva pseudoaleatoria e IV aleatorio es \textbf{CPA-Secure}.
+
+\subsubsection{Otros modos: CFB, OFB, CTR}
+
+\begin{itemize}
+  \item \textbf{CFB (Cipher Feedback):} usa \emph{solo} la función Enc (menor
+        complejidad en dispositivos embebidos). Genera una transformación de
+        flujo a partir de una de bloque. CPA-Secure con IV aleatorio.
+  \item \textbf{OFB (Output Feedback):} también construye flujo a partir de
+        bloque; permite \textbf{calcular los bits del keystream por adelantado}
+        (no dependen del texto). CPA-Secure con IV aleatorio.
+  \item \textbf{CTR (Counter):} usa un \textbf{contador} (nonce $\|$ contador)
+        para generar el keystream: $c_i = E_k(\text{nonce}\| i)\oplus m_i$.
+        \textbf{Permite acceso aleatorio} y es \textbf{paralelizable}
+        (muy útil con procesamiento paralelo). Es CPA-Secure \textbf{si no se
+        repite el par $(k,\text{nonce})$}.
+\end{itemize}
+
+\begin{examen}
+\textbf{CTR descifra con la MISMA función $E$ (2023):} como el descifrado es
+$m_i = E_k(\text{nonce}\|i)\oplus c_i$, CTR (al igual que OFB y CFB) es válido
+\textbf{aunque la primitiva no sea invertible} — nunca se usa $D_k$. Esto es un
+punto fino que suele preguntarse.
+\end{examen}
+
+\paragraph{Resumen de seguridad de los modos.}
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Modo} & \textbf{CPA-Secure?} & \textbf{Notas} \\
+\midrule
+ECB & \textbf{No} & determinista, revela patrones \\
+CBC & Sí (IV aleat.) & encadena, usa $E$ y $D$ \\
+CFB & Sí (IV aleat.) & solo $E$; flujo a partir de bloque \\
+OFB & Sí (IV aleat.) & solo $E$; keystream precalculable \\
+CTR & Sí (no repetir $k,\text{nonce}$) & solo $E$; paralelizable \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Propagación de errores en CBC (NÚCLEO de examen)}
+
+\begin{examen}
+\textbf{Cómo se pide (casi todos los años: 2015 Propagating CBC, 2016 FSM,
+2018/2023 CBC con $C_0=IV$, 2025-1, 2025-2).} Método general:
+\begin{enumerate}
+  \item \textbf{Escribir la recurrencia de cifrado} del esquema dado y
+        \textbf{despejar $M_i$} invirtiendo $E_k$ (con $D_k$) y deshaciendo
+        el/los XOR.
+  \item \textbf{Analizar la propagación de UN bit de error en $C_j$:} ver qué
+        bloques de texto plano descifrado quedan corruptos.
+  \item \textbf{Analizar borrado/inserción de bloques:} ver qué se
+        desincroniza.
+\end{enumerate}
+\end{examen}
+
+\paragraph{CBC estándar — propagación de un bit de error en $C_j$.}
+Como $M_i = D_k(C_i)\oplus C_{i-1}$, un error en $C_j$ afecta a dos
+descifrados:
+\begin{itemize}[nosep]
+  \item $M_j = D_k(C_j)\oplus C_{j-1}$: el $C_j$ corrupto \textbf{pasa por
+        $D_k$} $\Rightarrow$ corrompe \textbf{todo el bloque $M_j$} (un bit de
+        entrada de un cifrador de bloque cambia $\sim$todo el bloque de salida).
+  \item $M_{j+1} = D_k(C_{j+1})\oplus C_j$: aquí $C_j$ entra por \textbf{XOR
+        directo} $\Rightarrow$ corrompe \textbf{solo el bit correspondiente} de
+        $M_{j+1}$.
+  \item $M_{j+2}$ y siguientes: \textbf{intactos}.
+\end{itemize}
+\begin{destacado}
+En CBC estándar el error es \textbf{autolimitado a 2 bloques}: todo $M_j$ + un
+bit de $M_{j+1}$.
+\end{destacado}
+
+\paragraph{Propagating CBC (PCBC) — 2015.} Variante donde el encadenamiento
+incluye también el texto plano, de modo que un error en $C_j$ \textbf{se
+propaga a TODOS los bloques siguientes} (no se autolimita). El método es el
+mismo: escribir la recurrencia, despejar $M_i$ y ver que el término corrupto
+nunca se cancela en los bloques posteriores.
+
+\paragraph{Borrado / inserción de bloques.}
+\begin{itemize}[nosep]
+  \item \textbf{Borrar $C_0=IV$:} como $M_1 = D_k(C_1)\oplus C_0$, se
+        \textbf{desincroniza $M_1$} (se pierde la referencia); los demás
+        bloques se descifran con un corrimiento.
+  \item \textbf{Borrar el último bloque $C_n$:} se pierde \textbf{solo $M_n$};
+        el resto queda intacto.
+\end{itemize}
+
+\begin{ojo}
+En estos ejercicios el error más común es no distinguir el camino del bloque
+corrupto: \textbf{pasar por $D_k$ corrompe el bloque entero}; entrar por
+\textbf{XOR corrompe solo ese bit}. Tener claro \emph{en cuántos bloques}
+aparece $C_j$ en las ecuaciones de descifrado.
+\end{ojo}
+
+%======================================================================
+\subsection{Estado de un criptosistema}
+
+\begin{itemize}[nosep]
+  \item \textbf{Seguro:} cumple con las expectativas de su modelo de seguridad.
+  \item \textbf{Debilitado:} existen adversarios con probabilidad no
+        despreciable de éxito, pero el esfuerzo es enorme (décadas) o las
+        condiciones muy difíciles (p.\ ej.\ disponer de $2^{80}$ mensajes).
+  \item \textbf{Quebrado:} existen adversarios con probabilidad no despreciable
+        de éxito en \textbf{tiempos practicables}.
+\end{itemize}
+
+\begin{destacado}
+Un criptosistema puede ser \textbf{seguro y estar quebrado al mismo tiempo}:
+hay múltiples pruebas de seguridad y cada una evalúa un escenario distinto.
+\end{destacado}
+
+\prof{Se considera mala práctica desarrollar un criptosistema nuevo para un proyecto: existen funciones estudiadas por años con un nivel de confianza adecuado.}
+
+\textit{Lectura recomendada: Katz \& Lindell, \emph{Introduction to Modern
+Cryptography}, capítulos 2 y 3.}
+
+\end{document}

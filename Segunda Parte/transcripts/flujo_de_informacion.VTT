@@ -1,0 +1,3090 @@
+WEBVTT
+
+1
+00:00:04.980 --> 00:00:06.280
+Pablo Eduardo Abad: Bien
+
+2
+00:00:08.100 --> 00:00:18.670
+Pablo Eduardo Abad: las clases anteriores. Estuvimos viendo distintos temas de seguridad en aplicaciones desde la parte más teórica de polis y modelos, problemas más concretos.
+
+3
+00:00:19.050 --> 00:00:22.190
+Pablo Eduardo Abad: como autenticación, como control de acceso.
+
+4
+00:00:23.130 --> 00:00:30.340
+Pablo Eduardo Abad: Vamos a retomar un problema que por ahí vimos más de manera informada al principio, que es el de flujo de información.
+
+5
+00:00:30.660 --> 00:00:31.600
+Pablo Eduardo Abad: Sí,
+
+6
+00:00:35.090 --> 00:00:41.330
+Pablo Eduardo Abad: cuando nosotros hablábamos de en políticas de seguridad, no suelen aparecer
+
+7
+00:00:41.480 --> 00:00:46.560
+Pablo Eduardo Abad: sentencias como un empleado, no puede ver los sueldos de otros empleados. Por ejemplo.
+
+8
+00:00:47.750 --> 00:00:53.440
+Pablo Eduardo Abad: entonces, si a nosotros nos toca implementar ese tipo de requisitos de seguridad.
+
+9
+00:00:56.220 --> 00:01:01.350
+Pablo Eduardo Abad: ya vimos que en principio no puede decir eso, es confidencialidad.
+
+10
+00:01:01.890 --> 00:01:08.039
+Pablo Eduardo Abad: Tenemos control de acceso. Pero cuando empezamos a ver los modelos de políticas, vimos que el problema
+
+11
+00:01:08.760 --> 00:01:11.159
+Pablo Eduardo Abad: más más complicado es
+
+12
+00:01:13.610 --> 00:01:21.499
+Pablo Eduardo Abad: que esos requerimientos, más que al lugar donde está la la información en un momento particular se refieren a la información en sí, entonces
+
+13
+00:01:21.690 --> 00:01:26.479
+Pablo Eduardo Abad: empiezan a aparecer. No sé si se acuerdan caminos de lecturas y escrituras donde tal vez
+
+14
+00:01:27.960 --> 00:01:32.160
+Pablo Eduardo Abad: la política pide esto, pero hay un usuario que tiene permiso para leer
+
+15
+00:01:32.280 --> 00:01:37.269
+Pablo Eduardo Abad: su sueldo si quieren, por ejemplo, y lo podría escribir en otro lugar donde otros usuarios lo podrían ver.
+
+16
+00:01:37.740 --> 00:01:38.600
+Pablo Eduardo Abad: Sí,
+
+17
+00:01:39.230 --> 00:01:49.700
+Pablo Eduardo Abad: el control de acceso en general no cubre estas cosas o para cubrirlas. Hay que hacer un desarrollo muy artesanal o aplicar la teoría de algún modelo para asegurarnos de esto.
+
+18
+00:01:50.030 --> 00:01:53.599
+Pablo Eduardo Abad: Sí, Este es un problema por ahí simple, pero
+
+19
+00:01:54.480 --> 00:02:00.340
+Pablo Eduardo Abad: párense por un segundo. Desde el punto de vista de una empresa que está desarrollando, No sé,
+
+20
+00:02:00.520 --> 00:02:04.800
+Pablo Eduardo Abad: medicamentos que está desarrollando tecnología de punta.
+
+21
+00:02:04.950 --> 00:02:22.940
+Pablo Eduardo Abad: Sí ahí. El problema por ahí no es tanto data interna solamente que un usuario que un empleado pueda acceder a información del empleado, sino que la información no se fugue, no salga de la empresa. Si los 2 problemas son análogos y se conocen como problemas de flujo de información si
+
+22
+00:02:23.820 --> 00:02:30.459
+Pablo Eduardo Abad: y por qué flujo de información? Porque hay una parte de de la seguridad en la cual queremos estudiar.
+
+23
+00:02:30.810 --> 00:02:38.760
+Pablo Eduardo Abad: no cómo controlamos el acceso puntual a la información, sino cómo entendemos la forma en la que la información fluye
+
+24
+00:02:38.950 --> 00:02:42.950
+Pablo Eduardo Abad: a través de los sistemas ahí en comentario.
+
+25
+00:02:44.610 --> 00:02:49.620
+Pablo Eduardo Abad: pero tal vez el empleado puede ver cuando se modifica el archivo salario, es decir, apaga.
+
+26
+00:02:50.200 --> 00:02:53.160
+Pablo Eduardo Abad: A todos les están cambiando el sueldo, salvo 1 000, cuáles son.
+
+27
+00:02:54.680 --> 00:03:04.869
+Pablo Eduardo Abad: Hay Hay de todo. En ese sentido, Vamos a tocar ese tema que ves ese tema que que el ejemplo que vos diste ahí. Joaquín es técnicamente se llama un canal lateral.
+
+28
+00:03:04.990 --> 00:03:10.140
+Pablo Eduardo Abad: Es una señal indirecta que permite transmitir información.
+
+29
+00:03:10.800 --> 00:03:11.770
+Pablo Eduardo Abad: Sí,
+
+30
+00:03:12.750 --> 00:03:25.569
+Pablo Eduardo Abad: Entonces, cuando hablamos de control de acceso, se acuerdan que tenemos modelos más sofisticados, menos sofisticados, pero prácticamente todos se pueden como encajar en el concepto de limitar el acceso a
+
+31
+00:03:25.910 --> 00:03:29.579
+Pablo Eduardo Abad: sujeto ejecutando una operación puntual sobre un objeto puntual?
+
+32
+00:03:29.790 --> 00:03:30.690
+Pablo Eduardo Abad: Sí,
+
+33
+00:03:32.180 --> 00:03:37.959
+Pablo Eduardo Abad: el tema es: ¿qué pasa con la información en sí que no es estática, que puede actualizarse, que puede copiarse.
+
+34
+00:03:42.170 --> 00:03:49.459
+Pablo Eduardo Abad: Entonces, algo importante hace meternos ahora por este agujero este de de de control de flujo.
+
+35
+00:03:50.500 --> 00:03:51.650
+Pablo Eduardo Abad: Vimos
+
+36
+00:03:52.040 --> 00:03:59.400
+Pablo Eduardo Abad: control de acceso y vimos sus limitaciones de control de acceso. Eso no quiere decir que los controles de acceso no sirven
+
+37
+00:03:59.550 --> 00:04:06.929
+Pablo Eduardo Abad: en términos formales. Los sistemas de control de acceso son mecanismos abiertos. Se llama
+
+38
+00:04:07.630 --> 00:04:17.409
+Pablo Eduardo Abad: son mecanismos que permiten asegurar una parte del problema, pero no todo. Entonces generalmente necesitan ser complementados.
+
+39
+00:04:17.649 --> 00:04:26.810
+Pablo Eduardo Abad: Uno puede definir un mecanismo de control de acceso que sea muy robusto, Entonces, la complementación que va a requerir, va a ser chica, o tal vez requiere mucha más
+
+40
+00:04:27.020 --> 00:04:28.310
+Pablo Eduardo Abad: complementación.
+
+41
+00:04:28.450 --> 00:04:35.999
+Pablo Eduardo Abad: Cuando entremos en seguridad en empresas, van a ver que producto de esto, de que los mecanismos en general son abiertos.
+
+42
+00:04:36.390 --> 00:04:52.519
+Pablo Eduardo Abad: Una de las estrategias que tienen todas las empresas es pensar en la seguridad como una serie de capas de cebolla. No todas las capas tienen agujeros, pero superponemos tantas que esperamos no coincida el agujero justo en el mismo lugar y las capas vayan tapando. Los agujeros de las anteriores.
+
+43
+00:04:53.410 --> 00:04:55.700
+NICOLÁS CANZONIERI: Tenía un nombre. Eso no era
+
+44
+00:04:56.330 --> 00:04:59.729
+NICOLÁS CANZONIERI: la fecha de queso pillado. Me.
+
+45
+00:04:59.990 --> 00:05:01.030
+Pablo Eduardo Abad: Cómo.
+
+46
+00:05:02.340 --> 00:05:06.259
+NICOLÁS CANZONIERI: Me suena. La metáfora de fritas de queso pilladas tipo
+
+47
+00:05:06.490 --> 00:05:11.519
+NICOLÁS CANZONIERI: tienen todos un agujero, pero como están apiladas, ninguno deja ver la.
+
+48
+00:05:11.520 --> 00:05:12.530
+Pablo Eduardo Abad: Exacto.
+
+49
+00:05:12.790 --> 00:05:23.380
+Pablo Eduardo Abad: Es la primera vez que escucho la metáfora de capas de queso y lenta, lo llamamos capas de cebolla, pero está buena, está buena. La La idea es esa. En el fondo.
+
+50
+00:05:23.490 --> 00:05:26.369
+Pablo Eduardo Abad: tenés capas con distintos agujeros, y la idea es
+
+51
+00:05:26.510 --> 00:05:31.240
+Pablo Eduardo Abad: el superponerlas termines tapando todo y nos llega un camino de punta a punta.
+
+52
+00:05:32.930 --> 00:05:34.450
+Pablo Eduardo Abad: Está buena la energía.
+
+53
+00:05:34.900 --> 00:05:39.560
+Pablo Eduardo Abad: Mhm: Entonces.
+
+54
+00:05:43.940 --> 00:05:50.719
+Pablo Eduardo Abad: si nosotros pudiésemos confinar el flujo de información en un ambiente totalmente controlado.
+
+55
+00:05:52.400 --> 00:05:57.910
+Pablo Eduardo Abad: nosotros no tendríamos riesgos o no tendríamos problemas de seguridad e integridad. Sí,
+
+56
+00:05:58.340 --> 00:06:10.019
+Pablo Eduardo Abad: Un ejemplo de esto es el modelo de la padura. Si el modelo de la padura nos define un modelo que, en un ambiente totalmente cerrado y controlado, donde se aplica el 100 por 100 del modelo
+
+57
+00:06:10.150 --> 00:06:17.219
+Pablo Eduardo Abad: nos da garantías de confidencialidad respecto al flujo de información, ya no no solo respecto al lugar donde está
+
+58
+00:06:22.150 --> 00:06:30.339
+Pablo Eduardo Abad: el problema de controlar la información en tránsito, o sea, cuando se está moviendo, se conoce como problema de confinamiento, sí. Y es
+
+59
+00:06:31.540 --> 00:06:40.299
+Pablo Eduardo Abad: un problema complicadísimo de de resolver. Sí, el modelo ideal de de de confinamiento se conoce como aislación total.
+
+60
+00:06:40.410 --> 00:06:44.459
+Pablo Eduardo Abad: Sí, los requisitos son super simples, O sea, es
+
+61
+00:06:45.240 --> 00:06:54.270
+Pablo Eduardo Abad: para qué que un sistema tenga aislación total. El proceso que corre dentro del sistema no puede comunicarse con ningún otro proceso. Sí,
+
+62
+00:06:54.450 --> 00:06:57.310
+Pablo Eduardo Abad: Y ese proceso no puede ser observado por nadie.
+
+63
+00:06:59.020 --> 00:06:59.970
+Pablo Eduardo Abad: Sí.
+
+64
+00:07:00.800 --> 00:07:03.929
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Me asombra lo útil que puede llegar a segar eso que puede llegar.
+
+65
+00:07:03.930 --> 00:07:23.379
+Pablo Eduardo Abad: Ese es el problema. No, Este es un caso. Ese es el el teórico ideal. Si nosotros tenemos otra forma también histórica, de llamar a esto. Nosotros solemos decir que el sistema más seguro del mundo corre en una computadora que está apagada metida en una caja fuerte enterrada en el fondo del océano, sin que nadie sepa dónde está.
+
+66
+00:07:23.880 --> 00:07:32.469
+Pablo Eduardo Abad: Entonces, Sí, aislación total. Es como el modelo teórico aspiracional. El problema es que los requisitos de aislación total
+
+67
+00:07:33.640 --> 00:07:42.019
+Pablo Eduardo Abad: le quitan utilidad a los sistemas, o sea, tenemos un sistema que puede correr algo, pero al cual no le podemos dar entrada porque no puede comunicarse. No podemos ver la salida
+
+68
+00:07:42.490 --> 00:07:45.090
+Pablo Eduardo Abad: porque no podemos ni conectarlo ni observarlo.
+
+69
+00:07:45.360 --> 00:07:53.640
+Pablo Eduardo Abad: Este. En esas condiciones tenemos aislación total y control completo del flujo de información, Pues genial, ¿
+
+70
+00:07:54.330 --> 00:08:06.530
+Pablo Eduardo Abad: En la práctica eso no ocurre si, y en la práctica les diría: el problema más grande no es solamente el que el proceso no pueda comunicarse con otros sí, porque hay hay escenarios donde eso se puede lograr a
+
+71
+00:08:07.490 --> 00:08:16.829
+Pablo Eduardo Abad: 1. Podría tener una red totalmente cerrada que nunca está conectada a Internet, y en algunos casos eso puede hasta ser útil. Digo, no.
+
+72
+00:08:17.180 --> 00:08:18.699
+Pablo Eduardo Abad: no es que no sirve para nada.
+
+73
+00:08:18.810 --> 00:08:23.789
+Pablo Eduardo Abad: Lo más difícil es el segundo requisito que no puede ser observado en la práctica
+
+74
+00:08:24.620 --> 00:08:30.779
+Pablo Eduardo Abad: Cualquier cosa que corra en una computadora tiene un montón de medidas observables. ¿y por qué? Porque usas memoria.
+
+75
+00:08:31.190 --> 00:08:32.799
+Pablo Eduardo Abad: usa ciclos de C, P. U
+
+76
+00:08:33.360 --> 00:08:40.349
+Pablo Eduardo Abad: Usa ancho de banda al comunicarse este con otras computadoras, usa espacio en disco, al almacenar cosas.
+
+77
+00:08:40.780 --> 00:08:49.639
+Pablo Eduardo Abad: Si todos esos son indicadores observables, 1 puede observarlos y extraer información del proceso y del resultado del proceso. A partir de eso.
+
+78
+00:08:51.110 --> 00:08:54.599
+Pablo Eduardo Abad: Entonces me pueden decir, ¿cómo puede ser?
+
+79
+00:08:54.860 --> 00:09:01.920
+Pablo Eduardo Abad: Si yo puedo medir los ciclos de C, P. U que usa un proceso que está ejecutando cómo de ahí convierto en recursos observables.
+
+80
+00:09:06.140 --> 00:09:13.130
+Pablo Eduardo Abad: porque a veces, intencionalmente, a veces sin intención, los mecanismos
+
+81
+00:09:14.330 --> 00:09:23.099
+Pablo Eduardo Abad: de este tipo observables se convierten en un canal encubierto de información. Si un canal encubierto es un método de comunicación
+
+82
+00:09:23.620 --> 00:09:32.980
+Pablo Eduardo Abad: que permite transferir información por vías que no estaban diseñadas para transmitir información, sí en
+
+83
+00:09:33.220 --> 00:09:44.580
+Pablo Eduardo Abad: en el contexto de seguridad. Este es un problema porque, como los canales no estaban pensados para transmitir información, es muy poco probable que tengan los controles que sí tienen los canales para transmitir.
+
+84
+00:09:44.890 --> 00:09:52.630
+Pablo Eduardo Abad: Sí, yo tal vez me puedo concentrar en monitorear todo el tráfico de red que sale de una computadora, porque estimo que
+
+85
+00:09:53.170 --> 00:10:00.720
+Pablo Eduardo Abad: por ahí pueden estar tratando de robarme datos este o o puede estar entrando un vector de ataque y y lo monitoreo bien
+
+86
+00:10:00.960 --> 00:10:02.430
+Pablo Eduardo Abad: en
+
+87
+00:10:02.620 --> 00:10:17.960
+Pablo Eduardo Abad: Y resulta que tal vez hay otro vector de ataque y la fue información se está dando en un servidor donde, a través de la lectura minuciosa de la Cpu, pueden, desde una máquina virtual extraer información que estaría alojada en otra máquina virtual.
+
+88
+00:10:20.370 --> 00:10:29.989
+Pablo Eduardo Abad: Sí, el estudio de canales encubiertos es casi una disciplina en sí misma, O sea, hay
+
+89
+00:10:30.880 --> 00:10:33.880
+Pablo Eduardo Abad: literatura, infinita, investigación infinita de esto.
+
+90
+00:10:34.320 --> 00:10:39.480
+Pablo Eduardo Abad: Hay muchos tipos de canales encubiertos. Hay canales que
+
+91
+00:10:41.120 --> 00:10:48.370
+Pablo Eduardo Abad: permiten extraer información por temporalidad. Se llama Timing Channels, en
+
+92
+00:10:48.620 --> 00:10:59.479
+Pablo Eduardo Abad: donde típicamente ocurre que nosotros podemos monitorear el canal a ciertos intervalos regulares y en función de cómo cambie la lectura de ese canal podemos inferir información si
+
+93
+00:11:00.610 --> 00:11:10.099
+Pablo Eduardo Abad: de forma súper básica, sin sin entrar en detalles. Imagínense que ustedes pueden samplear una red y ver la cantidad de bytes o de tramas que están circulando por la red.
+
+94
+00:11:10.600 --> 00:11:22.449
+Pablo Eduardo Abad: Si tal vez eso no les diga mucho, no pueden extraer información concreta, pero sí podrían extraer información de cuándo hay una comunicación, este entre 2 computadoras, sí,
+
+95
+00:11:22.690 --> 00:11:27.399
+Pablo Eduardo Abad: pero podemos llegar un poco más, porque si podemos contar la cantidad temas que pasan, si
+
+96
+00:11:27.520 --> 00:11:32.930
+Pablo Eduardo Abad: podemos entender qué tipo de comunicación están haciendo un combo de y de
+
+97
+00:11:33.080 --> 00:11:36.850
+Pablo Eduardo Abad: ida y vuelta un recuast response. Están transmitiendo un archivo multimedia.
+
+98
+00:11:37.170 --> 00:11:38.340
+Pablo Eduardo Abad: Hay.
+
+99
+00:11:38.710 --> 00:11:58.099
+Pablo Eduardo Abad: esto. Es una práctica que muchos proveedores de Internet han hecho y siguen haciendo siguen oficialmente. Ahora no lo pueden decir que se llama Traffic Shaping, o sea, analizar las tramas sin poder entender el contenido y en función de la forma de la trama, entender qué tipo de tráfico es y aplicarle algunas restricciones
+
+100
+00:11:58.430 --> 00:12:11.040
+Pablo Eduardo Abad: sí acá es donde, en algún momento, cuando el el ancho de banda global del servidor está excedido, empiezan a hacer frotling de conexión, espíritu peer de streaming de vídeo
+
+101
+00:12:11.630 --> 00:12:14.320
+Pablo Eduardo Abad: este para garantizar el ancho de banda para otras cosas.
+
+102
+00:12:15.140 --> 00:12:24.180
+Pablo Eduardo Abad: Sí, esas son aplicaciones llamadas grises. No son malas, sí, pero también se puede usar ese mismo concepto para tratar de extraer información
+
+103
+00:12:24.530 --> 00:12:28.800
+Pablo Eduardo Abad: lo mismo, la carga de Cpu. Lo mismo el tiempo de respuesta a una aplicación.
+
+104
+00:12:28.940 --> 00:12:43.590
+Pablo Eduardo Abad: Sí, hay otra familia de canales encubiertos que tienen que ver con almacenamiento, Sí, espacios en un archivo
+
+105
+00:12:43.810 --> 00:12:57.459
+Pablo Eduardo Abad: atributos. La metadata de un archivo bits no usados en estructuras de datos. Sí, hay hay estructuras que tienen bits reservados o Beats que pueden tomar cualquier valor, sí, protocolos, donde hay lugares donde
+
+106
+00:12:57.630 --> 00:13:01.220
+Pablo Eduardo Abad: debe ir un valor aleatorio y el valor tal vez no sea tan aleatorio.
+
+107
+00:13:01.480 --> 00:13:13.840
+Pablo Eduardo Abad: Este Los canales de encubiertos por almacenamiento aprovechan esos lugares físicos que no están pensados para llevar información.
+
+108
+00:13:14.000 --> 00:13:15.190
+Pablo Eduardo Abad: para transmitirla.
+
+109
+00:13:15.820 --> 00:13:23.860
+Pablo Eduardo Abad: Sí, en Acá les dejo el links a a a 2 papers
+
+110
+00:13:24.730 --> 00:13:27.790
+Pablo Eduardo Abad: simples como para que al que le interese le
+
+111
+00:13:28.950 --> 00:13:35.010
+Pablo Eduardo Abad: los pueda seguir de una cosa que la primera no es tan
+
+112
+00:13:37.890 --> 00:13:45.920
+Pablo Eduardo Abad: normal, llamémosla. Pero para que para que vean el nivel, sí que habla de ex filtrado de información codificado.
+
+113
+00:13:47.450 --> 00:13:51.249
+Pablo Eduardo Abad: decodificando los sonidos que genera una impresora.
+
+114
+00:13:51.610 --> 00:13:57.639
+Pablo Eduardo Abad: No me acuerdo si este es el paper de una impresora de las de matriz de puntos o de una impresora láser.
+
+115
+00:13:58.220 --> 00:14:06.899
+Pablo Eduardo Abad: vamos de vuelta. Esto es un flaco que puso un micrófono de muy alta fidelidad escuchando a una impresora
+
+116
+00:14:07.700 --> 00:14:10.459
+Pablo Eduardo Abad: y logra reconstruir parte de lo que se imprime.
+
+117
+00:14:12.680 --> 00:14:15.390
+Pablo Eduardo Abad: Sí, hay algunos que son todavía más.
+
+118
+00:14:17.530 --> 00:14:25.230
+Pablo Eduardo Abad: No sé si generadores de paranoia, diría este: hay hay papers donde
+
+119
+00:14:26.020 --> 00:14:33.339
+Pablo Eduardo Abad: con un láser apuntando a una ventana. Y midiendo la vibración de la ventana, logran reconstruir la habitación que hay adentro.
+
+120
+00:14:36.180 --> 00:14:40.680
+Pablo Eduardo Abad: hay papers que logran
+
+121
+00:14:41.490 --> 00:14:46.610
+Pablo Eduardo Abad: estudiando la forma en la que usa una. Uno usa el teclado, identificar la persona que lo está usando.
+
+122
+00:14:46.830 --> 00:14:51.410
+Pablo Eduardo Abad: Todo esto, que les cuento son ejemplos distintos de canales encubiertos. Sí,
+
+123
+00:14:52.970 --> 00:15:04.560
+Pablo Eduardo Abad: hay canales encubiertos que se pueden usar para finger printing Se llama para identificación. Hay canales encubiertos que se usan para ex filtrado ex filtrado es sacar datos de un sistema por afuera de los controles. Sí,
+
+124
+00:15:04.710 --> 00:15:07.939
+Pablo Eduardo Abad: una muy famosa hace unos años
+
+125
+00:15:08.210 --> 00:15:12.350
+Pablo Eduardo Abad: usaba el Protocolo D. N. S. De hecho, en muchas empresas
+
+126
+00:15:12.940 --> 00:15:22.339
+Pablo Eduardo Abad: había Firewalls, filtros que controlaban todo el tráfico entrando y saliente filtraban el acceso a sitios. Es Es muy normal en en muchas empresas que
+
+127
+00:15:22.850 --> 00:15:26.579
+Pablo Eduardo Abad: que tengan ya equipos de seguridad avanzados.
+
+128
+00:15:27.890 --> 00:15:38.060
+Pablo Eduardo Abad: muy buen control monitoreo de de la información que sale detección automática si hay. No sé si alguien está queriendo sacar información personal de clientes o cosas así
+
+129
+00:15:38.590 --> 00:15:40.140
+Pablo Eduardo Abad: en
+
+130
+00:15:42.200 --> 00:15:50.360
+Pablo Eduardo Abad: Pero todo eso concentrado, si quieren la capa chutetepe del de de protocolo, sí impidiendo conexiones. No sé T. S. P arbitrarias a Sockets.
+
+131
+00:15:51.010 --> 00:15:52.390
+Pablo Eduardo Abad: Pero resulta que
+
+132
+00:15:52.750 --> 00:16:00.380
+Pablo Eduardo Abad: prácticamente todo Internet necesita para poder comunicar 2 máquinas. La resolución de nombres, el Dns, que es un Protocolo que existe desde siempre
+
+133
+00:16:00.720 --> 00:16:09.140
+Pablo Eduardo Abad: y hasta hace. Bueno, son más de 10 años de verdad. Hasta hace un poco más de 10 años, los Firewalls busca de nombres, se resuelven y listo.
+
+134
+00:16:09.790 --> 00:16:16.920
+Pablo Eduardo Abad: Tal vez había un servidor de nombres internos que cuando no sabía el nombre, preguntaba a un externo y lo callaba. Entonces todas consultaban un servidor
+
+135
+00:16:17.120 --> 00:16:19.970
+Pablo Eduardo Abad: interno que de última buscaba externos.
+
+136
+00:16:20.070 --> 00:16:28.100
+Pablo Eduardo Abad: Y a alguien se le ocurrió chi ¿Y por qué no? No uso esa idea de filtro? D. N. S. Este para
+
+137
+00:16:28.210 --> 00:16:31.779
+Pablo Eduardo Abad: para sacar información? ¿va a ir paseando a los firwards a los controles.
+
+138
+00:16:32.310 --> 00:16:48.030
+Pablo Eduardo Abad: Sí, es de den ese tuning. Es es una técnica ya un poco más. No es la original, sino un poco más ordenada, pero que va por ese lado. Y si quieren, pensándola muy fáciles, Imagínense que ustedes controlen un dominio y controla el D. N. S.
+
+139
+00:16:48.290 --> 00:16:51.040
+Pablo Eduardo Abad: ¿que sirven los nombres de ese dominio. Sí,
+
+140
+00:16:52.060 --> 00:16:59.659
+Pablo Eduardo Abad: ustedes podrían empezar a hacer desde el lugar donde quieren sacar la información, búsquedas de subdominios, donde el nombre del subdominio
+
+141
+00:17:00.940 --> 00:17:06.840
+Pablo Eduardo Abad: vamos a hacerlo muy rudimentario. Si si quieren, es la letra A y en base a 64
+
+142
+00:17:08.550 --> 00:17:16.449
+Pablo Eduardo Abad: parte del código que quieren sacar ustedes afuera. Entonces hacen una búsqueda. Esa búsqueda del subdominio llega al servidor de dominio
+
+143
+00:17:17.130 --> 00:17:31.560
+Pablo Eduardo Abad: registrarse y tiene un Ip. Cualquiera se puede hacer otra búsqueda con otro subdominio con el siguiente bloque y el siguiente, y el siguiente, el siguiente: si se la pasan haciendo búsquedas, y lo que importa en realidad es que van a llegar esas búsquedas al servidor Dns
+
+144
+00:17:31.610 --> 00:17:37.329
+Pablo Eduardo Abad: y que, a partir del nombre del subdominio que están buscando, se puede ir rearmando información arbitraria.
+
+145
+00:17:39.070 --> 00:17:46.119
+Pablo Eduardo Abad: Bueno, eso es un ejemplo de de Corechannel. Y el problema más grande de muchos de los Corechannels es que se van descubriendo
+
+146
+00:17:46.230 --> 00:17:49.840
+Pablo Eduardo Abad: canales creativos. Es bastante complicado evitarlos.
+
+147
+00:17:50.370 --> 00:17:55.489
+Pablo Eduardo Abad: pero pero si tienen ganas de la paper divertidas, hay un montón Acá de de este tipo?
+
+148
+00:17:56.720 --> 00:17:58.030
+Pablo Eduardo Abad: Mhm
+
+149
+00:18:02.890 --> 00:18:15.139
+Pablo Eduardo Abad: Les decía, hay 2 casos típicos de esto, no la explotación de un cover channel a propósito, como el ejemplo este del túnel indones que les contaba
+
+150
+00:18:15.740 --> 00:18:20.770
+Pablo Eduardo Abad: sí, pero también ocurre que estos canales existen porque
+
+151
+00:18:21.350 --> 00:18:34.509
+Pablo Eduardo Abad: existen. Hay que tomar muchos recaudos para que no existan. ¿sí? Y cuando existen y un atacante logra extraer información, ya se habla de un ataque. Si esos ataques se llaman ataques de canal lateral, pues hay Channel Attack.
+
+152
+00:18:34.840 --> 00:18:42.449
+Pablo Eduardo Abad: Sí, los ataques de canal lateral son una familia bastante avanzada de ataques que explota
+
+153
+00:18:42.650 --> 00:18:46.469
+Pablo Eduardo Abad: esta idea de emisiones espaciales o temporales
+
+154
+00:18:46.930 --> 00:19:04.839
+Pablo Eduardo Abad: de un sistema para extraer información sensible si acá ya aplicado a seguridad. No nos interesa entender este solamente si hubo tráfico o no nos interesa cuando hablamos de un ataque es que se está logrando vulnerar seguridad, extraer información que queríamos que esté confidencial.
+
+155
+00:19:05.270 --> 00:19:08.469
+Pablo Eduardo Abad: El gran tema con los site Chanel Attacks es que.
+
+156
+00:19:08.890 --> 00:19:25.340
+Pablo Eduardo Abad: A diferencia de lo que vimos la clase pasada con vulnerabilidades que conceptualmente son errores En el diseño de un sistema, los exchanes no explotan vulnerabilidades clásicas de software si no explotan un error de autenticación o una falta de autorización
+
+157
+00:19:25.550 --> 00:19:33.950
+Pablo Eduardo Abad: este, sino que explotan la existencia de algunos de estos canales que muchas veces no se diseñan siquiera no se toman en cuenta.
+
+158
+00:19:34.320 --> 00:19:35.060
+Pablo Eduardo Abad: Mhm.
+
+159
+00:19:36.650 --> 00:19:46.439
+Pablo Eduardo Abad: Esto es especialmente relevante cuando hablamos de sistemas que tienen componentes criptográficos. Recuérdense que la criptografía nos da un montón de
+
+160
+00:19:47.330 --> 00:19:56.490
+Pablo Eduardo Abad: bloques para construir seguridad muy muy fuerte, sí, pero el eslabón de confianza que une Todo eso es la clave que se utiliza.
+
+161
+00:19:56.910 --> 00:20:02.739
+Pablo Eduardo Abad: Si toda la seguridad que montamos en criptografía depende que un atacante no consiga acceso a la clave.
+
+162
+00:20:03.020 --> 00:20:10.359
+Pablo Eduardo Abad: sí, entonces en componentes que hacen uso de criptografía. Este tipo de ataques suele apuntar a recuperar la clave.
+
+163
+00:20:10.520 --> 00:20:12.359
+Pablo Eduardo Abad: ¿sí? Y eso es un problema.
+
+164
+00:20:12.600 --> 00:20:17.030
+Pablo Eduardo Abad: porque ahí, si se cae toda la seguridad que 1 construyó como como castillo de naipes.
+
+165
+00:20:19.420 --> 00:20:23.670
+Pablo Eduardo Abad: alguna duda hasta acá Mhm.
+
+166
+00:20:23.670 --> 00:20:26.290
+MARTÍN GALLARDO BERTUZZI: No.
+
+167
+00:20:26.940 --> 00:20:27.790
+Pablo Eduardo Abad: Perfecto.
+
+168
+00:20:29.780 --> 00:20:33.560
+Pablo Eduardo Abad: Mhm: Bien.
+
+169
+00:20:34.370 --> 00:20:35.510
+Pablo Eduardo Abad: Entonces
+
+170
+00:20:35.780 --> 00:20:46.759
+Pablo Eduardo Abad: cuando tenemos un sistema que maneja claves criptográficas, sea porque las tiene que cargar la memoria, o sea, porque las tiene que utilizar para cifrar algo.
+
+171
+00:20:47.160 --> 00:20:50.410
+Pablo Eduardo Abad: Estamos en un escenario donde esto deja de ser un
+
+172
+00:20:52.420 --> 00:21:00.070
+Pablo Eduardo Abad: un problema difícil de de resolver y atacar para volverse un tema bastante relevante. Sí,
+
+173
+00:21:01.530 --> 00:21:09.070
+Pablo Eduardo Abad: hay ejemplos de ataques de canal lateral contra hardware, incluso uso específico.
+
+174
+00:21:09.540 --> 00:21:18.270
+Pablo Eduardo Abad: Sí, acá. Tenemos algunos ejemplos, también para el que quiera profundizar un poco, pero, por ejemplo.
+
+175
+00:21:19.370 --> 00:21:25.119
+Pablo Eduardo Abad: hay ataques que miden el tiempo de Cpu que se tarda en procesar
+
+176
+00:21:25.400 --> 00:21:28.140
+Pablo Eduardo Abad: funciones de cifrado y descifrado de bloques
+
+177
+00:21:28.970 --> 00:21:36.770
+Pablo Eduardo Abad: y con muchas mediciones. Más que nada para sacar el ruido no de esas mediciones. Este inferir parte de la clave
+
+178
+00:21:37.010 --> 00:21:38.539
+Pablo Eduardo Abad: o la clave completa.
+
+179
+00:21:41.620 --> 00:21:47.669
+Pablo Eduardo Abad: Y 1 dice: es una locura. ¿cómo puede pasar eso? Es es imposible. Estamos hablando de por ahí nanosegundos
+
+180
+00:21:48.440 --> 00:21:49.750
+Pablo Eduardo Abad: pasa que
+
+181
+00:21:51.660 --> 00:21:58.620
+Pablo Eduardo Abad: los algoritmos que se utilizan en criptografía y a veces los mismos compiladores optimizan mucho código. Si entonces hay
+
+182
+00:21:59.350 --> 00:22:13.449
+Pablo Eduardo Abad: hay bloques o hay formas de de operar que van a tener una duración variable en siglos de reloj, sí, Por ejemplo, si estuviésemos con criptografía simétrica, la criptografía simétrica suele tener operaciones matemáticas con números, grandes
+
+183
+00:22:13.910 --> 00:22:21.959
+Pablo Eduardo Abad: sí la cantidad de ciclos de reloj que se utiliza para multiplicar o exponenciar los números grandes depende del tamaño de esos números.
+
+184
+00:22:24.290 --> 00:22:33.210
+Pablo Eduardo Abad: Si nosotros tuviésemos primero la precisión teórica de poder medir la cantidad exacta de ciclos de reloj y modelamos el algoritmo que se utilizó.
+
+185
+00:22:33.980 --> 00:22:41.139
+Pablo Eduardo Abad: Podemos ir adivinando esas cosas. Y si encima estamos con un algoritmo de cifrado donde nosotros por ahí controlamos 1 de los números.
+
+186
+00:22:42.170 --> 00:22:45.040
+Pablo Eduardo Abad: dijimos pode, podemos usar una suerte de
+
+187
+00:22:45.210 --> 00:22:55.700
+Pablo Eduardo Abad: ataque de texto plano conocido donde vamos probando números que conocemos. Y usamos la diferencia de ejecución para calcular la incógnita que no conocemos, que es la clave o
+
+188
+00:22:55.890 --> 00:22:57.819
+Pablo Eduardo Abad: o algo de información de la clave
+
+189
+00:22:58.530 --> 00:23:04.979
+Pablo Eduardo Abad: en una computadora real, es más difícil medir exactamente la cantidad de
+
+190
+00:23:05.180 --> 00:23:11.050
+Pablo Eduardo Abad: ciclos que utiliza o lo era depende de la
+
+191
+00:23:12.920 --> 00:23:20.650
+Pablo Eduardo Abad: depende de la como es el el tipo de chips que usen, porque los los procesadores modernos tienen como micro instrucciones para
+
+192
+00:23:20.760 --> 00:23:23.740
+Pablo Eduardo Abad: ayudar a hacer divagging avanzado de
+
+193
+00:23:23.910 --> 00:23:31.800
+Pablo Eduardo Abad: fingining de ensamblador y tienen forma de monitorear la cantidad de de ciclos. Que hay entre operaciones y demás.
+
+194
+00:23:31.900 --> 00:23:46.770
+Pablo Eduardo Abad: Eso requiere ya alguien que tenga control de la máquina, Pero incluso sin tener control, los procesadores son tan rápidos hoy día que podemos empezar a hacer una suerte de sampleo estadístico e ir empezando a sacar ruido para tener una medición lo más aproximada posible.
+
+195
+00:23:46.930 --> 00:23:49.459
+Pablo Eduardo Abad: Y a veces eso alcanza porque.
+
+196
+00:23:50.710 --> 00:24:06.899
+Pablo Eduardo Abad: como en la mayoría de los ataques, no necesitamos que el ataque sea totalmente exitoso. Si yo, con este ataque, puedo de alguna manera mover el sesgo de probabilidades y darle una probabilidad más alta, ciertos valores de los bits de la clave puede haber, pero el resto por fuerza bruta.
+
+197
+00:24:07.280 --> 00:24:13.260
+Pablo Eduardo Abad: Entonces yo tenía una clave de 100, 28 bits y logro sesgar. No sé 40 bits de esos.
+
+198
+00:24:14.500 --> 00:24:18.250
+Pablo Eduardo Abad: Ahora tendrá que hacer 2 a las 88 pruebas. No será 100. 28
+
+199
+00:24:19.390 --> 00:24:28.190
+Pablo Eduardo Abad: Entonces, con esa combinación de cosas. Algunos de estos detalles son bastante devastadores: análisis de consumo de energía.
+
+200
+00:24:28.190 --> 00:24:28.600
+MARTÍN GALLARDO BERTUZZI: Que no.
+
+201
+00:24:28.600 --> 00:24:29.200
+Pablo Eduardo Abad: Sí, claro.
+
+202
+00:24:29.570 --> 00:24:42.790
+MARTÍN GALLARDO BERTUZZI: Una consulta. Por ejemplo, el el ejemplo No, no me acuerdo si puteo, o Rodrigo, que lo dio el ejemplo de, por ejemplo, hacer vibrar el ataque, el ataque que se había descubierto, de hacer vibrar 2 bits
+
+203
+00:24:43.170 --> 00:24:44.700
+MARTÍN GALLARDO BERTUZZI: y.
+
+204
+00:24:44.950 --> 00:24:46.490
+Pablo Eduardo Abad: Road y para.
+
+205
+00:24:46.490 --> 00:24:53.030
+MARTÍN GALLARDO BERTUZZI: Claro para obtener el bit del medio. Eso sería también un side Channel Attack o no se mete en esta.
+
+206
+00:24:53.030 --> 00:24:56.090
+Pablo Eduardo Abad: Es un Said Channel Pérez de los más jodidos. Es un Sai Channel que nadie con.
+
+207
+00:24:56.090 --> 00:24:56.740
+MARTÍN GALLARDO BERTUZZI: siempre.
+
+208
+00:24:56.890 --> 00:25:07.070
+Pablo Eduardo Abad: Los flacos, o sea, es es la es la memoria en temas de timing, por su estructura. Si quieres más física de cómo funciona
+
+209
+00:25:07.900 --> 00:25:16.329
+Pablo Eduardo Abad: también este, permitiendo observar información que no debería ser observable.
+
+210
+00:25:17.770 --> 00:25:18.160
+MARTÍN GALLARDO BERTUZZI: Vamos a.
+
+211
+00:25:18.160 --> 00:25:18.510
+Pablo Eduardo Abad: De acuerdo.
+
+212
+00:25:18.510 --> 00:25:18.910
+MARTÍN GALLARDO BERTUZZI: Soy español.
+
+213
+00:25:18.910 --> 00:25:25.029
+Pablo Eduardo Abad: Lo que tiene. Esto es un campo muy fértil de investigación y hay cosas muy locas, cosas que
+
+214
+00:25:25.170 --> 00:25:34.319
+Pablo Eduardo Abad: una ya sabe, será chance de funcionar. Pero este de vez en cuando sale algún paper que muestra cosas dignas de películas de ciencia ficción.
+
+215
+00:25:36.240 --> 00:25:47.490
+Pablo Eduardo Abad: eso de Roucabar fue a ver especialmente todos estos. Rogue Hammar Spectre es otro. Hay toda una familia de de ataques de canales laterales que se fueron.
+
+216
+00:25:47.490 --> 00:25:48.360
+NICOLÁS CANZONIERI: Rambo.
+
+217
+00:25:48.360 --> 00:25:52.660
+Pablo Eduardo Abad: Y en y
+
+218
+00:25:52.870 --> 00:25:57.250
+Pablo Eduardo Abad: me mataste con Rambo. Pero tiene nombre que es digno de de un ataque de estos. Puede ser.
+
+219
+00:25:57.250 --> 00:25:59.839
+NICOLÁS CANZONIERI: Y justo estaba en la guía de
+
+220
+00:26:00.150 --> 00:26:03.189
+NICOLÁS CANZONIERI: estaba en la guía de esto. Y lo busqué y era
+
+221
+00:26:03.640 --> 00:26:10.980
+NICOLÁS CANZONIERI: usar esas variaciones de electromagnéticas para formar radiofrecuencias que alguien de afuera podría captar.
+
+222
+00:26:11.730 --> 00:26:19.250
+Pablo Eduardo Abad: Okay Dale. Sí, sí, somos nos gustan los nombres, así como medio de película para estas cosas.
+
+223
+00:26:19.580 --> 00:26:20.990
+Pablo Eduardo Abad: Este
+
+224
+00:26:23.470 --> 00:26:40.090
+Pablo Eduardo Abad: que les iba a decir, los ataques al hardware en sí, son son bastante modernos y y les diría: ganaron mucho, mucha importancia desde que tenemos a los a los hiper skelers, a los a W. S. Google del mundo
+
+225
+00:26:40.760 --> 00:26:48.270
+Pablo Eduardo Abad: que son datas Sanders gigantes pero muy densos, también donde en una misma máquina física, ponen a
+
+226
+00:26:49.470 --> 00:26:56.230
+Pablo Eduardo Abad: a servidores virtuales, incluso de distintos clientes. Meldown es otro Mhm.
+
+227
+00:26:57.020 --> 00:27:02.969
+Pablo Eduardo Abad: Entonces, en los últimos años, hay mucha investigación y mucha inversión en investigar este tipo de ataques.
+
+228
+00:27:03.490 --> 00:27:10.590
+Pablo Eduardo Abad: Se imagínense si 1 pudiese rento un servidor. Y si tú en a W. S. Y desde ese servidor
+
+229
+00:27:11.370 --> 00:27:15.610
+Pablo Eduardo Abad: puedo leer la información de todos los otros servidores que están en esa misma máquina física.
+
+230
+00:27:17.680 --> 00:27:22.249
+Pablo Eduardo Abad: Es una lotería, pero me pongo a correr la lotería sin parar hasta que salga algo interesante.
+
+231
+00:27:22.590 --> 00:27:25.190
+Pablo Eduardo Abad: Entonces hay hay mucha investigación en eso
+
+232
+00:27:25.470 --> 00:27:39.979
+Pablo Eduardo Abad: otro blanco por ahí de años anteriores. A esto de los servidores que eran. No había conferencia de seguridad de de selección país y se les rompía son las smart Ats, las tarjetas que tienen un chip integrado
+
+233
+00:27:41.360 --> 00:27:42.550
+Pablo Eduardo Abad: como ser.
+
+234
+00:27:43.380 --> 00:27:50.880
+Pablo Eduardo Abad: No, No es justo. Las tarjetas de crédito, pero más que nada, las de transporte, esto las de acceso a edificios.
+
+235
+00:27:51.440 --> 00:27:55.070
+Pablo Eduardo Abad: esas tarjetas. Digo, la la versión más
+
+236
+00:27:59.180 --> 00:28:18.300
+Pablo Eduardo Abad: más básica de esas tarjetas codifican en radiofrecuencia un identificador único y el sistema con eso toma decisiones, Pero hay otras. Este, por ejemplo, nuestra tarjeta sube, por ejemplo, que necesitan poder operar offling, entonces la tarjeta misma tiene memoria. Si
+
+237
+00:28:19.260 --> 00:28:29.879
+Pablo Eduardo Abad: una tarjeta que físicamente va a estar en manos de alguien que la quiera romper. Es es una sed muy difícil de proteger. Entonces, la idea conceptual es que estas tarjetas, que tienen memoria.
+
+238
+00:28:31.110 --> 00:28:41.800
+Pablo Eduardo Abad: tienen memoria cifrada. Y entonces es cuando se las conecta con algo, se transmite. La clave: se descifra la memoria, se actualiza, están pensadas para no ser manipuladas
+
+239
+00:28:42.330 --> 00:28:45.789
+Pablo Eduardo Abad: este y tienen adentro claves criptográficas.
+
+240
+00:28:45.920 --> 00:28:52.829
+Pablo Eduardo Abad: Así que supóngase que se necesita tecnología muy compleja para poder recuperarla sin sin perderlas.
+
+241
+00:28:53.080 --> 00:28:54.550
+Pablo Eduardo Abad: Y
+
+242
+00:28:55.440 --> 00:29:02.000
+Pablo Eduardo Abad: pero Como todo circuito, tiene un consumo y a través del consumo. Históricamente las han roto a casi todas.
+
+243
+00:29:02.830 --> 00:29:06.909
+Pablo Eduardo Abad: viendo las diferencias de consumo e ir procesando distintos mensajes.
+
+244
+00:29:07.250 --> 00:29:12.320
+Pablo Eduardo Abad: Se puede extraer información, Bueno, y así
+
+245
+00:29:12.870 --> 00:29:15.259
+Pablo Eduardo Abad: hay un montón de de ejemplos
+
+246
+00:29:15.420 --> 00:29:19.710
+Pablo Eduardo Abad: al que le guste, póngase a buscar sidechan en el ataxi y va a encontrar de todos los colores.
+
+247
+00:29:21.390 --> 00:29:28.699
+Pablo Eduardo Abad: Entonces, 2 caras por ahí de una misma moneda, ¿no? O sea, hay canales encubiertos.
+
+248
+00:29:29.210 --> 00:29:32.429
+Pablo Eduardo Abad: sí que son flujos de información
+
+249
+00:29:33.910 --> 00:29:39.849
+Pablo Eduardo Abad: que no fueron diseñados para hacer flujo de información y permiten transmitir información
+
+250
+00:29:39.990 --> 00:29:45.370
+Pablo Eduardo Abad: típicamente para fuera de los controles, porque el no haberlo considerado tampoco lo consideran los controles.
+
+251
+00:29:46.470 --> 00:29:53.980
+Pablo Eduardo Abad: Un ataque de canal lateral es explotar un canal encubierto para extraer información sensible.
+
+252
+00:29:58.680 --> 00:30:06.720
+Pablo Eduardo Abad: ¿cómo podemos resolver o mitigar esto? Sí, si quieren el el spoiler rápido es
+
+253
+00:30:07.010 --> 00:30:10.040
+Pablo Eduardo Abad: resolver esto es prácticamente misión imposible.
+
+254
+00:30:10.690 --> 00:30:14.049
+Pablo Eduardo Abad: Sí, es muy difícil
+
+255
+00:30:14.230 --> 00:30:26.480
+Pablo Eduardo Abad: resolver esto para todos los problemas conocidos. Es muy difícil, pero se puede hacer. El problema son los canales que hoy no conocemos, que son ocultos, pero sí se puede mitigar
+
+256
+00:30:26.890 --> 00:30:30.409
+Pablo Eduardo Abad: y y mitigarlo. Les diría que es la forma en la que
+
+257
+00:30:30.880 --> 00:30:36.739
+Pablo Eduardo Abad: cuando esto empieza a ser parte de la necesidad de seguridad de un sistema. Es la forma que más utiliza
+
+258
+00:30:37.860 --> 00:30:44.120
+Pablo Eduardo Abad: para ambas cosas. Hay técnicas que se pueden utilizar en tiempos de compilación, o sea, el estar diseñando el
+
+259
+00:30:44.390 --> 00:30:47.460
+Pablo Eduardo Abad: el sistema o al estar compilándolo
+
+260
+00:30:48.120 --> 00:31:00.329
+Pablo Eduardo Abad: que en general van a analizar la propagación de de información siguiendo directamente la las líneas del código fuente. Sí, en general es un proceso bastante costoso y complejo.
+
+261
+00:31:00.980 --> 00:31:07.649
+Pablo Eduardo Abad: No sé si vieron en alguna otra materia el el concepto de verificación formal de sistemas Uno puede
+
+262
+00:31:08.930 --> 00:31:19.289
+Pablo Eduardo Abad: convertir una una aplicación, cualquier aplicación en un sistema formal, como si fuese un axioma, perdón, un teorema matemático y demostrar que es correcto
+
+263
+00:31:20.250 --> 00:31:29.579
+Pablo Eduardo Abad: si si nosotros tuviésemos la la obligación por algo de mostrar que algo no tiene vans contra una especificación perfecta. Hay Hay técnicas para hacer eso.
+
+264
+00:31:29.860 --> 00:31:33.239
+Pablo Eduardo Abad: Este hay que estar medio loco. Pero para cosas críticas.
+
+265
+00:31:33.820 --> 00:31:40.710
+Pablo Eduardo Abad: por ejemplo, Tanenbound, el autor del montón de libros de redes y sistemas operativos.
+
+266
+00:31:40.900 --> 00:31:46.210
+Pablo Eduardo Abad: armó un micro carnal de un sistema operativo con una demostración formal de que es seguro, por ejemplo.
+
+267
+00:31:46.410 --> 00:31:49.360
+Pablo Eduardo Abad: para cosas así muy críticas puede estar ahí
+
+268
+00:31:49.700 --> 00:31:59.719
+Pablo Eduardo Abad: eso. Entonces hay verificaciones de flujo en tiempo de compilación. Hay verificaciones dinámicas en tiempo de ejecución. Son las más utilizadas.
+
+269
+00:32:03.860 --> 00:32:09.970
+Pablo Eduardo Abad: ¿cómo venimos a tiempo bien control de flujo en tiempo de compilación.
+
+270
+00:32:13.330 --> 00:32:20.220
+Pablo Eduardo Abad: El concepto de esto es medir la información
+
+271
+00:32:20.820 --> 00:32:37.969
+Pablo Eduardo Abad: que hay asociada en cada variable a medida que vamos ejecutando un programa, ¿sí? Y evaluar cómo cambia esa cantidad de información a medida que van pasando las sentencias. Si la idea es que si la cantidad de información que tiene una variable cambia a lo largo del tiempo, es porque hay flujo de información.
+
+272
+00:32:38.820 --> 00:32:44.359
+Pablo Eduardo Abad: sí, si no debería haber flujo de información y cambia esa medición
+
+273
+00:32:45.980 --> 00:32:48.840
+Pablo Eduardo Abad: es que tenemos un problema potencial a la hora de cambiar
+
+274
+00:32:51.550 --> 00:32:56.879
+Pablo Eduardo Abad: la primera parte de cómo resolver esto es cómo medimos la información.
+
+275
+00:32:57.190 --> 00:33:00.399
+Pablo Eduardo Abad: Por suerte, ya hace muchos años, hace casi
+
+276
+00:33:00.510 --> 00:33:07.599
+Pablo Eduardo Abad: 90 años, este a a Klaude Shannon se le ocurrió una forma de
+
+277
+00:33:08.320 --> 00:33:13.310
+Pablo Eduardo Abad: convertir en un solo número la cantidad información que puede circular por un
+
+278
+00:33:13.890 --> 00:33:32.309
+Pablo Eduardo Abad: por un canal si si nosotros pensamos en un canal discreto en un canal de comunicación, si lo pensamos como un canal donde se transmiten distintas señales discretas una tras de la otra. Distintos bytes, por ejemplo, sí. Donde cada valor posible de esas señales tiene una probabilidad de ocurrencia distinta.
+
+279
+00:33:32.480 --> 00:33:39.679
+Pablo Eduardo Abad: Si nosotros podemos calcular la entropía de ese canal.
+
+280
+00:33:40.370 --> 00:33:52.569
+Pablo Eduardo Abad: Sí, es un término que usa el mismo nombre y tiene como alguna relación pero muy tirada de los pelos con la entropía física de termodinámica, pero pero no son exactamente el mismo concepto.
+
+281
+00:33:52.900 --> 00:34:04.489
+Pablo Eduardo Abad: pero no se llama igual. Se llama entropía. O sea, podemos caracterizar la entropía de ese canal. Con esta fórmula, el producto de la probabilidad de cada valor por el logaritmo en base 2 de la probabilidad de ese valor
+
+282
+00:34:04.950 --> 00:34:06.789
+Pablo Eduardo Abad: sumado para todos los valores
+
+283
+00:34:10.870 --> 00:34:23.079
+Pablo Eduardo Abad: y obtener una un valor numérico para ese canal, que nos indica una medida de información. Si si tenemos que entender qué es lo que calcula esto así un poco intuitivamente.
+
+284
+00:34:23.170 --> 00:34:32.020
+Pablo Eduardo Abad: La idea es que más que medir la cantidad de información que tiene, el canal, mide la cantidad de información que deberíamos conocer para poder explicar completamente el canal
+
+285
+00:34:33.520 --> 00:34:41.269
+Pablo Eduardo Abad: o el contenido de ese canal. Sí, entonces se dice que es una medida de falta o incertidumbre de información más que información.
+
+286
+00:34:41.750 --> 00:34:47.600
+Pablo Eduardo Abad: pero se puede usar. No importa el eso es más que nada, dónde ponemos el el punto de referencia, ¿no?
+
+287
+00:34:47.770 --> 00:34:52.940
+Pablo Eduardo Abad: Y para hay 2 formas de ver esto es, fíjense que esto requiere que caractericemos
+
+288
+00:34:53.219 --> 00:34:59.129
+Pablo Eduardo Abad: el tipo de mensajes que va por el canal, no como una tabla de probabilidades, porque es una cantidad discreta de elementos.
+
+289
+00:34:59.430 --> 00:35:08.960
+Pablo Eduardo Abad: Esta Esta fórmula tiene un valor mínimo, sí que va a ser 0
+
+290
+00:35:09.460 --> 00:35:14.290
+Pablo Eduardo Abad: cuando ocurre que la probabilidad de alguno de estos valores es 1
+
+291
+00:35:16.080 --> 00:35:20.579
+Pablo Eduardo Abad: como la suma de la probabilidad. Todos los valores tiene que dar 1
+
+292
+00:35:22.060 --> 00:35:27.020
+Pablo Eduardo Abad: propiedades básicas de de las probabilidades si tenemos un valor en concreto que da 1
+
+293
+00:35:27.170 --> 00:35:32.699
+Pablo Eduardo Abad: el resto, tiene que valer 0 y, en ese caso, lo que ocurre es que cada 1 de estos términos
+
+294
+00:35:33.350 --> 00:35:40.430
+Pablo Eduardo Abad: o vale 0, porque la probabilidad vale 0 o vale 0, porque la probabilidad vale 1. Y entonces el logaritmo vale 0, sí.
+
+295
+00:35:40.880 --> 00:35:46.350
+Pablo Eduardo Abad: Pero en particular ese caso es el caso de un canal donde nosotros sabemos exactamente lo que se transmite.
+
+296
+00:35:47.260 --> 00:35:55.149
+Pablo Eduardo Abad: porque si le podemos atribuir probabilidad 1 a un valor a un mensaje, quiere decir que sabemos que en ese canal se transmite ese mensaje, y solo ese mensaje.
+
+297
+00:35:56.140 --> 00:36:05.389
+Pablo Eduardo Abad: Entonces la entropía vale 0. Cuando conocemos a la perfección ese mensaje, cuando no hay información extra
+
+298
+00:36:06.330 --> 00:36:08.320
+Pablo Eduardo Abad: que se esté transmitiendo en ese mensaje.
+
+299
+00:36:12.330 --> 00:36:19.059
+Pablo Eduardo Abad: Cuándo es máxima la entropía? Bueno, la andropía para una
+
+300
+00:36:21.430 --> 00:36:25.889
+Pablo Eduardo Abad: para un canal que puede tomar n valores distintos. Es 1 sobre N:
+
+301
+00:36:26.060 --> 00:36:31.880
+Pablo Eduardo Abad: si, cuando todas las probabilidades son iguales, esta función tiene un máximo
+
+302
+00:36:32.930 --> 00:36:38.610
+Pablo Eduardo Abad: cuando todas las probabilidades son iguales si todas las probabilidades son iguales, todas valen 1 sobre n
+
+303
+00:36:40.290 --> 00:36:43.729
+Pablo Eduardo Abad: por esto de que la suma de las probabilidades tiene que valer 1.
+
+304
+00:36:45.440 --> 00:36:52.320
+Pablo Eduardo Abad: Pero si todas las probabilidades tienen el mismo valor, 1 sobre N: lo que tenemos es una distribución uniforme.
+
+305
+00:36:53.580 --> 00:37:04.559
+Pablo Eduardo Abad: Quiere decir que de los 100 posibles valores son todos improbables. No hay ninguno de los que sepamos más ahí es cuanto más desconocemos de la distribución en ese canal puede ir cualquier cosa.
+
+306
+00:37:05.000 --> 00:37:14.350
+Pablo Eduardo Abad: Y lo que nos cuantifica, si quieren es la cantidad de bits de información que necesitaríamos para poder describir ese canal. El mensaje que va en ese canal.
+
+307
+00:37:15.770 --> 00:37:31.329
+Pablo Eduardo Abad: Estos son los 2 extremos. Lo interesante es que esto es una función continua. La entropía mide de forma continua lo que ocurre entre estos 2 extremos. Entonces nos deja cuantificar los escenarios donde conocemos algo de información del canal, pero no toda la información.
+
+308
+00:37:32.680 --> 00:37:33.570
+Pablo Eduardo Abad: Sí.
+
+309
+00:37:35.290 --> 00:37:42.480
+Pablo Eduardo Abad: Con todo esto tenemos una forma de cuantificar la información sobre un canal sobre una variable. Lo vamos a hacer también.
+
+310
+00:37:45.110 --> 00:37:54.429
+Pablo Eduardo Abad: Cuando empecemos a analizar flujo de información, vamos a tener que empezar a analizar cómo cambian estos valores como cambia la entropía, a medida que ocurren cosas.
+
+311
+00:37:54.680 --> 00:38:01.989
+Pablo Eduardo Abad: Para eso se utiliza parecido al concepto de probabilidad condicional, concepto de entropía condicional. Y, de hecho.
+
+312
+00:38:02.830 --> 00:38:09.849
+Pablo Eduardo Abad: como la entropía se construye sobre probabilidades. Las entropías condicionales, también se construyen sobre probabilidades.
+
+313
+00:38:10.000 --> 00:38:15.260
+Pablo Eduardo Abad: Sí, la entropía se define sobre una variable de letra discreta.
+
+314
+00:38:16.760 --> 00:38:20.030
+Pablo Eduardo Abad: una variable que puede tomar un conjunto X de valores
+
+315
+00:38:20.320 --> 00:38:26.069
+Pablo Eduardo Abad: con una distribución que le damos. La incondicional. Se define sobre 2, si y se puede definir
+
+316
+00:38:26.220 --> 00:38:32.569
+Pablo Eduardo Abad: la entropía de X, sabiendo que ocurrió algo con otra variable, un caso particular
+
+317
+00:38:32.780 --> 00:38:36.409
+Pablo Eduardo Abad: que la misma definición, salvo que todas las probabilidades son condicionales
+
+318
+00:38:37.140 --> 00:38:42.550
+Pablo Eduardo Abad: o la probabilidad condicional general de una variable, conduciendo la otra, que es
+
+319
+00:38:43.550 --> 00:38:47.170
+Pablo Eduardo Abad: el promedio ponderado de las andropías condicionales
+
+320
+00:38:47.800 --> 00:39:01.040
+Pablo Eduardo Abad: son fórmulas, Sí, son fórmulas que igual miden. Son una sumatoria que hay una sumatoria de otras sumatorias, se expanden bastante pero bueno, son fórmulas que nos permiten llevar a resultados numéricos un montón de cosas.
+
+321
+00:39:02.810 --> 00:39:12.700
+Pablo Eduardo Abad: Entonces lo mismo que veníamos contando intuitivamente se puede definir formal sobre flujo de información. Si Si yo tengo un sistema en un estado start Ss.
+
+322
+00:39:12.810 --> 00:39:15.830
+Pablo Eduardo Abad: Sí, yo quiero llevar un estado terminal. T.
+
+323
+00:39:16.790 --> 00:39:19.329
+Pablo Eduardo Abad: Después ejecutar una secuencia de comandos.
+
+324
+00:39:20.380 --> 00:39:25.979
+Pablo Eduardo Abad: Yo puedo definir los valores de una variable que quiere observar
+
+325
+00:39:26.290 --> 00:39:31.110
+Pablo Eduardo Abad: o 2 variables que quiere observar al inicio. Y al final
+
+326
+00:39:33.660 --> 00:39:43.579
+Pablo Eduardo Abad: sí, entonces puedo formalizar a través de la entropía si existe o no flujo de información, O sea, yo puedo decir que después de ejecutar una serie de comandos
+
+327
+00:39:44.550 --> 00:39:53.200
+Pablo Eduardo Abad: y me observando 2 variables. Cualquiera si hay flujo de información, si la entropía
+
+328
+00:39:53.660 --> 00:39:57.789
+Pablo Eduardo Abad: hay flujo de información, perdón de una variable a hacia la otra, sí
+
+329
+00:39:58.290 --> 00:40:06.450
+Pablo Eduardo Abad: la entropía, o sea, lo que desconozco, de una variable conociendo el estado final de la otra es menor
+
+330
+00:40:06.910 --> 00:40:11.890
+Pablo Eduardo Abad: que la entropía de esa misma variable, considerando el estado inicial.
+
+331
+00:40:13.930 --> 00:40:21.980
+Pablo Eduardo Abad: Esto es, si yo cuantifico la información al principio de esa variable, lo que me falta conocer, la entropía
+
+332
+00:40:23.100 --> 00:40:32.430
+Pablo Eduardo Abad: y después la cuantifico al final, con el estado final que puedo observar de la variable y me da distinto. En particular, me da a menor hubo transferencia de información
+
+333
+00:40:33.020 --> 00:40:35.849
+Pablo Eduardo Abad: si no hubo transferencia de información. ¿qué debería pasar.
+
+334
+00:40:41.440 --> 00:40:43.229
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y tenía que darte mayor igual.
+
+335
+00:40:44.020 --> 00:40:45.440
+Pablo Eduardo Abad: Debería dar mayor igual
+
+336
+00:40:45.680 --> 00:40:59.250
+Pablo Eduardo Abad: por ahí, al igual es fácil de ver, o sea, si si la otra variable no tiene nada que ver. La entropía no cambia, entonces va el mayor. En realidad es es un poco más complicado. Es correcto y tiene que ver con que pueden aparecer operaciones
+
+337
+00:41:02.030 --> 00:41:09.550
+Pablo Eduardo Abad: en las sentencias que no tenga que ver con la variable, pero que nos destruyan información sobre la otra, por ejemplo.
+
+338
+00:41:10.010 --> 00:41:15.489
+Pablo Eduardo Abad: una sentencia que pisa el valor de la variable. Eso va a aumentar la entropía automáticamente.
+
+339
+00:41:17.070 --> 00:41:25.589
+Pablo Eduardo Abad: Independientemente de que este yo conozca o no el valor de la otra variable.
+
+340
+00:41:25.890 --> 00:41:29.099
+Pablo Eduardo Abad: especialmente si es una asignación que no tiene nada que ver con la otra variable
+
+341
+00:41:29.680 --> 00:41:33.909
+Pablo Eduardo Abad: como caso especial de esto. Podría ser que
+
+342
+00:41:34.900 --> 00:41:39.670
+Pablo Eduardo Abad: la variable que estemos usando es una variable que no exista al principio
+
+343
+00:41:40.650 --> 00:41:44.940
+Pablo Eduardo Abad: que se cree durante la ejecución de las de los comandos de las sentencias.
+
+344
+00:41:45.160 --> 00:41:56.139
+Pablo Eduardo Abad: En ese caso se compara la la probabilidad condicional contra el estado final versus la probabilidad no condicional, la probabilidad absoluta. Al principio
+
+345
+00:42:00.170 --> 00:42:06.240
+Pablo Eduardo Abad: sobre esta definición se pueden construir técnicas formales e iterativas para
+
+346
+00:42:07.460 --> 00:42:13.060
+Pablo Eduardo Abad: seguir el flujo de información. Algo súper importante a entender es
+
+347
+00:42:13.370 --> 00:42:19.419
+Pablo Eduardo Abad: cuando lo bajamos a nivel programas modelo imperativo, si quieren, para no complicarlos de programación.
+
+348
+00:42:19.670 --> 00:42:26.079
+Pablo Eduardo Abad: El flujo de información existe, siempre es, de hecho, es necesario para que funcione. Yo hago algo
+
+349
+00:42:26.660 --> 00:42:29.530
+Pablo Eduardo Abad: para después utilizarlo en sentencias posteriores.
+
+350
+00:42:30.170 --> 00:42:31.050
+Pablo Eduardo Abad: Sí.
+
+351
+00:42:31.970 --> 00:42:44.270
+Pablo Eduardo Abad: Entonces, cuando 1 hace seguimiento del flujo de información no busca seguir todo flujo de información en toda configuración de variables. Generalmente se ciñe a casos importantes.
+
+352
+00:42:44.800 --> 00:42:51.079
+Pablo Eduardo Abad: y típicamente es en algún lugar muy crítico donde va a haber una variable, por ejemplo, que va a tener una clave criptográfica.
+
+353
+00:42:52.490 --> 00:43:03.010
+Pablo Eduardo Abad: y queremos ver que, midiendo otras variables observables, no se puede inferir esa clave de alguna manera en
+
+354
+00:43:03.960 --> 00:43:05.400
+Pablo Eduardo Abad: el análisis
+
+355
+00:43:05.980 --> 00:43:19.640
+Pablo Eduardo Abad: de este tipo de cosas básicamente implica dividir al programa en una secuencia ordenada de pasos y analizar esto caso por caso. Sí, supóngase esto una asignación simple donde una variable. Le doy la suma de otros 2
+
+356
+00:43:21.710 --> 00:43:32.329
+Pablo Eduardo Abad: y supóngase que conocemos la variable y no existe. Al principio se está creando en esta ascendencia, pero sobre X y Z no conocemos valores puntuales, pero tenemos una tabla de probabilidades. Por ejemplo.
+
+357
+00:43:32.490 --> 00:43:39.310
+Pablo Eduardo Abad: X puede tener 8 valores para hacerlo simple. Pero todos aquí probados no sabemos nada de que puede venir cualquier valor de los 8 posibles.
+
+358
+00:43:39.470 --> 00:43:44.660
+Pablo Eduardo Abad: y de Zetas sabemos algo. Sabemos que tiene 3 valores posibles, pero hay más chances de que sea el primero.
+
+359
+00:43:45.790 --> 00:43:52.129
+Pablo Eduardo Abad: Sí, nosotros, con esta información. Podemos calcular las entropías. Podemos calcular la entropía de X,
+
+360
+00:43:52.310 --> 00:43:56.640
+Pablo Eduardo Abad: sí que era más fácil, porque son todas iguales. Entonces todas las probabilidades son un octavo.
+
+361
+00:43:57.420 --> 00:43:58.310
+Pablo Eduardo Abad: Sí,
+
+362
+00:43:58.580 --> 00:44:07.579
+Pablo Eduardo Abad: esto va a ser 8. Esto va a ser constante. Se sale así que se cancela, Va a ser básicamente la sumatoria del logaritmo de 1 sobre 8
+
+363
+00:44:07.720 --> 00:44:12.780
+Pablo Eduardo Abad: 8 veces 3, Shake Mhm.
+
+364
+00:44:16.420 --> 00:44:24.290
+Pablo Eduardo Abad: Este es el valor de X, por ejemplo, cuánto sabemos de X antes de ejecutar esto, Sí.
+
+365
+00:44:24.650 --> 00:44:29.999
+Pablo Eduardo Abad: Ahora, supóngase que ejecutamos esta sentencia. ¿sí? Y yo conozco el valor de, y
+
+366
+00:44:30.190 --> 00:44:32.060
+Pablo Eduardo Abad: yo puedo leer el valor de I.
+
+367
+00:44:32.760 --> 00:44:39.839
+Pablo Eduardo Abad: Si esta era la clave criptográfica, se hizo alguna operación Este, y este es el valor de salida de la función, que no es la clave criptográfica.
+
+368
+00:44:43.700 --> 00:44:51.160
+Pablo Eduardo Abad: ¿qué pasa si yo conozco el valor de y se que y tiene un valor puntual, Sí,
+
+369
+00:44:51.280 --> 00:44:58.260
+Pablo Eduardo Abad: con este comando. Yo sé muchas más cosas. Si sé que como Z puede tener 3 valores X puede tener solo 3 valores
+
+370
+00:44:58.880 --> 00:45:04.769
+Pablo Eduardo Abad: que van a ser, y menos 1 y 2 y 3. Peor aún, sé que hay más probabilidad de que sea y menos 1
+
+371
+00:45:06.360 --> 00:45:07.579
+Pablo Eduardo Abad: que de los otros.
+
+372
+00:45:08.710 --> 00:45:20.269
+Pablo Eduardo Abad: Todo esto que digo, así que lo puedo sacar intuitivamente. Lo puedo convertir en un número, calculando la entropía condicional de X, sabiendo el valor de I,
+
+373
+00:45:21.070 --> 00:45:29.469
+Pablo Eduardo Abad: que si me la pongo a calcular, en este caso va a ser bastante simple. Van a hacer estos 3 valores. Y estos 3 valores van a tener esta probabilidad de aparición.
+
+374
+00:45:29.880 --> 00:45:31.460
+Pablo Eduardo Abad: Me va a dar 1 5.
+
+375
+00:45:32.720 --> 00:45:34.070
+Pablo Eduardo Abad: ¿sabes qué pasa acá.
+
+376
+00:45:34.450 --> 00:45:40.309
+Pablo Eduardo Abad: La entropía de guisantes. Era 3 después. Conociendo, y es 1 5,
+
+377
+00:45:40.550 --> 00:45:43.460
+Pablo Eduardo Abad: hay traspasos de información de X a y
+
+378
+00:45:48.420 --> 00:45:49.160
+Pablo Eduardo Abad: Mhm.
+
+379
+00:45:52.480 --> 00:46:01.249
+Pablo Eduardo Abad: Esto se llama flujo directo de información. También existen los flujos indirectos. No sé en en un lenguaje imperativo. Además de las sentencias, tenemos
+
+380
+00:46:01.510 --> 00:46:04.810
+Pablo Eduardo Abad: secuencias que alteran el orden de ejecución.
+
+381
+00:46:05.110 --> 00:46:09.130
+Pablo Eduardo Abad: Sí, por ejemplo, un condicional, sí
+
+382
+00:46:09.430 --> 00:46:17.439
+Pablo Eduardo Abad: hacer un ejemplo súper simple también para que para que agarren la idea, después en las prácticas y en el libro lo lo vamos a complicar un poco más.
+
+383
+00:46:17.850 --> 00:46:20.130
+Pablo Eduardo Abad: Pero fíjense, por ejemplo.
+
+384
+00:46:21.280 --> 00:46:28.080
+Pablo Eduardo Abad: supóngase que llegan esta sentencia que dice: si X es igual a 0, entonces y vale 1, si no. Y vale 0,
+
+385
+00:46:28.890 --> 00:46:32.280
+Pablo Eduardo Abad: Sí, Fíjense que a diferencia de esta
+
+386
+00:46:32.520 --> 00:46:39.270
+Pablo Eduardo Abad: yo acá lo escribí en una línea, pero X e Y no aparecen en la misma sentencia. Si yo miro esta sentencia a sentencia.
+
+387
+00:46:40.380 --> 00:46:49.200
+Pablo Eduardo Abad: acá hay una sentencia que dice igual a 1. Acá hay otra que es igual a 0. Acá Hay una expresión que podría ser analizarla por separado también que compara X con 0
+
+388
+00:46:49.500 --> 00:46:51.990
+Pablo Eduardo Abad: y nunca aparecen en la misma sentencia.
+
+389
+00:46:52.780 --> 00:46:54.770
+Pablo Eduardo Abad: Sin embargo, o sea.
+
+390
+00:46:55.120 --> 00:47:05.539
+Pablo Eduardo Abad: no tenemos ni siquiera que conocer Entiopía. Uno mira eso y dice: si ustedes conocen el valor de I después de esa sentencia, pueden inferir. Pueden sacar información de ellos.
+
+391
+00:47:06.030 --> 00:47:11.980
+Pablo Eduardo Abad: Sí, supóngase que X era muy bueno con igualdad de probabilidades.
+
+392
+00:47:12.360 --> 00:47:18.020
+Pablo Eduardo Abad: Sí, si ustedes calculan la andropía de X con esta distribución, vale 1
+
+393
+00:47:18.450 --> 00:47:23.760
+Pablo Eduardo Abad: si calcula la andropía X conocido y en este caso, valer 0.
+
+394
+00:47:24.280 --> 00:47:29.069
+Pablo Eduardo Abad: A partir de ahí, vamos a poder siempre sacar el valor de X hay traspaso de información. También
+
+395
+00:47:33.070 --> 00:47:37.599
+Pablo Eduardo Abad: esto es un canal espacial de información, si quieren.
+
+396
+00:47:38.030 --> 00:47:47.000
+Pablo Eduardo Abad: sí, pero también podría ser un canal temporal por comportamiento. Por ejemplo, un siglo infinito.
+
+397
+00:47:49.210 --> 00:47:58.120
+Pablo Eduardo Abad: sí. ¿cómo se analiza este tipo de cosas. Es un poco más complicado, pero acá. La variable observable tiene que ver con este. Es un caso muy extremo. ¿no? Esto podría ser
+
+398
+00:47:58.370 --> 00:48:02.980
+Pablo Eduardo Abad: en realidad que igual X es igual a 0. Se ejecuta algo muy pesado, por ejemplo.
+
+399
+00:48:03.870 --> 00:48:14.670
+Pablo Eduardo Abad: Pero bueno, a falta de que haya algo, yo acá podría plantear una variable observada y que, por ejemplo, valga 0 si el programa termina y 1. Si el programa no termina
+
+400
+00:48:18.290 --> 00:48:22.109
+Pablo Eduardo Abad: si calculo la entropía de X, de vuelta en un escenario donde equivale
+
+401
+00:48:22.590 --> 00:48:30.380
+Pablo Eduardo Abad: 0 a una con igualdad de probabilidades. La entropía es 1 si calculo la entropía de X, dado Y con esta definición de y
+
+402
+00:48:30.510 --> 00:48:31.770
+Pablo Eduardo Abad: la entropía 0.
+
+403
+00:48:32.420 --> 00:48:34.500
+Pablo Eduardo Abad: Hay traspaso de información de vuelta.
+
+404
+00:48:34.970 --> 00:48:41.179
+Pablo Eduardo Abad: Fíjense que este ya no es observando las variables, estamos observando si el programa termina o no termina.
+
+405
+00:48:41.730 --> 00:48:44.959
+Pablo Eduardo Abad: Y eso nos da información indirecta sobre ellos.
+
+406
+00:48:46.690 --> 00:48:55.549
+Pablo Eduardo Abad: Mhm Son ejemplos muy simples, sí, pero el poder de esto es que estos 3 casos.
+
+407
+00:48:55.890 --> 00:48:58.229
+Pablo Eduardo Abad: si quieren el del If con distintas
+
+408
+00:48:58.350 --> 00:49:02.529
+Pablo Eduardo Abad: semánticas, se puede adaptar a un dúo o a un Wild, o sea, a Loops.
+
+409
+00:49:02.650 --> 00:49:11.390
+Pablo Eduardo Abad: Este Este es un look infinito. Es un caso aparte, porque es el caso que suele romper todo. Pero
+
+410
+00:49:12.590 --> 00:49:20.040
+Pablo Eduardo Abad: esta misma idea que se puede hacer sentencia, sentencia. Se puede hacer un programa de 1 000 sentencias, ¿
+
+411
+00:49:21.510 --> 00:49:24.909
+Pablo Eduardo Abad: Hay sistemas automáticos para intentar hacer eso.
+
+412
+00:49:25.130 --> 00:49:32.249
+Pablo Eduardo Abad: La realidad es que las técnicas que se utilizan para eso comparten los mismos límites que las técnicas de verificación formal
+
+413
+00:49:32.610 --> 00:49:40.049
+Pablo Eduardo Abad: y, primero, no son computables para verificar todo programa. Siempre va a haber programas
+
+414
+00:49:40.330 --> 00:49:50.919
+Pablo Eduardo Abad: que no son verificables. Ese es un límite teórico. Les diría más que práctico, porque en general, los no computables son este tipo de cosas. Son programas que nunca terminarían entonces.
+
+415
+00:49:51.240 --> 00:49:58.480
+Pablo Eduardo Abad: Y dentro de la familia de programas útiles. Se pueden construir
+
+416
+00:50:00.290 --> 00:50:03.569
+Pablo Eduardo Abad: programas que automaticen esto y que, y que funcionen.
+
+417
+00:50:04.030 --> 00:50:06.230
+Pablo Eduardo Abad: El problema más grande es
+
+418
+00:50:06.390 --> 00:50:17.749
+Pablo Eduardo Abad: una cosa, es evaluar una sentencia así fija de valor que se combinan. Pero cuando empezamos a pasar sistemas más complejos donde estos valores dependen de un estímulo externo.
+
+419
+00:50:18.140 --> 00:50:23.400
+Pablo Eduardo Abad: Estos valores son un input que llega desde el teclado. Este o un click del mouse.
+
+420
+00:50:23.930 --> 00:50:26.370
+Pablo Eduardo Abad: La cantidad de casos empieza a explotar
+
+421
+00:50:27.150 --> 00:50:37.990
+Pablo Eduardo Abad: de forma exponencial. Y en algún momento ya es imposible verificar todas las ramas. Eso es un problema grande que hace que esto se suela limitar a cosas muy chicas y cosas muy, muy
+
+422
+00:50:38.210 --> 00:50:42.669
+Pablo Eduardo Abad: encerradas en sí misma con poca comunicación con el exterior.
+
+423
+00:50:43.180 --> 00:50:57.599
+Pablo Eduardo Abad: Y finalmente, para todas estas técnicas de demostración formal. Los ciclos son un problema. Sí, este es un ciclo potencialmente infinito, pero un ciclo que tenga Código que se ejecute y que en alguna ejecución cambie la condición para salir.
+
+424
+00:50:57.990 --> 00:51:00.200
+Pablo Eduardo Abad: Son un problema para estas demostraciones.
+
+425
+00:51:00.330 --> 00:51:10.259
+Pablo Eduardo Abad: típicamente se hace lo que se llama un look and rolling, que es como convertir ese programa que tiene el ciclo en la secuencia equivalente a repetir el ciclo muchas veces.
+
+426
+00:51:10.760 --> 00:51:20.980
+Pablo Eduardo Abad: Por eso tiene un límite. No, yo la desenrollo, el ciclo 1 000 veces. Y si hay alguna combinación de datos que necesitaba 1 000 una interacciones del ciclo. No la voy a estar viendo
+
+427
+00:51:23.090 --> 00:51:34.970
+Pablo Eduardo Abad: en general en general, para este tipo de análisis, El analizar siglos. No sé hasta 10 veces suele ser ya muy poderoso, porque los problemas estructurales suelen aparecer en pocos siglos.
+
+428
+00:51:36.810 --> 00:51:41.780
+Pablo Eduardo Abad: Pero es si quieren, un cabo suelto que queda en este tipo de demostraciones
+
+429
+00:51:46.160 --> 00:51:54.050
+Pablo Eduardo Abad: técnicas formales que se pueden aplicar sobre el código fuente. Hay programas que intentan aplicar esto. Son técnicas pesadas
+
+430
+00:51:54.160 --> 00:51:59.200
+Pablo Eduardo Abad: y requieren para funcionar un código fuente que tenga una estructuración bastante particular.
+
+431
+00:52:00.980 --> 00:52:03.509
+Pablo Eduardo Abad: ¿qué hacemos con el resto de las cosas? Fueron
+
+432
+00:52:14.210 --> 00:52:17.200
+Pablo Eduardo Abad: cortarle el cable de red a la
+
+433
+00:52:21.770 --> 00:52:23.020
+Pablo Eduardo Abad: aproximarlo.
+
+434
+00:52:23.610 --> 00:52:30.800
+Pablo Eduardo Abad: Entonces hay 2 grandes formas de hacer aislamiento. Hoy día, la primera es
+
+435
+00:52:31.240 --> 00:52:36.630
+Pablo Eduardo Abad: simulándole a la aplicación al proceso, un entorno de ejecución sintético.
+
+436
+00:52:37.650 --> 00:52:40.530
+Pablo Eduardo Abad: Sí, eso es virtualización, una máquina virtual.
+
+437
+00:52:41.000 --> 00:52:51.830
+Pablo Eduardo Abad: O sea, entonces no tenemos a el procesador a la computadora corriendo el programa, sino que tenemos un programa que simula un ambiente sintético, una computadora puede ser
+
+438
+00:52:51.950 --> 00:52:52.890
+Pablo Eduardo Abad: sí.
+
+439
+00:52:53.120 --> 00:52:58.679
+Pablo Eduardo Abad: Y a través de esa simulación corre el programa y por correrlo dentro de esa simulación
+
+440
+00:52:59.010 --> 00:53:03.319
+Pablo Eduardo Abad: puede estar dinámicamente evaluando si lo deja seguir corriendo o no.
+
+441
+00:53:05.570 --> 00:53:09.000
+Pablo Eduardo Abad: Sí. Ese es el concepto de visual de virtualización.
+
+442
+00:53:10.310 --> 00:53:20.839
+Pablo Eduardo Abad: Es pesadísimo, sí, porque requiere emular todo el ambiente donde corre un programa, y los ambientes donde corren programas, son bichos complejos.
+
+443
+00:53:21.790 --> 00:53:28.039
+Pablo Eduardo Abad: entonces es complicado de hacer. Es muy pesado en recursos también. Si otra técnica que se usa
+
+444
+00:53:28.610 --> 00:53:29.990
+Pablo Eduardo Abad: se llama sanboxing
+
+445
+00:53:30.440 --> 00:53:37.429
+Pablo Eduardo Abad: unboxing es un poco más liviana. Lo que plantea es bueno. En vez de simular todo el ambiente de ejecución.
+
+446
+00:53:37.670 --> 00:53:39.869
+Pablo Eduardo Abad: busquemos un mecanismo
+
+447
+00:53:43.010 --> 00:53:50.669
+Pablo Eduardo Abad: que nos permita arbitrar las interacciones de esos procesos Con cualquiera que los quiera observar.
+
+448
+00:53:52.230 --> 00:54:00.249
+Pablo Eduardo Abad: Sí, hay distintas técnicas de sanboxing. Hay sandboxing a nivel sistema operativo, o sea, el sistema operativo. Hace esta
+
+449
+00:54:00.780 --> 00:54:08.419
+Pablo Eduardo Abad: esta idea de cuando alguien quiere interactuar o cuando la aplicación quiere interactuar con alguien lo derivo antes a a un
+
+450
+00:54:09.020 --> 00:54:11.350
+Pablo Eduardo Abad: este mecanismo de control.
+
+451
+00:54:11.540 --> 00:54:19.250
+Pablo Eduardo Abad: o podría ocurrir con un programa que reescribe el programa original para agregar esos controles en cada antes de cada lugar.
+
+452
+00:54:19.470 --> 00:54:21.769
+Pablo Eduardo Abad: Son 2 son los 2 mecanismos que existen
+
+453
+00:54:22.320 --> 00:54:29.250
+Pablo Eduardo Abad: este, pero en general, la idea de unboxing. ¿es Esa es arbitrar ahora todo lo que es la entrada, salida del programa
+
+454
+00:54:29.550 --> 00:54:34.030
+Pablo Eduardo Abad: para tomar también decisiones dinámicamente en
+
+455
+00:54:39.670 --> 00:54:50.580
+Pablo Eduardo Abad: estoy pensando mecanismo, ahora mecanismos de virtualización, máquinas virtuales, Bien, Web, virtual box. Cualquier cosa de esas es virtualización.
+
+456
+00:54:52.200 --> 00:54:59.159
+Pablo Eduardo Abad: mecanismo de sandboxing, por ejemplo, es en Munix. Algunos algunas, el comando Ch cha root.
+
+457
+00:55:02.870 --> 00:55:03.590
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí.
+
+458
+00:55:05.470 --> 00:55:10.869
+Pablo Eduardo Abad: Genial ¿qué podrás contarnos brevemente qué hace Te Acordás.
+
+459
+00:55:11.240 --> 00:55:14.959
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Me parece que lo que sí era para cambiar quién era Ruth puede ser
+
+460
+00:55:15.750 --> 00:55:17.429
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: algo de los permisos de Ruth.
+
+461
+00:55:17.690 --> 00:55:28.380
+Pablo Eduardo Abad: No, No, no exactamente. Es es la raíz, pero lo que nos deja hacer es ejecutar un proceso cualquiera o sea después se ha hecho Root. Uno pone
+
+462
+00:55:28.560 --> 00:55:34.599
+Pablo Eduardo Abad: bueno un parámetro y y pone un proceso. No sé, barrabín barra baja de un Shell, por ejemplo.
+
+463
+00:55:34.810 --> 00:55:37.449
+Pablo Eduardo Abad: Pero lo que nos permite definir qué
+
+464
+00:55:38.670 --> 00:55:43.280
+Pablo Eduardo Abad: qué carpeta va a ver ese proceso como si fuese la carpeta raíz del fight System.
+
+465
+00:55:43.540 --> 00:55:50.849
+Pablo Eduardo Abad: Sí, es un comando típico de iunix donde múnix, toda entrada y salida es un archivo. El teclado es un archivo, el monitor es un archivo.
+
+466
+00:55:51.080 --> 00:55:54.739
+Pablo Eduardo Abad: entonces Ch Root. Lo que nos deja es lanzar un proceso nuevo
+
+467
+00:55:55.490 --> 00:56:05.519
+Pablo Eduardo Abad: que tiene una vista cortada del fight System, Yo puedo crearme un directorio y le creo, adentro. No es un directorio, etcétera. Un directorio user
+
+468
+00:56:05.960 --> 00:56:10.309
+Pablo Eduardo Abad: y con Ch Ruth corro un programa este
+
+469
+00:56:10.510 --> 00:56:14.880
+Pablo Eduardo Abad: que ve eso como Five System, si quiere abrir barra, etcétera. Ahora, password
+
+470
+00:56:15.060 --> 00:56:19.370
+Pablo Eduardo Abad: va a abrir el barracetera dentro del directorio que le queda como encajonado ahí
+
+471
+00:56:20.010 --> 00:56:27.870
+Pablo Eduardo Abad: esos unboxing. Un ejemplo muy usado. El unboxing es en los instaladores de paquetes de unix.
+
+472
+00:56:28.190 --> 00:56:33.909
+Pablo Eduardo Abad: Típicamente tienen que correr scripts para instalar aplicaciones hechas por terceros, sí,
+
+473
+00:56:34.830 --> 00:56:45.170
+Pablo Eduardo Abad: eventualmente con permisos de Ruth, con capacidad de romper toda la miércoles este por maldad, o porque están mal hechos, Entonces, el instalador típico de unix que hace corre esos scripts
+
+474
+00:56:46.080 --> 00:56:51.580
+Pablo Eduardo Abad: adentro de un de un sandbox, Sí, o sea, le da como una visión limpia del sistema
+
+475
+00:56:51.800 --> 00:56:57.030
+Pablo Eduardo Abad: que tiene sus directorios, barracetera barra loca. Todo barrabín
+
+476
+00:56:57.450 --> 00:57:02.559
+Pablo Eduardo Abad: deja que corra el Script y que instale Y después el proceso que hace verifica
+
+477
+00:57:02.700 --> 00:57:05.510
+Pablo Eduardo Abad: qué archivos nuevos aparecieron en ese lugar.
+
+478
+00:57:06.380 --> 00:57:13.839
+Pablo Eduardo Abad: Y si no hay nada sospechoso, raro, Copie, esos archivos ahora sí al otro sistema. Es una técnica de unboxing, por ejemplo.
+
+479
+00:57:15.910 --> 00:57:18.660
+Pablo Eduardo Abad: Sí, en el medio hay de todo.
+
+480
+00:57:20.070 --> 00:57:23.600
+Pablo Eduardo Abad: Bueno, las máquinas virtuales les decía, es como la
+
+481
+00:57:23.840 --> 00:57:29.130
+Pablo Eduardo Abad: la forma de de trabajar este con con virtualización
+
+482
+00:57:30.510 --> 00:57:39.170
+Pablo Eduardo Abad: aisladas muy fuertemente, porque, como tienen su propio corren su propio sistema operativo, con lo cual es como que tienen una visión donde ni siquiera comparten. Cpu
+
+483
+00:57:39.460 --> 00:57:40.330
+Pablo Eduardo Abad: Sí,
+
+484
+00:57:41.580 --> 00:57:52.570
+Pablo Eduardo Abad: unboxing. En cambio, comparten muchas cosas. Lo que yo les conté de esa charrut de Sanboxing a nivel país system. Pero lo cierto es que esos procesos comparten la memoria y la C, P, U, por ejemplo.
+
+485
+00:57:54.170 --> 00:57:58.539
+Pablo Eduardo Abad: con con el resto de los procesos. Entonces ahí hay canales que no están aislados.
+
+486
+00:58:03.140 --> 00:58:10.729
+Pablo Eduardo Abad: La siguiente derivada de eso. Si quieren, Para ir más allá de Ch Root, es cuando el sistema operativo lo soporta
+
+487
+00:58:12.280 --> 00:58:18.210
+Pablo Eduardo Abad: aislación a nivel, sistema operativo, ¿sí? Y Unix o Linux en particular.
+
+488
+00:58:19.270 --> 00:58:23.999
+Pablo Eduardo Abad: tiene 2 conceptos: Se Groups y namespaces.
+
+489
+00:58:24.620 --> 00:58:28.189
+Pablo Eduardo Abad: Si escucharon hablar una vez de docker containers
+
+490
+00:58:29.180 --> 00:58:43.480
+Pablo Eduardo Abad: Dogger es básicamente una aplicación que hace uso y configura se Groups y gamespaces, y permite ejecutar procesos, dándoles una visión completa de un país System distinto una Cpu distinta y memoria distinta.
+
+491
+00:58:44.440 --> 00:58:47.500
+Pablo Eduardo Abad: que no tiene conexión con las cosas que ocurren afuera de eso.
+
+492
+00:58:48.430 --> 00:58:55.580
+Pablo Eduardo Abad: Windows tiene algo parecido tiene user Mods Kevin para simular la parte de nine spaces y yo objects
+
+493
+00:58:55.910 --> 00:58:57.500
+Pablo Eduardo Abad: que permiten
+
+494
+00:58:57.660 --> 00:59:04.129
+Pablo Eduardo Abad: agrupar cosas y cosas, acá puede ser un bloque de memoria y una Cpu, por ejemplo, o un porcentaje de C, P. U
+
+495
+00:59:04.320 --> 00:59:09.030
+Pablo Eduardo Abad: y priorizarlos como una sola cosa, que sería algo bastante parecido a ese grupo.
+
+496
+00:59:09.160 --> 00:59:15.269
+Pablo Eduardo Abad: En ambos sistemas operativos se pueden armar este tipo de sanboxing y por eso es quedo caro. También puede correr
+
+497
+00:59:15.820 --> 00:59:18.460
+Pablo Eduardo Abad: con algunas limitaciones en en Windows.
+
+498
+00:59:23.180 --> 00:59:30.980
+Pablo Eduardo Abad: Bueno, contenedores era lo que les decía. Es es el es aprovechar estas tecnologías de ese unboxing a nivel sistema operativo
+
+499
+00:59:31.410 --> 00:59:33.369
+Pablo Eduardo Abad: este para aislar aplicaciones?
+
+500
+00:59:33.840 --> 00:59:44.229
+Pablo Eduardo Abad: Sí, en general, los containers en sí tienen más servicios alrededor de esto, pero la la idea es
+
+501
+00:59:44.460 --> 00:59:51.759
+Pablo Eduardo Abad: aislar vías unboxing simulando este C, P. U memoria y five Sister
+
+502
+00:59:57.030 --> 01:00:00.000
+Pablo Eduardo Abad: es como un esquema, un esquema típico donde
+
+503
+01:00:01.180 --> 01:00:08.919
+Pablo Eduardo Abad: podemos ir viendo las capas que hay entre el hardware real y y una aplicación pobre. Este es un servidor virtual. Vamos a tener el hardware.
+
+504
+01:00:09.230 --> 01:00:14.820
+Pablo Eduardo Abad: el sistema operativo que corra y el hypervisor, que sería como la aplicación que gestiona las máquinas virtuales.
+
+505
+01:00:16.080 --> 01:00:18.469
+Pablo Eduardo Abad: El sistema operativo de la Máquina virtual.
+
+506
+01:00:21.820 --> 01:00:28.360
+Pablo Eduardo Abad: el con su file sistem y la aplicación que estamos corriendo. Si varias máquinas virtuales tienen todo el stack replicado.
+
+507
+01:00:28.960 --> 01:00:38.299
+Pablo Eduardo Abad: Los containers son pesados, pero básicamente eliminan la necesidad de tener un sistema operativo completo corriendo, da la misma abstracción casi
+
+508
+01:00:38.920 --> 01:00:42.660
+Pablo Eduardo Abad: este, pero corriendo directamente sobre un host
+
+509
+01:00:43.840 --> 01:00:51.680
+Pablo Eduardo Abad: y bueno, y este sería el el ejemplo comparativo. Si estuviésemos corriendo sobre ver metal como se le dice, un ambiente no no virtualizado.
+
+510
+01:01:00.650 --> 01:01:01.740
+Pablo Eduardo Abad: Bien.
+
+511
+01:01:03.250 --> 01:01:16.520
+Pablo Eduardo Abad: vamos a a ver. Habiendo visto flujo de información que era por ahí la última pata de cómo armar seguridad, vamos a volver a pivotear al lado de ver la seguridad desde el punto de vista del atacante
+
+512
+01:01:19.250 --> 01:01:22.049
+Pablo Eduardo Abad: y empezar a hablar de
+
+513
+01:01:22.550 --> 01:01:31.490
+Pablo Eduardo Abad: el siguiente eslabón que viene después de lo que son las vulnerabilidades. ¿se acuerdan que vimos ahí? Hay amenazas a la seguridad, a una política de seguridad
+
+514
+01:01:31.720 --> 01:01:45.319
+Pablo Eduardo Abad: que se pueden materializar en vulnerabilidades. Pero hay otra familia de de construcciones que son programas diseñados específicamente con algún fin malicioso, sí que
+
+515
+01:01:45.610 --> 01:01:50.689
+Pablo Eduardo Abad: de forma general se llaman malware malware como abreviatura de maliciousch, software
+
+516
+01:01:51.800 --> 01:01:59.260
+Pablo Eduardo Abad: y y se caracteriza por ser programas que básicamente son construidos para para hacer daño. O sea, hoy
+
+517
+01:01:59.730 --> 01:02:05.210
+Pablo Eduardo Abad: existen equipos profesionales dedicados a construir malware que
+
+518
+01:02:06.280 --> 01:02:10.960
+Pablo Eduardo Abad: que se utiliza para distintas cosas. Y hay montón de tipos de malware.
+
+519
+01:02:11.080 --> 01:02:17.950
+Pablo Eduardo Abad: La idea de lo que vamos a ver ahora es ver los distintos tipos para primero, entender de qué se habla cuando hablamos de malware, pero entender también
+
+520
+01:02:20.480 --> 01:02:26.919
+Pablo Eduardo Abad: cómo un atacante utiliza programas para conseguir agenciar
+
+521
+01:02:28.250 --> 01:02:37.239
+Pablo Eduardo Abad: acercarse a algún objetivo, recabando información, destruyendo la disponibilidad del sistema ex filtrando datos, manteniendo accesos
+
+522
+01:02:37.920 --> 01:02:46.450
+Pablo Eduardo Abad: o incluso cometiendo Este Bravary no me sale como traducirlo extorsiones.
+
+523
+01:02:49.350 --> 01:02:57.970
+Pablo Eduardo Abad: El El primer tipo de malware conocido como muchas de estas cosas. Nací por error.
+
+524
+01:02:58.340 --> 01:03:00.420
+Pablo Eduardo Abad: Sí, son los gusanos. Se llaman
+
+525
+01:03:00.650 --> 01:03:06.250
+Pablo Eduardo Abad: virus y gusanos. Son 2 cosas que tienen una sutileza, pero básicamente son programas
+
+526
+01:03:07.420 --> 01:03:22.399
+Pablo Eduardo Abad: que tiene una característica importante, que es la capacidad de propagarse. Por eso, el nombre de virus no a semejanza de los de los virus físicos tiene la capacidad de infectar una máquina o un proceso, un sistema y propagarse hacia otros
+
+527
+01:03:22.980 --> 01:03:23.810
+Pablo Eduardo Abad: mhm.
+
+528
+01:03:25.500 --> 01:03:29.549
+Pablo Eduardo Abad: La infección puede venir de múltiples maneras. Puede ser una infección
+
+529
+01:03:29.730 --> 01:03:41.360
+Pablo Eduardo Abad: basada en explotar una vulnerabilidad, o puede ser una infección basada en simplemente ejecutar un programa que reescribe un archivo ejecutable, modificando lo lo que hace
+
+530
+01:03:41.870 --> 01:03:52.029
+Pablo Eduardo Abad: Sí, los gusanos se especializan. Los gusanos son programas cuyo si quieren su única misión es
+
+531
+01:03:53.470 --> 01:04:01.239
+Pablo Eduardo Abad: multiplicarse, propagarse y ocupar recursos Si el primer gusano nació por un error, fue un programa.
+
+532
+01:04:02.120 --> 01:04:07.719
+Pablo Eduardo Abad: si no me falla, la memoria en la Universidad de Berkeley. Le puedo estar errando ahora
+
+533
+01:04:08.670 --> 01:04:16.520
+Pablo Eduardo Abad: en en una clase de lo que sería programación distribuida en las carreras modernas donde estaban explorando sistemas
+
+534
+01:04:16.880 --> 01:04:25.029
+Pablo Eduardo Abad: que se auto replicaban y se propagaban como para poder escalar y y procesar de forma distribuida un bar en el
+
+535
+01:04:25.380 --> 01:04:42.999
+Pablo Eduardo Abad: en el programa de un alumno, básicamente hizo que se multiplique por todos lados escape del laboratorio vaya a las computadoras de todos los docentes de la universidad. Este, y en particular, el mismo programa se multiplicaba muchas veces en la misma máquina. Entonces la saturaba y tiraba abajo
+
+536
+01:04:43.120 --> 01:04:45.660
+Pablo Eduardo Abad: el sistema operativo por falta de memoria.
+
+537
+01:04:45.810 --> 01:04:53.650
+Pablo Eduardo Abad: Ese fue el primer gusano hecho de forma inocua. Hoy día llamamos gusano a esto. Casualmente, un programa que lo que hace es replicarse
+
+538
+01:04:53.840 --> 01:04:57.980
+Pablo Eduardo Abad: de forma muy agresiva, consumiendo recursos Mhm
+
+539
+01:04:58.100 --> 01:05:02.840
+Pablo Eduardo Abad: y generalmente están asociados a ataques de denegación de servicio.
+
+540
+01:05:06.310 --> 01:05:11.709
+Pablo Eduardo Abad: Mhm, Habido algunos divertidos en la historia.
+
+541
+01:05:13.100 --> 01:05:20.179
+Pablo Eduardo Abad: Ese huele a Hammer. Ese huele. Ese Güell Slammer fue un un gusano que se hizo bastante famoso porque
+
+542
+01:05:21.230 --> 01:05:29.129
+Pablo Eduardo Abad: estoy hablando hace 20 años, más o menos, lograba infectar a cualquier instancia de secuela. Una base de datos de Microsoft
+
+543
+01:05:29.630 --> 01:05:34.729
+Pablo Eduardo Abad: Mhm, por el solo hecho de tener conexión de red, explotaba un
+
+544
+01:05:35.340 --> 01:05:39.280
+Pablo Eduardo Abad: una vulnerabilidad. Pero una vez que la explotaba, era como que
+
+545
+01:05:40.480 --> 01:05:47.149
+Pablo Eduardo Abad: se descargaba y ejecutaba con una suerte de Stor producir su propio proceso en el servidor de base de datos y seguía expandiéndose
+
+546
+01:05:47.370 --> 01:05:50.539
+Pablo Eduardo Abad: este. Y si eso vamos a poner un fin de semana.
+
+547
+01:05:51.540 --> 01:05:59.380
+Pablo Eduardo Abad: infectó como a medio 1 000 000 de computadoras en los primeros 10 min. Ahí tengo 75 000. Computadoras una locura.
+
+548
+01:05:59.580 --> 01:06:02.880
+Pablo Eduardo Abad: lo que hizo. Pero bueno, hay hay muchos en la historia.
+
+549
+01:06:05.150 --> 01:06:08.820
+Pablo Eduardo Abad: En general, perdón, un un virus
+
+550
+01:06:09.330 --> 01:06:15.879
+Pablo Eduardo Abad: suele tener 2 componentes: un componente de replicación y un componente de ejecución.
+
+551
+01:06:18.310 --> 01:06:27.310
+Pablo Eduardo Abad: Y en función del componente de ejecución, A un virus se le puede reclasificar con algún otro nombre, Sí, Pero lo lo que caracteriza a los virus es esta capacidad de autorreplicarse.
+
+552
+01:06:28.320 --> 01:06:31.090
+Pablo Eduardo Abad: Sí, y es lo que los vuelve tan molestos porque es
+
+553
+01:06:31.690 --> 01:06:35.479
+Pablo Eduardo Abad: o sea, infectan a alguien y tiene algún mecanismo para propagarse, que
+
+554
+01:06:35.610 --> 01:06:50.960
+Pablo Eduardo Abad: puede ser hacer conexiones salientes. Pero los más avanzados ya suben en el stack de nivel y por ahí buscan contactos de personas o conexiones o cookies de sitios de redes sociales y se propagan este
+
+555
+01:06:51.500 --> 01:06:54.700
+Pablo Eduardo Abad: utilizando directamente servicios de incapa 7.
+
+556
+01:06:55.210 --> 01:06:56.860
+Pablo Eduardo Abad: Así que se
+
+557
+01:06:58.680 --> 01:07:07.519
+Pablo Eduardo Abad: un tipo de programas bastante bastante insidioso. Algunos inocuos solo se programan los gusanos, pero pueden tener otras formas. En general.
+
+558
+01:07:08.230 --> 01:07:15.289
+Pablo Eduardo Abad: cuando el virus tiene otro otro uso normal, va a mantener esta capacidad, replicar el virus, pero lo vamos a llamar de otra manera.
+
+559
+01:07:15.610 --> 01:07:20.960
+Pablo Eduardo Abad: Sí, otro tipo de malware. Son los troyanos, los los troyanos
+
+560
+01:07:21.280 --> 01:07:26.720
+Pablo Eduardo Abad: siguen. La idea está de la de la cómo es.
+
+561
+01:07:26.920 --> 01:07:32.079
+Pablo Eduardo Abad: En en la historia de de la pelea entre Atenas y Esparta. Era
+
+562
+01:07:32.410 --> 01:07:36.639
+Pablo Eduardo Abad: del caballo de Troya. Si la idea es
+
+563
+01:07:38.190 --> 01:07:47.510
+Pablo Eduardo Abad: lo que dice la leyenda es que había una ciudad inexpugnable, y la forma que lograron hacer entrar fue básicamente ofreciéndole un regalo a los de la ciudad. Un caballo
+
+564
+01:07:47.790 --> 01:07:53.790
+Pablo Eduardo Abad: Este que tenía gente adentro. Entonces entró a la ciudad pasó todas las defensas.
+
+565
+01:07:54.260 --> 01:07:59.259
+Pablo Eduardo Abad: la gente que está escondiendo el gallo, salir pudieron conquistar finalmente Troya.
+
+566
+01:07:59.750 --> 01:08:00.980
+Pablo Eduardo Abad: Y
+
+567
+01:08:04.670 --> 01:08:11.979
+Pablo Eduardo Abad: Y entonces lograron entrar. Hoy día, se llama troyano. A eso. Casualmente, a
+
+568
+01:08:12.550 --> 01:08:18.439
+Pablo Eduardo Abad: malware oculto dentro de otro software que parece benigno. Sí, en
+
+569
+01:08:23.510 --> 01:08:33.239
+Pablo Eduardo Abad: hay, por ejemplo, mucho de esto en sitios que ofrecen aplicaciones para bajar gratis
+
+570
+01:08:33.399 --> 01:08:37.650
+Pablo Eduardo Abad: que no son gratuitas. Este no sea versión grackeada de Windows.
+
+571
+01:08:38.590 --> 01:08:46.020
+Pablo Eduardo Abad: versión graqueada de Office Bueno, resulta que muchas veces esos cracks, esos bypass de la de la seguridad o de las licencias.
+
+572
+01:08:46.420 --> 01:08:49.260
+Pablo Eduardo Abad: resulta que tienen también otros programillas que hacen cosas.
+
+573
+01:08:49.410 --> 01:08:54.350
+Pablo Eduardo Abad: En general, se habla de caballos de Troya, a eso, un mal lugar de cualquier tipo escondido
+
+574
+01:08:54.500 --> 01:08:56.290
+Pablo Eduardo Abad: dentro de una aplicación
+
+575
+01:08:56.779 --> 01:09:05.710
+Pablo Eduardo Abad: que tiene otro sentido, no necesariamente legítimo, por el ejemplo que dino es una aplicación legítima, pero este
+
+576
+01:09:06.500 --> 01:09:12.339
+Pablo Eduardo Abad: puede ser en cualquier tipo de aplicación si las cosas después empiezan a combinarse. Hay virus
+
+577
+01:09:14.800 --> 01:09:24.010
+Pablo Eduardo Abad: que reescriben aplicaciones legítimas poniéndose ellos mismos o su payload y convierten esas aplicaciones en troyanos y son aplicaciones normales.
+
+578
+01:09:24.540 --> 01:09:30.470
+Pablo Eduardo Abad: o sea, que que pasan a convertirse en troyanos. Hay aplicaciones que se desarrollan como troyanos.
+
+579
+01:09:31.370 --> 01:09:37.649
+Pablo Eduardo Abad: y ha habido casos de empresas que han comprado aplicaciones y las han modificado para incluir otros llanos.
+
+580
+01:09:38.420 --> 01:09:43.419
+Pablo Eduardo Abad: Esto pasó mucho. Dicen que sigue pasando
+
+581
+01:09:43.640 --> 01:09:46.719
+Pablo Eduardo Abad: con la industria de los videojuegos móviles.
+
+582
+01:09:47.109 --> 01:09:54.090
+Pablo Eduardo Abad: Hay empresas que compran videojuegos, chiquititos móviles y les agregan este troyanos.
+
+583
+01:09:57.620 --> 01:10:00.020
+MARTÍN GALLARDO BERTUZZI: María Profesor, una consulta.
+
+584
+01:10:00.020 --> 01:10:00.770
+Pablo Eduardo Abad: Uno.
+
+585
+01:10:01.350 --> 01:10:10.709
+MARTÍN GALLARDO BERTUZZI: Cuando el troyano ya está adentro de del de un dispositivo. Y ya cuando perdón, o sea, o de un proceso o lo que sea.
+
+586
+01:10:11.480 --> 01:10:17.199
+MARTÍN GALLARDO BERTUZZI: Desde ahí, el atacante puede. Qué? ¿qué es lo que puede hacer.
+
+587
+01:10:17.470 --> 01:10:24.110
+Pablo Eduardo Abad: Lo que quiera agarrar lo que quiera, o sea, piense que son programas desarrollados para eso, entonces hay hay de todo, o sea, es.
+
+588
+01:10:24.110 --> 01:10:26.040
+MARTÍN GALLARDO BERTUZZI: Okay mhm.
+
+589
+01:10:26.040 --> 01:10:39.149
+Pablo Eduardo Abad: Mirá virus o gusano como una forma de propagarse, pero ya no como una forma de esconderse ninguno de los 2 habla de qué es lo que hace una vez Lo que hace. Se le llama pelo a eso. Y casualmente genérico es.
+
+590
+01:10:39.620 --> 01:10:44.060
+Pablo Eduardo Abad: vamos a ver algunos tipos de de como es de
+
+591
+01:10:44.700 --> 01:10:51.840
+Pablo Eduardo Abad: de cosas, Pero las 2 más complejas, si quieres que puedan aparecer, son lo que se llama el Ransomware.
+
+592
+01:10:52.410 --> 01:10:59.459
+Pablo Eduardo Abad: que básicamente es este una forma de estafa donde el pelo lo que hace es o borra
+
+593
+01:11:00.940 --> 01:11:13.530
+Pablo Eduardo Abad: o exfiltra o copia hacia afuera o encripta información, y básicamente te pide un rescate, este de alguna manera, para recuperarla o para no publicarla.
+
+594
+01:11:13.660 --> 01:11:15.160
+MARTÍN GALLARDO BERTUZZI: Okey.
+
+595
+01:11:15.160 --> 01:11:21.900
+Pablo Eduardo Abad: Hay otro tipo de taillón que se llama Command and Control, que básicamente dejan como un miniservidor corriendo
+
+596
+01:11:22.560 --> 01:11:28.689
+Pablo Eduardo Abad: o en realidad es un cliente, pero que se conecta a un servidor cada tanto. Y le dice: Che decime qué tengo que hacer, decime qué tengo que hacer
+
+597
+01:11:29.130 --> 01:11:37.399
+Pablo Eduardo Abad: son los más jodidos, porque, digo, es te infectan con cualquier cosa y que hace como una máquina zombi que te pueden usar para lo que quieran al día siguiente.
+
+598
+01:11:37.540 --> 01:11:39.480
+Pablo Eduardo Abad: Porque ¿qué puedo hacer? Es
+
+599
+01:11:39.790 --> 01:11:44.980
+Pablo Eduardo Abad: toma baja de este programa y ejecutalo. Entonces es como que se convierten en una suerte de
+
+600
+01:11:45.460 --> 01:11:50.430
+Pablo Eduardo Abad: computadoras zombi para minar cripto por ahí Nicolás, o para lo que sea.
+
+601
+01:11:50.550 --> 01:12:01.280
+Pablo Eduardo Abad: este o este para el día de mañana, montar un ataque de dinero de los service distribuido contra alguien este o
+
+602
+01:12:01.650 --> 01:12:11.589
+Pablo Eduardo Abad: para que el día que terminen de construir una aplicación para robar todas las credenciales de los Home Bangings, del país donde está la máquina, se la baje y empiece a robarle los datos.
+
+603
+01:12:12.490 --> 01:12:17.159
+Pablo Eduardo Abad: Se llama máquinas zombies a esas máquinas que quedan con control.
+
+604
+01:12:17.770 --> 01:12:30.529
+Pablo Eduardo Abad: Ese es otro tipo de pelón, pero de ahí a la creatividad. En algún momento estuvieron de moda cuando los monitores eran más viejos y se trabajaba más a bajo nivel, había forma de romper monitores este
+
+605
+01:12:31.010 --> 01:12:34.490
+Pablo Eduardo Abad: jugando con tazas de refresco violentas
+
+606
+01:12:34.830 --> 01:12:43.090
+Pablo Eduardo Abad: y había virus que simplemente su pelo era romper monitores porque divertido.
+
+607
+01:12:43.090 --> 01:12:48.580
+MARTÍN GALLARDO BERTUZZI: Y.
+
+608
+01:12:49.530 --> 01:12:50.390
+Pablo Eduardo Abad: ¿cómo?
+
+609
+01:12:51.410 --> 01:12:52.260
+Pablo Eduardo Abad: Claro.
+
+610
+01:12:52.260 --> 01:12:55.000
+MARTÍN GALLARDO BERTUZZI: No, no de que que que muchas gracias. Profe: No.
+
+611
+01:12:55.000 --> 01:12:56.650
+Pablo Eduardo Abad: Por favor.
+
+612
+01:12:57.270 --> 01:13:04.760
+Pablo Eduardo Abad: Entonces? Bueno, troyanos más sofisticados todavía es
+
+613
+01:13:04.990 --> 01:13:08.920
+Pablo Eduardo Abad: son los root Kids. Se pueden combinar, o sea, un virus.
+
+614
+01:13:09.110 --> 01:13:16.589
+Pablo Eduardo Abad: Pude armar troyanos. Un virus puede propagarse y después enquistarse en un sistema a través de un root kit.
+
+615
+01:13:18.560 --> 01:13:23.900
+Pablo Eduardo Abad: Un root kid es cualquier software que está diseñado para ocultarse.
+
+616
+01:13:24.190 --> 01:13:30.940
+Pablo Eduardo Abad: ocultar malware dentro de una máquina sin infectada, O sea, si yo el virus tradicional es un programa ejecutable?
+
+617
+01:13:31.140 --> 01:13:42.060
+Pablo Eduardo Abad: ¿sí? Y tal vez se propaga modificando otro programa ejecutable, entonces 1 puede de alguna manera detectarlo. La idea del rugby es ir un paso más y hacer contramedidas
+
+618
+01:13:43.040 --> 01:13:46.799
+Pablo Eduardo Abad: activas para esconderse ejemplo de eso.
+
+619
+01:13:47.010 --> 01:13:48.500
+Pablo Eduardo Abad: Y
+
+620
+01:13:49.070 --> 01:13:56.349
+Pablo Eduardo Abad: un Root King que corre como Root en Múnix, podría, por ejemplo, interceptar system couls. Entonces hay Root Kits avanzados
+
+621
+01:13:57.100 --> 01:14:05.060
+Pablo Eduardo Abad: en Linux que interceptan los sis Calls para leer los archivos, de barra Prok por ejemplo, y se esconden.
+
+622
+01:14:05.180 --> 01:14:08.589
+Pablo Eduardo Abad: O sea, están corriendo un proceso, pero ustedes hacen P. S. Y no aparece
+
+623
+01:14:08.780 --> 01:14:17.329
+Pablo Eduardo Abad: este que pueden esconder el archivo del disco, O sea, están en un lugar, pero interceptan los discos de ver el contenido de ese directorio
+
+624
+01:14:18.600 --> 01:14:20.779
+Pablo Eduardo Abad: y van y no existe el archivo.
+
+625
+01:14:21.270 --> 01:14:26.320
+Pablo Eduardo Abad: Hay formas muy sofisticadas de esconderse. Hay Root Kids en las computadoras más nuevas.
+
+626
+01:14:26.620 --> 01:14:34.450
+Pablo Eduardo Abad: No sé si escucharon hablar de Secure Wood o de wefi y el bio firmado. La secuencia de But blogger firmado.
+
+627
+01:14:34.790 --> 01:14:35.580
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí.
+
+628
+01:14:36.240 --> 01:14:48.909
+Pablo Eduardo Abad: Bueno, eso es un dolor de cabeza para Linux encima. Fue un dolor de cabeza muy grande porque no querían darles a las distribuidoras la capacidad de firmar todo eso nace porque aparecieron root kits que en vez de enquistarse de esta manera, se metían en navíos.
+
+629
+01:14:50.360 --> 01:14:58.520
+Pablo Eduardo Abad: entonces armar una suerte de but lawder propio que les dejaba persistirse. Incluso si yo formateaba el disco y reinstalaba el sistema operativo.
+
+630
+01:15:00.320 --> 01:15:08.449
+Pablo Eduardo Abad: joyitas, obras de arte muy doloroso y bueno, y llevaron a este tipo de contramedidas. Pero en general, a cualquier programa que
+
+631
+01:15:08.850 --> 01:15:12.639
+Pablo Eduardo Abad: utiliza técnicas activas para ocultarse. Lo llamamos Root Kid.
+
+632
+01:15:13.010 --> 01:15:23.220
+Pablo Eduardo Abad: Sí, hay Road kids en específicos para Windows. Hay road kits para mac este y
+
+633
+01:15:23.460 --> 01:15:31.249
+Pablo Eduardo Abad: prácticamente para todo sistema operativo. Se puede construir 1 de los casos más resonantes Así de o más famosos de Root Kids
+
+634
+01:15:32.330 --> 01:15:39.009
+Pablo Eduardo Abad: Stucsnet fue un un mal lugar diseñado profesionalmente.
+
+635
+01:15:40.620 --> 01:15:50.020
+Pablo Eduardo Abad: Pongan que todavía no queda claro ahí. No hay consenso de quien lo diseñó, pero estaría entre el servicio secreto de Israel o el de Estados Unidos
+
+636
+01:15:50.540 --> 01:15:55.260
+Pablo Eduardo Abad: Medio, distribuido entre esos 2, o sea, diseñado por profesionales de seguridad
+
+637
+01:15:55.790 --> 01:16:02.600
+Pablo Eduardo Abad: que durante meses a ver el el objetivo de eso. Era un virus que se escondía y se propagaba por máquinas
+
+638
+01:16:03.000 --> 01:16:09.180
+Pablo Eduardo Abad: y tenían como la firma digital para saber cuándo estaba corriendo las máquinas de una de las instalaciones nucleares de Irán.
+
+639
+01:16:09.350 --> 01:16:12.619
+Pablo Eduardo Abad: y tenía instrucciones básicamente para sabotear esas máquinas
+
+640
+01:16:13.170 --> 01:16:23.910
+Pablo Eduardo Abad: y nada y hacer que se rompan básicamente máquinas industriales, no cuando corría ahí. Esas máquinas no estaban conectadas a Internet, estaban aisladas entonces durante muchos meses.
+
+641
+01:16:24.780 --> 01:16:26.639
+Pablo Eduardo Abad: Básicamente este virus
+
+642
+01:16:27.010 --> 01:16:33.620
+Pablo Eduardo Abad: y Rud Kid estuvo infectando máquinas por todo Internet descontroladamente pasa que nadie lo detectaba porque no hacía nada.
+
+643
+01:16:33.860 --> 01:16:37.589
+Pablo Eduardo Abad: Lo único que tenía su pelo era esperar hasta llegar a una de esas máquinas
+
+644
+01:16:37.970 --> 01:16:42.270
+Pablo Eduardo Abad: conocidas. Y en algún momento salió la noticia de que a Irán se le rompió, el
+
+645
+01:16:42.490 --> 01:16:48.170
+Pablo Eduardo Abad: Tuvo problemas con sus plantas de enriquecimiento. Un año. Fue esto, ¿
+
+646
+01:16:48.290 --> 01:16:55.249
+Pablo Eduardo Abad: Y cuando hicieron todo el análisis forense lo encontraron. Y cuando hicieron análisis forense, entendió que había medio Internet, que estaba contagiada con esto
+
+647
+01:16:56.020 --> 01:17:00.379
+Pablo Eduardo Abad: de Stutnets. Usaba técnicas bastante avanzadas para
+
+648
+01:17:02.160 --> 01:17:11.730
+Pablo Eduardo Abad: el catch de los rookies y lo que los vuelve muy peligrosos son muy difíciles de diseñar, no porque trabajan a bajo nivel con sistemas operativos por ahí. Una actualización del sistema operativo los rompe.
+
+649
+01:17:11.900 --> 01:17:18.020
+Pablo Eduardo Abad: Pero por trabajar a ese nivel es muy difícil que que puedan ser detectados por antivirus, por ejemplo.
+
+650
+01:17:18.600 --> 01:17:25.480
+Pablo Eduardo Abad: están corriendo como un nivel atrás en tiros. Lee memoria. No no hay nada en memoria, lee disco. No, no hay nada en disco.
+
+651
+01:17:26.260 --> 01:17:30.249
+Pablo Eduardo Abad: Quiere analizar los patrones en radio, se puede esconder de cualquier cosa.
+
+652
+01:17:30.910 --> 01:17:36.909
+Pablo Eduardo Abad: Entonces, cuanto más sofisticado se esconde de más cosas. Los más sofisticados no son detectables con antivirus.
+
+653
+01:17:42.880 --> 01:17:56.910
+Pablo Eduardo Abad: Ahora, mecanismos de propagación y de enraizamiento, si quieren o persistencia, sobre el pelo. Ahí
+
+654
+01:17:57.950 --> 01:18:04.669
+Pablo Eduardo Abad: hay malware que trabaja de forma pasiva, donde, si quieren, el objetivo del que lo diseñó no es es
+
+655
+01:18:05.030 --> 01:18:08.320
+Pablo Eduardo Abad: mantener el perfil lo más bajo posible y no hacer nada.
+
+656
+01:18:08.620 --> 01:18:17.840
+Pablo Eduardo Abad: Este que llame la atención, porque están diseñados para extraer información. Si a ese tipo de software. Se llama spyware.
+
+657
+01:18:19.420 --> 01:18:24.590
+Pablo Eduardo Abad: En general, spyware es software diseñado para recolectar información.
+
+658
+01:18:25.250 --> 01:18:26.190
+Pablo Eduardo Abad: Sí,
+
+659
+01:18:26.330 --> 01:18:33.229
+Pablo Eduardo Abad: y acá es donde hay spyware que usa lo que vimos hace poquito de cover chanles para filtrar Algunos son más
+
+660
+01:18:33.480 --> 01:18:34.520
+Pablo Eduardo Abad: este
+
+661
+01:18:35.770 --> 01:18:46.899
+Pablo Eduardo Abad: más simples y usan canales normales. Sí, especialmente los que apuntan a mercado hogareño, donde nosotros en nuestra red, no tenemos un equipo de seguridad que esté monitoreando todo lo que entra y sale de de nuestra red.
+
+662
+01:18:47.300 --> 01:18:48.280
+Pablo Eduardo Abad: Mhm.
+
+663
+01:18:48.440 --> 01:18:49.700
+Pablo Eduardo Abad: Pero
+
+664
+01:18:51.920 --> 01:19:03.190
+Pablo Eduardo Abad: y acá entran, también hay empresas. Hay una que se volvió muy famoso últimamente que trataba siempre de mantener el perfil bajo, pero salió en un par de noticias. Y ahora todo el mundo la conoce, que se llama palantir
+
+665
+01:19:03.440 --> 01:19:08.069
+Pablo Eduardo Abad: palentina. Entre otras cosas se dedica a hacer Spiward a medida para distintos gobiernos
+
+666
+01:19:11.020 --> 01:19:13.430
+Pablo Eduardo Abad: en la carrera de robarse cosas y demás. Pero.
+
+667
+01:19:13.430 --> 01:19:15.480
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y con ese nombre, ¿qué otra cosa va a hacer.
+
+668
+01:19:17.940 --> 01:19:25.990
+Pablo Eduardo Abad: Tiene otros negocios más turbios todavía, pero no vamos a entrar en eso. Busquen si quieren, después el el portfolio de lo que hace Valentín y se van.
+
+669
+01:19:26.230 --> 01:19:28.009
+Pablo Eduardo Abad: Se van. Se van a caer así de
+
+670
+01:19:28.610 --> 01:19:33.370
+Pablo Eduardo Abad: los ojos muy abiertos, pero bueno, eso es nada
+
+671
+01:19:36.150 --> 01:19:44.100
+Pablo Eduardo Abad: está igual. Entonces es, tiene que ver ya con lo que hace. No con el pelo, como decíamos ransomware, Es otro tipo de pelo. Si esto
+
+672
+01:19:44.280 --> 01:19:54.710
+Pablo Eduardo Abad: les diría que apareció, fue un uso creativo de de las redes, este de criptomonedas. En algún momento, a alguien se le ocurrió el Che. ¿por qué no?
+
+673
+01:19:55.640 --> 01:20:06.680
+Pablo Eduardo Abad: ¿por qué no extorsiona a la gente para sacarle plata? Ahora que tengo un mecanismo digital universal, descentralizado y difícil de rastrear para cobrar
+
+674
+01:20:07.000 --> 01:20:14.619
+Pablo Eduardo Abad: este. Y y a partir de ahí, empezaron varias generaciones de este tipo de de antivirus.
+
+675
+01:20:14.730 --> 01:20:20.280
+Pablo Eduardo Abad: de un virus de perdón de malware y
+
+676
+01:20:21.270 --> 01:20:29.870
+Pablo Eduardo Abad: randomsomware. En general, es cualquier software que termina tratando de extorsionar a alguien para sacar plata los los más comunes, o los más vistos
+
+677
+01:20:30.020 --> 01:20:35.859
+Pablo Eduardo Abad: generalmente bloquean el acceso a información, típicamente cifran la información y
+
+678
+01:20:36.090 --> 01:20:46.500
+Pablo Eduardo Abad: piden un rescate para la clave que permitiría descifrarlo. Si ha habido casos de todo tipo, ha habido malware que estaban mal escritos y he recuperado la información, paguen o no
+
+679
+01:20:46.810 --> 01:20:51.540
+Pablo Eduardo Abad: este ha habido malware que estaban mal escritos y se pudo recuperar la información sin que paguen.
+
+680
+01:20:51.770 --> 01:20:58.669
+Pablo Eduardo Abad: Hay otros que exfiltran información y después piden un rescate para no publicarla.
+
+681
+01:20:59.360 --> 01:21:00.240
+Pablo Eduardo Abad: Mhm.
+
+682
+01:21:00.940 --> 01:21:08.020
+Pablo Eduardo Abad: Pero en general, todos los que los que tratan de hacer algún tipo de de coerción económica para algo se clasifica como ramsomware
+
+683
+01:21:11.990 --> 01:21:19.610
+Pablo Eduardo Abad: pesadilla, les diría más que en el ámbito personal, en el ámbito empresarial no o sea un tanto, para que llegue un servidor o una base de datos
+
+684
+01:21:20.560 --> 01:21:25.759
+Pablo Eduardo Abad: puede poner en riesgo activos muy importantes para una empresa. Así que puede ser un problema.
+
+685
+01:21:26.150 --> 01:21:37.510
+MARTÍN GALLARDO BERTUZZI: Una una consulta que me quedó de Root Kid. El Root Kid puede tanto ocultar troyanos como virus, o en alguno específico.
+
+686
+01:21:40.110 --> 01:21:41.320
+MARTÍN GALLARDO BERTUZZI: y.
+
+687
+01:21:41.320 --> 01:21:51.959
+Pablo Eduardo Abad: Complementario puede ocultar tanto a troyanos como virus este como como otros programas. También hay hay programas buenos entre comillas que utilizan Ruth que la la la misma tecnología es un mecanismo de persistencia.
+
+688
+01:21:51.960 --> 01:21:54.210
+MARTÍN GALLARDO BERTUZZI: Ok, perfecto.
+
+689
+01:21:54.210 --> 01:21:59.230
+Pablo Eduardo Abad: Estas cosas se pueden empezar a combinar después. Ese es el tema, y a veces la.
+
+690
+01:21:59.230 --> 01:22:00.800
+MARTÍN GALLARDO BERTUZZI: No.
+
+691
+01:22:00.800 --> 01:22:06.739
+Pablo Eduardo Abad: Puedes tener un virus virus. Es la forma que se propaga entre máquinas que en cada máquina se enquista como un Root Kit.
+
+692
+01:22:07.140 --> 01:22:11.300
+Pablo Eduardo Abad: Sí. Y si quieres y que en cada máquina una desinfectada una vez metido ahí,
+
+693
+01:22:12.200 --> 01:22:13.300
+Pablo Eduardo Abad: se convierte en un Rams.
+
+694
+01:22:13.300 --> 01:22:13.630
+MARTÍN GALLARDO BERTUZZI: Me lo.
+
+695
+01:22:13.630 --> 01:22:14.539
+Pablo Eduardo Abad: En la parte que ejecuta.
+
+696
+01:22:15.500 --> 01:22:17.619
+MARTÍN GALLARDO BERTUZZI: Perfecto. No.
+
+697
+01:22:17.620 --> 01:22:24.279
+Pablo Eduardo Abad: Aparecer encima. Equipos profesionales que empiezan a empiezan a aparecer como malware más sofisticado que empieza a combinar todo esto
+
+698
+01:22:24.700 --> 01:22:28.239
+Pablo Eduardo Abad: por ahí. Esto. Hace 20 años. Eran cosas más simples y más de
+
+699
+01:22:28.520 --> 01:22:35.380
+Pablo Eduardo Abad: les diría que era más tontería de gente que haciéndose el vivo. Hoy día ya hay un mercado más profesionalizado de crimen que usa esto.
+
+700
+01:22:36.280 --> 01:22:38.370
+MARTÍN GALLARDO BERTUZZI: Perfecto porfa. Muchas gracias.
+
+701
+01:22:38.840 --> 01:22:47.919
+Pablo Eduardo Abad: De nada. El tercer tipo de pelo así más característico que tienen estas estos bichos son las bot nets. Sí, una bot net. Es
+
+702
+01:22:48.710 --> 01:22:56.349
+Pablo Eduardo Abad: este concepto que les conté antes de convertir a la computadora infectada o al servicio infectado
+
+703
+01:22:56.660 --> 01:23:03.560
+Pablo Eduardo Abad: en una suerte de zombi que queda a la espera de instrucciones o una gente como dicen ahí multiuso. Entonces
+
+704
+01:23:03.910 --> 01:23:11.509
+Pablo Eduardo Abad: las máquinas infectadas se usan para 20 000 cosas. Ahí tienen algunas accesos anónimos, Distribuir spam, Este
+
+705
+01:23:12.750 --> 01:23:15.699
+Pablo Eduardo Abad: hay servicios, No sé si saben, pero hay hay.
+
+706
+01:23:16.250 --> 01:23:18.670
+Pablo Eduardo Abad: hay hay una cosa que se llama la economía gris.
+
+707
+01:23:19.000 --> 01:23:26.240
+Pablo Eduardo Abad: Son servicios que no son ilegales, pero se sabe que para implementarlos tiene que haber algo no muy santo. Entonces, por ejemplo.
+
+708
+01:23:26.460 --> 01:23:32.219
+Pablo Eduardo Abad: hay servicios que permiten mandar emails de Spam y bypasearse los filtros de Gmail y demás
+
+709
+01:23:32.780 --> 01:23:35.170
+Pablo Eduardo Abad: hace filtros para funcionar bien.
+
+710
+01:23:35.300 --> 01:23:39.749
+Pablo Eduardo Abad: Generalmente usan este tipo de cosas, usan computadoras hogareñas infectadas.
+
+711
+01:23:39.860 --> 01:23:44.409
+Pablo Eduardo Abad: entonces distribuyen el envío de de de spam entre tantas computadoras
+
+712
+01:23:45.930 --> 01:23:49.380
+Pablo Eduardo Abad: tan segmentadas que sería imposible desbloquearlos casi
+
+713
+01:23:49.520 --> 01:23:51.819
+Pablo Eduardo Abad: y que si lo bloquean, no importa porque tienen más.
+
+714
+01:23:52.020 --> 01:24:01.409
+Pablo Eduardo Abad: Si pasamos, si quieren, a a la modernidad modernidad, Hay algunos servicios medio raros en China, que ofrecen
+
+715
+01:24:01.580 --> 01:24:05.560
+Pablo Eduardo Abad: acceso a las apis de andrópico de Open Ai a
+
+716
+01:24:06.250 --> 01:24:08.160
+Pablo Eduardo Abad: un cuarto o menos del precio
+
+717
+01:24:09.990 --> 01:24:16.439
+Pablo Eduardo Abad: y haciendo 2 más. Dos Las estimaciones de los expertos es que están usando apikis robadas. Entonces
+
+718
+01:24:18.020 --> 01:24:22.840
+Pablo Eduardo Abad: roban a vikies con mecanismos de propagación de este tipo
+
+719
+01:24:25.370 --> 01:24:28.819
+Pablo Eduardo Abad: y spyware para extraerlas, y después las convierten
+
+720
+01:24:29.720 --> 01:24:32.720
+Pablo Eduardo Abad: en en servicios de este tipo
+
+721
+01:24:33.140 --> 01:24:43.299
+Pablo Eduardo Abad: una bot net. Lo Lo que tiene de peligroso es eso? Con crea un ejército de computadoras que están disponibles para cualquier cosa, después para extraer la información que tengan
+
+722
+01:24:43.420 --> 01:24:49.080
+Pablo Eduardo Abad: para aplicar un ram software en en el momento para usarlas de pívot para otro ataque.
+
+723
+01:24:49.910 --> 01:24:53.480
+Pablo Eduardo Abad: y que cuando lo rastrean, se llega a esa computadora y no al original.
+
+724
+01:24:54.750 --> 01:24:59.189
+Pablo Eduardo Abad: Mhm, la voz de más grande que está documentada.
+
+725
+01:25:00.210 --> 01:25:04.320
+Pablo Eduardo Abad: Yo no sé si salía alguna nueva, por lo menos esto era así hace 4 años.
+
+726
+01:25:04.980 --> 01:25:10.930
+Pablo Eduardo Abad: Este, y no no recuerdo haber leído más claro. Se llamaba Frizbe, y
+
+727
+01:25:11.390 --> 01:25:18.130
+Pablo Eduardo Abad: se estima que en algún momento fue responsable de más de la mitad del envío del spam mundial. Estamos hablando de
+
+728
+01:25:18.720 --> 01:25:22.649
+Pablo Eduardo Abad: 60 billones de emails por día durante varios días.
+
+729
+01:25:26.490 --> 01:25:27.340
+Pablo Eduardo Abad: Mhm.
+
+730
+01:25:30.630 --> 01:25:38.050
+Pablo Eduardo Abad: Bueno, la la la idea de una voz no es de esto. Es como bastante sofisticado si se lo ponen a pensar, porque es como una suerte de
+
+731
+01:25:39.350 --> 01:25:41.720
+Pablo Eduardo Abad: los mecanismos que vimos de infección.
+
+732
+01:25:42.290 --> 01:25:46.580
+Pablo Eduardo Abad: sí automatizados para llevar una cantidad impresionante de targets y un esquema
+
+733
+01:25:46.700 --> 01:25:54.340
+Pablo Eduardo Abad: de control y de Delivery, que tiene que ser resilente a que piensen que acá hay, No sé, 1 000 000 de computadoras infectadas
+
+734
+01:25:54.600 --> 01:26:01.940
+Pablo Eduardo Abad: con que alguien se dé cuenta en una y se lo reporte a la agencia del antivirus o algún investigador se dé cuenta de algo.
+
+735
+01:26:02.100 --> 01:26:05.470
+Pablo Eduardo Abad: Esto se analiza hacia atrás, se ve hacia dónde se comunica
+
+736
+01:26:05.590 --> 01:26:10.470
+Pablo Eduardo Abad: y se da de baja todo esto, entonces estas infraestructuras de Command and Control
+
+737
+01:26:11.190 --> 01:26:18.249
+Pablo Eduardo Abad: no es un servidor corriendo en a W. S y Listo. Son sistemas distribuidos bastante sofisticados.
+
+738
+01:26:19.440 --> 01:26:26.199
+Pablo Eduardo Abad: descentralizados. Sin un único no punto de falla, les diría que son sistemas bastante difíciles de hacer.
+
+739
+01:26:26.420 --> 01:26:29.619
+Pablo Eduardo Abad: pero hay de esos. Y hay ahora servicios.
+
+740
+01:26:30.840 --> 01:26:34.470
+Pablo Eduardo Abad: esta economía gris, si quieren, hay hay servicios que alquilan
+
+741
+01:26:34.680 --> 01:26:49.200
+Pablo Eduardo Abad: computadoras para cómputo distribuido que por acá. Son bot nets, básicamente yo, alquilo cómputo distribuido por ahí pensando que me están alquilando cosas en a W. S. O en Google con asure este, y en realidad están usando esto.
+
+742
+01:26:57.740 --> 01:27:03.000
+Pablo Eduardo Abad: El ciclo de un mal lugar suele tener esquemáticamente estas fases.
+
+743
+01:27:03.120 --> 01:27:05.760
+Pablo Eduardo Abad: Si hay hay un reconocimiento inicial
+
+744
+01:27:06.230 --> 01:27:12.639
+Pablo Eduardo Abad: que es entender dónde está corriendo una fase de compromiso, una fase de
+
+745
+01:27:14.560 --> 01:27:22.340
+Pablo Eduardo Abad: persistencia, si esto puede ser modificar un archivo del sistema, puede ser instalarse a nivel sistema operativo a nivel bios.
+
+746
+01:27:24.370 --> 01:27:29.679
+Pablo Eduardo Abad: Algunos tienen la parte de pivoteo se llama esto escalar privilegios. O sea, es.
+
+747
+01:27:31.720 --> 01:27:34.449
+Pablo Eduardo Abad: estoy corriendo en la computadora de un usuario.
+
+748
+01:27:35.760 --> 01:27:50.209
+Pablo Eduardo Abad: Me di cuenta que estoy corriendo Windows. Entonces hago el el el ataque inicial modificando, por ejemplo, el Filexplorer, el archivo de Filexplorer por 1, que es mío, que se comporta, igual, pero que además estoy yo.
+
+749
+01:27:50.670 --> 01:27:54.750
+Pablo Eduardo Abad: pero estoy como usuario. Ahora veo cómo puedo escalar privilegios
+
+750
+01:27:58.150 --> 01:28:02.450
+Pablo Eduardo Abad: hacia Ruth
+
+751
+01:28:03.020 --> 01:28:12.410
+Pablo Eduardo Abad: Si encuentro que no sé este el usuario. Este es administrador de la máquina escalo Root. Me muevo lateralmente hacia otro
+
+752
+01:28:12.660 --> 01:28:18.989
+Pablo Eduardo Abad: proceso que ya corra a nivel sistema operativo. Mantengo la presencia con eso. Y sigo.
+
+753
+01:28:19.170 --> 01:28:23.060
+Pablo Eduardo Abad: Y después, finalmente, después de 1 más siglos de estos.
+
+754
+01:28:23.420 --> 01:28:27.760
+Pablo Eduardo Abad: en el momento completa la misión ejecuta su pelo. La La razón por la que fue creado
+
+755
+01:28:29.350 --> 01:28:33.440
+Pablo Eduardo Abad: lo lo que es interesante de este siglo es toda esta parte.
+
+756
+01:28:35.110 --> 01:28:40.790
+Pablo Eduardo Abad: desde el reconocimiento inicial hasta el loop de descargar privilegios genérica.
+
+757
+01:28:41.740 --> 01:28:54.670
+Pablo Eduardo Abad: o sea, no no genérica, en el sentido de que corre en cualquier sistema operativo y demás es, tiene muchas cosas específicas, pero es genérica de lo que vaya a hacer después del virus. Entonces hay kits para desarrollo de malware que se venden hoy día
+
+758
+01:28:55.140 --> 01:28:57.259
+Pablo Eduardo Abad: en este mercado gris que le escondé
+
+759
+01:28:57.480 --> 01:29:02.059
+Pablo Eduardo Abad: este o gente que vende esto, que vende todo esto ya empaquetado como producto.
+
+760
+01:29:03.220 --> 01:29:04.710
+Pablo Eduardo Abad: En general.
+
+761
+01:29:05.880 --> 01:29:11.850
+Pablo Eduardo Abad: yo diría que no es lo mejor, porque ha habido casos de gente que vende todo esto, y todo Esto es un caballo de Troya
+
+762
+01:29:12.940 --> 01:29:18.400
+Pablo Eduardo Abad: donde cuando alguien lo usaba para infectar una máquina más le daba control que lo había escrito.
+
+763
+01:29:19.350 --> 01:29:27.310
+Pablo Eduardo Abad: Y además, por ser genéricos, tienen más chance de aparecer y ser detectados, porque basta con que alguno lo use mal de muchos para que lo detecten.
+
+764
+01:29:27.490 --> 01:29:32.049
+Pablo Eduardo Abad: Pero todo esto hoy día existe como producto. También ya hay
+
+765
+01:29:33.520 --> 01:29:36.859
+Pablo Eduardo Abad: este malware kits que que productizo en esa parte.
+
+766
+01:29:37.020 --> 01:29:42.970
+Pablo Eduardo Abad: Mhm: No vamos a pasar esto, que es lo que contar rápido.
+
+767
+01:29:46.040 --> 01:29:53.099
+Pablo Eduardo Abad: Bien, lo lo que vimos hoy son el capítulo 16 y 17 del libro de Bishop.
+
+768
+01:29:55.040 --> 01:30:00.379
+Pablo Eduardo Abad: Y con esto terminamos la parte de malware. La verdad que la parte de malware tiene
+
+769
+01:30:01.700 --> 01:30:07.220
+Pablo Eduardo Abad: tiene estos conceptos no deja de ser el desarrollo de un programa con fines no benignos.
+
+770
+01:30:07.840 --> 01:30:19.900
+Pablo Eduardo Abad: Son programas bastante complejos y técnicos. No hay una forma genérica de hacer esto, o 1 escribe el programa para correr en Linux on Mac o en Windows. Y tal vez en esta versión particular.
+
+771
+01:30:20.000 --> 01:30:25.109
+Pablo Eduardo Abad: este cuanto más sofisticado, más específico suele ser respecto al sistema.
+
+772
+01:30:25.510 --> 01:30:35.330
+Pablo Eduardo Abad: pero no dejan de ser programas, o sea, el el lo que los les hace ganar. El nombre distinto es que fueron concebidos exclusivamente con un fin malicioso.
+

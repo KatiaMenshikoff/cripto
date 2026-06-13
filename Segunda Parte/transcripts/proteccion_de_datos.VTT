@@ -1,0 +1,1726 @@
+WEBVTT
+
+1
+00:00:06.920 --> 00:00:18.780
+Leandro Ariel Suarez: Bueno, hoy nos toca la clase de ahora nos toca ver todo lo que es protección de datos desde una perspectiva más de un siso al siso, que es el
+
+2
+00:00:18.840 --> 00:00:28.360
+Leandro Ariel Suarez: el Chief, el sí Lebel de seguridad dentro de la empresa. Ahora no me acuerdo las siglas. Si le soy sincero, pero las puedo buscar exactamente. Ahora.
+
+3
+00:00:28.710 --> 00:00:38.710
+Leandro Ariel Suarez: si yo es Chief Information Security Officer, ahí está que generalmente es.
+
+4
+00:00:38.820 --> 00:00:50.639
+Leandro Ariel Suarez: pero el director de seguridad en una empresa o quien está a cargo de velar por la seguridad de esa empresa y generalmente que tiene implicancias legales, no si llegara a ver algún tipo de
+
+5
+00:00:50.870 --> 00:00:57.649
+Leandro Ariel Suarez: de de problema o incidente de seguridad severo, no que tenga consecuencias legales.
+
+6
+00:00:57.880 --> 00:01:04.930
+Leandro Ariel Suarez: Entonces, bueno, esto es desde desde esa perspectiva no enfocado en las organizaciones
+
+7
+00:01:05.230 --> 00:01:19.450
+Leandro Ariel Suarez: y acá es donde pasamos a aplicar, digamos, para la protección de datos se pasa a aplicar todos los principios que ya vimos en pos de proteger la Cia, la confidencialidad, integridad y disponibilidad de los datos.
+
+8
+00:01:19.920 --> 00:01:23.250
+Leandro Ariel Suarez: Pero, bueno, vamos a a ir viendo distintas
+
+9
+00:01:23.400 --> 00:01:32.279
+Leandro Ariel Suarez: formas para y para protegerlo. Y conecta con la clase anterior, bastante de seguridad en la empresa.
+
+10
+00:01:35.540 --> 00:01:39.980
+Leandro Ariel Suarez: Bueno, el problema, ¿Cuál es el problema que que tenemos?
+
+11
+00:01:40.130 --> 00:01:41.520
+Leandro Ariel Suarez: Bueno.
+
+12
+00:01:42.610 --> 00:02:01.079
+Leandro Ariel Suarez: en una empresa, 1 tiene que definir una política de protección de datos personales, por ejemplo, para evitar que un empleado no pueda acceder a ver los sueldos de otro empleado o no puede acceder a ver datos personales o el número de teléfono, documento de identidad distintas cuestiones.
+
+13
+00:02:01.350 --> 00:02:03.650
+Leandro Ariel Suarez: Entonces.
+
+14
+00:02:03.810 --> 00:02:10.880
+Leandro Ariel Suarez: ¿qué es un dato personal? Un dato personal es todo lo que permite identificar a una persona solamente por ese mismo dato.
+
+15
+00:02:11.310 --> 00:02:22.299
+Leandro Ariel Suarez: Por ejemplo, el nombre y apellido, pero tengo nombre y apellido. Está bien que yo capaz que hay muchos Leandro Suárez en Argentina o en Buenos Aires en capital.
+
+16
+00:02:22.350 --> 00:02:35.899
+Leandro Ariel Suarez: Pero quizás un nombre que es más particular tipo Lionel Messi. No creo que haya mucho Lionel Messi, entonces eso va a depender. ¿no? El nombre es algo medio
+
+17
+00:02:36.810 --> 00:02:52.439
+Leandro Ariel Suarez: que no es definitorio para para identificar una persona, pero igualmente las las regulaciones y las leyes lo consideran un dato personal por este caso no que quizás hay un nombre específico que no se repite y que, bueno, se puede considerar como identificable.
+
+18
+00:02:52.440 --> 00:02:58.570
+Leandro Ariel Suarez: Después yo está en las direcciones de mail, no que son únicas y
+
+19
+00:02:59.510 --> 00:03:08.450
+Leandro Ariel Suarez: no solo que no se repiten, sino que pertenecen a una sola persona o deberían pertenecer una sola persona, el número de identidad de documentos identidad.
+
+20
+00:03:09.010 --> 00:03:16.969
+Leandro Ariel Suarez: Bueno, la dirección, la dirección del domicilio de una persona también constituye un dato personal.
+
+21
+00:03:17.090 --> 00:03:30.239
+Leandro Ariel Suarez: entonces dentro de la organización igual hay otros datos que son sensibles, no el caso del sueldo de un empleado. Uno no quiere que todos sepan lo que está ganando otra persona
+
+22
+00:03:30.560 --> 00:03:36.739
+Leandro Ariel Suarez: por distintos motivos. No, no me voy, No me voy a meter en eso, pero generalmente se trata de que no.
+
+23
+00:03:36.880 --> 00:03:38.799
+Leandro Ariel Suarez: de que no se divulgue eso.
+
+24
+00:03:39.570 --> 00:03:47.259
+Leandro Ariel Suarez: Entonces tenemos que definir una política y después ver cómo ¿Cómo forzamos a que esa política se cumpla?
+
+25
+00:03:53.080 --> 00:03:59.290
+Leandro Ariel Suarez: Bueno, los controles de acceso en un sistema son parte de esa solución, pero no siempre son suficientes.
+
+26
+00:04:00.430 --> 00:04:08.690
+Leandro Ariel Suarez: entonces surge el ciclo. Volvemos con los ciclos dentro de seguridad, no bastante el ciclo de protección de la información
+
+27
+00:04:08.820 --> 00:04:13.020
+Leandro Ariel Suarez: donde tenemos el gobierno, que eso es lo que ya vimos la clase pasada.
+
+28
+00:04:13.360 --> 00:04:23.199
+Leandro Ariel Suarez: Después tenemos el descubrimiento, o sea, el gobierno. Es el punto de gestión, no donde 1 ahí va tomando decisiones. Y va viendo como ejecuta todo.
+
+29
+00:04:23.390 --> 00:04:31.739
+Leandro Ariel Suarez: Entonces pasamos a lo que es un Discovery ver qué datos. Hay ver qué es lo que hay en el universo de datos que tenemos dando vuelta en la organización.
+
+30
+00:04:32.420 --> 00:04:37.940
+Leandro Ariel Suarez: Después pasamos al paso de protección, donde tenemos que definir cómo protegemos esos datos
+
+31
+00:04:38.380 --> 00:04:53.599
+Leandro Ariel Suarez: y qué datos protegemos. No siempre no vamos a probablemente proteger todos los datos, porque hay algunos que no son sensibles. No, no, no tienen ninguna injerencia, entonces tenemos que definir qué es lo y cómo vamos a proteger esos datos que sí nos interesan.
+
+32
+00:04:54.260 --> 00:04:56.530
+Leandro Ariel Suarez: Después está la parte del complejance
+
+33
+00:04:56.890 --> 00:05:00.750
+Leandro Ariel Suarez: de asegurar que eso se proteja efectivamente. No.
+
+34
+00:05:00.870 --> 00:05:10.230
+Leandro Ariel Suarez: También lo vimos la Grecia pasada esto de estar comprobando que estemos protegiendo y asegurándonos de que eso esté evidentemente protegido.
+
+35
+00:05:10.880 --> 00:05:24.109
+Leandro Ariel Suarez: Después de la detección donde detectamos un bueno, podría llegar a pasar que haya filtración de de datos O, O, bueno, bridges de la información. Y bueno, tenemos que ser capaces de detectarlo.
+
+36
+00:05:24.470 --> 00:05:34.130
+Leandro Ariel Suarez: Y si hubiera habido algo de eso, hace dar una respuesta, Responder por esas filtraciones, Responder a a esas filtraciones y evitar que se sigan sucediendo.
+
+37
+00:05:34.270 --> 00:05:37.059
+Leandro Ariel Suarez: Y luego volvemos a empezar. Es un siglo.
+
+38
+00:05:40.440 --> 00:05:44.470
+Leandro Ariel Suarez: Entonces parándonos en el primer punto, data Aberns.
+
+39
+00:05:45.220 --> 00:05:57.219
+Leandro Ariel Suarez: el el data ganas es todas las tareas que necesitamos para asegurar que los datos sean seguros, estén íntegros, sean confidenciales y estén disponibles en todo momento que se requiera
+
+40
+00:05:57.880 --> 00:06:06.239
+Leandro Ariel Suarez: y o sea, de fin de acá en el data governance parados Gornal definimos cómo deben actuar las personas.
+
+41
+00:06:06.730 --> 00:06:26.340
+Leandro Ariel Suarez: los procesos que tiene que seguir esas personas. La tecnología que nos va a ayudar a respaldar todo esto, No, evidentemente, hacer que esas personas se comporten como se tienen que comportar durante todo el ciclo de vida de los datos. Vamos a ver ahora que los datos tienen un ciclo de vida también, como los sistemas
+
+42
+00:06:26.510 --> 00:06:32.480
+Leandro Ariel Suarez: y ese ciclo de vida, pues hay normativas que quizás se
+
+43
+00:06:32.750 --> 00:06:46.029
+Leandro Ariel Suarez: nos obligan a que esos datos vivan cierta cantidad de tiempo que se borren, que no se borren. Bueno, definen cómo tiene que ser ese ciclo de vida de los datos y cuando deben vivir.
+
+44
+00:06:47.210 --> 00:06:49.800
+Leandro Ariel Suarez: también tenemos casos donde
+
+45
+00:06:49.990 --> 00:06:58.030
+Leandro Ariel Suarez: se tienen que eliminar datos por por cuestiones legales, temas de gravedad, implicancias de ese tipo
+
+46
+00:06:58.910 --> 00:07:10.799
+Leandro Ariel Suarez: y como dato horas, también se tiene, digamos, la la responsabilidad de definir los roles de la organización que utilizan ese esos datos, esa información.
+
+47
+00:07:13.530 --> 00:07:28.699
+Leandro Ariel Suarez: entonces generalmente se establecen no estándares internos porque generalmente se conocen como políticas de datos y se aplican a la recolección, al almacenamiento al procesamiento de retención y la eliminación de los datos.
+
+48
+00:07:29.310 --> 00:07:41.979
+Leandro Ariel Suarez: Entonces acá ya entramos en el tabla Sicle. No tenemos, bueno, el paso 1 donde hacemos el collection de de toda la información a través de todos los posibles canales. Esto ya veíamos
+
+49
+00:07:42.100 --> 00:07:50.429
+Leandro Ariel Suarez: cómo se transmiten, cómo se guardan y cómo se transmiten toda esa información a través de equis sistemas, a través de qué,
+
+50
+00:07:50.860 --> 00:08:04.429
+Leandro Ariel Suarez: cómo se transportan también esos datos, radiotemas y físicamente, el uso y la distribución se se procesa y se distribuye de forma interna.
+
+51
+00:08:04.690 --> 00:08:18.350
+Leandro Ariel Suarez: Y después la rete. Cuanto se debe retener esos datos debido a que hay cosas requerimientos, digamos, de de regulaciones y normativas que nos nos obligan quizás a retenerlos
+
+52
+00:08:18.910 --> 00:08:22.549
+Leandro Ariel Suarez: y posteriori si deberíamos
+
+53
+00:08:23.480 --> 00:08:30.709
+Leandro Ariel Suarez: hacer un disposand de todos estos datos una vez que ese periodo de retención ya se haya cumplido.
+
+54
+00:08:30.950 --> 00:08:42.400
+Leandro Ariel Suarez: Entonces todo esto generalmente conviene, porque porque tener datos en el fondo es tener información, en el fondo es tener activos no importantes que buscan los atacantes. Muchas veces?
+
+55
+00:08:45.590 --> 00:09:00.760
+Leandro Ariel Suarez: Bueno, hay hay regulaciones externas. Por ejemplo, el la ley de protección de datos, 25 326 que nos definen como sistema que trabaja, o sea, que opera en Argentina.
+
+56
+00:09:01.240 --> 00:09:17.279
+Leandro Ariel Suarez: Define cómo deberíamos sacar los datos? Acá Bueno, en el artículo 1 dice la presión de ley tiene por objeto la protección integral de datos personales aceptados en archivo de registros, banco de datos u otros medios técnicos de tratamiento de datos, sean estos públicos o privados, destinados al informe para garantizar
+
+57
+00:09:17.280 --> 00:09:22.939
+Leandro Ariel Suarez: el derecho al honor y a la intimidad de las personas, sino también como la es una información sobre las mismas
+
+58
+00:09:23.080 --> 00:09:30.679
+Leandro Ariel Suarez: que sobre las mismas se registre como una nueva televisión, el artículo 43. Bueno, esto es el objeto por el cual está la posición de datos personales
+
+59
+00:09:30.710 --> 00:09:39.829
+Leandro Ariel Suarez: y después nos explica, como debe ser esa seguridad de los datos. Lo que tiene de, bueno está esta ley es que no especifica de qué forma.
+
+60
+00:09:39.830 --> 00:09:51.850
+Leandro Ariel Suarez: sino que si lo leemos, dice el responsable u usuario del archivo de datos debe adoptar las medidas técnicas y organizativas que resulten necesarias para garantizar la seguridad y confidencialidad de los datos personales
+
+61
+00:09:51.900 --> 00:10:05.860
+Leandro Ariel Suarez: de modo de evitar su altera adulteración, pérdida, consulta, tratamiento no autorizado y que permitan detectar desviaciones intencionales o no de información, ya sea que los riesgos provengan de la acción humana o del medio técnica utilizada.
+
+62
+00:10:06.140 --> 00:10:18.450
+Leandro Ariel Suarez: esto está bueno porque, como que te dice a grandes rasgos, ché vos tenés que hacer todo lo posible para que estos datos permanezcan íntegros confidenciales y
+
+63
+00:10:19.080 --> 00:10:26.009
+Leandro Ariel Suarez: que, si se llegaran a hacer que que evitar filtraciones de estos datos no o borrado no intencional.
+
+64
+00:10:26.550 --> 00:10:39.779
+Leandro Ariel Suarez: Entonces, cuando usted tiene una aplicación o un sistema o algo que utiliza y guarda datos personales, tienen que asesorarse legalmente y ver qué requerimientos, sobre todo en el momento en el que
+
+65
+00:10:39.780 --> 00:10:51.220
+Leandro Ariel Suarez: que se esté, que ¿qué es lo que se está pidiendo para poder cumplir con esta ley, que es bastante general, digamos, pero para bien, porque eso le permite que esta ley todavía tenga
+
+66
+00:10:51.320 --> 00:10:58.520
+Leandro Ariel Suarez: sea aplicable. El día de hoy No, no definieron una tecnología al momento de
+
+67
+00:10:58.630 --> 00:11:05.950
+Leandro Ariel Suarez: de expedirla, que fue hace bastante ya. Sí, sí fue en los 80. Esto en
+
+68
+00:11:06.120 --> 00:11:15.269
+Leandro Ariel Suarez: bueno, esto implica también que dice: queda prohibido registrar datos personales en archivo de registros o bancos que no reúnan condiciones técnicas de integridad y seguridad.
+
+69
+00:11:16.270 --> 00:11:26.700
+Leandro Ariel Suarez: Generalmente esto. Este tipo de leyes implica que las personas pueden solicitar ver que datos guarda la organización o el sistema.
+
+70
+00:11:26.860 --> 00:11:32.980
+Leandro Ariel Suarez: pedir modificarlos e incluso pedir su borrado. A veces 1 dice: yo, yo no quiero estar en
+
+71
+00:11:33.080 --> 00:11:36.149
+Leandro Ariel Suarez: en esta, en los datos de esta organización
+
+72
+00:11:36.290 --> 00:11:47.240
+Leandro Ariel Suarez: o esta empresa o este sistema, entonces 1 puede generalmente pedir que se borre toda la historia, el el derecho al olvido. Creo que se le se le dice
+
+73
+00:11:47.410 --> 00:11:48.770
+Leandro Ariel Suarez: en
+
+74
+00:11:48.810 --> 00:11:58.219
+Leandro Ariel Suarez: eso. Lo pueden ver generalmente, eso es una ley que o este tipo de de accionar se suele exigir en casi todo el mundo.
+
+75
+00:11:58.220 --> 00:12:13.269
+Leandro Ariel Suarez: Creo que Facebook, Twitter y Todas estas hor Sí, empresas te permiten, digamos, hacer un borrado de tu cuenta, e incluso te mandan los datos de todo tu historial. Y si vos le haces lo que hay, borran todo lo que tienen de vos?
+
+76
+00:12:17.530 --> 00:12:23.409
+Leandro Ariel Suarez: Bueno, están las las famosas regulaciones internacionales. Algunas las vimos también la clase pasada.
+
+77
+00:12:23.530 --> 00:12:34.550
+Leandro Ariel Suarez: Tenemos todo lo que es general, data protection regulation. O G, P, R, que es quizás la más conocida de de protección de datos personales, que es de la Unión Europea.
+
+78
+00:12:35.300 --> 00:12:43.690
+Leandro Ariel Suarez: básicamente toca a casi todos los empleados, clientes y usuarios de la Unión Europea. Así,
+
+79
+00:12:43.850 --> 00:13:01.079
+Leandro Ariel Suarez: 1 el sistema esté localizado en Argentina. Si vos trabajas o al o hay usuarios que interactúan desde la Unión Europea. Vos tenés que poder respetar esta esta normativa lo mismo. Si tienes algún algún
+
+80
+00:13:01.570 --> 00:13:06.250
+Leandro Ariel Suarez: alguna infraestructura publicada en la Unión Europea, me parece que también te aplica.
+
+81
+00:13:06.420 --> 00:13:13.110
+Leandro Ariel Suarez: Entonces, bueno, es bastante similar a lo que vimos recién de de de la ley de protección de datos personales.
+
+82
+00:13:14.220 --> 00:13:31.830
+Leandro Ariel Suarez: Es por esta ley que, si no me equivoco, si salió en 2 018 por esta ley que se vino de golpe, todo este tema de las cookies, no de prohibir las cooki que utilicen sus cookies, y 1 le pone no solo lo esencial. O Bueno, si estás apurado. Le pones que si a todo
+
+83
+00:13:32.000 --> 00:13:43.059
+Leandro Ariel Suarez: ¿por qué? Porque esta ley pide un consentimiento explícito, o sea, que el usuario explícitamente dé el otorgue el el consentimiento?
+
+84
+00:13:43.400 --> 00:13:47.150
+Leandro Ariel Suarez: Bueno, el caso de las cookies, generalmente porque
+
+85
+00:13:47.680 --> 00:14:04.259
+Leandro Ariel Suarez: se utilizan con otros fines más de que quizás registran datos tuyos que vos no querés hacer tus preferencias. No sé la actividad que vos haces en la en la en el sitio, a veces también pueden acceder a a cookies de otras.
+
+86
+00:14:04.490 --> 00:14:12.899
+Leandro Ariel Suarez: Se pueden llegar a utilizar a Google de otras de otras de otros sitios. Bueno, entonces una. Por eso te pide generalmente
+
+87
+00:14:13.300 --> 00:14:16.270
+Leandro Ariel Suarez: un consentimiento explícito. Y a veces hasta te dejan
+
+88
+00:14:16.910 --> 00:14:27.300
+Leandro Ariel Suarez: elegir solo lo esencial. Es bueno, solo lo esencial para que vos puedas para que el el sitio pueda ofrecerte una experiencia
+
+89
+00:14:27.450 --> 00:14:33.039
+Leandro Ariel Suarez: y la experiencia que está tratando de darte y después las otras que antes son de marketing de otras cuestiones
+
+90
+00:14:33.300 --> 00:14:35.290
+Leandro Ariel Suarez: que podría llegar a rechazar.
+
+91
+00:14:37.290 --> 00:14:50.929
+Leandro Ariel Suarez: Bueno, después tenemos todo lo que es de de pci data secretar, que es todo el utili La utilización de de es, comprende, digamos, todo lo que es compra online con tarjeta de crédito.
+
+92
+00:14:51.190 --> 00:15:00.199
+Leandro Ariel Suarez: Se supone que debiera proteger todos los datos críticos de una tarjeta de crédito, que son el número de la tarjeta datos adicionales como
+
+93
+00:15:00.320 --> 00:15:06.939
+Leandro Ariel Suarez: nombre completo de la quién están? A quién? ¿a nombre de quién está la tarjeta.
+
+94
+00:15:07.410 --> 00:15:10.559
+Leandro Ariel Suarez: el vencimiento? Bueno, todo lo que figura en la tarjeta, generalmente
+
+95
+00:15:10.670 --> 00:15:13.770
+Leandro Ariel Suarez: el código de seguridad que estaba por detrás.
+
+96
+00:15:13.960 --> 00:15:16.229
+Leandro Ariel Suarez: que ese es de lo más crítico
+
+97
+00:15:16.370 --> 00:15:22.110
+Leandro Ariel Suarez: y datos, quizás de la banda magnética que que trae propiamente la banda magnética o el chip.
+
+98
+00:15:22.420 --> 00:15:40.639
+Leandro Ariel Suarez: y a veces, o a veces no. Creo que todas las tarjetas tienen un pin que es como un segundo factor. Digamos, si yo me robo una tarjeta. Y lo quiero usar. Y si yo tengo el pin configurado a pedir el pin en el pos Net para poder validar la compra. Entonces, si yo no tengo ese pin es como si hay algún segundo factor.
+
+99
+00:15:40.850 --> 00:15:41.600
+Leandro Ariel Suarez: No.
+
+100
+00:15:43.780 --> 00:15:51.399
+Leandro Ariel Suarez: Lo importante para ver. Esta norma es que lo que hizo la norma es acotar la cantidad de datos a proteger.
+
+101
+00:15:51.660 --> 00:16:07.860
+Leandro Ariel Suarez: Dijo listo para mí. Estos 4 o 5 datos son los que hay que proteger. Entonces me concentro en tratar de de hacer toda la normativa para que se enfoquen esos 5 datos y no en todo lo hemos puesto. Podría abarcar un montón de cosas, Entonces, lo que nos dio
+
+102
+00:16:08.240 --> 00:16:11.319
+Leandro Ariel Suarez: el Blue Print, que nos da esta norma es que
+
+103
+00:16:11.500 --> 00:16:19.950
+Leandro Ariel Suarez: una de las cosas más importantes que se tiene que tomar en cuenta a la hora de proteger datos que es agotar la cantidad de datos en base a su publicidad? No.
+
+104
+00:16:21.410 --> 00:16:28.869
+Leandro Ariel Suarez: y eso es muy importante a la hora de definir una pro una política de protección de datos, No decir Che. Yo me voy a concentrar en esto nada más.
+
+105
+00:16:29.100 --> 00:16:30.489
+Leandro Ariel Suarez: Ahora, después, vamos a
+
+106
+00:16:31.510 --> 00:16:39.139
+Leandro Ariel Suarez: otro concepto muy piola que que que impuso el P. S. I fue el tema de la autopinización.
+
+107
+00:16:40.120 --> 00:16:46.560
+Leandro Ariel Suarez: La localización, básicamente cómo funciona es Yo Tengo todos estos 5 datos de la tarjeta.
+
+108
+00:16:46.820 --> 00:16:49.000
+Leandro Ariel Suarez: que son los que permiten ejecutar una compra.
+
+109
+00:16:50.190 --> 00:16:53.310
+Leandro Ariel Suarez: esos 5 datos. Yo los guardo bajo 7 llaves.
+
+110
+00:16:53.670 --> 00:17:12.980
+Leandro Ariel Suarez: Y y yo apunto a esa tarjeta a través de un token. Entonces lo primero que hago es, me pasa la tarjeta, la tokenizo y empiezo a elaborar con ese toque, sabiendo que los datos, los tengo guardados bajo 7 llaves. Pero yo, con ese toque podría mi sistema, debería poder utilizarlo en nombre de la tarjeta.
+
+111
+00:17:13.540 --> 00:17:31.359
+Leandro Ariel Suarez: De esa forma. Si en algún momento, Yo, en mis bases de datos, que quizás no tengo bajo 3. Pero si llegas filtrar ese token, igualmente requerirían ir a buscar los datos al la base que está recontra 1 000 protegida, segmentada por un montón de controles de de acceso y seguridad.
+
+112
+00:17:31.530 --> 00:17:50.370
+Leandro Ariel Suarez: Entonces el token ya no tiene ningún valor. El toque se lo podría difundir la empresa no sería lo ideal, pero si difunde su token en sí no tienen información. Digamos que después se puede reutilizar en otro lado, Obviamente que está mal y nadie lo hace, ¿no? Pero le doy un ejemplo bien
+
+113
+00:17:50.400 --> 00:17:58.579
+Leandro Ariel Suarez: bien groso, o sea, bien, y como así sacado de los pelos tirado de los pelos para que se den cuenta.
+
+114
+00:17:58.830 --> 00:18:02.550
+Leandro Ariel Suarez: entonces eso? El el uso del token o el tokenizado
+
+115
+00:18:02.700 --> 00:18:04.940
+Leandro Ariel Suarez: surgió también a partir de esto.
+
+116
+00:18:06.510 --> 00:18:12.350
+Leandro Ariel Suarez: Y después tenemos todo lo que es hels insura Sport: habilitar la contabilidad.
+
+117
+00:18:12.360 --> 00:18:29.150
+Leandro Ariel Suarez: que es todo lo de información médica, no la electricidad que tienen los datos médicos, los datos personales médicos. Si yo tengo una enfermedad, imagínense eso en contextos donde si realmente puede llegar a tener, no sé un montón de implicancias.
+
+118
+00:18:29.150 --> 00:18:33.429
+Leandro Ariel Suarez: entonces acá. Surgió también la anonimización de los datos.
+
+119
+00:18:33.480 --> 00:18:42.890
+Leandro Ariel Suarez: surgió el concepto de poder anonimizar los datos, se pueden utilizar igual, o sea, esta persona tiene una enfermedad así hacía u otros estudios para esta persona
+
+120
+00:18:42.890 --> 00:18:54.889
+Leandro Ariel Suarez: son de esta manera. Entonces, después yo, todos esos datos los puede importar y hacer análisis, hacer buscar patrones, hacer un montón de cosas. Pero yo no sé de de quién es este estudio. Yo no sé de quién es esta enfermedad.
+
+121
+00:18:54.970 --> 00:19:02.329
+Leandro Ariel Suarez: entonces de esa forma se puede elaborar con los datos sin la necesidad de saber de quién de quién es ese dato?
+
+122
+00:19:02.760 --> 00:19:09.110
+Leandro Ariel Suarez: Generalmente para las historias clínicas. Este tipo de de cosas se suele, se suele exigir
+
+123
+00:19:11.890 --> 00:19:28.249
+Leandro Ariel Suarez: bueno, y después están otras regulaciones como Sox, que es para la las las empresas que cotizan en bolsa la que tienen ipo o públicas, que exigen, bueno, que se haya una transparencia en sus operaciones.
+
+124
+00:19:28.300 --> 00:19:36.439
+Leandro Ariel Suarez: regulan un poco la seguridad y los datos. También el F F I E o segmentol
+
+125
+00:19:36.740 --> 00:19:55.660
+Leandro Ariel Suarez: que era un framework que ahora está medio en desuso, me parece, se está. Se está usando en East más que nada que quiero y, por ejemplo, que fue el que instauró siglo atrás, que dimos la casa pasada en el mismo organismo, ya tiene su propio framework, entonces lo
+
+126
+00:19:55.730 --> 00:19:58.090
+Leandro Ariel Suarez: lo están se está usando a veces.
+
+127
+00:19:58.690 --> 00:20:03.520
+Leandro Ariel Suarez: y la FBI, e que también tiene alguna
+
+128
+00:20:05.000 --> 00:20:22.700
+Leandro Ariel Suarez: algunas consideraciones a nivel de ciberseguridad. Para dar. Sobre todo, creo que estuvo muy, muy metido en todo lo que fue las normativas de I P. A, también está bastante relacionado al F. D, Ahí es la una organización que
+
+129
+00:20:22.980 --> 00:20:29.529
+Leandro Ariel Suarez: Full and Drag. Creo. Association, que se dedica a toda la parte de estudios médicos de
+
+130
+00:20:29.770 --> 00:20:34.639
+Leandro Ariel Suarez: de más cuestiones de también de alimentos y drogas y y demás.
+
+131
+00:20:39.910 --> 00:20:42.990
+Leandro Ariel Suarez: Bueno, data Rolls.
+
+132
+00:20:43.270 --> 00:21:00.909
+Leandro Ariel Suarez: acá Tenemos algunos roles que se pueden identificar en lo que es la protección de datos. Primero tenemos el Data Trusty, que es alguien algúnevel o una posición estratégica alta que es responsable legalmente
+
+133
+00:21:01.260 --> 00:21:08.919
+Leandro Ariel Suarez: por los datos, o sea, si llegara a pasar algo medio que con esos datos medio que eres el responsable a nivel jurídico. Por eso
+
+134
+00:21:09.930 --> 00:21:18.639
+Leandro Ariel Suarez: abajo, esa persona. Generalmente, los datos son muchísimos. Se empiezan a ir viviendo en dominios. Entonces abajo generalmente hay un dato, Steward.
+
+135
+00:21:18.650 --> 00:21:30.930
+Leandro Ariel Suarez: que es un responsable interno que per aprueba accesos a los datos dentro de su dominio y generalmente se App aprobó acceso. Es a un data custodian
+
+136
+00:21:31.020 --> 00:21:44.799
+Leandro Ariel Suarez: que es un autorizado por un stewart a grandear acceso a a los usuarios de esos datos, realmente tal como que se empieza a una jerarquía para poder distribuir un poco esos datos o permitir su acceso.
+
+137
+00:21:45.010 --> 00:22:01.310
+Leandro Ariel Suarez: Entonces, si se custodian, va a garantizar acceso de los datos efectivamente, y dentro de su dominio, no, o sea, cada vez empieza a bajar un poco más el lo cada vez es más chico el dominio de los datos que maneja cada cada 1 de estos intervinientes.
+
+138
+00:22:01.530 --> 00:22:07.950
+Leandro Ariel Suarez: Y por último, está el data yuso, que es efectivamente quien accede a los datos y quien hace algo en sus datos. ¿no?
+
+139
+00:22:13.610 --> 00:22:18.080
+Leandro Ariel Suarez: Bueno, Discovery, pasamos a a la parte de Discovery los datos.
+
+140
+00:22:19.380 --> 00:22:23.320
+Leandro Ariel Suarez: Acá hay distintos distintos pasos.
+
+141
+00:22:23.700 --> 00:22:36.069
+Leandro Ariel Suarez: Por un lado, vamos a a identificar esto. Decia. Che Vamos a a a contar un poco, no los datos que vamos a tratar de proteger. Entonces, para eso hay que clasificarlos y después tomar una decisión sobre eso.
+
+142
+00:22:36.420 --> 00:22:48.659
+Leandro Ariel Suarez: Primero, lo que vamos a hacer es tratar de identificar los activos que tenemos todo. No todo es un activo asegurarnos todo dato. Se requiere asegurar Entonces, una vez que identificamos eso.
+
+143
+00:22:49.270 --> 00:22:59.159
+Leandro Ariel Suarez: vamos a tratar de definir los roles o identificar los roles sobre esos datos, ¿no? ¿quién ¿Quién
+
+144
+00:22:59.380 --> 00:23:03.770
+Leandro Ariel Suarez: ¿Quién controla cada dominio de datos, que es lo que vimos anteriormente, los data rolls
+
+145
+00:23:04.360 --> 00:23:18.130
+Leandro Ariel Suarez: y después, bueno, quizás des definir, digamos, perfiles de acceso para que se pueda acceder a esos datos. Quizás que que no requieran autorización. Quizás hay algunos perfiles más protegidos, otros no tanto.
+
+146
+00:23:20.260 --> 00:23:27.449
+Leandro Ariel Suarez: Después vamos a ejecutar esto. Esta planificación? Vamos a educar a todos los involucrados
+
+147
+00:23:27.580 --> 00:23:35.879
+Leandro Ariel Suarez: que ya están. Tienen su clasificación dentro de dentro de la organización, la clasificación de los datos dentro de la organización
+
+148
+00:23:36.550 --> 00:23:48.700
+Leandro Ariel Suarez: y después de educar a todos esos grupos involucrados como cómo está clasificado todos los datos y quién tiene la potestad sobre cada 1 desplegamos una tecnología que nos permita proteger esos datos. Efectivamente.
+
+149
+00:23:49.000 --> 00:23:58.670
+Leandro Ariel Suarez: ahí es donde se suele implementar alguna herramienta? Bueno, o mismo, atraer los sistemas se definen las políticas y los perfiles de acceso.
+
+150
+00:24:00.160 --> 00:24:09.249
+Leandro Ariel Suarez: Después vamos a monitorear eso. Vamos a revisar logs y alertas para ver que no se esté vulnerando el acceso a datos que no corresponden
+
+151
+00:24:09.650 --> 00:24:28.390
+Leandro Ariel Suarez: y, llegado el caso, que detectemos desvíos, vamos a reaccionar. Y probablemente qué sé yo. A veces se define que alguien maneje un nominatom pero después a otra persona interfiere a esos datos. Y bueno, al final esa persona le terminaba dando acceso o no. Igualmente se logró llegar a esos datos.
+
+152
+00:24:28.390 --> 00:24:37.329
+Leandro Ariel Suarez: pero después se validó de que en realidad, esa persona, si requiere utilizar esos datos, Entonces, bueno, ahí reclasificamos, volvemos a armar la clasificación
+
+153
+00:24:37.390 --> 00:24:53.069
+Leandro Ariel Suarez: y bloqueamos o permitimos también, en caso de que definamos que no se necesita o que sí se permite que esos datos sean accedidos, a veces algún dato que se considera crítico. Después se considera no crítico. Bueno, es un poco esto.
+
+154
+00:24:53.990 --> 00:24:58.300
+Leandro Ariel Suarez: Seguimos con los ciclos en en seguridad
+
+155
+00:25:01.820 --> 00:25:11.999
+Leandro Ariel Suarez: y después tenemos toda la particularidad del dato que el mismo dato puesta en distintos Estados. Volviendo un poco al ejemplo que vimos al principio no
+
+156
+00:25:12.460 --> 00:25:29.759
+Leandro Ariel Suarez: tenemos de distintos Estados en los que puede pasar el dato formatos pasa por distintos medios, que también el dato, y eso también en distintas tecnologías, interviniendo ubicación real del dato
+
+157
+00:25:30.000 --> 00:25:43.590
+Leandro Ariel Suarez: Data Center, que ya están distribuidos a lo largo del mundo. Bueno, hay muchas configuraciones posibles y las regulaciones que hoy en Ge, generalmente donde ponen el ojo a las regulaciones, como vimos en los datos.
+
+158
+00:25:43.880 --> 00:25:56.129
+Leandro Ariel Suarez: tienen distintas medidas o o distintos lineamientos para cada 1 de sus Estados, o sea, definen cómo se va a tratar el dato en cada 1 de sus Estados. Generalmente tenemos 2 Estados
+
+159
+00:25:56.700 --> 00:26:00.960
+Leandro Ariel Suarez: que son en reposo y en tránsito. Ahora vamos a averiguar que hay algunos más.
+
+160
+00:26:02.370 --> 00:26:03.889
+Leandro Ariel Suarez: No, por ejemplo.
+
+161
+00:26:04.040 --> 00:26:15.680
+Leandro Ariel Suarez: Todo lo que es en reposo en reposo es está literalmente el dato está en reposo, no se está moviendo. No se está procesando. Esto puede ser una base de datos
+
+162
+00:26:16.340 --> 00:26:21.209
+Leandro Ariel Suarez: o un backup. Puede ser un excel en una hoja de Excel.
+
+163
+00:26:21.640 --> 00:26:25.730
+Leandro Ariel Suarez: Puede ser que esté en algún lado de la nube, como por ejemplo, en un s, 3
+
+164
+00:26:26.840 --> 00:26:31.580
+Leandro Ariel Suarez: en un backet de c 3 ahí esperando y nada más.
+
+165
+00:26:31.850 --> 00:26:35.579
+Leandro Ariel Suarez: Eso es en reposo, digamos, el dato está quieto.
+
+166
+00:26:36.060 --> 00:26:43.230
+Leandro Ariel Suarez: Después tenemos el dato en movimiento inmotion. Entonces estamos moviéndose de una ubicación a otra o de un Estado a otro.
+
+167
+00:26:43.540 --> 00:26:48.569
+Leandro Ariel Suarez: generalmente a través de la red, No. Pero bueno, también puede ser
+
+168
+00:26:48.750 --> 00:26:55.070
+Leandro Ariel Suarez: cuando alguien corre tu pendrive y dice, transfiere un dato que
+
+169
+00:26:55.310 --> 00:27:12.410
+Leandro Ariel Suarez: bueno, esto generalmente es una que cuan cuando pasa este tipo de cosas, bueno, hay caso que le dije recién cuando una aplicación le pide un dato a otra cuando se cuarea una base y sale el dato de la base hacia no sé el programa que esté utilizando el la persona o la aplicación misma.
+
+170
+00:27:14.240 --> 00:27:27.540
+Leandro Ariel Suarez: y después el dato en uso, que es cuando está siendo procesado está siendo utilizado por una aplicación por un servidor o por alguien. Esto puede ser una aplicación que está transformando un dato o una aplicación que está usando el dato para calcular algo
+
+171
+00:27:27.710 --> 00:27:31.440
+Leandro Ariel Suarez: bueno. Nada se se entiende. Me parece la la idea
+
+172
+00:27:35.780 --> 00:27:37.529
+Leandro Ariel Suarez: hasta acá hay una duda.
+
+173
+00:27:41.600 --> 00:27:43.130
+MARTÍN GALLARDO BERTUZZI: No brutal. Todo bien.
+
+174
+00:27:44.850 --> 00:27:47.790
+Leandro Ariel Suarez: Y yo estoy grabando? ¿no? ¿sí?
+
+175
+00:27:51.390 --> 00:28:07.479
+Leandro Ariel Suarez: Bueno, después viene lo la parte de el inventoreado de de los datos. Inventory. Entonces acá. Esto se empieza a identificar a registrar todos estos datos críticos que necesitamos proteger donde están ubicados, cómo se usan.
+
+176
+00:28:08.050 --> 00:28:15.629
+Leandro Ariel Suarez: quién qué clasificación tienen dentro de la clasificación que definimos y quiénes son los responsables por cada 1 de esos datos.
+
+177
+00:28:15.720 --> 00:28:35.150
+Leandro Ariel Suarez: Esto después sirve para la toma de decisiones para ver cómo se diseña la seguridad, la aplicación de políticas. Entonces, bueno, es una parte bastante importante donde se tiene que tener en cuenta el el negocio también. Y como se utilizan esos datos, a veces no es cuestión de decir protejo todos los datos
+
+178
+00:28:35.150 --> 00:28:49.919
+Leandro Ariel Suarez: y ya está, sino que esos datos se requieren utilizar para hacer procesamiento, para hacer análisis. Y esos datos no solo los requiere usar una aplicación, sino que también hay gente que los tiene que poder utilizar en otro formato. Bueno.
+
+179
+00:28:50.070 --> 00:28:52.779
+Leandro Ariel Suarez: por eso está bueno inventorearlo
+
+180
+00:28:53.180 --> 00:29:00.390
+Leandro Ariel Suarez: y saber que existen y de que formas se pueden, cómo tiene que estar clasificados y qué forma se pueden utilizar después.
+
+181
+00:29:05.390 --> 00:29:08.720
+Leandro Ariel Suarez: ¿qué desafío tiene el dato inventory
+
+182
+00:29:08.780 --> 00:29:25.920
+Leandro Ariel Suarez: que es costoso mantenerlo actualizado. No imagino que sabrán, se habrán dado cuenta cada vez que aparece un nuevo dato, cada vez que un dato cambia la forma en la que se registra o desaparece un dato. Todo esto, o el dato cambia el flujo de los datos cambia
+
+183
+00:29:26.240 --> 00:29:37.929
+Leandro Ariel Suarez: su utilización, su propósito. Todo esto es costoso de mantenerlo autorizado. Es también costoso, inventariado. No es fácil, sobre todo en organizaciones perdón muy grandes.
+
+184
+00:29:38.150 --> 00:29:41.020
+Leandro Ariel Suarez: Entonces, de esta forma.
+
+185
+00:29:41.370 --> 00:29:59.679
+Leandro Ariel Suarez: a veces también es difícil descubrir nuevos tipos de datos que 1 no está al tanto, todo el tiempo aparece un un equipo nuevo genera nuevos datos y 1 no se entera. O sea, para enterarse, tienes que hacer todo un barrido de cómo se está operando en la empresa, en todas las presa. Es demasiado grande. Te lleva un montón de tiempo
+
+186
+00:29:59.830 --> 00:30:09.489
+Leandro Ariel Suarez: tenés que educar a la gente. Ché, Acuérdense que cuando empiecen a generar unos datos, nos tienen que avisar a nosotros, vos governance. Los datos. Bueno.
+
+187
+00:30:09.490 --> 00:30:23.679
+Leandro Ariel Suarez: todo eso. Imagínense que es recostoso. Imagínese que el los equipos o la la empresa, puede generar datos sensibles, medias de todo el tiempo y nada Es fácil que esto quedes autorizado, que desprotegido.
+
+188
+00:30:23.780 --> 00:30:24.890
+Leandro Ariel Suarez: Entonces, bueno.
+
+189
+00:30:25.110 --> 00:30:44.990
+Leandro Ariel Suarez: una de las alternativas que surgió con el tiempo fue el data Eibary, el Data Livery. Lo que hace es etiquetar, o sea, buscar una forma de etiquetar esos datos, o sea, que el mismo dato tenga su clasificación o este inventariado en sí mismo.
+
+190
+00:30:45.400 --> 00:30:52.479
+Leandro Ariel Suarez: Entonces esta forma es mucho más más flexible y más realizable no directamente vos como
+
+191
+00:30:52.850 --> 00:30:59.929
+Leandro Ariel Suarez: como sistema que genera un dato, ya tenés que dar una untable en un time.
+
+192
+00:31:00.100 --> 00:31:01.310
+Leandro Ariel Suarez: Y
+
+193
+00:31:01.550 --> 00:31:15.760
+Leandro Ariel Suarez: entonces, bueno, pues si vos, ya tenés, controles y y mecanismos montados sobre ese sistema de leyling que puede ser algo normalizado, o sea, el mismo para todos los datos listo ya está, o sea, por donde sea que pase el dato
+
+194
+00:31:15.760 --> 00:31:22.640
+Leandro Ariel Suarez: y si requiere pasar a través de un mecanismo ya normalizado, se va a filtrar, se van a aplicar políticas
+
+195
+00:31:22.760 --> 00:31:33.070
+Leandro Ariel Suarez: o controles que definen. Si ese dato tiene que estar ahí, si no tiene que estar ahí. Si tiene que estar registrado en algún lado, si tiene que generar su blog, Si no tiene que loviarse en algún blog.
+
+196
+00:31:35.880 --> 00:31:43.680
+Leandro Ariel Suarez: hay hay un poco de de todo eso. Digamos a ver, no es un proceso estandarizado.
+
+197
+00:31:43.830 --> 00:31:45.869
+Leandro Ariel Suarez: porque todos los sistemas tienen que
+
+198
+00:31:46.070 --> 00:31:58.800
+Leandro Ariel Suarez: tienen que poder traducir esto y de alguna forma, tomar esas medidas. Pero es algo mucho más realizable que lo que acabamos de ver, ¿no? O sea, Quizás vos. Podés bajar una política de Che, No.
+
+199
+00:31:59.140 --> 00:32:04.940
+Leandro Ariel Suarez: no estandarizado. No está estandarizado, pero yo ahora lo estandarizo. Todos los que manejen este tipo de datos.
+
+200
+00:32:05.190 --> 00:32:22.139
+Leandro Ariel Suarez: datos sensibles. Y digo, los datos sensibles son estos: el número tienen que aplicar la política del Every listo y si no aplica esta política? Bueno, era un momento. Te vamos a ubicar y probablemente te pediremos respuesta de por qué no estás cumpliendo con la política de la empresa.
+
+201
+00:32:23.420 --> 00:32:34.019
+Leandro Ariel Suarez: Entonces, bueno, los sistemas modernos permiten generalmente, o sea, la mayoría. Tenemos modernos. Permite la creación de etiquetas o un tipo de metadata donde podamos tener esta info.
+
+202
+00:32:34.920 --> 00:32:38.549
+Leandro Ariel Suarez: por ejemplo, el tag policiadores
+
+203
+00:32:38.570 --> 00:32:55.350
+Leandro Ariel Suarez: donde ya antes define. Ya. Es algo como estandarizado por ellos cuando vos decís. Bueno, esto pertenece. Este dato pertenece a este sujeto. A estos sujetos. Son ¿no? Y la etiqueta que tienen es esta envirament production.
+
+204
+00:33:01.310 --> 00:33:10.350
+Leandro Ariel Suarez: Bueno, y después pasamos a lo que es evidentemente y ya efectivamente protección de los datos
+
+205
+00:33:10.970 --> 00:33:13.920
+Leandro Ariel Suarez: hasta ahora fue todo como el atrás la
+
+206
+00:33:14.780 --> 00:33:19.110
+Leandro Ariel Suarez: toda la preparación, no para después efectivamente protegerlos.
+
+207
+00:33:19.670 --> 00:33:22.540
+Leandro Ariel Suarez: No hay ninguna duda.
+
+208
+00:33:23.220 --> 00:33:27.950
+Leandro Ariel Suarez: Bueno, ¿qué ¿qué manera tenemos de de proteger estos datos? Bueno.
+
+209
+00:33:28.140 --> 00:33:44.850
+Leandro Ariel Suarez: estos informes se pueden dar, por ejemplo a la hora de el comparer. Tal entonces hay ciertos compiladores. Es una forma de que de de poder proteger este dato o los datos a través de todo su ciclo de vida, entonces
+
+210
+00:33:45.170 --> 00:33:47.919
+Leandro Ariel Suarez: el compilador nos puede asegurar
+
+211
+00:33:48.390 --> 00:33:56.259
+Leandro Ariel Suarez: que durante la fase de compilación se está analizando el código, se detecten, no sé violaciones de que se está
+
+212
+00:33:56.430 --> 00:34:03.619
+Leandro Ariel Suarez: printeando contraseñas solo por el estilo o datos sensibles. Y bueno, eso es una forma
+
+213
+00:34:03.870 --> 00:34:10.359
+Leandro Ariel Suarez: generalmente lo por qué surgen este tipo de medidas en forma
+
+214
+00:34:11.389 --> 00:34:25.650
+Leandro Ariel Suarez: claramente, o sea, cuando 1 hace un software trata de que sea de calidad, no trata de evitar hacer este tipo de cuestiones, pero como la realidad es 1 de los requerimientos para la seguridad. Tenemos que tener este tipo de de de medidas
+
+215
+00:34:25.800 --> 00:34:33.849
+Leandro Ariel Suarez: para seguir enfociando que no se no se filtren datos. Bueno, proteger los datos.
+
+216
+00:34:34.040 --> 00:34:35.429
+Leandro Ariel Suarez: Como bien dijimos
+
+217
+00:34:37.639 --> 00:34:49.830
+Leandro Ariel Suarez: algunos compiladores pueden asegurarnos que que estos datos no sean filtrados. Por ejemplo, el Sakecure Stream de Java, que en realidad es. Acá Hay un error. Creo que es el Gardel Stream
+
+218
+00:34:50.030 --> 00:34:52.959
+Leandro Ariel Suarez: que lo que hace bueno
+
+219
+00:34:53.969 --> 00:35:07.359
+Leandro Ariel Suarez: se guarda el string se guarda encriptado, O sea, yo digo, Che, esto es un un un string que está segurizado. Lo guardan encriptado. Entonces, si alguien se mete la memoria en vivo no lo va a poder ver, O sea, va a tener que traer para poderse encriptar ese string.
+
+220
+00:35:07.620 --> 00:35:17.920
+Leandro Ariel Suarez: Si 1 1 guarda una Power en un string clásico de Java, eso se puede ver en texto plano, mirando a la memoria con alguna herramienta de que pueda examinar el proceso.
+
+221
+00:35:18.970 --> 00:35:22.780
+Leandro Ariel Suarez: Creo que seguir Stream es de punta lento.
+
+222
+00:35:22.900 --> 00:35:26.370
+Leandro Ariel Suarez: no de de de Java, el jardín del stream.
+
+223
+00:35:27.260 --> 00:35:44.230
+Leandro Ariel Suarez: Bueno, después también hay herramientas de análisis de código estático que ayudan bastante. Y ahí ya entramos en las metodologías que vimos, por ejemplo, de execox que vimos la clase pasada. No que meten la seguridad dentro de el desarrollo.
+
+224
+00:35:48.980 --> 00:36:04.759
+Leandro Ariel Suarez: Bueno, una lo lo que lo que seguramente surge listo. Tengo que que guardar. Tengo que resguardar datos, proteger datos listo encriptación, porque esos datos, de alguna forma, después los tengo que recuperar para seguir utilizándolo. Y la orientación es una de las medidas que se utilizan
+
+225
+00:36:05.320 --> 00:36:11.829
+Leandro Ariel Suarez: para proteger. Acá Tenemos el caso del estado de reposo de los datos
+
+226
+00:36:11.940 --> 00:36:20.660
+Leandro Ariel Suarez: donde no se están moviendo últimamente. Entonces, bueno, una de las medidas que se puede tomar es encriptar esos datos en el medio en el que están.
+
+227
+00:36:22.190 --> 00:36:36.970
+Leandro Ariel Suarez: Acá surgen algunas alternativas. Por ejemplo, tenemos lo que lo que son los los Hcm que lo vimos por allá, también en la casa de autenticación. No es un hardware específico de seguridad
+
+228
+00:36:37.030 --> 00:36:43.610
+Leandro Ariel Suarez: que se dedica básicamente a proteger y evitar de que se pueda acceder a ciertos secretos.
+
+229
+00:36:43.790 --> 00:37:00.620
+Leandro Ariel Suarez: Por ejemplo, las claves simétricas, Las clases simétricas son recontra sensibles si alguien se hace con una simetría, puede salir a desencriptar un montón de datos que se hayan editado con esa clave. Entonces, una de las formas que tenemos de protegerlo es
+
+230
+00:37:00.660 --> 00:37:05.469
+Leandro Ariel Suarez: a través de un un H. C, M. Lo guardás en ese hardware. Y ese hardware es
+
+231
+00:37:05.540 --> 00:37:15.870
+Leandro Ariel Suarez: anti antitanbery, entonces no se podía de forma sencilla, vulnerar ese hardware.
+
+232
+00:37:16.310 --> 00:37:24.830
+Leandro Ariel Suarez: Bueno, y bueno, generalmente, como no se puede obtener la clave. Simétrica en esos. H. S. M.
+
+233
+00:37:25.100 --> 00:37:37.059
+Leandro Ariel Suarez: Que yo creo les había comentado. Tienen ya las operaciones de encriptación y desencriptación disponibles para realizar entonces de esa forma, 1 no tiene que acceder a la clave. Ya te lo hace el mismo. El mismo hardware
+
+234
+00:37:39.600 --> 00:37:46.330
+Leandro Ariel Suarez: después. También hay 10 dors, no, que que quizás ya están más familiarizados, tienen el forma de
+
+235
+00:37:46.470 --> 00:38:00.149
+Leandro Ariel Suarez: es una manera de de poder segurizar la información en el para el caso de los de las claves, no si tienen algún quistor por ahí y algún software que lo realiza, bueno, guarda todas las claves, las encripta con una clave
+
+236
+00:38:00.870 --> 00:38:05.199
+Leandro Ariel Suarez: máster, y de esa forma se accede a todas las demás.
+
+237
+00:38:07.040 --> 00:38:22.749
+Leandro Ariel Suarez: Después tenemos otros ejemplos, como, por ejemplo, lo que sería el Keckbeck, o que se conoce como Key en Cristo y el Keck, que es una clave que se usaba para clave, y el deck, que es el data inscription Key.
+
+238
+00:38:22.930 --> 00:38:26.520
+Leandro Ariel Suarez: por ejemplo, se es es una forma de
+
+239
+00:38:26.660 --> 00:38:37.800
+Leandro Ariel Suarez: hacer encriptación por capas. Entonces es mucho más seguro, porque yo, con una clave incripto, la clave que pueda terminar siendo la la clave efectiva que va a encriptar los datos.
+
+240
+00:38:38.100 --> 00:38:57.040
+Leandro Ariel Suarez: entonces es más seguro. También es más flexible, porque yo roto generalmente la clave, la primera clave, la que la con la que cripto, la clave, que efectivamente es cripto de los datos. Entonces yo puedo ir rotando eso. Y la clave con la que se criptó los datos no cambia.
+
+241
+00:38:57.170 --> 00:39:02.139
+Leandro Ariel Suarez: Entonces, de esa forma es como bastante mucho más dinámico.
+
+242
+00:39:02.260 --> 00:39:09.349
+Leandro Ariel Suarez: pero lo que tiene es que es más difícil administrar, naturalmente, no porque ya implica una segunda capa de encriptación
+
+243
+00:39:15.410 --> 00:39:29.729
+Leandro Ariel Suarez: y después, bueno, lo que es la nube. Lo que tenemos hoy en día una nube es los datos que que tenemos en esa nube en en reposo. Es es una infraestructura que es de terceros, o sea, es de un proveedor y está en posición de ese proveedor. Entonces
+
+244
+00:39:29.820 --> 00:39:38.359
+Leandro Ariel Suarez: acá tenemos que tomar ciertas decisiones para poder proteger esos datos y en base también a lo que nos ofrece el proveedor
+
+245
+00:39:38.580 --> 00:39:44.040
+Leandro Ariel Suarez: y acá surgen distintas posibilidades.
+
+246
+00:39:44.360 --> 00:39:46.040
+Leandro Ariel Suarez: Tenemos
+
+247
+00:39:46.430 --> 00:40:03.739
+Leandro Ariel Suarez: la posibilidad de ser mucho más operativo, eficientemente operativos o de enfocarnos más en la seguridad y en tener un control un poco más propio sobre esos datos. Entonces
+
+248
+00:40:04.340 --> 00:40:09.020
+Leandro Ariel Suarez: acá tenemos distintas alternativas. Podríamos
+
+249
+00:40:09.330 --> 00:40:26.730
+Leandro Ariel Suarez: utilizar toda nuestra invitación, o sea que la parte de Cloud y de hosting y demás, todo eso lo maneja el proveedor, pero nosotros ocuparnos de hacer la encriptación por proceso de encriptación de nuestro lado antes de almacenar la info en el proveedor. Entonces
+
+250
+00:40:26.880 --> 00:40:35.119
+Leandro Ariel Suarez: esto que nos permite, bueno, ser completamente independiente del proveedor de la nube. No utilizamos ninguna herramienta ni estamos
+
+251
+00:40:35.380 --> 00:40:48.269
+Leandro Ariel Suarez: limitados a ninguna definición por parte del proveedor, más que cómo vamos a guardar esos datos, que es más, depende más del dato o del tamaño de los datos que queramos guardar.
+
+252
+00:40:50.010 --> 00:41:05.600
+Leandro Ariel Suarez: Después Bueno, tenemos ya todo lo que es encriptación. Clown Eitive, que hay acá hay varias alternativas, pero ya estamos delegando un poco la encriptación en el proveedor de la nube. Y acá ya estamos atándonos a ese proveedor.
+
+253
+00:41:06.930 --> 00:41:11.390
+Leandro Ariel Suarez: Entonces podemos tener
+
+254
+00:41:11.530 --> 00:41:29.539
+Leandro Ariel Suarez: traer nuestras propias claves o tenerlas nosotros directamente, o sea, o las generamos nosotros y se las damos o las tenemos nosotros y listos, o sea, no las no las ponemos en el software del proveedor.
+
+255
+00:41:29.710 --> 00:41:40.499
+Leandro Ariel Suarez: Entonces, bueno, ¿cuál es la diferencia? Bueno, que el proveedor puede definir cuándo y cómo rotar esas claves y de la otra forma las rotaríamos nosotros. Digamos
+
+256
+00:41:41.850 --> 00:41:51.849
+Leandro Ariel Suarez: después. Bueno, tenemos la posibilidad de que nosotros gestionemos y decidamos también cuando se se rotan esas claves o o, bueno.
+
+257
+00:41:51.870 --> 00:42:02.950
+Leandro Ariel Suarez: ¿qué tipo de no sé qué tipo de política son esa clave que puedo aplicar, pero no puedo hacer esas claves, O sea, puedo encriptar ya es más un zas, ¿no? Yo
+
+258
+00:42:02.990 --> 00:42:11.769
+Leandro Ariel Suarez: Yo puedo definir rotar la clave, pero yo no me entero cuál es esa clave ni nada por el estilo, o sea, se ocupa el proveedor 100 por 100.
+
+259
+00:42:11.840 --> 00:42:26.040
+Leandro Ariel Suarez: Entonces quizás lo que yo sepa, es que listo, roté una clave. Entonces, mis datos que yo guardo ya funcionan con otra clave. Pero yo no conozco esa clave No, No, no, no está dentro de mi administración. Ya queda
+
+260
+00:42:26.200 --> 00:42:28.310
+Leandro Ariel Suarez: del lado del proveedor.
+
+261
+00:42:28.680 --> 00:42:46.020
+Leandro Ariel Suarez: Y la última alternativa, ya cuando directamente no controlamos nada, es. No No es que no hacemos ningún tipo de gestión sobre las claves, sino que el proveedor decide cuándo la rota como la rota. No podemos acceder ni ver nada, ni ni usarla para editar otros contenidos que no sea lo del proveedor no decide. Acá es
+
+262
+00:42:46.160 --> 00:42:51.280
+Leandro Ariel Suarez: le dejo, completa, completo control al proveedor.
+
+263
+00:42:52.430 --> 00:42:53.750
+Leandro Ariel Suarez: Obviamente.
+
+264
+00:42:54.430 --> 00:43:05.270
+Leandro Ariel Suarez: son de distintas estrategias que van dándonos cada vez más eficiencia operativa, pero también mayor costo, mientras que la otra es bueno.
+
+265
+00:43:05.450 --> 00:43:09.290
+Leandro Ariel Suarez: Tenemos me menor costo, pero más control.
+
+266
+00:43:09.530 --> 00:43:18.730
+Leandro Ariel Suarez: y también suman mayor complejidad a nuestro lado, porque tenemos que salir a manejar toda esa complejidad que quizás no estemos dispuestos a manejar, no a nivel de encriptación.
+
+267
+00:43:19.640 --> 00:43:22.150
+Leandro Ariel Suarez: También tenemos que que ver bien.
+
+268
+00:43:22.180 --> 00:43:26.150
+Leandro Ariel Suarez: algo que no es menor el tema de la ubicación de los datos que yo les decía.
+
+269
+00:43:26.160 --> 00:43:43.399
+Leandro Ariel Suarez: ojo con los proveedores, porque los proveedores a veces tienen de distintas regiones y depende de cómo esté armado la distribución de los datos, Pueden haber datos distribuidos en en distintos países que aplican distintas regulaciones en cada 1 de ellos, entonces eso solo debe tener muy en cuenta.
+
+270
+00:43:50.560 --> 00:43:51.530
+Leandro Ariel Suarez: Bueno.
+
+271
+00:43:51.530 --> 00:43:52.790
+MARTÍN GALLARDO BERTUZZI: Y Profe. Me gusta así.
+
+272
+00:43:53.350 --> 00:43:55.290
+Leandro Ariel Suarez: Sí, Sí.
+
+273
+00:43:55.290 --> 00:44:03.359
+MARTÍN GALLARDO BERTUZZI: Depende el el el caso que necesitemos va a ser el el el caso que vamos a usar en o mandarlo a la
+
+274
+00:44:03.520 --> 00:44:08.609
+MARTÍN GALLARDO BERTUZZI: a la nube y y usar tus propias kiess, o o depende del caso o no.
+
+275
+00:44:10.370 --> 00:44:13.080
+Leandro Ariel Suarez: Va a depender. Si va a depender 100 por 100 de
+
+276
+00:44:13.300 --> 00:44:21.880
+Leandro Ariel Suarez: primero, ¿qué es lo que vos querés hacer, o sea después, si no te importa tanto como si no, que se haga. Bueno, ya cada vez vas a, no
+
+277
+00:44:22.410 --> 00:44:32.120
+Leandro Ariel Suarez: vas a delegar muchísimo más. Y por último, el tema del de de vos, tu tu tu posibilidad económica. No porque este último.
+
+278
+00:44:32.370 --> 00:44:42.980
+Leandro Ariel Suarez: esto último implica que el proveedor tenga hacer cada vez más cosas. A medida que vos vas yendo entre la derecha, a la izquierda le está dando más responsabilidad al proveedor y, por lo tanto, mayor costo.
+
+279
+00:44:43.190 --> 00:44:46.430
+Leandro Ariel Suarez: pero menos complejidad para vos. O sea, Te olvidás.
+
+280
+00:44:47.000 --> 00:44:47.860
+MARTÍN GALLARDO BERTUZZI: Claro, Eso sí.
+
+281
+00:44:48.160 --> 00:45:05.369
+Leandro Ariel Suarez: De la otra forma. Bueno, cada vez tienes que ir preocupándote más Si, qué sé yo tenés que ir uy cada. No sé. Todos los años. Tengo que ir rotando las claves. Yo ya te tengo que acordar vos. No lo hace el proveedor uy, bueno, no tengo que rotarlas y aparte, tengo que generar porque
+
+282
+00:45:05.620 --> 00:45:07.199
+Leandro Ariel Suarez: yo tengo mis propias claves.
+
+283
+00:45:07.500 --> 00:45:23.950
+Leandro Ariel Suarez: Entonces, bueno, ahí ya es otro otro tipo de gestión. No, Una cosa es apretar un botón en la Wls rotar clave. Listo. Ya sé que no hablar se terminó y la otra forma, después generar la clave a es, o lo que sea, con la complejidad de que yo le haya dado
+
+284
+00:45:24.080 --> 00:45:26.370
+Leandro Ariel Suarez: y después cargarla en el proveedor
+
+285
+00:45:27.270 --> 00:45:31.389
+Leandro Ariel Suarez: o yo tengo esas esas claves. Y como las protejo.
+
+286
+00:45:31.630 --> 00:45:35.569
+Leandro Ariel Suarez: aquel el el escenario de joven optis, o sea.
+
+287
+00:45:35.570 --> 00:45:36.180
+MARTÍN GALLARDO BERTUZZI: Claro.
+
+288
+00:45:36.180 --> 00:45:46.910
+Leandro Ariel Suarez: Ahí existe, empieza empieza a hacer un tira y afloja de guita. Y yo la madurez que tengo yo como empresa para poder hacer esas operaciones
+
+289
+00:45:47.580 --> 00:45:48.540
+Leandro Ariel Suarez: y
+
+290
+00:45:48.760 --> 00:45:55.399
+Leandro Ariel Suarez: y el conocimiento también. Muchas empresas no son expertos en seguridad. Entonces terminan delegando más y cada vez más.
+
+291
+00:45:57.330 --> 00:45:59.190
+MARTÍN GALLARDO BERTUZZI: Perfecto. Profe: Muchas gracias.
+
+292
+00:46:02.100 --> 00:46:14.879
+Leandro Ariel Suarez: Bueno, pasamos. Habiendo dejado atrás en reposo, pasamos al al Estado más también más dinámico, que es el tránsito. Es cuando los datos están moviéndose. No
+
+293
+00:46:14.940 --> 00:46:33.409
+Leandro Ariel Suarez: Acá tenemos varias posibilidades, O sea, podemos encriptar antes de que se usen, o sea, por ejemplo, acá. Tengo el ejemplo del clip de un archivo con G. P. G, antes de mandarlo por mail. Entonces ahí estoy tomando una acción antes de transmitirlo.
+
+294
+00:46:33.930 --> 00:46:35.389
+Leandro Ariel Suarez: Y la otra es
+
+295
+00:46:35.960 --> 00:46:47.129
+Leandro Ariel Suarez: utilizar protocolos de transporte que aseguren que ese dato viaje encriptado. Por ejemplo, usar Smt peso de Tl: S para enviar el el
+
+296
+00:46:47.390 --> 00:46:49.009
+Leandro Ariel Suarez: el archivo a través de mail
+
+297
+00:46:49.160 --> 00:46:53.760
+Leandro Ariel Suarez: de esa forma tipo. Yo no tengo que instalar el archivo, y yo sé que va a viajar seguro.
+
+298
+00:46:55.020 --> 00:47:04.760
+Leandro Ariel Suarez: Hay protocolos que como. T. L. S. Que te aseguran esto generalmente todo el tráfico que esté en H, T, T, P. S. Está asegurado por teles de que
+
+299
+00:47:05.080 --> 00:47:06.980
+Leandro Ariel Suarez: de que no se va a poder leer, digamos.
+
+300
+00:47:07.440 --> 00:47:14.769
+Leandro Ariel Suarez: Y bueno, entonces hay otros protocolos como I, P, C, Y bueno, S. S. H. También, que aseguran que
+
+301
+00:47:15.670 --> 00:47:24.189
+Leandro Ariel Suarez: que todo el el tránsito de la información en tránsito esté encriptada. No, esto que vimos de se ponen de acuerdo antes con un algoritmo.
+
+302
+00:47:24.400 --> 00:47:34.900
+Leandro Ariel Suarez: La encriptación asimétrica se ponen de acuerdo en la clave simétrica y después ya cifran todo el tráfico de forma simétrica. Pero ya habiendo más.
+
+303
+00:47:35.070 --> 00:47:37.610
+Leandro Ariel Suarez: ha habiendo supuesto de acuerdo en una clave.
+
+304
+00:47:43.330 --> 00:47:53.339
+Leandro Ariel Suarez: Bueno, y esto quedó medio raro. Bueno, yo la parte de informes de Secutihn Time. ¿cómo puedo asegurar que los datos
+
+305
+00:47:54.130 --> 00:48:04.759
+Leandro Ariel Suarez: estén protegidos a la hora de ejecución, o sea, cuando están en un sistema ejecutándose o mismo cuando están pasando entre distintos sistemas o distintos componentes del sistema.
+
+306
+00:48:04.840 --> 00:48:21.330
+Leandro Ariel Suarez: entonces esto generalmente se aplica a nivel se implementa a nivel aplicativo, no teniendo buenas decisiones, buenos conceptos y principios de seguridad. Esto que le decía antes: no no printarlo los secretos en un blog. Bueno, utilizando
+
+307
+00:48:21.330 --> 00:48:25.090
+Leandro Ariel Suarez: ciertas herramientas
+
+308
+00:48:25.250 --> 00:48:36.179
+Leandro Ariel Suarez: que nos permitan proteger ese dato, tener en cuenta. Uy, estoy manejando autossensibles. Yo tengo que tomar ciertas medidas a nivel de aplicación para no
+
+309
+00:48:36.730 --> 00:48:40.120
+Leandro Ariel Suarez: exponer info, y
+
+310
+00:48:40.300 --> 00:48:49.739
+Leandro Ariel Suarez: eso es a nivel aplicativo, no la decisión. Nosotros, como desarrolladores de cómo de tener en cuenta que ese dato es crítico y cómo protegerlo realmente
+
+311
+00:48:50.340 --> 00:48:57.799
+Leandro Ariel Suarez: y después, bueno, a nivel infraestructura hay herramientas como los Lp que nos permiten detectar
+
+312
+00:48:57.980 --> 00:49:02.340
+Leandro Ariel Suarez: que que se estén filtrando datos exponiendo datos.
+
+313
+00:49:06.830 --> 00:49:13.720
+Leandro Ariel Suarez: Después tenemos también el caso de de como enquipamos la lata de cómo protegemos la edad de memoria.
+
+314
+00:49:13.830 --> 00:49:19.430
+Leandro Ariel Suarez: Los datos de memoria se podrían considerarse también que están en reposo en memoria.
+
+315
+00:49:19.620 --> 00:49:33.040
+Leandro Ariel Suarez: Por eso quizás es un caso particular de da 3 que porque están esperando que la C. P u los use o están en tránsito, entre a veces también están en tránsito entre el el V A. S. De entrada, salida y la C. P. U
+
+316
+00:49:33.410 --> 00:49:36.270
+Leandro Ariel Suarez: Entonces, más allá de cómo lo especifiquemos.
+
+317
+00:49:36.590 --> 00:49:40.930
+Leandro Ariel Suarez: Por ejemplo, se puede dar en un ambiente de múltiples virtual machines
+
+318
+00:49:41.030 --> 00:49:49.910
+Leandro Ariel Suarez: accediendo a la misma memoria. Hay un potencial riesgo de acceder información confidencial, no porque de distintas B m. Accediendo lo mismo.
+
+319
+00:49:50.990 --> 00:50:07.830
+Leandro Ariel Suarez: Intel y otros fabricantes implementaron un protocolo, un mecanismo protocolo que se llama T M E que está implementado en hardware entonces permite gestionar la encriptación de memoria a través de múltiples claves de encriptación
+
+320
+00:50:12.010 --> 00:50:14.490
+Leandro Ariel Suarez: que está acá el tema es
+
+321
+00:50:15.270 --> 00:50:24.430
+Leandro Ariel Suarez: total memoria inscription a través de una sola clave compartida por todos los procesos. Podemos gestionar
+
+322
+00:50:24.760 --> 00:50:28.630
+Leandro Ariel Suarez: la encriptación de estos datos No, Y
+
+323
+00:50:28.880 --> 00:50:41.530
+Leandro Ariel Suarez: lo que hace es, se realiza la desencriptación en la Cpu antes de que ayer. Entonces, de esa forma estamos, evitamos que alguien pueda llegar a puentear
+
+324
+00:50:41.640 --> 00:50:45.499
+Leandro Ariel Suarez: con un favor físico y empezar a ver los datos.
+
+325
+00:50:45.740 --> 00:50:47.520
+Leandro Ariel Suarez: Somos el centro del
+
+326
+00:50:48.190 --> 00:50:55.239
+Leandro Ariel Suarez: del costo de la C. P. U, nos aseguramos de que esté protegido, digamos, como una especie de Hcm. Digamos.
+
+327
+00:51:01.140 --> 00:51:05.530
+Leandro Ariel Suarez: Bueno, acá hay más ejemplos de cómo están implantado.
+
+328
+00:51:08.100 --> 00:51:13.030
+Leandro Ariel Suarez: Y después, bueno, tenemos lo que es la encriptación en estos dispositivos.
+
+329
+00:51:13.280 --> 00:51:17.520
+Leandro Ariel Suarez: Si tiene un chip, hay o T o sistemas embebidos.
+
+330
+00:51:17.790 --> 00:51:21.860
+Leandro Ariel Suarez: la seguridad en mi vida para los sistemas medidos, que
+
+331
+00:51:21.990 --> 00:51:27.810
+Leandro Ariel Suarez: es 1 de los escenarios probablemente más desfavorables, no porque estos chips o estos.
+
+332
+00:51:27.930 --> 00:51:43.500
+Leandro Ariel Suarez: no sé, los arduinos, los raspberry que están metidos en medio en cualquier lado, sobre todo los estos chips, así chiquitos, como los S, los s, 32 o 0, 32, No me acuerdo ahora particularmente como es las siglas
+
+333
+00:51:44.050 --> 00:51:57.139
+Leandro Ariel Suarez: capaz de estar en todos lados, o sea, están expuestos físicamente o sea capaz que están puestos en un semáforo capaz están puestos en un campo de de cultivos. Están por todos lados, capaz que están.
+
+334
+00:51:57.210 --> 00:52:04.489
+Leandro Ariel Suarez: No sé, pueden estar en diversos lados adentro de otras cosas también. No se ven, pero están ahí.
+
+335
+00:52:04.710 --> 00:52:06.930
+Leandro Ariel Suarez: Y lo que tienen es
+
+336
+00:52:07.040 --> 00:52:15.450
+Leandro Ariel Suarez: bueno, primero, que están físicamente expuestos después, que usan protocolos abiertos que ya son super conocidos
+
+337
+00:52:15.490 --> 00:52:29.330
+Leandro Ariel Suarez: y generalmente están también abiertos a al divaging C. Como son de bajo nivel, suelen permitir que se puedan divaguear fácilmente tipo. Además que me conecto
+
+338
+00:52:29.370 --> 00:52:40.909
+Leandro Ariel Suarez: me me me conecto de alguna forma, ya sea inalámbrico o de con cable, y puedo, no sé, no tiene ninguna interfaz de autenticación para ver que yo sea efectivamente alguien que que debo estar rodeando eso.
+
+339
+00:52:41.040 --> 00:52:59.500
+Leandro Ariel Suarez: Entonces estas cosas plantean vectores de ataques directos que no no tienen protección, no tienen ningún tipo de civilización. El tema de Wireless también se puede conectar cualquiera, o sea, el dispositivo. Quizás está inaccesible físicamente, pero no puedo conectar hasta de un teléfono celular.
+
+340
+00:52:59.750 --> 00:53:12.900
+Leandro Ariel Suarez: y es esto tienen esta particularidad, que tiene una escala enorme. Generalmente están distribuidos en grandes cantidades. Hay muchos por todos lados y están también dentro de muchas cosas.
+
+341
+00:53:13.070 --> 00:53:21.470
+Leandro Ariel Suarez: Bueno, están expuestos físicamente. No, alguien puede ir y y romperlo o atacarlo.
+
+342
+00:53:22.760 --> 00:53:34.209
+Leandro Ariel Suarez: Por ejemplo, el el caso de de no sé sensores de riego, no que que yo tenga alguna de estos chips que estén controlando. No sé a la temperatura o o
+
+343
+00:53:34.210 --> 00:53:45.829
+Leandro Ariel Suarez: en base a algún parámetro si alguien que permitía el riego en un sector de cultivos, entonces si yo me meto y puedo llegar a toquetear los los sensores
+
+344
+00:53:45.830 --> 00:53:50.330
+Leandro Ariel Suarez: o no sé o mismo las condiciones para que
+
+345
+00:53:50.800 --> 00:53:54.400
+Leandro Ariel Suarez: para qué se ríe todo el tiempo. Por ejemplo, le pongo que está
+
+346
+00:53:54.540 --> 00:54:07.970
+Leandro Ariel Suarez: vulneró a un tumper. Y digo, no tenés que regar cuando se haya una temperatura que sé que se va a superar en todo el año. Entonces, bueno, eso empieza a regar y genera gastos económicos.
+
+347
+00:54:08.230 --> 00:54:10.329
+Leandro Ariel Suarez: No sé un ejemplo que se me ocurre ahora.
+
+348
+00:54:11.180 --> 00:54:17.769
+Leandro Ariel Suarez: Entonces, bueno, por eso es también importante que simplemente a un tipo de H. C, M. En estos aparatos
+
+349
+00:54:18.070 --> 00:54:24.300
+Leandro Ariel Suarez: de seguridad embebida para que no se puedan realizar este tipo de ataques
+
+350
+00:54:24.600 --> 00:54:32.310
+Leandro Ariel Suarez: que, bueno, lamentablemente todavía no se le está dando la importancia que tiene, pero Pero, bueno, cada vez va a ser más importante?
+
+351
+00:54:38.040 --> 00:54:42.840
+Leandro Ariel Suarez: Bueno, seguimos avanzando en el ciclo. Pasamos a lo que es el incumplimiento de todo esto.
+
+352
+00:54:43.300 --> 00:54:48.230
+Leandro Ariel Suarez: Ya lo protegimos los datos, como como me aseguro de que eso efectivamente esté pasando.
+
+353
+00:54:49.700 --> 00:54:58.660
+Leandro Ariel Suarez: Bueno, acá el el caso del abuelo. Mi abuelo siempre me decía: no basta con ser bueno, también hay que parecerlo. No
+
+354
+00:54:59.790 --> 00:55:04.250
+Leandro Ariel Suarez: todo esto de las regulaciones y todo lo demás
+
+355
+00:55:04.600 --> 00:55:19.090
+Leandro Ariel Suarez: que que estuvimos viendo después se tiene que cumplir, por ejemplo, cuando llegó una auditoría, porque después, en lo que diría vos tenés, que demostrar de que todo eso que dijiste que hacías, lo haces efectivamente.
+
+356
+00:55:19.310 --> 00:55:38.310
+Leandro Ariel Suarez: Todo tiene que dar evidencia, o sea, por eso es que generalmente las empresas suele obligar a que todo se logue, todo quede evidencia. ¿por qué? Porque después, cuando vienen estos organismos o cuando hay que comparecer ante ellos, tenemos que demostrar que somos Cospleyance. Y con estas evidencias.
+
+357
+00:55:38.310 --> 00:55:44.009
+Leandro Ariel Suarez: con estos registros es mucho más fácil poder demostrarlo.
+
+358
+00:55:49.230 --> 00:55:50.430
+Leandro Ariel Suarez: Entonces.
+
+359
+00:55:50.630 --> 00:55:58.159
+Leandro Ariel Suarez: por ejemplo, 1 de los de los pedidos de Copyr puede ser el tema de la retención de datos que hablamos al principio.
+
+360
+00:55:58.650 --> 00:56:09.979
+Leandro Ariel Suarez: Esto es info, que ya no es necesario guardarla, pero que te obligan por distintas cuestiones, fines legales, análisis forenses. No sé o algún tipo de otra
+
+361
+00:56:10.140 --> 00:56:15.230
+Leandro Ariel Suarez: de otro requerimiento. Entonces el Iva, por ejemplo, te obliga a que
+
+362
+00:56:15.590 --> 00:56:25.410
+Leandro Ariel Suarez: guarde los datos, obtenga blogs o algo por el estilo del registro 6 años desde la fecha, que es el contenido de ese dato.
+
+363
+00:56:25.850 --> 00:56:29.550
+Leandro Ariel Suarez: fue usado, Fue efectivo por última vez.
+
+364
+00:56:29.790 --> 00:56:37.330
+Leandro Ariel Suarez: Entonces, vos por 6 años, es, no importa, y yo, o sea, por ejemplo, para una obra social o para una medicina preparada.
+
+365
+00:56:37.570 --> 00:56:47.700
+Leandro Ariel Suarez: tuvo datos de historia clínica de una persona. Bueno, esa persona se fue. Dejó de ser cliente. No importa Por 6 años, vos tenés que tener guardado. Eso
+
+366
+00:56:48.900 --> 00:56:56.609
+Leandro Ariel Suarez: lo mismo. Sox te pide que por 7 años guardas, toda la información de la auditoría, documentos, todas las cuestiones
+
+367
+00:56:56.800 --> 00:56:59.730
+Leandro Ariel Suarez: por si hay que hacer algún tipo de investigación a futuro.
+
+368
+00:57:03.260 --> 00:57:21.519
+Leandro Ariel Suarez: Después hay hay otro tipo de de de exigencias. Creo que todo lo que es encriptación de algunos datos personales bajo algunas leyes también te obligan a que las claves de encriptación vos las rotes cada 10 años, por ejemplo.
+
+369
+00:57:21.640 --> 00:57:29.989
+Leandro Ariel Suarez: Entonces, bueno, vos te tenés que asegurar encriptarte todos los datos de todos tus clientes. Pero a los 10 años vas a tener que rondar las claves y reencriptar todo
+
+370
+00:57:30.450 --> 00:57:41.719
+Leandro Ariel Suarez: eso también tiene que ver con con temas de de Copydens, ¿no? Si después a los 10 años viene una auditoría y vos no lo rotaste, probablemente no estés cumpliendo y tengas alguna
+
+371
+00:57:41.990 --> 00:57:44.879
+Leandro Ariel Suarez: alguna consecuencia, probablemente económica.
+
+372
+00:57:49.690 --> 00:58:05.709
+Leandro Ariel Suarez: Bueno, y habiendo cumplido, digamos, con el cumpleaños, después, igualmente no nos podemos quedar con que ah, no, yo cumplo, ya o sea, yo soy seguro, lo parezco o no. Y aparte, tengo que estar verificando constantemente de que lo soy. ¿no?
+
+373
+00:58:07.990 --> 00:58:25.659
+Leandro Ariel Suarez: Entonces, una de esas. Una de las herramientas que nos permiten validar esto son los del Lp, que ya lo venimos viendo bastante los data, los prevención por más que ella. Prevención. La mayoría de estas herramientas son más de detección, no tanto de prevención, No.
+
+374
+00:58:26.390 --> 00:58:33.480
+Leandro Ariel Suarez: lo que nos dan los D. L. P: Es la forma de poder clasificar, inventariar y detectar los datos, y después esa forma
+
+375
+00:58:34.490 --> 00:58:48.020
+Leandro Ariel Suarez: los vemos en todos sus Estados y de esa forma podemos ver si están saliendo de Estados que no corresponden si están siendo filtrados. Si hay una falla con algún dato, si están siendo divulgados, si están siendo
+
+376
+00:58:48.020 --> 00:58:54.800
+Leandro Ariel Suarez: bueno, ex filtrado básicamente en algún sistema o en algún medio que no, no sea lo correcto.
+
+377
+00:58:54.950 --> 00:59:03.680
+Leandro Ariel Suarez: Entonces este tipo de herramientas ya es como que bueno, Vos le das toda la información y listo. Tiene una alerta cuando veas que algo esto no se está cumpliendo.
+
+378
+00:59:05.140 --> 00:59:15.500
+Leandro Ariel Suarez: Lo esto no era panacea, ¿no? O sea, es una herramienta, pero lo que tiene es que es súper complejo de implementar, ¿no? Entonces, generalmente, lo que.
+
+379
+00:59:16.070 --> 00:59:22.209
+Leandro Ariel Suarez: como son muy difíciles de implementar, requiere un esfuerzo enorme por parte de toda la compañía.
+
+380
+00:59:22.350 --> 00:59:32.199
+Leandro Ariel Suarez: Y se suele Lo que suele pasar es que las funcionalidades del Lpe ya vienen incorporadas en muchos de los productos que tenemos a diario.
+
+381
+00:59:32.420 --> 00:59:41.649
+Leandro Ariel Suarez: Entonces, una vez que hay que salir, implementar un de un D, L, P, si no que las funcionalidades de las herramientas que usamos ya tienen. D. L. P. C, incorporado.
+
+382
+00:59:42.370 --> 00:59:45.250
+Leandro Ariel Suarez: Por ejemplo.
+
+383
+00:59:45.500 --> 00:59:54.460
+Leandro Ariel Suarez: hay casos de de cuando empezaron a haber 2 todo el tema de los ramsomware. No sé si se acuerdan cuando empezaron a tardar un montón, el ransomware
+
+384
+00:59:54.590 --> 01:00:13.899
+Leandro Ariel Suarez: una herramienta del L. P. O algunas funcionalidades del L P podría llegar a detectar que hay encriptaciones no autorizadas de datos o que el dato cambió o que el dato está teniendo algún comportamiento extraño. Y ahí se puede aplicar alguna medida, ya sea primero alerta, obviamente, y después quizás depende de la
+
+385
+01:00:14.190 --> 01:00:19.439
+Leandro Ariel Suarez: que depende qué tipo de de complejidad tenga la herramienta.
+
+386
+01:00:20.040 --> 01:00:35.429
+Leandro Ariel Suarez: ¿qué tipo de sofisticación tenga esa herramienta podría llegar a a otra tipo otro tipo de medidas. Por ejemplo, no sé si detecta que una máquina de un empleado se encriptó por un por un ataque puede llegar a ser inutilizar ese dispositivo. Se me ocurre?
+
+387
+01:00:42.870 --> 01:00:45.750
+Leandro Ariel Suarez: Bueno, ya estamos llegando del film.
+
+388
+01:00:46.050 --> 01:00:59.370
+Leandro Ariel Suarez: ¿qué pasa cuando nosotros detectamos. Y descubrimos que hubo un incidente que hubo algún tipo de de de filtración de datos que hubo un ataque que hubo algo, por lo cual se vulneró esa protección de de los datos.
+
+389
+01:00:59.830 --> 01:01:07.180
+Leandro Ariel Suarez: Bueno, acá ya entra lo que se suele conocer como la respuesta a incidentes.
+
+390
+01:01:09.090 --> 01:01:20.269
+Leandro Ariel Suarez: Cómo operamos frente a un incidente. Por lo general, durante el incidente tratamos de tratar de de guardar, documentar, identificar todo lo que pasó todo lo que está pasando.
+
+391
+01:01:20.350 --> 01:01:31.010
+Leandro Ariel Suarez: de frenarlo de alguna forma, o sea, tratar de frenarlo como el lugar, o sea, filtrar la todo perdón parar todo lo que es la filtración de estos datos no.
+
+392
+01:01:31.440 --> 01:01:40.610
+Leandro Ariel Suarez: y se suelen tomar medidas de empezar a segurizar por demás, o sea tomar todas las medidas posibles para evitar de que haya otros
+
+393
+01:01:40.640 --> 01:01:56.439
+Leandro Ariel Suarez: ex filtraciones que no estemos viendo. Entonces, en general se suele, es como cuando nada entran a robar a tu casa. Y bueno, porque no sé, la puerta era insegura. Entonces, bueno, probablemente pongas una puerta súper segura y después también segurices
+
+394
+01:01:56.440 --> 01:02:02.699
+Leandro Ariel Suarez: las ventanas. No sé cualquier otro. Si tienes alguna entrada por el techo, no sé todo lo que sea.
+
+395
+01:02:02.860 --> 01:02:10.239
+Leandro Ariel Suarez: generalmente toman medidas extra para para evitar de que de que sigan.
+
+396
+01:02:10.690 --> 01:02:13.870
+Leandro Ariel Suarez: se siga filtrando datos que no no corresponden.
+
+397
+01:02:14.890 --> 01:02:28.140
+Leandro Ariel Suarez: Y algo muy importante es no, no, no se. No tendríamos que evitar. No tendríamos que tratar de ocultar estos incidentes. No, lo que tenemos que hacer es trabajar con un protocolo
+
+398
+01:02:28.340 --> 01:02:31.910
+Leandro Ariel Suarez: un poco. Está todo, Acá no que
+
+399
+01:02:32.650 --> 01:02:51.639
+Leandro Ariel Suarez: habla de traer. Por ejemplo, un equipo de forense tener generalmente hay equipos dedicados en las empresas a respuestas incidentes, porque porque ya tienen todo este protocolo. Y, ya saben, todo esto. Jordin, todo incorpora incorporado, trabajan de esto. Entonces.
+
+400
+01:02:51.670 --> 01:02:56.390
+Leandro Ariel Suarez: cuando pasa lo de estos, el primero que está laburando es el equipo de respuesta a incidentes
+
+401
+01:02:56.460 --> 01:03:02.889
+Leandro Ariel Suarez: y sabe cómo los pasos y las medidas que tiene que tomar y se los va indicando a todas las personas.
+
+402
+01:03:02.990 --> 01:03:19.929
+Leandro Ariel Suarez: Esto porque claramente no vamos a andar capacitando a todos los empleados de la empresa. Para Uy. Si paso un incidente, No, el equipo de respuesta de respuesta de incidentes generalmente va y va a hablar con todos los que estuvieron involucrados a revisar todo. Va a generar una especie de post mortem
+
+403
+01:03:19.930 --> 01:03:26.069
+Leandro Ariel Suarez: después, no, Pero va a tener que tomar todas estas medidas que vemos acá y asegurarse de que se cumplan.
+
+404
+01:03:27.020 --> 01:03:34.530
+Leandro Ariel Suarez: Entonces lo que tenemos que que trabajar en realidad es evitar exponer información innecesaria, o sea.
+
+405
+01:03:35.250 --> 01:03:40.609
+Leandro Ariel Suarez: cuando hay equipos. Obviamente que los incidentes hay que comunicarlos, sobre todo cuando estamos
+
+406
+01:03:40.860 --> 01:03:53.540
+Leandro Ariel Suarez: cuando estamos sujetos a normativas y regulaciones. Uno no puede ocultar lo que pasó, lamen, o sea, lamentablemente hay que comunicarlo, pero hay que comunicarlo
+
+407
+01:03:53.820 --> 01:04:04.869
+Leandro Ariel Suarez: lo mínimo y lo necesario. Solo lo requerido tampoco. Si tienes un incidente en tu empresa, no vas a salir a publicar en Twitter. Ayer hackearon todo lo en la base de datos de de mis de mis clientes, ¿no?
+
+408
+01:04:05.170 --> 01:04:08.210
+Leandro Ariel Suarez: Pero si vos estás
+
+409
+01:04:08.470 --> 01:04:17.570
+Leandro Ariel Suarez: siendo sujeto a una medida, una normativa, una regulación de datos personales, generalmente algún organismo vas a tener que informarle que pasó eso.
+
+410
+01:04:17.950 --> 01:04:23.480
+Leandro Ariel Suarez: Entonces? Bueno, después, ese organismo puede tomar las medidas que
+
+411
+01:04:23.520 --> 01:04:41.779
+Leandro Ariel Suarez: que requiera en base al al Te va seguramente pedir un montón de información, y ahí sí es donde 1 tiene que disponilizar esa información, ¿no? ¿cómo fue el ataque, de qué forma, qué datos quedaron expuestos. Ahí es donde trabaja todo el equipo de forense dentro de del equipo de de respuesta, incidencias ¿no?
+
+412
+01:04:41.780 --> 01:04:55.240
+Leandro Ariel Suarez: Y ahí entran todas las 24 h posteriores. ¿qué es lo que se hace. Se trabaja con el equipo de forenses, identifica las implicaciones legales o qué es lo que legalmente hay que hay que tomar como medida
+
+413
+01:04:55.540 --> 01:04:58.510
+Leandro Ariel Suarez: a veces. Por ejemplo, si
+
+414
+01:04:59.030 --> 01:05:05.789
+Leandro Ariel Suarez: en el caso de que tuvieras una filtración de datos de tarjeta de crédito, muy probablemente tengas que
+
+415
+01:05:05.980 --> 01:05:20.849
+Leandro Ariel Suarez: informarle a los bancos que que poseen esa tarjeta de crédito. ¿qué es lo que pasó? Disponitizarles cuáles fueron los clientes afectados y, naturalmente, a tus clientes, ¿no? Pues también tendrías que que informarle naturalmente.
+
+416
+01:05:20.890 --> 01:05:39.300
+Leandro Ariel Suarez: De hecho, no sé, estuvimos una filtración de dato, bueno si alguna alguna vez les les pasó que su sus contraseñas o algún dato fue filtrado. Seguramente les llegó algún mail diciéndole che tus datos fueron vulnerados, te por ejemplo, para el caso de las contraseñas. A veces te piden que que
+
+417
+01:05:39.400 --> 01:05:49.270
+Leandro Ariel Suarez: que pongan su segundo factor o mismo. Te dicen cambiar la contraseña o no sé, algún tipo de de de informe de que fuiste
+
+418
+01:05:50.080 --> 01:05:52.930
+Leandro Ariel Suarez: de que fue vulnerada tu tu información
+
+419
+01:05:53.610 --> 01:06:00.739
+Leandro Ariel Suarez: después, Bueno, se reporta a la permanege en que en el fondo de los que son responsables
+
+420
+01:06:01.260 --> 01:06:04.030
+Leandro Ariel Suarez: por todo este tipo de de incidentes
+
+421
+01:06:04.240 --> 01:06:22.010
+Leandro Ariel Suarez: si identifican los posibles problemas que que pueda hacer surgir a futuro en base a lo el incidente que pasó, No esto de Huy, Tengo que salir, informarle a los bancos. Tengo que salir a a hablar con los clientes si es una empresa pública, dar explicaciones al boro
+
+422
+01:06:22.010 --> 01:06:30.590
+Leandro Ariel Suarez: o a los inversores. Bueno y, naturalmente, arreglar el problema, O sea, si eso surgió toda la infiltración porque
+
+423
+01:06:30.700 --> 01:06:44.389
+Leandro Ariel Suarez: no sé, un empleado divulgó algo. Y de esa forma lograron atacar, bueno, bajar una política y bastante exhaustiva a toda la gente si fue por una vulnerabilidad en un sistema, Bueno, corregirla
+
+424
+01:06:44.560 --> 01:06:47.850
+Leandro Ariel Suarez: ahí va a depender no hombre, el tipo de
+
+425
+01:06:47.960 --> 01:06:50.419
+Leandro Ariel Suarez: de incidentes y de la causa?
+
+426
+01:06:55.860 --> 01:07:03.389
+Leandro Ariel Suarez: Bueno, y llegamos al fin al fin de la de la materia, por así decirse.
+
+427
+01:07:03.750 --> 01:07:09.630
+Leandro Ariel Suarez: Esto es todo lo lo de protección de datos. No sé si quedó alguna duda.
+
+428
+01:07:13.180 --> 01:07:16.279
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: No, Yo estoy bien el jueves que viene. ¿qué hacemos?
+
+429
+01:07:18.370 --> 01:07:21.730
+Leandro Ariel Suarez: El juez que viene no.
+
+430
+01:07:21.730 --> 01:07:23.179
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: No es fácil.
+
+431
+01:07:23.800 --> 01:07:25.629
+Leandro Ariel Suarez: Para y de para la grabación.
+

@@ -1,0 +1,1614 @@
+WEBVTT
+
+1
+00:00:01.890 --> 00:00:05.399
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Los iquitos somos, no sé, 40, 50, pero.
+
+2
+00:00:06.230 --> 00:00:12.519
+Leandro Suarez: Sí, Pero como vi cómo viene siendo en en las clases virtuales poquitos.
+
+3
+00:00:14.270 --> 00:00:16.159
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí, no. Nunca estuvimos todos Acá.
+
+4
+00:00:19.240 --> 00:00:22.270
+Leandro Suarez: Miren que si no vienen, los finales van a ser
+
+5
+00:00:22.750 --> 00:00:26.990
+Leandro Suarez: a lo mejor no digo nada, porque esto ya está quedando grabado. Pero bueno, yo solamente lo digo.
+
+6
+00:00:27.930 --> 00:00:33.359
+Leandro Suarez: Y y si pueden responderle a Pablo mucho mejor, porque
+
+7
+00:00:34.520 --> 00:00:39.549
+Leandro Suarez: sino acumulando bronca para para los finales no mentira.
+
+8
+00:00:39.910 --> 00:00:45.169
+Leandro Suarez: Bueno, hoy nos toca la autenticación.
+
+9
+00:00:45.310 --> 00:00:56.650
+Leandro Suarez: pero antes quería quería hacer un repaso medio de lo que de lo que ya ven, estuvieron viendo la clase pasada, entiendo que vieron control de acceso y.
+
+10
+00:00:57.140 --> 00:01:04.879
+Leandro Suarez: bueno, modelos de seguridad, políticas de seguridad en en sí.
+
+11
+00:01:05.810 --> 00:01:14.450
+Leandro Suarez: Básicamente, lo lo que en lo que se basa, digamos, la tría cía de todo todo lo que versa sobre la trilogía, no la confidencialidad.
+
+12
+00:01:14.800 --> 00:01:17.040
+Leandro Suarez: la integridad y la disponibilidad
+
+13
+00:01:17.710 --> 00:01:27.639
+Leandro Suarez: que esta trías, digamos como lo más importante, lo más abstracto dentro de de lo que es la seguridad. Las aplicaciones. Sobre todo.
+
+14
+00:01:28.090 --> 00:01:31.750
+Leandro Suarez: se acuerdan más o menos cada una.
+
+15
+00:01:32.570 --> 00:01:39.910
+Leandro Suarez: la C, la I y la A la A, que está en inglés, no, pero la confidencialidad, la integridad
+
+16
+00:01:40.330 --> 00:01:44.149
+Leandro Suarez: y la y la disponibilidad a a bailar elite en inglés.
+
+17
+00:01:45.160 --> 00:01:58.119
+Leandro Suarez: Bueno, como como vieron, digamos lo que es la confidencialidad. Viene a proteger todo lo que son las lecturas sobre la información que quien lee, esa información, sea quien debe ser y no otro.
+
+18
+00:01:58.540 --> 00:02:04.749
+Leandro Suarez: La integridad, digamos, viene a proteger más que nada las modificaciones o las escrituras sobre esa información
+
+19
+00:02:05.130 --> 00:02:08.490
+Leandro Suarez: que nadie que no no tenga los poderes, pueda.
+
+20
+00:02:08.860 --> 00:02:13.610
+Leandro Suarez: digamos, inferir en esa o no inferir, sino
+
+21
+00:02:14.030 --> 00:02:17.109
+Leandro Suarez: hacer algún tipo de acción sobre esa información.
+
+22
+00:02:18.010 --> 00:02:23.350
+Leandro Suarez: Y lo que es disponibilidad bueno, es más o menos
+
+23
+00:02:23.460 --> 00:02:31.880
+Leandro Suarez: permitir que quien debe acceder a la información pueda accederla en el momento en el que esa persona debe acceder. No es como una especie de híbrido. También
+
+24
+00:02:32.010 --> 00:02:34.410
+Leandro Suarez: incluye lo que es lectura y escritura.
+
+25
+00:02:36.220 --> 00:02:43.549
+Leandro Suarez: Todo lo que son las políticas de seguridad vienen a versar sobre sobre estos 3,
+
+26
+00:02:43.860 --> 00:02:58.859
+Leandro Suarez: digamos, conceptos o requerimientos dentro de lo que es un sistema y toda una toda política de seguridad de una organización va a tratar de de forzar que esas 3 propiedades se cumplan. No.
+
+27
+00:02:59.430 --> 00:03:07.960
+Leandro Suarez: de ahí surgen los modelos de seguridad que estuvieron viendo la bueno, las mismas políticas.
+
+28
+00:03:08.240 --> 00:03:16.480
+Leandro Suarez: Dentro de los de los modelos, también tienes los los esquemas de control de acceso los mandan mandatorios, los discrecionales estuvieron viendo.
+
+29
+00:03:16.840 --> 00:03:22.640
+Leandro Suarez: Pero en el fondo, digamos, todo termina siendo como un conjunto
+
+30
+00:03:22.950 --> 00:03:28.090
+Leandro Suarez: de reglas que definen si un sujeto puede acceder a un objeto ¿Y de qué forma no
+
+31
+00:03:29.470 --> 00:03:37.759
+Leandro Suarez: todo eso medio que está como contemplado dentro de los modelos de de los Mac, de los Dac, de las políticas que son aparte, digamos, como
+
+32
+00:03:38.740 --> 00:03:42.140
+Leandro Suarez: un modelo más alto, digamos, de una organización.
+
+33
+00:03:44.350 --> 00:03:50.419
+Leandro Suarez: Ahora, ¿qué es lo que pasa, que todo es todo este
+
+34
+00:03:51.020 --> 00:03:54.689
+Leandro Suarez: tema de de como controlarse. El acceso tiene algo
+
+35
+00:03:54.960 --> 00:04:05.729
+Leandro Suarez: bastante importante, algo que no no es menor, que es que hay sujetos interactuando en el sistema, Como podemos ver con este conjunto de reglas, ¿no?
+
+36
+00:04:06.290 --> 00:04:24.889
+Leandro Suarez: Entonces esos sujetos no dejan de ser externos y muy probablemente físicos. ¿no? O sea, porque, bueno, tenés un sistema, vas a querer que la gente interactúe con él de alguna forma, según su propósito, son sistemas corporativos. Bueno, los empleados pueden interactuar.
+
+37
+00:04:25.140 --> 00:04:32.690
+Leandro Suarez: Tienen su sistema abierto, que la gente pueda también realizar acciones.
+
+38
+00:04:33.490 --> 00:04:39.859
+Leandro Suarez: Y cuando tenemos entidades externas y físicas, tenemos que lograr representarlos de alguna forma
+
+39
+00:04:39.970 --> 00:04:42.589
+Leandro Suarez: dentro de los sistemas dentro de nuestros sistemas.
+
+40
+00:04:43.750 --> 00:04:51.989
+Leandro Suarez: Generalmente es esa identificación interna o representación interna termina siendo, Se la termina llamando principal
+
+41
+00:04:53.050 --> 00:04:57.330
+Leandro Suarez: y estaba por alguna especie de autenticador.
+
+42
+00:04:57.440 --> 00:04:58.190
+Leandro Suarez: O sea, claro.
+
+43
+00:04:58.910 --> 00:05:04.810
+Leandro Suarez: terminan siendo básicamente lo que se conoce como la idea del usuario o algún tipo de identificador
+
+44
+00:05:04.940 --> 00:05:12.229
+Leandro Suarez: que se le da a a una entidad externa cuando empieza a a formar parte de un sistema o un interactuar con un sistema
+
+45
+00:05:13.860 --> 00:05:18.320
+Leandro Suarez: que, qué pasa con con esta.
+
+46
+00:05:18.430 --> 00:05:22.310
+Leandro Suarez: que no es algo trivial, Digamos representar a un sujeto externo.
+
+47
+00:05:22.560 --> 00:05:24.040
+Leandro Suarez: En un sistema
+
+48
+00:05:24.220 --> 00:05:33.399
+Leandro Suarez: cada vez que ese sujeto quiere autenticarse con nuestro sistema, tenemos que comprobar que ese sujeto sea quien dice hacer ya. Por ejemplo, yo me lo voy a irba.
+
+49
+00:05:33.850 --> 00:05:41.030
+Leandro Suarez: que Leandro Suárez sea Leandro Suárez, y no otra persona tratando de impersonar a impersonarme, digamos.
+
+50
+00:05:42.100 --> 00:05:54.620
+Leandro Suarez: el método más común que conocemos de toda la vida. Es el usuario y contraseña, no vos le asignas a un sujeto, un usuario y después le permitís o le das vos mismo como sistema una contraseña para que pueda acceder.
+
+51
+00:05:55.680 --> 00:06:00.149
+Leandro Suarez: Eso es como el método clásico que que se uso toda la vida. ¿no?
+
+52
+00:06:03.300 --> 00:06:10.280
+Leandro Suarez: Si vivo acá arriba es porque tengo la P. P. T acá en un monitor acá arriba. Entonces en
+
+53
+00:06:10.670 --> 00:06:16.449
+Leandro Suarez: como le decía, tenemos que tener alguna forma de confirmar que esa identidad, sea quien dice ser.
+
+54
+00:06:16.740 --> 00:06:22.699
+Leandro Suarez: Para eso hay algunos pasos. Tenemos que obtener primero la información de esa entidad.
+
+55
+00:06:22.920 --> 00:06:32.620
+Leandro Suarez: después tenemos que analizarla para ver si es fidedigna y después determinar si corresponde a una entidad dentro del sistema, o es alguien
+
+56
+00:06:33.300 --> 00:06:36.629
+Leandro Suarez: nada que no no está registrado, digamos, dentro del sistema.
+
+57
+00:06:38.650 --> 00:06:44.320
+Leandro Suarez: Si alguno pregunta algo, y no lo veo, levante la mano o
+
+58
+00:06:44.670 --> 00:06:48.580
+Leandro Suarez: o avísame o prendan el vídeo y me avisan porque capaz que no lo veo.
+
+59
+00:06:49.850 --> 00:07:06.659
+Leandro Suarez: Bueno. Como consecuencia de de esto, de que tenemos que analizar esta información, comprobarlo de alguna forma tenemos que almacenar esa información en nuestro sistema y después contar con alguna especie de procedimiento para poder determinar, para poder determinar de esa forma
+
+60
+00:07:06.780 --> 00:07:11.349
+Leandro Suarez: y hacer esta corroboración? ¿no? Y de ahí surgen
+
+61
+00:07:11.560 --> 00:07:20.039
+Leandro Suarez: los sistemas de autenticación. Hasta ahora vinieron viendo lo que son los criptosistema que son generalmente duplas de
+
+62
+00:07:20.210 --> 00:07:27.360
+Leandro Suarez: de distintos componentes. Bueno, acá también tenemos una dupla de 5 componentes y.
+
+63
+00:07:27.840 --> 00:07:38.739
+Leandro Suarez: por un lado, tenemos lo que es la información de autendicación, que es la información de la entidad externa. Es algo que el sistema no controla, viene dado por el por el sujeto.
+
+64
+00:07:39.870 --> 00:07:44.600
+Leandro Suarez: Después tenemos la información complementaria que digamos es
+
+65
+00:07:44.880 --> 00:07:52.359
+Leandro Suarez: la la que nosotros almacenamos en el sistema para, digamos, poder identificar a a ese externo
+
+66
+00:07:53.870 --> 00:08:03.619
+Leandro Suarez: la función de complementación, que es la que obtiene de A, C. Partimos De ahí nos da un C
+
+67
+00:08:04.040 --> 00:08:04.930
+Leandro Suarez: que en
+
+68
+00:08:05.370 --> 00:08:18.019
+Leandro Suarez: Lo Lo que es importante. Lo que vamos a ver después es que esta va a ser bueno que D. C no se pueda volver a a no, porque si no, si yo tengo sed de alguna forma podría saber de de quién per a quién pertenece información.
+
+69
+00:08:18.460 --> 00:08:20.710
+Leandro Suarez: hay distintos
+
+70
+00:08:21.070 --> 00:08:32.940
+Leandro Suarez: distintas aristas de ese tema también. Pero, bueno, quizás concede también pueda ingresar al sistema, ¿no? Pero bueno, básicamente sé, y digamos efe es lo que infiere de deriva de A a C.
+
+71
+00:08:35.090 --> 00:08:39.850
+Leandro Suarez: Tenemos la función de funciones de autenticación que son las que he dado a
+
+72
+00:08:40.000 --> 00:08:46.419
+Leandro Suarez: determinan si hay un Sé que le corresponde. No, esta parte de la comprobación
+
+73
+00:08:47.760 --> 00:08:56.699
+Leandro Suarez: que, digamos como lo más, no es lo más importante, pero digamos como lo con lo que 1 interactúa, o el sistema, digamos, la parte más más fuerte del sistema de autenticación
+
+74
+00:08:57.450 --> 00:09:04.720
+Leandro Suarez: y después tenemos las funciones de selección que son más administrativas, no como para actualizar y
+
+75
+00:09:04.850 --> 00:09:09.360
+Leandro Suarez: y modificar o sumar una información complementaria
+
+76
+00:09:09.660 --> 00:09:13.980
+Leandro Suarez: de los distintos de las distintas identidades que están en el sistema.
+
+77
+00:09:20.720 --> 00:09:27.750
+Leandro Suarez: Bueno, vamos componente a componente desarticulando un poco el sistema. No
+
+78
+00:09:28.220 --> 00:09:36.349
+Leandro Suarez: Primero, tenemos la info autenticación, la información, autenticación, que es lo que provee la entidad externa. El sujeto que se quiere autenticar en su sistema.
+
+79
+00:09:36.840 --> 00:09:43.420
+Leandro Suarez: Esta información. Como dijimos, no tiene. No tenemos como sistema. No tenemos ningún tipo de
+
+80
+00:09:43.530 --> 00:09:48.770
+Leandro Suarez: de acción sobre esto, o sea, viene dado de afuera, pero
+
+81
+00:09:48.870 --> 00:09:56.390
+Leandro Suarez: podemos exigir ciertos factores que van a graduar la confianza en la que tenemos en esa información. No.
+
+82
+00:09:57.240 --> 00:09:59.779
+Leandro Suarez: Esto es no es lo mismo
+
+83
+00:10:00.000 --> 00:10:02.600
+Leandro Suarez: que venga una persona y me diga una contraseña
+
+84
+00:10:03.090 --> 00:10:05.540
+Leandro Suarez: a que venga esa persona y nos muestre su cara.
+
+85
+00:10:06.330 --> 00:10:13.969
+Leandro Suarez: por ejemplo, cuando se quieren pasar a una fiesta y le dicen, bueno, a pasar a la fiesta. Tenés que decir esta contraseña
+
+86
+00:10:14.130 --> 00:10:15.709
+Leandro Suarez: no se le das a nadie.
+
+87
+00:10:16.050 --> 00:10:26.220
+Leandro Suarez: pero vos entras a la fiesta diciendo la contraseña. O sea, viene una persona que no sé, lo escuchó. Estaba escuchando y escuchó varias fiestas, dice la contraseña y pasa
+
+88
+00:10:27.150 --> 00:10:39.650
+Leandro Suarez: un grado de confianza. Ahora distinto es mirá invitar a un amigo. ¡ay, cómo es tu amigo, toma una foto. Y cuando va tu amigo lo ves y es igual. Ahora va el tu vecino, No, Bueno, yo no pasa.
+
+89
+00:10:40.220 --> 00:10:49.429
+Leandro Suarez: Entonces hay distintos grados confianza ahí en cómo se se puede tomar esa información, autenticación más allá que no tengamos poder de
+
+90
+00:10:49.690 --> 00:10:54.359
+Leandro Suarez: no, no, no no podemos hacer ingerir esa información, No.
+
+91
+00:10:55.730 --> 00:11:09.140
+Leandro Suarez: De ahí surgen los factores, no los distintos factores que existen hoy, que los habrán escuchado sobre todo con con esta movida que se estaba viendo ahora de la autenticación multifactor y demás. Segundo factor de autenticación múltiple.
+
+92
+00:11:09.910 --> 00:11:14.749
+Leandro Suarez: y bueno, tiene que ver con esto, pero acá vamos a a ver los distintos tipos que hay. No
+
+93
+00:11:15.570 --> 00:11:21.549
+Leandro Suarez: Primero tenemos el tipo de factor, lo que se conoce como conocimiento compartido
+
+94
+00:11:21.800 --> 00:11:29.580
+Leandro Suarez: el clásico, algo que conozco. Se conocen los factores con con esta frase, tipo, algo que conozco, sabemos, algo, se llama nosotros.
+
+95
+00:11:29.920 --> 00:11:32.090
+Leandro Suarez: Pero el factor, algo que conozco
+
+96
+00:11:32.200 --> 00:11:46.870
+Leandro Suarez: es se basa en un secreto compartido. Básicamente como vienen, venimos desde ahora, trabajando en el tema de la de las claves de de los criptosistemas asimétricos. No, los 2 en tuen tienen que conocer una
+
+97
+00:11:46.990 --> 00:11:54.919
+Leandro Suarez: una clave, un secreto: compartir, naturalmente, o de forma clásica, es la contraseña de toda la vida, ¿no?
+
+98
+00:11:55.570 --> 00:12:03.670
+Leandro Suarez: Pero, ¿qué pasa nosotros como sistema? Tenemos que almacenar de forma segura ese ese secreto? Porque si no.
+
+99
+00:12:03.910 --> 00:12:09.820
+Leandro Suarez: ¿qué pasa lo que dijimos anteriormente, viene otra persona, pone en secreto, ponen la contraseña y pasa.
+
+100
+00:12:09.930 --> 00:12:14.880
+Leandro Suarez: Y sí, Im y persona a otro usuario que
+
+101
+00:12:15.050 --> 00:12:20.980
+Leandro Suarez: naturalmente, tenés que conocer el usuario, no del de la de la otra persona, pero eso quizás no es tan
+
+102
+00:12:21.590 --> 00:12:24.710
+Leandro Suarez: complicado como obtener el secreto.
+
+103
+00:12:25.280 --> 00:12:32.289
+Leandro Suarez: También hay otros tipos, los far path Freises o las preguntas secretas que me están quedando bastante en desuso
+
+104
+00:12:32.470 --> 00:12:35.709
+Leandro Suarez: Mala práctica ya últimamente. Pero, bueno.
+
+105
+00:12:36.570 --> 00:12:46.489
+Leandro Suarez: estos son los sistemas, o sea, el perdón, no sistemas. Estos son el factor más viejo, más clásico, más más utilizado de toda la vida.
+
+106
+00:12:46.590 --> 00:13:00.479
+Leandro Suarez: Por lo tanto, son de los más estudiados los que más se perfeccionaron y también los que más atacaron, porque tienen mucho más tiempo en operación que los nuevos factores que surgieron estos últimos tiempos.
+
+107
+00:13:06.150 --> 00:13:15.159
+Leandro Suarez: Así que, bueno, este factor depende básicamente que se mantenga el secreto. El secreto se mantenga privado, ese secreto y no se divulgue
+
+108
+00:13:15.600 --> 00:13:20.349
+Leandro Suarez: y, como puede pasar que no sé, el usuario anota la clave
+
+109
+00:13:20.540 --> 00:13:31.910
+Leandro Suarez: en un en una notita y lo pegan. En la era. Fue un amigo vio la notita y dijo, listo. Me lo veo con otra persona. Bueno, ahí no se vulneró, se vulneró al usuario, No se vulneró al sistema
+
+110
+00:13:34.570 --> 00:13:45.389
+Leandro Suarez: distinto es si alguien de alguna forma obtiene la información que ya lo vamos a ver del sistema almacenada y puede inferir. Cuál es la donde sea. Ahí eso es un problema.
+
+111
+00:13:49.030 --> 00:13:58.380
+Leandro Suarez: Otro factor que se conoce como el de posesión de posesión física. Más que nada es el de algo que tengo.
+
+112
+00:13:58.700 --> 00:14:04.110
+Leandro Suarez: La forma análoga que tenemos de verlo es la llave para entrar a la a las casas
+
+113
+00:14:04.430 --> 00:14:06.990
+Leandro Suarez: para entrar a la casa. Si tengo que tener las llaves.
+
+114
+00:14:07.400 --> 00:14:14.460
+Leandro Suarez: si tengo la llave de mi casa, entro a mi casa si yo agarro. Y le doy la llave a un amigo. Ese amigo puede entrar a mi casa
+
+115
+00:14:15.320 --> 00:14:25.670
+Leandro Suarez: y acá estamos en la misma, o sea, basamos la la la autenticación en un elemento físico que poseemos.
+
+116
+00:14:26.440 --> 00:14:31.640
+Leandro Suarez: la pregunta, el auténtica editor, Sí. Muy bien.
+
+117
+00:14:32.360 --> 00:14:38.809
+Leandro Suarez: Ahora vamos a hablar de tema igual, pero pero sí básicamente para para poder usar el etiquetado, tengo que tener el celular.
+
+118
+00:14:41.100 --> 00:14:52.749
+Leandro Suarez: ¿qué pasa con lo mismo? Me pasa con las llaves para entrar Tú las tenés que cuidar, No sé dárselas a nadie que no corresponda. Bueno, la llave es lo digo complicado que se estropeen, pero puede pasar.
+
+119
+00:14:53.000 --> 00:15:00.890
+Leandro Suarez: Pero bueno, un dispositivo como, por ejemplo celular, se puede dañar, te lo pueden robar, te lo pueden clonar
+
+120
+00:15:01.670 --> 00:15:05.770
+Leandro Suarez: o de alguna forma, extraer tu información sin que vos te des cuenta. Entonces
+
+121
+00:15:06.110 --> 00:15:15.759
+Leandro Suarez: tiene ese peligro. Tiene ese riesgo que Bueno, en el ejemplo de la llave no no es tan que el ejemplo de llaves si te la pueden robar. Pero bueno, es
+
+122
+00:15:15.940 --> 00:15:18.919
+Leandro Suarez: es más crítico, digamos, en un contexto de
+
+123
+00:15:19.200 --> 00:15:21.360
+Leandro Suarez: de autenticación de un sistema, no
+
+124
+00:15:21.810 --> 00:15:39.360
+Leandro Suarez: algunos ejemplos. Las Smart cars son las clásicas tarjetas, No tengo acá pero las tarjetas con las que pasaba pasas en en en las oficinas, ese tipo de de tarjetas hay distintos tipos, hay toques u s. B, Por ejemplo, yo tengo 1 acá
+
+125
+00:15:39.500 --> 00:15:42.449
+Leandro Suarez: para lograr un sistema.
+
+126
+00:15:42.840 --> 00:15:49.799
+Leandro Suarez: Es una uvi ki que básicamente la conecto en la compu y y me deja pasar, digamos.
+
+127
+00:15:49.950 --> 00:15:55.009
+Leandro Suarez: o sea, para el suelo guiarme, tengo que poner mi contraseña. Y y este factor adicional.
+
+128
+00:15:56.170 --> 00:16:07.309
+Leandro Suarez: y después. El bula indicator. Es un caso para que yo necesito tener el celular para poder generar ese código que va rotando cada cierto tiempo
+
+129
+00:16:08.210 --> 00:16:21.139
+Leandro Suarez: y también existen los no sé si lo vieron alguna vez o en alguna serie o algún amigo. Si trabaja en un banco, si alguno trabaja en un banco, el token físico, que es básicamente como una especie de pendrive que no se conecta, sino que tiene un
+
+130
+00:16:21.410 --> 00:16:25.960
+Leandro Suarez: un visor donde tiene un código que se va renovando cada equis tiempo.
+
+131
+00:16:26.360 --> 00:16:28.810
+Leandro Suarez: Pero, bueno, eso es otra forma también.
+
+132
+00:16:29.340 --> 00:16:31.860
+Leandro Suarez: ¿qué pasa con este factor.
+
+133
+00:16:32.630 --> 00:16:40.130
+Leandro Suarez: Estamos en la en el mismo problema que del del inicio, o sea, es algo físico que tenemos que
+
+134
+00:16:40.370 --> 00:16:47.430
+Leandro Suarez: que de al de alguna forma, transmitirlo al sistema. Tiene que tener una representación dentro del sistema.
+
+135
+00:16:47.790 --> 00:16:59.469
+Leandro Suarez: Y como toda representación del tema, puede ser su planta clonada, entonces por eso se suele tener.
+
+136
+00:16:59.670 --> 00:17:14.329
+Leandro Suarez: Bueno, en el caso de de de este toque físico, este es cómo se llama u s. U s. B. Token. Bueno, si me lo roban, me lo roban. Pero en el caso de indicator de los de los R, C, a I D I se llaman, me parece.
+
+137
+00:17:14.400 --> 00:17:28.569
+Leandro Suarez: tienen una una protección que es que se va renovando el código. Entonces que pasa si a mí me roban el código, me lo ven, o lo que fuera. Tiene muy corto tiempo para poder operar. Entonces nada con eso complico un poco las cosas.
+
+138
+00:17:32.110 --> 00:17:36.930
+Leandro Suarez: Y ahí está ahí, puse el chat para llamarlo mejor.
+
+139
+00:17:37.940 --> 00:17:43.670
+Leandro Suarez: Bueno, seguimos el factor
+
+140
+00:17:43.810 --> 00:18:01.909
+Leandro Suarez: inherente, o yo me gusta decirlo biométrico más que otra cosa, pero el factor de inherente de la persona que se le da lo que soy, lo basamos, digamos en lo que es. Las características físicas de la de de la persona, características que no se pueden modificar.
+
+141
+00:18:01.990 --> 00:18:17.700
+Leandro Suarez: Por ejemplo, la huella, la cara la retina, la voz en medio en medio polémico. Pero bueno, en algu en algunos sistemas utilizaba la voz hoy con la I a medio que te hacen un
+
+142
+00:18:17.910 --> 00:18:29.609
+Leandro Suarez: ya, incluso con la caras en deep face y todo ese tipo de cosas. Pero Pero, bueno, la voz también fue en algún momento bastante importante en algunos sistemas.
+
+143
+00:18:29.940 --> 00:18:31.820
+Leandro Suarez: Y
+
+144
+00:18:32.160 --> 00:18:40.879
+Leandro Suarez: lo lo más importante acá es que nada son cosas, son características de la persona que que no son fáciles de modificar o perder? No.
+
+145
+00:18:42.590 --> 00:18:46.540
+Leandro Suarez: Sí, Sí, Sí.
+
+146
+00:18:46.720 --> 00:18:54.369
+Leandro Suarez: Y bueno, ¿y ¿y qué pasó de esto. Tenemos un tema con esto, que
+
+147
+00:18:54.900 --> 00:19:05.619
+Leandro Suarez: no son 100 por 100 eficaces por 2 motivos: 1, porque, bueno, no hay un sistema de lectura siempre eficaz. Y aunque lo hubiera, no.
+
+148
+00:19:05.840 --> 00:19:10.220
+Leandro Suarez: y es es un tema complejo, porque.
+
+149
+00:19:10.550 --> 00:19:15.969
+Leandro Suarez: y no sé si alguno se acuerda de los prim las primeras implementaciones de la huella en los celulares.
+
+150
+00:19:16.130 --> 00:19:31.719
+Leandro Suarez: pero, por ejemplo, yo lo viví y era que estabas con el celular, y y ponía la huella y no te tomaba, No te tomaba, no te tomaba capaz que estabas un rato hasta que encontrabas la forma. Entonces tanto la representación como buena lectura
+
+151
+00:19:32.470 --> 00:19:45.140
+Leandro Suarez: cambió, ¿no? Y bueno, terminaron. Terminaron pasándose al Face Id, ¿no? Pero esas primeras implementaciones lo que hacían era que el usuario se
+
+152
+00:19:45.390 --> 00:19:49.469
+Leandro Suarez: nada sin chano y dijera: no, listo, no, no lo uso
+
+153
+00:19:49.670 --> 00:19:59.239
+Leandro Suarez: o muchas veces empezaron a aumentar el umbral, que es lo que hicieron varios sistemas. Empezaron a meter el umbral de error y empezar a aceptar lecturas
+
+154
+00:19:59.370 --> 00:20:07.620
+Leandro Suarez: no tan perfectas vos de no bloquear al usuario es un problema bastante
+
+155
+00:20:08.450 --> 00:20:18.950
+Leandro Suarez: de excede un poco a la materia, porque es tema de de de captura de datos biométricos. Pero mucho de estos sistemas también se basaron en
+
+156
+00:20:19.150 --> 00:20:22.569
+Leandro Suarez: en lo que era la seguridad que usaban los programas de
+
+157
+00:20:22.690 --> 00:20:28.339
+Leandro Suarez: para policiales para buscar sospechosos, ese tipo de cosas
+
+158
+00:20:28.340 --> 00:20:46.650
+Leandro Suarez: donde esperas que la persona haya tenido cambios, se cambia el pelo. Incluso algunos se ponen este contacto para los ojos, se deja lavar ese tipo de cosas. Y esos sistemas están pensados para identificar a la persona, aún cuando hace acciones sobre su cara o su cuerpo para no ser detectado.
+
+159
+00:20:47.040 --> 00:20:53.259
+Leandro Suarez: Entonces, bueno, nada. Son sistemas que no son 100 por 100 eficaces por distintos motivos.
+
+160
+00:20:53.840 --> 00:21:03.209
+Leandro Suarez: Lo que sí tenemos que tener en claro es que este factor requiere una un mecanismo adicional Para evitar que sea engañado.
+
+161
+00:21:03.620 --> 00:21:22.599
+Leandro Suarez: Esto es, no sé. En algún momento algunos lectores de cara le pones una foto. Hoy ya no pasa tanto con él en algún momento le ponen una foto y te dejaban pasar o alguien va desarma. El dispositivo tiene conocimiento técnico para hacerlo y y lo toquetea manda otra información
+
+162
+00:21:22.600 --> 00:21:31.140
+Leandro Suarez: o intercepta los mensajes de alguna forma logra manipular el dispositivo de lectura para para forzar la entrada.
+
+163
+00:21:31.470 --> 00:21:40.399
+Leandro Suarez: entonces generalmente se ponen cámaras o algún tipo de mecanismo adicional para que no se pueda manipular el dispositivo de lectura.
+
+164
+00:21:41.410 --> 00:21:50.590
+Leandro Suarez: Y, bueno, después tenés tenés tema, no sé, yo tengo por ahí algún conocido que
+
+165
+00:21:50.700 --> 00:22:03.749
+Leandro Suarez: entrando al al trabajo, lo tomaba como otra persona. No sé si a 1 le pasó que su celular lo puede desbloquear a algún hermano algún primo, algo por el estilo. Pero hay por ahí alguna algunos casos de
+
+166
+00:22:04.320 --> 00:22:15.510
+Leandro Suarez: de que la misma información de autenticación, perdón. La La misma función complementaria va para 2 tipos de información de autenticación distinta, No.
+
+167
+00:22:18.520 --> 00:22:31.219
+Leandro Suarez: claro, Bueno, ahí. Nico dice que que podía desbloquear de todas maneras, no sé si se parece, pero no, no siempre, no siempre que se parecen tanto. Pero bueno, seguramente que te parece bastante a tu hermano. Y por eso pasa eso.
+
+168
+00:22:36.950 --> 00:22:40.079
+Leandro Suarez: Bueno, otro otro factor que es
+
+169
+00:22:40.620 --> 00:22:45.430
+Leandro Suarez: no se suele utilizar únicamente como como único factor, sino como un complemento.
+
+170
+00:22:45.640 --> 00:22:49.570
+Leandro Suarez: es el de contexto. Esto tiene que ver con
+
+171
+00:22:49.990 --> 00:23:07.370
+Leandro Suarez: la información desde la que se está autenticando en el contexto de la información que se está autenticando la el país donde está conectando incluso la ciudad, la red de origen, el dispositivo, la terminal en algunos datacedentes y demás.
+
+172
+00:23:07.370 --> 00:23:15.320
+Leandro Suarez: El día y la hora. Si yo estoy entrando a la oficina a las 3 de la mañana, algo raro, o sea, si si no está contemplado ese tipo de
+
+173
+00:23:15.370 --> 00:23:30.330
+Leandro Suarez: de situación, algo raro está pasando? Bueno, básicamente suelen aplicar reglas positivas o negativas, o sea, por ejemplo, que un operador está interactuando en un centro de cómputos, lo haga desde una red privada.
+
+174
+00:23:30.470 --> 00:23:39.100
+Leandro Suarez: Y para el caso negativo, es yo. Ahora me conecté a mi Laburo a Buenos Aires y en 2 h. Me conecto de Holanda.
+
+175
+00:23:39.210 --> 00:23:57.859
+Leandro Suarez: Generalmente, no no sé. Es veo raro, pero incluso mañana o pasado, entonces se suelen pedir habilitaciones. Ese estilo en los sistemas para que puedan, porque puede ser. Yo estuve un viaje de trabajo, Me voy a otro país y de golpe, tengo que trabajar. No
+
+176
+00:23:59.300 --> 00:24:03.269
+Leandro Suarez: acá. Te dedicó Alan a Pyongyang en 2 h.
+
+177
+00:24:04.360 --> 00:24:05.839
+Leandro Suarez: Sí, Sí, Sí, nada.
+
+178
+00:24:06.140 --> 00:24:13.600
+Leandro Suarez: En Generalmente, si apareciste te lo di ante Ámsterdam. Fuiste, Vos
+
+179
+00:24:14.130 --> 00:24:18.329
+Leandro Suarez: y estoy en Buenos Aires. Me parece que para Ámsterdam tengo como 8 h, ¿no?
+
+180
+00:24:18.750 --> 00:24:26.139
+Leandro Suarez: Pero bueno, generalmente es un es una especie de hacker que está tratando de de entrar.
+
+181
+00:24:33.640 --> 00:24:39.720
+Leandro Suarez: Bueno, acá hay un ejemplo, no de un sistema de indicación, por ejemplo, con una clave.
+
+182
+00:24:40.340 --> 00:24:44.520
+Leandro Suarez: Lo que es la información. Audificación es X, la clave.
+
+183
+00:24:45.360 --> 00:24:51.750
+Leandro Suarez: A modo ilustrativo. Como complementaria, como información complementaria podemos tomar el hash de A
+
+184
+00:24:52.510 --> 00:24:58.029
+Leandro Suarez: no es lo mejor. Podemos saber por qué. Pero bueno, acá como modelo ilustrativo, para mostrarles un ejemplo.
+
+185
+00:24:58.250 --> 00:25:01.179
+Leandro Suarez: utilizamos el hash de de a
+
+186
+00:25:01.580 --> 00:25:06.750
+Leandro Suarez: la función de complementaria es justamente caso de
+
+187
+00:25:07.620 --> 00:25:09.679
+Leandro Suarez: de lo que se le pase.
+
+188
+00:25:09.790 --> 00:25:21.730
+Leandro Suarez: y la función de autenticación es la igualdad de esta forma es si la función complementaria es igual a la complementaria que ya existe con esa información autenticación, lo válido, sino ¿no?
+
+189
+00:25:22.440 --> 00:25:32.499
+Leandro Suarez: Y bueno, las funciones de selección son, por ejemplo, la luz, el remolque, buser y el password para hacer un change de la contraseña.
+
+190
+00:25:36.220 --> 00:25:43.730
+Leandro Suarez: Bueno, las claves, los distintos tipos de la las claves en sí
+
+191
+00:25:44.560 --> 00:25:56.789
+Leandro Suarez: no, s. No, no, no son controladas por el sistema, como como puede ser en un sistema, las claves criptográfica, digamos las claves, generalmente las controla el usuario
+
+192
+00:25:57.040 --> 00:26:06.409
+Leandro Suarez: y, como vimos los criptosistemas, generalmente las claves son generadas aleatoriamente, no para justamente tener un
+
+193
+00:26:07.010 --> 00:26:13.370
+Leandro Suarez: una mayor protección, digamos, en este caso, no son generales aleatoriamente y
+
+194
+00:26:13.510 --> 00:26:16.700
+Leandro Suarez: entonces, por lo por lo general no. Entonces.
+
+195
+00:26:16.980 --> 00:26:19.079
+Leandro Suarez: al tener un control de usuario.
+
+196
+00:26:19.230 --> 00:26:23.919
+Leandro Suarez: 1 tiene como sistema tomar decisiones. ¿de qué voy a permitir como clave
+
+197
+00:26:24.120 --> 00:26:32.239
+Leandro Suarez: para resguardarme de ciertos ataques o o bueno para, para, digamos, ofrecer la mejor seguridad posible
+
+198
+00:26:32.830 --> 00:26:45.619
+Leandro Suarez: dentro de los tipos. Tenemos, bueno, la secuencia de palabras donde 1 puede poner restricciones de largo de de si tiene que tirar dígito, mayúscula, minúscula, símbolos especiales.
+
+199
+00:26:45.630 --> 00:26:55.770
+Leandro Suarez: Incluso podemos forzar aleatorias O, bueno, ahora el Browser te te permite generar aleatorias y que te las guarde automáticamente.
+
+200
+00:26:56.360 --> 00:27:00.920
+Leandro Suarez: Pero bueno, eso lo podemos tomar como decisión y tendrá su
+
+201
+00:27:01.650 --> 00:27:04.760
+Leandro Suarez: su grado de usabilidad o no según corresponda.
+
+202
+00:27:05.260 --> 00:27:11.450
+Leandro Suarez: Bueno, está en la secuencia de palabras. También. O las path freises
+
+203
+00:27:11.870 --> 00:27:22.990
+Leandro Suarez: estas suelen ser más lar más largas, digamos, por ejemplo, una paz también en desuso, porque no nos
+
+204
+00:27:23.500 --> 00:27:30.400
+Leandro Suarez: no suelen resultar, Son como un poco más adivinables que una contraseña. En algunos, En algunos casos.
+
+205
+00:27:30.660 --> 00:27:36.120
+Leandro Suarez: por ejemplo, perro árbol, 1, 2, 3
+
+206
+00:27:36.290 --> 00:27:38.349
+Leandro Suarez: o alguna frase de ese estilo.
+
+207
+00:27:38.690 --> 00:27:47.500
+Leandro Suarez: Ya vamos a ver qué que son a veces incluso más inferibles que una contraseña normal. Yo.
+
+208
+00:27:48.040 --> 00:28:02.150
+Leandro Suarez: y después tenemos las algorítmicas que suelen ser tipo para lo para lo de arte? Bueno, dame una respuesta en base a un desafío que te propongo, y la la possword de un único uso de one time password.
+
+209
+00:28:02.700 --> 00:28:12.889
+Leandro Suarez: que no son las del huevo, la etiqueta y que se suele confundir a veces, sino por ejemplo, cuando vos te lo guias a un sistema. Y ese es
+
+210
+00:28:13.010 --> 00:28:24.660
+Leandro Suarez: metes algún factor. Por ejemplo, creo que en gigab y en otros sistemas de que te ofrecen. Segundo factor de indicación te dan una protección extra, nodo de unos ricover y coach
+
+211
+00:28:24.860 --> 00:28:40.659
+Leandro Suarez: esos recovery code son códigos de un solo uso que vos lo los los pones y los vas quemando generalmente se suele se suelen utilizar cuando justamente perdés el dispositivo que tenés, el lugar del indicator te lo roban. No sé de formateaste el celular.
+
+212
+00:28:40.730 --> 00:28:54.279
+Leandro Suarez: y no, no tengo, No tengo físicamente. No puedo acceder al al factor, entonces? Bueno, los recovery goes son código de una sola utilización que te sirven para poder recuperar tu cuenta si perdés esos códigos.
+
+213
+00:28:54.640 --> 00:29:01.989
+Leandro Suarez: Generalmente, y tenés configurado los F. A Generalmente parece acceso a la cuenta, y bueno, ahí tenés que salir a hablar con guija, explicarle lo que pasó.
+
+214
+00:29:02.340 --> 00:29:07.829
+Leandro Suarez: Y según la empresa, unos te pueden decir, mira, no, no hay forma
+
+215
+00:29:08.110 --> 00:29:10.639
+Leandro Suarez: porque no puedo comprobar que vos seas quien quise ser.
+
+216
+00:29:11.760 --> 00:29:13.950
+MARTÍN GALLARDO BERTUZZI: Profe.
+
+217
+00:29:13.950 --> 00:29:14.330
+Leandro Suarez: Yo.
+
+218
+00:29:14.330 --> 00:29:22.280
+MARTÍN GALLARDO BERTUZZI: Los de un los de la auténticator serían más tokens que claves de uso único, o qué diferencia hay.
+
+219
+00:29:22.280 --> 00:29:27.699
+Leandro Suarez: Claro, lo vamos. Lo vamos a ver. Claro, estas son fijas. Digamos, el sistema te da voces
+
+220
+00:29:27.830 --> 00:29:36.410
+Leandro Suarez: un u I D, por ejemplo, dice, mira guardalo. Esto no cambia. Lo otro. Es una especie de toque, y lo vamos a ver más al final de la clase
+
+221
+00:29:36.570 --> 00:29:37.950
+Leandro Suarez: que tiene su lógica.
+
+222
+00:29:37.950 --> 00:29:39.830
+MARTÍN GALLARDO BERTUZZI: Gracias. Gracias.
+
+223
+00:29:40.120 --> 00:29:41.190
+MARTÍN GALLARDO BERTUZZI: Gracias.
+
+224
+00:29:45.110 --> 00:29:52.150
+Leandro Suarez: Bueno, con las claves vamos a ver mucho sobre claves porque, como como
+
+225
+00:29:52.340 --> 00:30:06.000
+Leandro Suarez: como dijimos, son solo lo más estudiado, lo más utilizado hoy en día. De hecho, la industria quiere moverse de las claves a otro tipo de autenticación. Otros factores, y está costando bastante.
+
+226
+00:30:06.110 --> 00:30:10.100
+Leandro Suarez: porque las claves quieras o no terminan siendo algo
+
+227
+00:30:10.320 --> 00:30:17.430
+Leandro Suarez: bastante utilizado. Es bastante sencillo de adoptar y
+
+228
+00:30:17.610 --> 00:30:28.230
+Leandro Suarez: y dentro de todo, tienen algunos fallos que se fueron dando por esto, porque los atacantes fueron perfeccionándose y analizando los sistemas y generando nuevos tipos de ataques.
+
+229
+00:30:28.460 --> 00:30:35.250
+Leandro Suarez: Pero Bueno, por ejemplo, el el famoso caso de phishing me hacen un phishing y me roban la cuenta. Si yo no tengo un segundo factor, no
+
+230
+00:30:39.180 --> 00:30:55.639
+Leandro Suarez: a la hora de almacenar las claves. ¿qué opinan? Bueno, acá ya está. Le dice, no recomendado gigante, pero me parece que les iba a hacer una pregunta de que le parecía eran almacenarlas en texto plano realmente que no.
+
+231
+00:30:55.920 --> 00:31:01.149
+Leandro Suarez: ¿por qué? Porque si me roban la base de datos, no porque alguien pueda acceder, porque
+
+232
+00:31:01.260 --> 00:31:08.229
+Leandro Suarez: en realidad estar en una base de datos, probablemente a través de una V, P. N o una red totalmente cerrada y demás.
+
+233
+00:31:08.390 --> 00:31:15.209
+Leandro Suarez: Pero ¿qué pasa están entre estos plano, o sea, si igualmente alguien logra acceder ahí por los medios que fuera.
+
+234
+00:31:16.140 --> 00:31:21.460
+Leandro Suarez: me terminan sacándome toda la base. Con todo lo todas las contunidades sin plano.
+
+235
+00:31:21.930 --> 00:31:32.129
+Leandro Suarez: Otra cosa no menor que no se suele, no se suele mencionar y que muchos sistemas, no para el tema de las contraseñas, porque está bastante bien extendido, que no tienen que
+
+236
+00:31:32.590 --> 00:31:33.630
+Leandro Suarez: que
+
+237
+00:31:33.990 --> 00:31:48.049
+Leandro Suarez: y guardarse en plano, pero sí para otros otras especies de tokens o u otro tipo de información para hacer otras acciones de los sistemas es sí, los desarrolladores tienen acceso a la base, o sea.
+
+238
+00:31:48.150 --> 00:32:06.920
+Leandro Suarez: puedo entrar y ver ciertos datos. Entonces, incluso por más que esté autenticada de la base de datos y demás. Los mismos administradores del sistema están viendo eso y podrían hacer especie de ataques hormiga que 1 no no tiene ninguna idea poner. No te das cuenta, digamos.
+
+239
+00:32:07.320 --> 00:32:10.789
+Leandro Suarez: entonces bueno, y eso es algo no menor también para mencionar.
+
+240
+00:32:13.290 --> 00:32:26.860
+MARTÍN GALLARDO BERTUZZI: Disculpe, ¿Hay alguna manera de de mermar el error humano? Tendría que vendría a ser en este caso, el error humano, de de los administradores de la base de datos.
+
+241
+00:32:27.660 --> 00:32:39.270
+Leandro Suarez: Bueno es tocaste un punto sensible en lo que es la seguridad de las co de las organizaciones, que es, cómo ¿Cómo
+
+242
+00:32:39.360 --> 00:32:52.639
+Leandro Suarez: capacitarse a la gente? ¿no? Y ahí hay, bueno, campañas de concientización para desarrolladores, para Dma, para gente de negocios, porque también la gente de de de negocios que no es It.
+
+243
+00:32:52.670 --> 00:33:11.499
+Leandro Suarez: es la que menos preparada está la que la que menos no sé si no le interesa la seguridad, pero que menos roce tiene con la seguridad que, por ejemplo, un desarrollador, un administrador de sistemas. Entonces ahí hay mucho trabajo de de equipos como governance y riesgos. Lo vamos a ver más adelante.
+
+244
+00:33:11.720 --> 00:33:23.050
+Leandro Suarez: que tienen que tener un rol activo, llevando informando y concientizando a los a los colaboradores sobre esto.
+
+245
+00:33:23.150 --> 00:33:24.320
+Leandro Suarez: Y
+
+246
+00:33:24.960 --> 00:33:35.239
+Leandro Suarez: bueno, ahí depende la el el tamaño de la empresa y y las responsabilidades puede terminar siendo responsabilidad de un equipo de Ap Sec.
+
+247
+00:33:35.240 --> 00:33:45.640
+Leandro Suarez: no de justamente un equipo con todo lo que vemos en esta segunda parte de la materia. Ustedes pueden entrar a trabajar un equipo de de application tranquilamente.
+
+248
+00:33:46.690 --> 00:33:50.839
+Leandro Suarez: así que nada es como que ha. Hay Hay muchas opciones para.
+
+249
+00:33:50.970 --> 00:33:59.670
+Leandro Suarez: para, digamos, poder. Hay Hay detecciones. También hay software que detecta y
+
+250
+00:34:00.310 --> 00:34:09.650
+Leandro Suarez: secretos en plano. En las bases de datos, en los repositorios. Hay hay muchas medidas. Lo más importante es concientizar
+
+251
+00:34:09.820 --> 00:34:18.920
+Leandro Suarez: y bajar a una especie de política donde también en forcés a los colaboradores a que a que trabajen de la de la manera correcta.
+
+252
+00:34:20.540 --> 00:34:23.630
+MARTÍN GALLARDO BERTUZZI: Perfecto. Profe: Muchas gracias.
+
+253
+00:34:27.319 --> 00:34:41.909
+Leandro Suarez: Bueno. Otra alternativa que en algún momento se utilizó fue la de cifrar. Uno dice che lista, tengo que darle confidencialidad a las claves. Bueno, ¿qué ¿cómo puedo hacer lo más? Lo más sencillo en aquel momento? Decías: listo, vamos a
+
+254
+00:34:42.039 --> 00:34:45.599
+Leandro Suarez: a cifrarla, agarro la cifro y la guardo
+
+255
+00:34:46.199 --> 00:34:51.319
+Leandro Suarez: se se utilizó. No es lo ideal hoy en día.
+
+256
+00:34:51.539 --> 00:35:02.009
+Leandro Suarez: Pero bueno, las claves en su en aquel momento o ahora pueden estar en la configuración, en los ejecutables
+
+257
+00:35:02.179 --> 00:35:07.439
+Leandro Suarez: como votantes en la en lo que es, digamos.
+
+258
+00:35:07.919 --> 00:35:18.829
+Leandro Suarez: suelen ser ingresadas. La primera vez que se inicia el sistema a veces, o sea, cada vez que se realice el sistema, hay que cargarla. Entonces alguien lo tiene que hacer. El administrador sistema lo tiene que hacer.
+
+259
+00:35:18.999 --> 00:35:21.509
+Leandro Suarez: Y bueno.
+
+260
+00:35:21.729 --> 00:35:28.419
+Leandro Suarez: di hay dis distintos tipos de sistemas. Entonces no estamos hablando, o sea, piensen que capaz. No estamos hablando de un sistema, como puede ser. No sé
+
+261
+00:35:28.699 --> 00:35:39.789
+Leandro Suarez: Instagram o o las aplicaciones que hay hoy en día masivas, sino quizás un sistema más dentro de una corpora corporativo. ¿no? Entonces, bueno.
+
+262
+00:35:39.849 --> 00:35:50.029
+Leandro Suarez: pueden estar cifradas, digamos, de esta forma, y también pueden estar en dispositivos criptográficos especializados.
+
+263
+00:35:50.309 --> 00:35:57.459
+Leandro Suarez: o se suele llamar hardware security modul H. S. M.
+
+264
+00:35:57.649 --> 00:36:07.359
+Leandro Suarez: Que son necesarios únicamente cuando se requiere acceder a la clave original, sea a veces en algunos contextos.
+
+265
+00:36:07.809 --> 00:36:14.379
+Leandro Suarez: más de tipo capaz que P. S I o donde se manejan tarjetas de crédito o data muy.
+
+266
+00:36:14.649 --> 00:36:17.229
+Leandro Suarez: muy crítica.
+
+267
+00:36:17.389 --> 00:36:33.779
+Leandro Suarez: y que los sistemas que operan generalmente pueden ser de bancos medio legacy medio antiguos que requieren que se pase la clave original, entonces 1 termina guardando en ese dispositivo y utilizando ese dispositivo para autentirse.
+
+268
+00:36:34.019 --> 00:36:48.599
+Leandro Suarez: Por lo general, este tipo de de almacenamiento se suele utilizar en esos casos de uso cuando necesitas enviarlo a un sistema Legacy que requiere que igual le pase la la contraseña original y validarla.
+
+269
+00:36:51.629 --> 00:37:03.769
+Leandro Suarez: Bueno, más adelante vamos a ver una forma de no almacenar la contraseña, pero almacenarlas en sí de alguna forma para que podamos validarlo.
+
+270
+00:37:04.139 --> 00:37:08.489
+Leandro Suarez: porque en el fondo, el usuario va a tener que ingresar su contraseña. ¿no?
+
+271
+00:37:12.929 --> 00:37:20.609
+Leandro Suarez: Bueno, un ejemplo de lo que es el sistema Unix en su sistema legas, sino después. Fue reemplazado por Linux.
+
+272
+00:37:20.899 --> 00:37:22.129
+Leandro Suarez: que
+
+273
+00:37:22.759 --> 00:37:28.509
+Leandro Suarez: a día de hoy espero que todos sepan que de Linux o o hayan tenido contacto con el sistema.
+
+274
+00:37:28.629 --> 00:37:36.469
+Leandro Suarez: Pero bueno y Unix era la la la versión, digamos, en la que se basó Linus troll para
+
+275
+00:37:37.109 --> 00:37:39.299
+Leandro Suarez: Para para quedar Linux
+
+276
+00:37:41.019 --> 00:37:53.489
+Leandro Suarez: en Múnich se almacenaba para causar y se almacenaba de una familia de una familia de funciones aleatoriamente se elegía una
+
+277
+00:37:53.639 --> 00:38:01.379
+Leandro Suarez: se callaba la Power. Con esa función se se marcaba. ¿cuál era la función que se había utilizado con los caracteres
+
+278
+00:38:01.599 --> 00:38:05.299
+Leandro Suarez: y se utilizaba una variante de des
+
+279
+00:38:05.439 --> 00:38:17.559
+Leandro Suarez: que no era reversible para procesar ese chanc De ese es información, digamos, toda la
+
+280
+00:38:17.729 --> 00:38:26.709
+Leandro Suarez: la Re, la la Func, el resultado de la función de Hash, el indicador de qué función se había utilizado, lo pasaba por ahí, y eso es lo que se guardaba.
+
+281
+00:38:27.619 --> 00:38:37.539
+Leandro Suarez: Esto fue un marcó un precedente porque hasta ahora los sistemas se venían cifrando o o no había un consenso de cómo se tenía que guardar las contraseñas.
+
+282
+00:38:37.659 --> 00:38:41.629
+Leandro Suarez: Entonces, de esta forma, Junis logró
+
+283
+00:38:42.759 --> 00:38:50.789
+Leandro Suarez: por generar una información complementaria que no se pueda volver a de la que no se puede volver a la información de autenticación original.
+
+284
+00:38:51.609 --> 00:38:53.059
+Leandro Suarez: Y
+
+285
+00:38:53.439 --> 00:38:58.989
+Leandro Suarez: entonces se empieza a guardar, digamos, como una prueba de que yo conozco el secreto, pero no guardo el secreto.
+
+286
+00:39:00.319 --> 00:39:07.959
+Leandro Suarez: Bueno, después vamos a ver que surgieron familias, defunciones o algoritmos, mejor dicho, que
+
+287
+00:39:08.879 --> 00:39:13.669
+Leandro Suarez: emularon este tipo de comportamientos, como fue el de Unix.
+
+288
+00:39:15.369 --> 00:39:18.289
+Leandro Suarez: Bueno, y después, como funcione de
+
+289
+00:39:18.489 --> 00:39:26.419
+Leandro Suarez: de autenticación, tenían el login su zudo que si se dan cuenta, son lo mismo que que está en en Linux y el Password y User y demás, también.
+
+290
+00:39:29.879 --> 00:39:32.349
+Leandro Suarez: hasta acá alguna duda.
+
+291
+00:39:36.680 --> 00:39:42.640
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: No me queda muy claro cómo es cuál es la diferencia entre la función F y la función? S.
+
+292
+00:39:44.390 --> 00:39:46.419
+Leandro Suarez: La función F, lo que la función.
+
+293
+00:39:46.420 --> 00:39:47.430
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Se muere, perdón.
+
+294
+00:39:47.890 --> 00:40:05.089
+Leandro Suarez: La función F es la que Vos Derivas de de la información autenticación, la información complementaria y la función L es la que te dice, corrobora a partir de una nueva información de autenticación. Si hay una correspondiente complementaria en el sistema.
+
+295
+00:40:05.770 --> 00:40:06.400
+Leandro Suarez: por ejemplo.
+
+296
+00:40:06.400 --> 00:40:08.910
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Ahí. La la L me quedó. Pero la F no.
+
+297
+00:40:09.420 --> 00:40:10.310
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Mhm.
+
+298
+00:40:10.310 --> 00:40:17.439
+Leandro Suarez: Por ejemplo, para el caso de este grama sencillito. La información complementaria estaba dada por el hash de la contraseña.
+
+299
+00:40:17.600 --> 00:40:23.879
+Leandro Suarez: Entonces, acá. En realidad, lo que está diciendo que se guarda por no decir la representación del Hash.
+
+300
+00:40:24.140 --> 00:40:32.589
+Leandro Suarez: La C es la representación de hash de A. Y la función complementaria es el hash, básicamente o el algoritmo que se utiliza.
+
+301
+00:40:32.810 --> 00:40:34.040
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Ahora, Sí.
+
+302
+00:40:34.670 --> 00:40:35.650
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Gracias.
+
+303
+00:40:36.060 --> 00:40:41.680
+Leandro Suarez: No, No, bueno para este caso, es es la información complementaria. Era
+
+304
+00:40:41.830 --> 00:40:51.899
+Leandro Suarez: todo esto, o sea, el hash que se ha utilizado aplicado a la contraseña. El indicador del de qué de qué función he utilizado
+
+305
+00:40:52.050 --> 00:40:56.079
+Leandro Suarez: y la función de derivación complementaria era la
+
+306
+00:40:56.640 --> 00:40:59.110
+Leandro Suarez: ves una variante que no era reversible, No.
+
+307
+00:41:03.410 --> 00:41:05.550
+Leandro Suarez: Bueno.
+
+308
+00:41:09.180 --> 00:41:15.050
+Leandro Suarez: ataque equis a un sistema de autenticación, y
+
+309
+00:41:16.040 --> 00:41:33.329
+Leandro Suarez: hay hay distintos tipos, o sea, como vimos un sistema autenticación. Lo que buscamos es identificar correctamente a a las entidades y un atacante. Lo que busca es ser identificado como una entidad que no es, en otras palabras, impersonarse como como es entidad.
+
+310
+00:41:33.500 --> 00:41:44.500
+Leandro Suarez: ¿para qué? Para ro robar información, robar dinero, probablemente hacer quizás tener acciones maliciosas sobre la otra persona. Bueno, hay distintas
+
+311
+00:41:44.660 --> 00:41:49.539
+Leandro Suarez: razones por las cuales un atacante quiere hacer esto o simplemente jorobar, digamos.
+
+312
+00:41:50.580 --> 00:42:00.590
+Leandro Suarez: Entonces se tiene que lograr, digamos, o sea, lo que busca es obtener
+
+313
+00:42:00.860 --> 00:42:12.210
+Leandro Suarez: con una información de autenticación distinta, obtener la misma información complementaria o obtener información complementaria
+
+314
+00:42:12.790 --> 00:42:21.010
+Leandro Suarez: y inferir de ella, utilizarla o inferir de ella algún dato para poder entrar en el sistema?
+
+315
+00:42:23.210 --> 00:42:32.810
+Leandro Suarez: Bueno, hay 2 tipos de ataques. Uno sobre la función complementaria de de de complementarias y otra sobre la función autenticación.
+
+316
+00:42:33.140 --> 00:42:46.019
+Leandro Suarez: Por ejemplo, un ataque offline se lo suele llamar a cuando 1 empieza a probar no distintas informaciones, autenticaciones, a ver si si dan con la misma información completa que está guardada en el sistema.
+
+317
+00:42:46.390 --> 00:42:49.030
+Leandro Suarez: por ejemplo.
+
+318
+00:42:49.210 --> 00:43:00.819
+Leandro Suarez: sí, cuando estás probando, tratando de de obtener. Hay un caso muy, muy representativo que es que pase. Yo me robé una base de datos de contraseñas.
+
+319
+00:43:01.390 --> 00:43:07.099
+Leandro Suarez: Y bueno, lo que tengo ahí son información complementaria, no
+
+320
+00:43:07.390 --> 00:43:17.890
+Leandro Suarez: simplificándolo. Quizás tenga los hayes de todas las contraseñas de todos los usuarios. Entonces, bueno, ahí lo que puedo hacer es con la información complementaria. No puedo hacer nada a priori
+
+321
+00:43:18.500 --> 00:43:22.900
+Leandro Suarez: probar con la función F hasta encontrarle alguna que me dé
+
+322
+00:43:23.400 --> 00:43:28.000
+Leandro Suarez: el C. Listo. Entonces, con esa información autenticación es con la que después voy y me logués.
+
+323
+00:43:28.050 --> 00:43:29.340
+MARTÍN GALLARDO BERTUZZI: Y.
+
+324
+00:43:31.040 --> 00:43:41.409
+Leandro Suarez: Los ataques online son distintos porque justamente ataca directamente la función de autenticación, O sea, es básicamente me abro el Ogin de la del sitio y empiezo a probar cosas.
+
+325
+00:43:41.660 --> 00:43:45.860
+Leandro Suarez: O sea, estoy atacando de alguna forma el propio Login, digamos.
+
+326
+00:43:52.520 --> 00:44:06.689
+Leandro Suarez: ya sea porque estoy jugando con el con el inspector y viendo, no sé si hay algo que pueda hacer, o estoy con el posman atrás pegándole tratando de sacar info infiriendo el servidor que está de de fondo, buscando vulnerabilidades de servidor. Bueno.
+
+327
+00:44:06.950 --> 00:44:15.029
+Leandro Suarez: eso es un ataque más online. El ataque offline es bueno, logré obtener información complementaria que puedo hacer una información complementaria para lograr obtener a
+
+328
+00:44:15.410 --> 00:44:16.440
+Leandro Suarez: Y lo voy a armar.
+
+329
+00:44:21.030 --> 00:44:24.149
+Leandro Suarez: Bueno, esto, supongo lo que le decía.
+
+330
+00:44:24.830 --> 00:44:27.710
+Leandro Suarez: Es medio prueba y error
+
+331
+00:44:28.560 --> 00:44:48.399
+Leandro Suarez: sobre sobre lo que yo ya tengo, de la de la información, de de una lista de claves potenciales. Nada en su momento se si obtengo el el archivo Ya hago de Linux. Podría utilizar programas como John la Reaper o crack, y tratar de.
+
+332
+00:44:48.570 --> 00:44:57.240
+Leandro Suarez: de, digamos, de de obtener, no de tener o tener un ataque positivo y
+
+333
+00:44:57.890 --> 00:45:01.599
+Leandro Suarez: y poder lograrme y personarme como como un usuario del sistema
+
+334
+00:45:02.090 --> 00:45:09.489
+Leandro Suarez: Bueno, y la la Los ataques on online son los que probamos a través de la de la función de lobino.
+
+335
+00:45:14.670 --> 00:45:23.869
+Leandro Suarez: ¿de qué forma podemos prevenir este tipo de de ataques? Creo acabo. Creo que me adelanté a ver
+
+336
+00:45:24.810 --> 00:45:28.840
+Leandro Suarez: acá vamos primero. Acá ¿Y
+
+337
+00:45:30.310 --> 00:45:38.480
+Leandro Suarez: ¿cómo ¿cómo estos tipos de ataques? Bueno, son los 2 tipos o ataques online, ataques offline. Pero ¿cómo se pueden digamos, mejorar estos ataques.
+
+338
+00:45:39.210 --> 00:45:48.670
+Leandro Suarez: Partimos de la premisa de que las claves no son aleatorias, como lo eran en los sistemas criptográficos, acá las claves, O puedo poner 1, 2, 3
+
+339
+00:45:48.910 --> 00:45:54.700
+Leandro Suarez: y el sistema. Quizás me deja pasar 1, 2, 3, 4, 5, 6. Si me exige algún tipo de de largo.
+
+340
+00:45:54.820 --> 00:45:56.000
+Leandro Suarez: Y
+
+341
+00:45:56.330 --> 00:46:07.750
+Leandro Suarez: entonces el atacante cuenta con una posición muy ventajosa, porque que existen existen primero los diccionario de palabras, o sea, generalmente, cuando 1 suele poner una contraseña.
+
+342
+00:46:07.880 --> 00:46:10.700
+Leandro Suarez: va a utilizar una palabra que existe en el diccionario
+
+343
+00:46:11.110 --> 00:46:18.579
+Leandro Suarez: un nombre propio. Peor si fuera eso, pero puede utilizar algo que que existe, digamos, alguna palabra existente.
+
+344
+00:46:19.300 --> 00:46:26.490
+Leandro Suarez: Después hay otro escenario que es los diccionarios que ya existen de
+
+345
+00:46:26.590 --> 00:46:29.209
+Leandro Suarez: claves descubiertas a lo largo del tiempo.
+
+346
+00:46:29.600 --> 00:46:46.860
+Leandro Suarez: Esa históricamente, hubo leaks de de base de datos con contraseñas. Y Y la realidad es que muchas de esas contraseñas son las que después terminan utilizando los usuarios, no solo el caso de una, 3, 4, 5, 6 sino cosas más
+
+347
+00:46:47.010 --> 00:46:57.579
+Leandro Suarez: más comunes, porque en una base de datos generalmente vas a tener 2 claves iguales. Entonces imagínense, a lo largo de todos los sistemas que existen.
+
+348
+00:46:58.130 --> 00:47:03.080
+Leandro Suarez: Hubo históricamente britches de de información de distintas empresas.
+
+349
+00:47:03.240 --> 00:47:21.800
+Leandro Suarez: Y, bueno, hay diccionarios especializados donde tienen todas esas claves, y 1 puede ir probando, haciéndose un script y vas probando el Tiki tiqui y vas probando combinaciones combinaciones entre las distintas contraseñas. Bueno, puedes hacer ponerte tan creativo como quieras.
+
+350
+00:47:23.160 --> 00:47:41.090
+Leandro Suarez: Y después hay transformación en las clásicas de toda la vida, transformaciones de elementos, un sufijo, algún prefijo, le cambio, Las letras por números. No sé, combino las palabras, espejo las palabras, hay Hay distintas acciones que lo hacemos, todos somos humanos, tenemos más o menos las mismas ideas.
+
+351
+00:47:41.260 --> 00:47:42.320
+Leandro Suarez: ¿sí?
+
+352
+00:47:42.620 --> 00:47:48.940
+Leandro Suarez: Y bueno, el caso más clásico es cuando despejaban el 1, 2, 3, 4, 5, 6, hacían 6, 5, 4, 3, 1, no
+
+353
+00:47:49.290 --> 00:47:50.890
+Leandro Suarez: de ahí para arriba.
+
+354
+00:47:52.160 --> 00:48:08.099
+Leandro Suarez: Y peor aún, cuando se utilizan informaciones de contexto, por ejemplo, tu nombre de usuario. Esa es la peor de todas. Bueno, y pues tienes tu nombre. D, N. I, fecha de nacimiento, dónde naciste ese tipo de de información.
+
+355
+00:48:08.280 --> 00:48:10.809
+Leandro Suarez: necesito ir a un
+
+356
+00:48:10.890 --> 00:48:29.930
+Leandro Suarez: una serie míster robot que arranca siendo bastante bastante de seguridad. La primer temporada es full, seguridad bastante técnica, y después bueno, termina siendo una serie un poco más psicológica, ¿no? Pero esa primera temporada es un pasaje
+
+357
+00:48:30.140 --> 00:48:39.230
+Leandro Suarez: por muchísimos capítulos de seguridad, aspectos de seguridad. Y hay un capítulo, hay una escena donde el personaje
+
+358
+00:48:39.360 --> 00:48:50.259
+Leandro Suarez: quieres hackear una persona, trata de un hacker, básicamente la la la la serie y quiere hackear una persona, lo llama y se hace pasar por ahí del Banco diciéndole que haya tenido un
+
+359
+00:48:51.210 --> 00:49:00.230
+Leandro Suarez: un incidente de seguridad y necesitaban corroborar algunos datos con él. Qué sé yo. Y le empieza a preguntar. Bueno, ¿en qué año naciste.
+
+360
+00:49:00.270 --> 00:49:13.419
+Leandro Suarez: Bueno, tu equipo son los yanquis y el chaval le dice sí, sí, pará. Me parece que yo no había puesto esa pregunta de seguridad? Bueno, no sé, le pregunta otra cosa y corta con esa información de contexto. Lo pone en un script
+
+361
+00:49:13.690 --> 00:49:16.480
+Leandro Suarez: y empiezo a probar combinaciones.
+
+362
+00:49:18.340 --> 00:49:33.579
+Leandro Suarez: Bueno, después termina no averiguando. No averiguando la Power porque al final estaba la persona Esa tenía. Estaba suplantando una identidad, Pero bueno, ese es otro tema, pero eso es una forma de cómo utilizar la información de contexto para para poder ir
+
+363
+00:49:34.660 --> 00:49:37.180
+Leandro Suarez: de adivinar una contraseña de forma más rápida. No.
+
+364
+00:49:38.110 --> 00:49:52.079
+MARTÍN GALLARDO BERTUZZI: Y profe una consulta. ¿cómo haría el el atacante? Yo, por ejemplo, en en en algunos casos algunas páginas web, por ejemplo, te recomiendan ciertas contraseñas que ellos les
+
+365
+00:49:52.170 --> 00:49:58.170
+MARTÍN GALLARDO BERTUZZI: 4. R mayúscula, t minúscula, algo irreconocible. ¿cómo hace el atacante? En ese caso.
+
+366
+00:49:58.510 --> 00:50:04.359
+MARTÍN GALLARDO BERTUZZI: porque No, no es algo ni ni ninguna palabra que esté en el diccionario ni.
+
+367
+00:50:04.360 --> 00:50:05.300
+Leandro Suarez: Es lo mismo.
+
+368
+00:50:06.050 --> 00:50:19.130
+Leandro Suarez: y ahí no te queda otra que fuerza bruta, O sea, si vos ponés una una contraseña que tenga suficiente entropía para que para que no, bueno, van a ver después se van a, se van a van a van a topar con flujo de información, entropía y demás.
+
+369
+00:50:19.170 --> 00:50:28.100
+Leandro Suarez: Pero cuando vos pones una contraseña o aleatoria, o algo se va aleatorio, es muy complicado para
+
+370
+00:50:28.580 --> 00:50:41.940
+Leandro Suarez: para un atacante, poder adivinarlo o llegar a a esa contraseña. Se puede cree, poder. Se puede, depende mucho del aro, ¿no? Y empieza después. Vamos a ver ahora en un ratito.
+
+371
+00:50:42.260 --> 00:50:46.580
+Leandro Suarez: una formulita para para determinar todo ese tipo de cosas.
+
+372
+00:50:46.790 --> 00:50:52.029
+Leandro Suarez: Pero básicamente sí se empieza a complejizar el tema es
+
+373
+00:50:53.500 --> 00:50:56.340
+Leandro Suarez: si vos te vas a cobrar esa contraseña, si no.
+
+374
+00:50:56.340 --> 00:50:58.510
+MARTÍN GALLARDO BERTUZZI: Claro, es el problema.
+
+375
+00:50:59.050 --> 00:51:11.650
+Leandro Suarez: Por eso ahora, generalmente el chrome o algunos navegadores, te ofrece generarte una contraseña aleatoria y te la y te la guarda en algún momento del Chrome ni siquiera los cifraba.
+
+376
+00:51:11.690 --> 00:51:24.999
+Leandro Suarez: o sea, algo pésimo que lo tuvieron varios problemas, y ahora sí, las cifras con otra contraseña. Digo, esta sí es como lo los power Manager, que calculo que muchos ha de tener esto. De.
+
+377
+00:51:25.000 --> 00:51:38.179
+Leandro Suarez: Bueno, tengo tal mi contraseña, Pero igual tengo una sola contraseña, y después termina siendo bueno, esa contraseña que tengo la única que me tengo que acordar tiene que ser súper fuerte. Y me la tengo que acordar, porque no la puedo borrar de ningún lado
+
+378
+00:51:38.480 --> 00:51:54.889
+Leandro Suarez: versus acordarme de un montón de contraseñas distintas y tratar de no reutilizar que ese es un problema grave. La mayoría de la gente reutiliza la contraseña en distintos sistemas. Y eso hace que después los bridges de de poswers leaks
+
+379
+00:51:54.980 --> 00:52:01.829
+Leandro Suarez: terminen resultando que, bueno, a no ser yo puse, me registré en tal, portal medio.
+
+380
+00:52:02.260 --> 00:52:09.780
+Leandro Suarez: cualquiera sea porque estaba. No sé haciendo algo. Puse una contraseña, la misma que ponía en Google, por ejemplo, pero Bueno.
+
+381
+00:52:10.190 --> 00:52:17.550
+Leandro Suarez: hackearon ese portal que no tiene una seguridad dudosa. Obtuvieron mi contraseña de alguna forma y después lo prueban en Google, y entra
+
+382
+00:52:18.760 --> 00:52:21.879
+Leandro Suarez: Así que nada.
+
+383
+00:52:22.170 --> 00:52:23.160
+Leandro Suarez: Ese es un
+
+384
+00:52:24.190 --> 00:52:32.060
+Leandro Suarez: distin distintas consideraciones a tener en cuenta, pero sí lo lo ideal sería tratar de ser que sea lo más aleatoria posible. O,
+
+385
+00:52:32.400 --> 00:52:37.480
+Leandro Suarez: bueno, son Muchas veces a mí me ha resultado mucho
+
+386
+00:52:37.700 --> 00:52:42.280
+Leandro Suarez: para borrar contraseñas que sean difíciles de sacar por diccionario
+
+387
+00:52:42.670 --> 00:52:46.400
+Leandro Suarez: y que, y que no sean difíciles de recordar.
+
+388
+00:52:46.480 --> 00:53:04.400
+Leandro Suarez: es frases frases que solamente yo conozco o no sé o un círculo muy íntimo que igualmente tampoco la aprobarían, ya capaz, que la conoce un amigo mío, pero mi amigo lo de baja que hago. Espero que no me saque entonces
+
+389
+00:53:04.400 --> 00:53:14.819
+Leandro Suarez: nada como que son frases, que solamente 1 conoce o no puede ser tampoco dichos, porque terminan siendo algo popular, pero
+
+390
+00:53:14.920 --> 00:53:26.480
+Leandro Suarez: que un claro 1 se acuerda capaz, haces unos unos cambios mínimos para que no sea exactamente lo mismo y listo, o sea y bueno en reglas mnemotécnicas, en base al sitio y demás.
+
+391
+00:53:26.700 --> 00:53:30.580
+Leandro Suarez: No es algo sencillo elegir clave, sino reutilizarlas.
+
+392
+00:53:30.870 --> 00:53:35.930
+Leandro Suarez: Y Pero bueno. Tampoco sé si un possmoud manager
+
+393
+00:53:36.200 --> 00:53:39.110
+Leandro Suarez: a veces sí y a veces no, no conviene tanto.
+
+394
+00:53:41.610 --> 00:53:43.310
+MARTÍN GALLARDO BERTUZZI: Perfecto. Gracias.
+
+395
+00:53:44.040 --> 00:53:53.680
+Leandro Suarez: No, no. Si bien no sé cómo viene manejándose con los con los cortes con Pablo, les parece que hagamos un corte. Ahora volvemos en 10.
+
+396
+00:53:55.240 --> 00:53:57.160
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí. ¿cuánto queda? Más o menos.
+
+397
+00:53:58.060 --> 00:54:00.709
+Leandro Suarez: Prestamos más o menos por la mitad.
+
+398
+00:54:01.890 --> 00:54:03.790
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Bueno, sigamos un corte. Entonces.
+
+399
+00:54:04.790 --> 00:54:08.759
+Leandro Suarez: Un poquito. Creo que estamos un poquito menos de la mitad. Pero, bueno, viene largo.
+
+400
+00:54:08.910 --> 00:54:11.279
+Leandro Suarez: dale hacemos un corte y volvemos en
+
+401
+00:54:11.450 --> 00:54:14.859
+Leandro Suarez: a la y cuarto, si quieren ponemos 5. Y cuarto.
+
+402
+00:54:18.490 --> 00:54:20.799
+Leandro Suarez: bueno, tengo que parar la grabación, ¿no?
+
+403
+00:54:21.000 --> 00:54:21.740
+Leandro Suarez: Sí.
+

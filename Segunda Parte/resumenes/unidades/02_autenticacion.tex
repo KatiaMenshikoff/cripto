@@ -1,0 +1,366 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+\section{Autenticación}
+
+\subsection{Qué es autenticar}
+
+\begin{definicion}{Autenticación}
+Asociar una \textbf{identidad} a un \textbf{principal}. La identidad corresponde a una entidad externa (la entidad del entorno), y el principal es la representación interna del sistema (p.\ ej.\ ``Usuario1'', ``Sistema1''). El componente que realiza la asociación es el \textbf{autenticador}.
+\end{definicion}
+
+La entidad externa es generalmente física y debe representarse de alguna forma dentro del sistema. Esa representación interna se llama \emph{principal} (típicamente el ID de usuario o algún identificador). Cada vez que un sujeto quiere autenticarse hay que comprobar que sea quien dice ser y no alguien que lo \textbf{impersona}.
+
+\paragraph{Pasos de la confirmación de identidad.}
+\begin{enumerate}[itemsep=1pt]
+  \item Obtener información de identidad.
+  \item Analizarla (ver si es fidedigna).
+  \item Determinar si corresponde a una entidad del sistema.
+\end{enumerate}
+\textbf{Consecuencias:} hay que almacenar información de cada entidad y contar con mecanismos para procesar esa información.
+
+\subsubsection{Componentes de un sistema de autenticación}
+
+Análogo a un criptosistema, es una tupla de \textbf{5 componentes}:
+
+\begin{center}
+\begin{tabular}{c l p{8.2cm}}
+\toprule
+\textbf{Comp.} & \textbf{Nombre} & \textbf{Descripción} \\
+\midrule
+$A=\{a\}$ & Información de autenticación & Designación de la entidad e información provista. La provee la entidad externa; el sistema \emph{no} la controla. \\
+$C=\{c\}$ & Información complementaria & Especificación de un principal + información almacenada por el sistema. \\
+$F=\{f: A\to C\}$ & Funciones de complementación & Derivan la información complementaria a partir de $A$. \\
+$L=\{l: A\times C\to\{0,1\}\}$ & Funciones de autenticación & Determinan si un par $(A,C)$ es una asociación válida. \\
+$S=\{s\}$ & Funciones de selección & Permiten crear y actualizar $A$ y $C$ (administrativas). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{destacado}
+Distinción $F$ vs $L$ (el profe la aclaró por pedido de un alumno):
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{$F$} \emph{deriva} $C$ a partir de la información de autenticación $A$ (ej: $C=h(A)$, el hash de la clave).
+  \item \textbf{$L$} \emph{corrobora}: dada una \emph{nueva} información de autenticación, dice si existe una $C$ correspondiente almacenada en el sistema.
+\end{itemize}
+$S$ son administrativas (crear/actualizar/borrar entidades), p.\ ej.\ \texttt{adduser()}, \texttt{removeuser()}, \texttt{passwd()}.
+\end{destacado}
+
+Es deseable que \textbf{de $C$ no se pueda volver a $A$}, porque si tengo $C$ podría saber a quién pertenece la información (o incluso ingresar al sistema).
+
+\begin{examen}
+\textbf{Función de complementación (2016).} Dada información de autenticación e información complementaria, retorna V/F. \emph{Cuidado:} eso describe a la función de \textbf{autenticación} $L$ ($A\times C\to\{0,1\}$). La función de \textbf{complementación} $F$ es $A\to C$ (deriva $C$). Tener clara la diferencia.
+\end{examen}
+
+\begin{examen}
+\textbf{Módulos de Autenticación vs Control de Acceso (2013).} Diagrama:
+$$\text{sujeto}\rightarrow\text{módulo autenticación}\rightarrow\text{módulo control de acceso}\rightarrow\text{objeto}$$
+Piden dar una vulnerabilidad de \emph{cada} módulo. Ideas del material:
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Autenticación:} robo/adivinación de la clave (fuerza bruta, diccionario), impersonación, robo del segundo factor, robo de la base de información complementaria.
+  \item \textbf{Control de acceso:} una vez impersonado un usuario, el sistema rara vez detecta que ``ese no sos vos''; fallas en las reglas que definen si un sujeto accede a un objeto y de qué forma (MAC/DAC).
+\end{itemize}
+\prof{Una vez que te personaste como otro usuario, ya está; el sistema, si no tiene métodos fuertes de detectar que ese no sos vos, por lo general no lo tiene, y podés hacer lo que quieras dentro del sistema.}
+\end{examen}
+
+\subsection{Factores de autenticación}
+
+La información de autenticación posee distintos \textbf{grados de confianza}. Los \emph{factores} indican la naturaleza de la información.
+
+\begin{center}
+\begin{tabular}{l p{10.5cm}}
+\toprule
+\textbf{Factor} & \textbf{Descripción y ejemplos} \\
+\midrule
+Algo que \textbf{conozco} & Secreto compartido. Clave, frase (passphrase), pregunta secreta. Requiere almacenar de forma segura el secreto; depende de su confidencialidad. Es el mecanismo más empleado y base de otros. \\
+Algo que \textbf{tengo} & Elemento físico. Smart card / USB token, generador de claves (RSA-ID), celular, tarjeta de coordenadas (token grid). Requiere cuidar el elemento; puede copiarse/clonarse; la info en tránsito puede ser suplantada. \\
+Algo que \textbf{soy} & Características intrínsecas (biometría). Huella, retina, voz, cara. No fácilmente modificables. Métodos no 100\% eficaces; asumen que el dispositivo de lectura no puede manipularse. \\
+\textbf{Contexto} & Red de origen, país/ciudad/geolocalización, host/terminal/device, día y hora, velocity. Suele usarse como complemento, no como único factor. Reglas positivas (operador desde la red privada del datacenter) o negativas (acceso desde otro país $\Rightarrow$ menos chances de ser quien dice). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{destacado}
+La información de autenticación la controla la entidad externa; el sistema no puede ``ingerirla''/forzarla, pero sí puede \textbf{exigir ciertos factores} que gradúan la confianza. No es lo mismo que alguien diga una contraseña (que pudo haber escuchado) a que muestre su cara: distintos grados de confianza.
+\end{destacado}
+
+\subsubsection{Biometría}
+
+No es 100\% eficaz por dos motivos: (1) no hay sistema de lectura siempre eficaz, y (2) aunque lo hubiera, la representación cambia (cambios físicos, etc.). Las primeras implementaciones de huella en celulares rechazaban al usuario; muchos sistemas \textbf{subieron el umbral de error} para no bloquear, aceptando lecturas imperfectas. Requiere un \textbf{mecanismo adicional} para evitar engaños (foto al lector de cara, manipular el dispositivo de lectura): se ponen cámaras u otros mecanismos para que no se manipule el lector.
+
+\begin{destacado}
+Puede pasar que la \textbf{misma función complementaria} valide \emph{dos} informaciones de autenticación distintas: el caso real es el celular de una persona que se desbloquea con la cara de un hermano/primo parecido (falso positivo biométrico).
+\end{destacado}
+
+\begin{examen}
+\textbf{Robo de identidad biométrico (V/F clásico, 2013).} \textbf{Verdadero:} sí puede haber robo de identidad biométrico. Los datos biométricos pueden ser capturados/suplantados, el dispositivo de lectura manipulado, y existen falsos positivos (rasgos parecidos). La biometría no es infalible.
+\end{examen}
+
+\subsection{Claves (passwords)}
+
+A diferencia de las claves criptográficas, las passwords \textbf{las controla el usuario} y por lo general \emph{no} son aleatorias. El sistema sí puede tomar decisiones sobre qué permite como clave.
+
+\paragraph{Tipos.}
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Secuencias de caracteres:} con restricciones (largo, dígitos, mayúsculas, símbolos); generadas aleatoriamente, por el usuario o de manera asistida.
+  \item \textbf{Secuencias de palabras (pass-phrases):} más largas. \emph{Cuidado:} a veces son \textbf{más adivinables} que una contraseña normal (ej.\ ``perro árbol 123'').
+  \item \textbf{Algorítmicas:} challenge-response (pregunta-respuesta) y OTP (claves de uso único).
+\end{itemize}
+
+\subsubsection{Almacenamiento de claves}
+
+\begin{center}
+\begin{tabular}{l p{9.5cm}}
+\toprule
+\textbf{Método} & \textbf{Comentario} \\
+\midrule
+Texto en claro & \textbf{NO recomendado.} Si roban la BD se llevan todo; accesible por fuera del sistema; los administradores/desarrolladores con acceso a la base podrían ver los secretos. \\
+Archivo cifrado & Requiere una clave para acceder. La clave puede estar en config, en el ejecutable, ingresarse al iniciar, o en un dispositivo criptográfico. Solo recomendado si \emph{se necesita} la clave original (p.\ ej.\ reenviarla a un sistema legacy). \\
+Hash / func.\ de derivación & Forma correcta: guardar una \emph{prueba} de que se conoce el secreto, sin guardar el secreto. Más abajo: salt + PBKDF2. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{destacado}
+Idea central del almacenamiento moderno: \prof{Se empieza a guardar como una prueba de que yo conozco el secreto, pero no guardo el secreto.}
+La clave del usuario \textbf{nunca se almacena}; se valida sin guardarla.
+\end{destacado}
+
+\paragraph{Ejemplo: Unix legacy.} Se almacena por cada usuario el resultado de \textbf{una de 4096} funciones de hash, elegida aleatoriamente.
+\begin{itemize}[itemsep=1pt]
+  \item $A=\{$secuencias de hasta 8 caracteres$\}$
+  \item $C=\{\,xx\,\underbrace{HHHHHHHHHHH}_{11}\,\}$, donde $xx$ = función de hash (0--4095, 2 caracteres) y $HH...H$ = resultado (11 caracteres).
+  \item $F=\{\,DES_{xx}(\cdot)\,\}$ (variante de DES, \emph{no} reversible).
+  \item $L=\{$login, su, sudo$\}$;\quad $S=\{$passwd, adduser$\}$.
+\end{itemize}
+Marcó un precedente: hasta entonces no había consenso de cómo guardar contraseñas (se cifraban). Unix logró generar información complementaria de la que \emph{no se puede volver} a la original.
+
+\subsubsection{Dispositivo criptográfico (HSM) y token físico}
+
+Las claves pueden guardarse en un \textbf{Hardware Security Module (HSM)} / cripto-chip especializado. Se usa cuando se requiere acceder a la clave original (contextos PCI, tarjetas de crédito, sistemas legacy de bancos que exigen la contraseña original).
+
+\begin{examen}
+\textbf{Token / llave física como segundo factor.} Sirve porque la \textbf{clave privada no se puede extraer del hardware} (HSM/cripto-chip): ``la clave nunca sale de ahí''. En los celulares hay un chip dedicado a biometría, por fuera del kernel del SO; el kernel solo recibe \texttt{OK}/\texttt{fail}, no accede a los datos biométricos.
+\end{examen}
+
+\subsection{Ataques a un sistema de autenticación}
+
+\textbf{Objetivo del atacante:} ser identificado como una entidad (impersonarla). \textbf{Mecanismo:} encontrar $a\in A$ tal que, para algún $f\in F$, $f(a)=c$ y $c$ está asociado a una entidad.
+
+\begin{center}
+\begin{tabular}{l p{10.5cm}}
+\toprule
+\textbf{Tipo} & \textbf{Descripción} \\
+\midrule
+\textbf{Offline} & Se conocen $f$ y $c$; se prueban distintos $a$ hasta que $f(a)=c$. Ataca la función \emph{complementaria}. Ej: obtener \texttt{/etc/shadow} (Linux) y usar \texttt{crack} / \texttt{john the ripper}; obtener el archivo \texttt{SAM} (Windows) con \texttt{ophcrack}. \\
+\textbf{Online} & Se usa la función $L$, probando distintos $a$ hasta pasar la autenticación. Ataca la función de \emph{autenticación} (el login). Ej: probar la función de login con una cuenta conocida (root, administrator, guest), o atacar el endpoint con herramientas tipo Postman/inspector. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Mejores ataques (no fuerza bruta pura).} Asumiendo que las claves no son aleatorias:
+\begin{itemize}[itemsep=1pt]
+  \item Diccionarios de palabras; diccionarios de claves \emph{descubiertas} (leaks/breaches históricos).
+  \item Transformaciones simples: sufijos, prefijos, reemplazos ($l\to1$, $o\to0$, vocales por números), palabras espejadas, dos palabras combinadas.
+  \item Información de contexto: nombre, usuario, DNI, fecha de nacimiento (la peor de todas: el nombre de usuario).
+\end{itemize}
+
+\subsubsection{Prevenciones}
+
+\textbf{General (offline):} esconder información para que $a$, $c$ o $f$ no sean conocidas simultáneamente. Como $f$ suele conocerse (algoritmos estándar, reversing), es más fácil proteger $c$ (ej.\ \texttt{/etc/shadow} solo accesible por root) que $a$ (en manos del usuario).
+
+\textbf{Prevenir el uso de $L$ (online):}
+\begin{itemize}[itemsep=1pt]
+  \item Tiempos crecientes ante fallas (\textbf{exponential back-off}): tras fallar se aumenta el tiempo de reintento exponencialmente.
+  \item Deshabilitar principales que están siendo forzados (\emph{cuidado:} un malicioso puede afectar la \textbf{disponibilidad} de un usuario haciéndolo bloquear).
+  \item Jailing / Honeypot: al detectar ataque, se switchea $L$ por una falsa; se deja al atacante en un ambiente controlado mientras se lo rastrea (``bote de miel'').
+  \item Captchas (cada vez más vulnerados por bots e IA; baratos, ofrecidos como servicio).
+\end{itemize}
+
+\textbf{Otras:} revisión proactiva de claves (rechazar claves fáciles, buscar en diccionarios/leaks, detectar patrones, usar info del usuario), expiración/rotación de claves (limita el daño de una clave comprometida; evitar reuso de las últimas N; \emph{no} forzar cambio al momento de login; avisar con anticipación), subir la complejidad de las claves.
+
+\begin{ojo}
+La \textbf{rotación de contraseñas} mal hecha es peligrosa: si se fuerza el cambio justo al ingresar (sin preaviso), el usuario apurado elige una contraseña fácil y \textbf{perjudica} la seguridad en vez de ayudarla. Siempre dar preaviso (7, 5, 1 día).
+\end{ojo}
+
+\subsection{Fuerza bruta: fórmula de Anderson y metodología}
+
+\begin{definicion}{Fórmula de Anderson}
+$$P = \frac{T\,G}{N}$$
+donde $P$ = probabilidad de adivinar una clave, $G$ = número de pruebas realizables por segundo, $T$ = tiempo dedicado a las pruebas, $N$ = tamaño del espacio de claves. Sirve para estimar el tiempo de un ataque.
+\end{definicion}
+
+El \textbf{espacio de claves} es $N = (\text{tamaño del alfabeto})^{\text{longitud}}$.
+
+\begin{examen}
+\textbf{EL ejercicio que ``entra siempre''.} El profe lo dijo: es fácil de hacer, fácil de chequear y permite ``darle vueltas de rosca''. Es la \textbf{segunda unidad más recurrente}.
+
+\medskip\noindent\textbf{Metodología paso a paso:}
+\begin{enumerate}[itemsep=2pt]
+  \item Identificar las variables: alfabeto ($\Rightarrow N=\text{alf}^{L}$), $G$ (pruebas/seg), $T$ (tiempo), $P$ (probabilidad objetivo) y la incógnita.
+  \item Plantear $P \ge \dfrac{T\,G}{N}$ y despejar la incógnita.
+  \item \textbf{Pasar todo a la misma unidad.} Tiempo: $1$ año $=365\cdot24\cdot60\cdot60$ s. Probabilidad objetivo típica $0{,}5$ o $1/100$.
+  \item Si la incógnita es la longitud $L$, despejar $N$ y luego $L \ge \log_{\text{alf}}(N)$, redondeando \textbf{hacia arriba}.
+\end{enumerate}
+
+\medskip\noindent\textbf{Ejemplo resuelto (PDF, alfanuméricas 36 caracteres).} ¿Qué longitud mínima requerir para que $P<0{,}5$ de hallar la clave en menos de 1 año, con $G=100.000$ claves/seg?
+\begin{align}
+P &\ge \frac{T\,G}{N} \;\Rightarrow\; N \ge \frac{T\,G}{P} = \frac{(365\cdot24\cdot60\cdot60)\cdot 100.000}{0{,}5}\\
+N = 36^{L} &\ge 6{,}3\cdot 10^{12}\\
+L &\ge \log_{36}\!\left(6{,}3\cdot 10^{12}\right) \approx 8{,}22 \;\Rightarrow\; L \ge 9
+\end{align}
+
+\medskip\noindent\textbf{Otros ejemplos del PDF (despejando $T$):}
+\begin{itemize}[itemsep=1pt]
+  \item Numéricas de 10 dígitos ($N=10^{10}$), $G=10.000$/seg, $P>0{,}5$: \; $T \le \dfrac{P\,N}{G}=\dfrac{0{,}5\cdot10^{10}}{10.000}=500.000\text{ s}\approx 6$ días.
+  \item 8 letras (26 caracteres, $N=26^8$), $G=10.000$/seg, $P>0{,}5$: \; $T \le \dfrac{0{,}5\cdot26^8}{10.000}\approx 1.044.135\text{ s}\approx 121$ días.
+\end{itemize}
+\end{examen}
+
+\begin{examen}
+\textbf{Variantes reales de parcial:}
+\begin{itemize}[itemsep=1pt]
+  \item Alfabeto $[a$-$zA$-$Z0$-$9]$ (62 símbolos), $10^4$ passwords/seg: ¿5 símbolos y 5 bits de salt dan $P<0{,}5$ en un año? (2015, 2025-1Q).
+  \item Alfabeto 96 caracteres, $10^5$/seg, $P=1/100$ en 365 días: hallar longitud mínima (Recup 2025).
+  \item TPU con 700 claves/seg, clave de 12 bits: tiempo para $P=1/100$ (Recup 2023). Con clave de 12 bits, $N=2^{12}$.
+\end{itemize}
+Cuando la clave se da \textbf{en bits}, $N=2^{\text{bits}}$. Conviene trabajar con potencias de 2 o logaritmos.
+\end{examen}
+
+\begin{ojo}
+\textbf{Errores que penalizan en el ejercicio de fuerza bruta:}
+\begin{itemize}[itemsep=1pt]
+  \item No pasar todo a la \textbf{misma unidad} (mezclar bits vs.\ símbolos vs.\ tiempo). 1 año $=365$ días $=365\cdot24\cdot60\cdot60$ s.
+  \item Olvidar redondear $L$ \textbf{hacia arriba} (entero).
+  \item Invertir mal la desigualdad al despejar.
+\end{itemize}
+\end{ojo}
+
+\subsection{Salt (salting)}
+
+\textbf{Escenario:} un atacante consigue $c_1,c_2,\dots,c_n$ (una base robada de información complementaria). Sin salt, cada prueba $a_i \to f(a_i)$ puede compararse \emph{en paralelo} contra todos los $c_j$.
+
+\textbf{Método:} introducir una perturbación distinta por cuenta:
+$$f(a) = x \;\|\; f'(a,x)$$
+donde $x$ es el salt (elegido aleatoriamente y embebido en el hash). Cada $c$ se calcula con una perturbación diferente, por lo que el atacante \textbf{no puede reutilizar} $f(a)$ para buscar varias cuentas en paralelo, y debe obtener el salt de cada usuario.
+
+\begin{destacado}
+\textbf{Qué hace y qué NO hace el salt (aclaración del profe):}
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{NO} agranda el espacio de claves del usuario.
+  \item \textbf{SÍ} penaliza al atacante \emph{offline}: equivale a sumar bits al cómputo del atacante, aumentando su costo por $2^{(\text{bits de salt})}$, porque tiene todos los hashes y debe probar más (no puede paralelizar ni detectar patrones de claves repetidas).
+  \item Evita que dos contraseñas iguales den la misma información complementaria.
+\end{itemize}
+\end{destacado}
+
+\begin{ojo}
+Error típico: decir que el salt \textbf{aumenta el espacio de búsqueda/de claves del usuario}. \textbf{Falso.} El salt no cambia el espacio de claves del usuario; penaliza al atacante (multiplica su costo por $2^{\text{bits de salt}}$). Por eso en el ejercicio ``5 símbolos + 5 bits de salt'' el salt suma al \emph{cómputo del atacante}, no al alfabeto/longitud de la clave.
+\end{ojo}
+
+\subsubsection{Funciones lentas: PBKDF2 (PKCS 5 v2.0)}
+
+\textbf{Idea:} encarecer el cómputo para que ejecutar el algoritmo sea costoso (suelen tardar $\ge 100$ ms en vez de 10 ms), de modo que probar muchas passwords sea lento para el atacante, pero irrelevante para el sistema (lo corre una sola vez al validar).
+
+Sea \textit{pass} una contraseña, $S$ un salt y PRF una función pseudoaleatoria (criptosistema simétrico o MAC). Se aplica iterativamente:
+\begin{align}
+u_1 &= \text{PRF}(\textit{pass}, S)\\
+u_2 &= \text{PRF}(\textit{pass}, u_1)\\
+    &\;\;\vdots\\
+u_j &= \text{PRF}(\textit{pass}, u_{j-1})\\
+\text{Resultado} &= u_1 \oplus u_2 \oplus \cdots \oplus u_j
+\end{align}
+
+\textbf{Algoritmo completo:} $K=\text{PBKDF2}(prf,\textit{pass},salt,c,len)$, con $K=T_1\|T_2\|\cdots\|T_n$ ($n=len/|prf|$) y cada bloque $T_i=u_1\oplus u_2\oplus\cdots\oplus u_c$, donde
+$$u_1=\text{PRF}(\textit{Pass},\,Salt\,\|\,\text{INT32\_BE}(i)),\qquad u_k=\text{PRF}(\textit{Pass},u_{k-1}).$$
+
+\begin{destacado}
+El parámetro $c$ (cantidad de \textbf{rondas}/iteraciones) es ajustable: a más rondas, más caro para el atacante. Como el sistema solo lo calcula una vez (al guardar o al verificar), no importa cuánto tarde; al atacante sí le complica las cosas. El XOR final busca uniformizar los bits (sin patrones detectables). Ya está implementado en estándar: en Java, JCE provee \texttt{PBKDF2WithHmacSHA1} vía \texttt{SecretKeyFactory} (no hay que implementar nada).
+\end{destacado}
+
+\begin{examen}
+\textbf{¿Es válido guardar passwords con SHA-256 en una BD? (Recup 2025).} Discutir:
+\begin{itemize}[itemsep=1pt]
+  \item Hashear es mejor que texto plano (guardás una prueba, no el secreto).
+  \item Pero SHA-256 ``a secas'' es \textbf{rápido} $\Rightarrow$ vulnerable a fuerza bruta/diccionario/rainbow tables.
+  \item Falta \textbf{salt}: sin él, dos claves iguales dan el mismo hash y el ataque se paraleliza.
+  \item Lo correcto es una \textbf{función lenta} con salt y rondas configurables (PBKDF2, bcrypt, scrypt). Conclusión: SHA-256 solo \emph{no} es adecuado.
+\end{itemize}
+\end{examen}
+
+\subsection{Challenge-Response y EKE}
+
+\textbf{Problema:} autenticar a un usuario remoto requeriría enviar la clave (necesita canal seguro; descubrir una comunicación antigua puede comprometer la clave).
+
+\textbf{Solución (challenge-response): no enviar la clave.}
+\begin{enumerate}[itemsep=1pt]
+  \item $A \to B$: pedido de autenticación.
+  \item $B \to A$: un challenge $\{r\}$.
+  \item $A \to B$: $f(k,r)$ (aplica una función preacordada sobre su clave $k$ y el challenge $r$).
+\end{enumerate}
+Así el usuario valida que conoce el secreto sin enviarlo. (Las \emph{passkeys} actuales siguen esta idea: el servidor manda un challenge, el cliente lo firma con una clave protegida por biometría/PIN, y el servidor verifica; hay un esquema de clave pública/privada de fondo y no se envía ningún dato secreto.)
+
+\paragraph{EKE (Encrypted Key Exchange).} Objetivo: impedir que un atacante adivine claves capturadas en la red. Mecanismo: hacer el diálogo en un \textbf{canal encriptado} (con clave $k_s$), de modo que el atacante \textbf{no tiene forma de saber si una clave es correcta}.
+$$A\to B:\ \{\text{pedido}\}k_s \qquad B\to A:\ \{r\}k_s \qquad A\to B:\ \{f(k,r)\}k_s$$
+
+\subsection{OTP --- Claves de uso único}
+
+\begin{ojo}
+\textbf{No confundir OTP (One Time Password) con One Time Pad.} Misma sigla, nada que ver.
+\end{ojo}
+
+\textbf{Objetivo:} generar claves que sirven una única vez. $A$ y $B$ comparten una clave $K$ y un contador $C$. Concepto: $(K,C)\rightarrow \text{OTP}\rightarrow(otp,C')$. La clave $K$ es criptográfica, generada aleatoriamente (es lo que se escanea en el QR / se carga en el authenticator). Dos variantes estandarizadas:
+
+\subsubsection{HOTP --- RFC 4226 (basado en HMAC)}
+$$\text{HOTP}(K,C)=\text{Truncate}\big(\text{HMAC-SHA1}(K,C)\big)$$
+\textbf{Truncate} extrae 32 bits de los 160 del MAC:
+\begin{itemize}[itemsep=1pt]
+  \item $\textit{offset} = mac[19]\ \&\ \texttt{0xf}$ \quad ($\leftarrow$ 4 bits del último byte)
+  \item $\textit{bin} = mac[\textit{offset}\,..\,\textit{offset}{+}3]\ \&\ \texttt{0x7fffffff}$
+  \item $\textit{Result} = \textit{bin}\ \%\ 10^{n}$ \quad ($n$ = cantidad de dígitos)
+\end{itemize}
+El \textbf{contador se incrementa en cada uso} $\Rightarrow$ requiere sincronización (\textbf{look-ahead}: el servidor calcula varios intentos hacia adelante). Se aconseja \textbf{throttling}. Genera códigos de 1 a 9 dígitos (recomendado $\ge 6$).
+
+\subsubsection{TOTP --- RFC 6238 (basado en tiempo)}
+$$\text{TOTP}(K)=\text{HOTP}(K,T), \qquad T=\frac{(\textit{current unix time}-T_0)}{X}$$
+donde $T_0$ = tiempo de referencia (usualmente $0$) y $X$ = segundos de vida de cada código (usualmente $30$). \textbf{No requiere contador} (el ``contador'' lo da el tiempo). Se aconseja un \textbf{drift-window} (cantidad de ticks desfasados aceptados, hacia atrás y hacia adelante, por des-sincronización entre servidores) y \textbf{throttling}. Es el más usado hoy (Google Authenticator, etc.).
+
+\begin{destacado}
+La complejidad frente a fuerza bruta es la misma aunque el código rote: si son 6 dígitos, se puede probar por fuerza bruta igual. Por eso se necesita throttling del lado del servidor. Los \textbf{recovery codes} son códigos de un solo uso para recuperar la cuenta si se pierde el dispositivo del segundo factor.
+\end{destacado}
+
+\subsection{Multifactor y multicanal}
+
+\textbf{Multi factor authentication:} requerir dos (o más) factores de \emph{distinto tipo}. Racional: cada tipo de factor requiere comprometer distintos \emph{assets}. Combinaciones comunes: conozco+tengo, conozco+soy, tengo+soy.
+
+\begin{examen}
+\textbf{Independencia de factores (concepto clave).} El multifactor es más seguro porque obliga a comprometer \textbf{varios canales independientes}. PERO si los factores están \textbf{entrelazados}, se anula la independencia y pierde sentido.
+\begin{itemize}[itemsep=1pt]
+  \item Ejemplo del profe: el \textbf{celular} concentra ``algo que tengo'' + ``algo que soy'' (cara/huella) en un solo dispositivo. Si lo roban/clonan/comprometen, comprometen \emph{ambos} factores a la vez.
+  \item Ejemplo de entrelazamiento que rompe la independencia: poder \textbf{recuperar el password por el segundo canal} (SMS) $\Rightarrow$ ``dos llaves para la misma cerradura'', ya no hay independencia real.
+\end{itemize}
+\end{examen}
+
+\begin{ojo}
+Error típico: decir que multifactor ``es seguro'' sin notar que \textbf{factores entrelazados rompen la independencia}. Hay que señalar la dependencia (segundo factor recuperable por el primero, ambos en el mismo dispositivo, etc.).
+\end{ojo}
+
+\begin{destacado}
+\textbf{Trilema usabilidad / performance / seguridad.} \prof{Seguridad siempre es un balance, algo vas a penalizar.} Pedir el segundo factor todo el tiempo es seguro pero golpea la usabilidad; por eso existe la \textbf{step-up authentication}: pedir un factor adicional solo ante anomalías (contexto extraño, cambio de geolocalización, primer login en mucho tiempo, etc.).
+\end{destacado}
+
+\subsection{Autenticación remota (SSO / Single Sign-On)}
+
+Consiste en \textbf{delegar la autenticación} a un sistema externo (relación de confianza). Conviene cuando otra empresa lo hace de forma más robusta y uno quiere enfocarse en su negocio.
+
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Productos propietarios:} Active Directory Federation Services (ADFS), CAS, Siteminder. (El ITBA usa Active Directory: los usuarios viven en el AD como recursos.)
+  \item \textbf{Tecnologías abiertas:} OpenID 1 y 2 $\to$ obsoletos. \textbf{OpenID Connect} $\to$ basado en OAuth2.
+\end{itemize}
+
+\begin{destacado}
+\textbf{OpenID Connect vs OAuth2.} OAuth2 es \textbf{autorización}; OpenID Connect le \textbf{añade la capa de autenticación} encima de OAuth2. ``Login con Google/Facebook/Apple'' delega la autenticación: la parte de saber \emph{quién sos} (nombre, foto) es OpenID Connect; pedir acceso a tus recursos (drive, archivos) es OAuth2. Así no hay que crear un usuario nuevo en cada sistema externo (federated login).
+\end{destacado}
+
+\subsection{Lectura recomendada}
+Capítulos 12--13 de \emph{Computer Security: Art and Science}, Matt Bishop.
+
+\end{document}

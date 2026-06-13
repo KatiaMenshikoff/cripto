@@ -1,0 +1,3030 @@
+WEBVTT
+
+1
+00:00:03.570 --> 00:00:04.550
+Rodrigo Ramele: Bueno, ah.
+
+2
+00:00:04.750 --> 00:00:14.670
+Rodrigo Ramele: chicos, arrancamos entonces un poco con protocolos. Con la parte de protocolo, yo ya tengo tengo 2 presentaciones. Tengo una, que es la la la más oficial y después otra que le voy a mostrar yo que va a servir para
+
+3
+00:00:15.280 --> 00:00:17.909
+Rodrigo Ramele: complementar algunas cosas. Voy a poner Full Stream.
+
+4
+00:00:19.290 --> 00:00:25.420
+Rodrigo Ramele: ahí está. Cualquiera X. Cero. Full: Screen se puso a ver.
+
+5
+00:00:25.860 --> 00:00:28.669
+Rodrigo Ramele: Bueno, pues imagina eso. Ahí va mejor. Bien. José.
+
+6
+00:00:29.930 --> 00:00:37.620
+Rodrigo Ramele: Bueno, vamos a empezar. Vamos a ver protocolos otros. Vamos a hablar de picadillo. Vamos a ver. Ssl Ok.
+
+7
+00:00:37.930 --> 00:00:44.980
+Rodrigo Ramele: Así que básicamente un estamos un poco corto. Ahí está,
+
+8
+00:00:45.220 --> 00:01:02.329
+Rodrigo Ramele: hacemos un repaso justamente mencionabas. C. C. Asecure. Ya vimos entonces cuáles son las condiciones que tiene que tener un criptosistema para hacerse asecure. Y obviamente, sabemos que para que se hace, sea secure, es decir, C C Asecure, qué significa
+
+9
+00:01:02.900 --> 00:01:04.380
+Rodrigo Ramele: ¿Qué significa el C S. A:
+
+10
+00:01:05.300 --> 00:01:09.790
+Rodrigo Ramele: Así de paso, vamos haciendo el repaso de del del para el final para el parcial.
+
+11
+00:01:09.790 --> 00:01:11.880
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Atact.
+
+12
+00:01:12.450 --> 00:01:20.209
+Rodrigo Ramele: Exacto y, en concreto, que significa: qué capacidad le estás dando al atacante para hacer este abordaje.
+
+13
+00:01:21.480 --> 00:01:25.329
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Que tiene un oráculo que puede encriptar y desencriptar todo lo que quiera.
+
+14
+00:01:26.130 --> 00:01:36.819
+Rodrigo Ramele: Muy bien exactamente y qué, cuál es la sutileza que y digamos con ese oráculo que puede encriptar y puede desencriptar, Él puede Elig puede
+
+15
+00:01:36.940 --> 00:01:44.150
+Rodrigo Ramele: dar mensajes para encriptar, y tiene la capacidad. Cuando va. Cuando está el Challenge de eventualmente
+
+16
+00:01:45.150 --> 00:01:51.749
+Rodrigo Ramele: evaluar algún mensaje, pero, obviamente, lo único que no puede hacer, que es, pensá, en el en el.
+
+17
+00:01:51.750 --> 00:01:53.460
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y evaluar qué quiere descifrar.
+
+18
+00:01:53.700 --> 00:02:05.760
+Rodrigo Ramele: Exactamente, pues si no tendrían sentido exacto, pero pueden quitar todo lo que quiere exactamente. Muy bien. Chiquin. Tú hablando, qué capó? Decime el nombre. Así me lo anoto para la corrección del parcial, para tenerlo en cuenta y darle un.
+
+19
+00:02:05.760 --> 00:02:07.440
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: No.
+
+20
+00:02:07.440 --> 00:02:10.340
+Rodrigo Ramele: Perfecto.
+
+21
+00:02:10.550 --> 00:02:24.220
+Rodrigo Ramele: Bueno, Muy bien exacto. Eso es ese sensequible, Entonces, sabemos que para implementar un esquema que tenga que pueda pasar a donde a donde podemos hacer un un criptosistema que
+
+22
+00:02:24.790 --> 00:02:28.289
+Rodrigo Ramele: que aún con esas capacidades que le estamos dando al atacante.
+
+23
+00:02:28.640 --> 00:02:43.909
+Rodrigo Ramele: pueda, digamos, al plantar el ataque, la probabilidad de que acierte atacante sea un medio cercano a un medio. Sabemos que no nos basta sólo con confidencialidad. También necesitamos integridad. Necesitamos una manera en la cual se le complique
+
+24
+00:02:43.940 --> 00:02:50.909
+Rodrigo Ramele: al atacante. Componer mensajes válidos. Por eso está el tema ahí está en la parte de integridad. Entonces.
+
+25
+00:02:51.380 --> 00:02:59.859
+Rodrigo Ramele: bueno, eso es lo que necesitamos. Y claro, todos los sistemas, si se quieren a un punto que son simétricos, que es donde estamos enfocando ahora, necesita una clave que sea compartida.
+
+26
+00:03:00.380 --> 00:03:04.660
+Rodrigo Ramele: Entonces el problema es bueno, bárbaro. ¿cómo yo puedo
+
+27
+00:03:05.150 --> 00:03:19.689
+Rodrigo Ramele: armar protocolos, es decir, armar secuencias de mensajes que primero resuelvan, por un lado, el tema de la clave de alguna manera con variantes de eso y, por otro lado, después establezcan las los diferentes requerimientos que están asociados con el tema de
+
+28
+00:03:19.690 --> 00:03:21.370
+Rodrigo Ramele: de de
+
+29
+00:03:21.370 --> 00:03:45.499
+Rodrigo Ramele: de la implementación de estos llamados. Ahora lo que estamos haciendo, estamos haciendo, estamos componiendo las piezas para poder hacer lo que queremos que es transmitir información, de forma que la información llegue a quien nosotros queremos que solo esa persona, solo esa entidad pueda accederla que tenga una garantía de que esa información no fue alterada, que en él tenga una garantía de que nosotros somos los verdaderamente la entidad que emitió esa información
+
+30
+00:03:45.500 --> 00:03:57.020
+Rodrigo Ramele: y que nosotros tengamos una garantía de que esa información llegó y la garantía que nosotros queremos decir, todo ese conjunto, que son las cosas que día a día, Nosotros demandamos de todas las nuestras herramientas digitales.
+
+31
+00:03:57.190 --> 00:04:02.689
+Rodrigo Ramele: Entonces lo primero que se establece es: bueno, vamos a pensar un Protocolo de intercambio de claves
+
+32
+00:04:02.750 --> 00:04:11.829
+Rodrigo Ramele: y un Protocolo de porque lo que queremos es que haya una clave K que sea compartida, entonces un protocolo de intercambio de clave. Está ejecutado por 2 partes.
+
+33
+00:04:11.830 --> 00:04:24.940
+Rodrigo Ramele: N, Por supuesto, es el tamaño para que tiene que ver con la seguridad computacional. ¿cuál va a ser la longitud de esas claves y para el manejo de lo que tiene que ver con eso, y hay 2 claves específicas que normalmente son
+
+34
+00:04:25.630 --> 00:04:27.920
+Rodrigo Ramele: una clave de A y una clave de B,
+
+35
+00:04:28.570 --> 00:04:42.420
+Rodrigo Ramele: y el Protocolo es válido. No tiene ninguna entrada, salvo el parámetro n Justamente el parámetro de seguridad de seguridad computacional y la salida del Protocolo va a ser un conjunto de mensajes intercambiados.
+
+36
+00:04:42.520 --> 00:04:56.949
+Rodrigo Ramele: Esto es lo que se llama normalmente el log del todo lo la historia de los mensajes no. Después va a tener una clave a que es conocida sólo por una de las partes. La clave. K. Y la clave K, que es conocida sólo por la otra parte
+
+37
+00:04:57.530 --> 00:05:12.400
+Rodrigo Ramele: y cuál es la condición fundamental para que el Protocolo sea un para que este Protocolo sea de intercambio de claves y sea correcto es que las 2 claves sean iguales que tanto la clave A como la clave B sean la misma, es decir, que lleguen a la misma clave: los 2.
+
+38
+00:05:12.610 --> 00:05:15.750
+Rodrigo Ramele: Eso es lo que lo que se establece en el protocolo
+
+39
+00:05:16.430 --> 00:05:36.330
+Rodrigo Ramele: y lo que 1 va a querer que el protocolo haga es que trate de evitar primero los eventualmente ataques pasivos, que es que pueda acceder que simplemente haciendo snoopping de mirando los los mensajes, pueda identificar las claves, puede identificar eventualmente la clave o eventualmente el los mensajes que se usan con la clave.
+
+40
+00:05:36.600 --> 00:05:52.100
+Rodrigo Ramele: y también está la parte de ataques activos adonde el atacante juega un rol dentro del dentro del propio Protocolo, o puede jugarlo, al menos, es decir, que pueda omitir mensajes, es decir, que mensajes los pueda eliminar, pueda reescribir el contenido del mensaje, reordenarlos o repetirlos.
+
+41
+00:05:52.470 --> 00:06:03.070
+Rodrigo Ramele: Y, bueno, los esquemas de intercambio que hemos visto hasta ahora nos sirven con atacantes activos y aparece lo que se llama Mann in the Midden, no en en mi T. M,
+
+42
+00:06:03.370 --> 00:06:04.570
+Rodrigo Ramele: que se que es.
+
+43
+00:06:05.130 --> 00:06:18.300
+Rodrigo Ramele: se escribe mucho. Así. Bit con la segunda I en minúscula, que son ataques man in de Middle que la idea del ataque de Manning de Middle es que un atacante se pone en el medio se para en el medio de la situación, y él puede
+
+44
+00:06:18.770 --> 00:06:22.710
+Rodrigo Ramele: hacerle creer a los 2 por los 2 lados, que es la otra contraparte.
+
+45
+00:06:23.090 --> 00:06:27.140
+Rodrigo Ramele: que es el típico ataque de band in themido. No, Bueno.
+
+46
+00:06:27.660 --> 00:06:43.000
+Rodrigo Ramele: la situación que aparece nosotros Ahora tenemos protocolos simétricos y protocolos asimétricos en los protocolos asimétricos. Sabemos que los los, digamos, los protocolos simétricos tienen una clave que es una clave simétrica, pero aparece el problema de cómo distribuir esa clave.
+
+47
+00:06:43.000 --> 00:06:53.650
+Rodrigo Ramele: Entonces los protocolos asimétricos facilitan el proceso de distribución, lo facilitan no es que lo resuelven, totalmente, sino que lo facilitan, porque justamente dividen la clave en 2 partes.
+
+48
+00:06:53.650 --> 00:06:57.770
+Rodrigo Ramele: Entonces, bueno, está el tema de cómo conseguir la
+
+49
+00:06:58.430 --> 00:07:05.480
+Rodrigo Ramele: digamos, las claves públicas no. Y, además, la clave pública. Hay una asociación de la clave pública con la identidad de las personas
+
+50
+00:07:06.010 --> 00:07:14.570
+Rodrigo Ramele: con una identidad, además que de las personas sería la identidad de las entidades, acá no identidad de las entidades. Después hay otra parte más, que es
+
+51
+00:07:14.670 --> 00:07:20.910
+Rodrigo Ramele: identificar a las entidades con las personas físicas o personas
+
+52
+00:07:21.410 --> 00:07:34.669
+Rodrigo Ramele: como empresa, no que puede ser otro otro problema, y eso ya entra dentro del lado de de de de eso, de la de la asociación que vos necesitabas como una entidad gubernamental que te provea esa última parte. ¿no? Entonces acá. Sería la identidad de las entidades. En realidad.
+
+53
+00:07:35.050 --> 00:07:52.489
+Rodrigo Ramele: Bien. Entonces, si se vulnera esa asociación, puede realizarse un ataque de Marin de Midder. Bueno, como son normalmente los ataques de de de Marin de Middel, a que es nuestro. Es Alice Alice está tratando con rep que puede ser algún, digamos, el destino de de de quién es el mensaje
+
+54
+00:07:52.570 --> 00:08:01.100
+Rodrigo Ramele: y le pide a este rep que es una especie de repositorio o repositorio de clave le dice dame la clave de b y revlay Pasa la clave de B.
+
+55
+00:08:01.190 --> 00:08:08.349
+Rodrigo Ramele: Pero lo que pasa en la realidad. Esto es lo de los barrios, lo que a cree que pasa, pero lo que pasa en la realidad es que hay un editor intermedio
+
+56
+00:08:08.400 --> 00:08:23.689
+Rodrigo Ramele: que es Malory, que está en el medio y que a está hablando con Malory. Y es Malory el que le da el que juega con las claves que le da haciéndole creer a que lo que le está dando eso es en realidad es su propia clave. La clave que él controla, haciéndosela pasar como una clave de.
+
+57
+00:08:23.790 --> 00:08:40.480
+Rodrigo Ramele: Y ese es el escenario de de Mann típico Manning de Middle, que es lo más difícil de detectar. En realidad, porque 1 puede ir escalando una manera después, cuando terminemos de contar, les les cuento cómo es en Scl, que esto se trata de resolver? ¿no? Bueno.
+
+58
+00:08:41.059 --> 00:08:50.679
+Rodrigo Ramele: una vez que tiene una clave equivocada a va a intentar incomunicarse con B, o sea, cree que acá, en este caso que accedió finalmente a la clave de de de B
+
+59
+00:08:50.850 --> 00:09:06.409
+Rodrigo Ramele: y le manda, qué sé yo, un mensaje que se lo va a mandar a ver diciendo, bueno, esto es un mensaje para vos ves Eme y se lo justamente utiliza Su clave. Se lo encripta con su clave pública. Y lo que está pasando en realidad es que se lo está encriptando con la clave de.
+
+60
+00:09:06.470 --> 00:09:22.790
+Rodrigo Ramele: Y luego usa la clave de B para encriptárselo con la clave pública. Y ese mensaje él. Obviamente, quien lo pudo acceder porque se lo encriptado. En definitiva, se lo encriptó con la clave pública de pensando que era la clave pública de B. Pero en realidad, la clave pública de era la que él controlaba.
+
+61
+00:09:22.910 --> 00:09:40.009
+Rodrigo Ramele: Entonces, el problema entra justamente en la esfera de la administración propia de de la administración de las claves y y cómo cómo hacer esa administración de las claves, no en en los protocolos, que son simétricos exclusivamente simétricos. ¿cómo se hace normalmente la administración de la clave? ¿quién se acuerda de eso? Algo? Ya vieron
+
+62
+00:09:40.320 --> 00:09:42.439
+Rodrigo Ramele: acá. Ahora estamos en protocolo.
+
+63
+00:09:42.600 --> 00:09:44.449
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: En los protocolos simétricos.
+
+64
+00:09:44.620 --> 00:09:46.079
+Rodrigo Ramele: Sí que si.
+
+65
+00:09:46.080 --> 00:09:51.709
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Había un un tercio, una una tercera parte que era confiable, que tenía las claves.
+
+66
+00:09:52.290 --> 00:09:54.109
+Rodrigo Ramele: Perfecto. ¿cómo se llama esa parte? Te Acordás.
+
+67
+00:09:54.620 --> 00:09:56.850
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: El el King Manager.
+
+68
+00:09:57.080 --> 00:10:04.769
+Rodrigo Ramele: Cada vez. El Center exactamente es el K. C. Es una. Es un esquema donde
+
+69
+00:10:05.340 --> 00:10:15.700
+Rodrigo Ramele: que es el que haces esa administración. Existe un protocolo que nosotros, que es bastante antiguo, que no se usa tanto que se llama Pe Pgp.
+
+70
+00:10:16.290 --> 00:10:30.960
+Rodrigo Ramele: que era un protocolo que se basaba en como una delegación de confianza. Nosotros no lo vemos en la materia porque ya no se usa más. Por un momento se usaba bastante, y era un protocolo que estaba basado como en la idea de similar a lo que el A, K D. C, A, donde
+
+71
+00:10:31.020 --> 00:10:40.440
+Rodrigo Ramele: 1 arrancaba con una con una sesión de confianza que está preestablecida. Es como si yo confío con Joaquín, no que que confío en Vos Joaquín.
+
+72
+00:10:40.610 --> 00:10:46.359
+Rodrigo Ramele: y nosotros, como que tenemos como una confianza y por algún esquema, nos compartimos como una clave simétrica de los 2.
+
+73
+00:10:46.520 --> 00:10:57.900
+Rodrigo Ramele: ¿y qué hacemos? Empezamos a intercambiar mensajes y vos me servís de K, a Dc de un tercero en el cual vos también confias, y yo también confío, y yo te puedo servir a vos de un tercero que yo también confío.
+
+74
+00:10:58.000 --> 00:11:01.590
+Rodrigo Ramele: Entonces, yo te sirvo de K. C de del tercero.
+
+75
+00:11:01.840 --> 00:11:06.130
+Rodrigo Ramele: Y a partir de ahí, vos podes establecer una relación de confianza con el tercero entendés
+
+76
+00:11:06.490 --> 00:11:10.639
+Rodrigo Ramele: que no lo viste personalmente. Vos me viste a mí personalmente, físicamente
+
+77
+00:11:10.820 --> 00:11:24.180
+Rodrigo Ramele: y y vos viste al al otro físicamente, no más. Y yo vi al otro físicamente, no más. Entonces es como un intermedio que usa un K, ese que va que que se va a se va construyendo. Ese protocolo se llamaba Pgp
+
+78
+00:11:24.550 --> 00:11:43.489
+Rodrigo Ramele: y se usó muchísimo en una época. Se transfiere la confianza. Exactamente, Tomás es así, se transfiere la confianza y opera siempre con claves simétricas, siempre operando con clase simétrica. Después, o a P. Gp. Le pusieron clases simétricas, pero la base era para operar comida donde 1 va tomando el rol del k e y se va transfiriendo. Se puede transferir más de un grado
+
+79
+00:11:44.060 --> 00:11:47.629
+Rodrigo Ramele: claro, estaba pensado para para que no, o sea.
+
+80
+00:11:48.230 --> 00:11:52.909
+Rodrigo Ramele: para que yo te dé, yo transfiera lo que yo vi físicamente
+
+81
+00:11:53.010 --> 00:12:10.540
+Rodrigo Ramele: y manejarlo de esa manera. Incluso sabes que me parece que no me acuerdo bien ahora, pero vos hasta podías decir hasta hasta qué grado vos confiabas entendés o vos saber esa información. Decir, bueno, si querés Dale confiaba en él, pero vos es una confianza de segundo grado y así sucesivamente a donde le a donde le restas
+
+82
+00:12:10.540 --> 00:12:23.819
+Rodrigo Ramele: confianza? No, obviamente, porque es alguien que que se te fue pasando. Y así. Bueno, ese es ese era. P, G, P: Y había un un protocolo que se llama Open. P, G, P, Hace un montón que no miro, cómo está. Hay que ver para mí. Lo voy a devolver un segundo a ver si sigue vivo
+
+83
+00:12:23.850 --> 00:12:28.590
+Rodrigo Ramele: o pe calculo que debe seguir vivo y vayas a saber de haber algún sistema? Sí, Sí, bastante vivo.
+
+84
+00:12:29.600 --> 00:12:36.150
+Rodrigo Ramele: Sí, fue incluso encendiendo estos detalles. Hay que ver ahora cómo me hacen ese examen e mail. Eso es un montonazo.
+
+85
+00:12:36.290 --> 00:12:45.739
+Rodrigo Ramele: un montonazo. Estaba un poco basado en eso. Hay que ahora seguro, debe tener también a una parte es Lega. Sí, Sí, la la página de Wikipedia Open P. G. P.
+
+86
+00:12:46.370 --> 00:12:55.729
+Rodrigo Ramele: Wikipedia. Pero se usaban, se usaban profesionalmente B Pérez por Pretty Wood Privacy. Fíjense justo el nombre que tiene. Es del año.
+
+87
+00:12:59.190 --> 00:13:03.320
+Rodrigo Ramele: No hice el año, acá. Pero 90 y pico fácil.
+
+88
+00:13:04.400 --> 00:13:17.760
+Rodrigo Ramele: Fácil. Bueno, se usó un montón. P: G P: Nada después desapareció y se dejó de usar, pero se usa poco, pero bueno, nada. Era un era un poco esa idea. Así que bien, muy bien, bien, esa es una manera que es con un con
+
+89
+00:13:18.380 --> 00:13:30.610
+Rodrigo Ramele: con un con un calce y cuál sería el equivalente de los calce que, claro, eso no lo ven, porque supuestamente lo estamos viendo en esta clase que, bueno, el equivalente del calce en en
+
+90
+00:13:30.910 --> 00:13:44.260
+Rodrigo Ramele: así o en asimétrico, y en realidad sería con el incluido de asimétrico. Es a través de lo que se llama Pk. Ahí, claro que es la infraestructura de public infraestructure. Es como 1 necesita montar una estructura.
+
+91
+00:13:44.320 --> 00:13:50.990
+Rodrigo Ramele: una estructura de comunicación para poder hacer la distribución de las claves públicas.
+
+92
+00:13:51.220 --> 00:13:56.659
+Rodrigo Ramele: Y esa distribución de claves públicas se concentra en lo que se llaman las Eas, que son las certifics de autorities.
+
+93
+00:13:56.710 --> 00:14:14.059
+Rodrigo Ramele: que son las entidades certificantes que van a ir delegando la posibilidad de poder distribuir claves públicas, y esas claves públicas se distribuyen en algo que se llama certificados. Lo vamos a ver en esta clase, que es un poco. Qué es esto? Bueno, la idea, ¿Cuál es asociar identidad a las claves
+
+94
+00:14:15.220 --> 00:14:25.690
+Rodrigo Ramele: lo mencionaban proto claro: estamos reviviendo exacto. Estamos viendo mucho de lo que vienen protocolos en protos y en en redes. También entonces nosotros tenemos, por un lado, tenemos la identidad
+
+95
+00:14:25.940 --> 00:14:31.209
+Rodrigo Ramele: y, por otro lado, la identidad de la entidad
+
+96
+00:14:32.130 --> 00:14:37.080
+Rodrigo Ramele: y después está la identidad de la persona en sí misma, que son cosas distintas.
+
+97
+00:14:38.850 --> 00:14:45.899
+Rodrigo Ramele: Entonces nosotros lo que queremos es asociar las claves públicas a la entidad y con eso, poder identificar
+
+98
+00:14:46.330 --> 00:14:48.060
+Rodrigo Ramele: identidad a la entidad.
+
+99
+00:14:48.340 --> 00:14:59.029
+Rodrigo Ramele: asociar que una entidad pública particular pertenece a una entidad y tener un aseguramiento criptográfico de queso, de queso y poder poderlo validarlo hacer esa esa validación.
+
+100
+00:14:59.350 --> 00:15:03.380
+Rodrigo Ramele: entonces, Por supuesto, esto no es aplicable a criptosistemas simétricos.
+
+101
+00:15:03.520 --> 00:15:17.820
+Rodrigo Ramele: y el motivo es bueno. La selección de claves depende de las partes involucradas en la comunicación y usar la clave equivocada significa que no hay garantías de confidencialidad e integridad que es este escenario. Es el escenario donde a no tiene, No, no, no puede hacer ningún chequeo sobre la clave que recibió
+
+102
+00:15:17.820 --> 00:15:23.939
+Rodrigo Ramele: y que él cree que está encriptando, que está mandando un mensaje que sólo ve, va a poder leer. Y sin embargo, no eso
+
+103
+00:15:23.940 --> 00:15:33.390
+Rodrigo Ramele: no está ocurriendo, porque lo está encriptando con la clave equivocada que obviamente se la dio Mallory, que estaba en el medio con un ataque de Manning de miedo. Entonces, lo que se establece en en
+
+104
+00:15:33.420 --> 00:15:46.119
+Rodrigo Ramele: como parte de los protocolos, son infraestructuras de seguridad, que es la infraestructura pescai en un momento está este en un trabajo recontramillucrativo es como tal, las infraestructuras de Pk ahí de las empresas. Entonces aparecen lo que son los certificados
+
+105
+00:15:46.580 --> 00:15:52.529
+Rodrigo Ramele: dentro de esto y los certificados son mensajes. Son mensajes concretos que contienen esta información
+
+106
+00:15:52.790 --> 00:16:01.909
+Rodrigo Ramele: información de la identidad, es decir, algo que va a ayudar para identificar a la entidad, no, por ejemplo, el nombre de la empresa.
+
+107
+00:16:01.910 --> 00:16:15.719
+Rodrigo Ramele: el nombre de de el nombre de la empresa con que la empresa va a estar registrada a nivel impositivo en un país o está registrada como empresa en algún país. El nombre de la de la persona física real
+
+108
+00:16:15.730 --> 00:16:22.049
+Rodrigo Ramele: va a tener asociada la clave pública, es decir, el certificado es un rap alrededor de la clave pública. Es una manera de poder
+
+109
+00:16:22.520 --> 00:16:27.210
+Rodrigo Ramele: darle a la clave pública información extra que permita hacer las validaciones para
+
+110
+00:16:27.350 --> 00:16:30.380
+Rodrigo Ramele: Ma hacer el link clave pública. Entidad.
+
+111
+00:16:30.540 --> 00:16:33.299
+Rodrigo Ramele: Después tiene una en los certificados, una fecha de emisión.
+
+112
+00:16:33.490 --> 00:16:41.249
+Rodrigo Ramele: Tienen un intervalo de validez, es decir, dice desde cuando hasta cuándo sirven y después tiene un tipo de uso de clave, es decir, dicen, para que
+
+113
+00:16:41.350 --> 00:16:57.770
+Rodrigo Ramele: se va a poder usar la clave que se está distribuyendo, que puede ser para firmar mensajes, para cifrar emails, para firmar certificados o para cif si en cifrado de sitios web no típicamente, por ejemplo, los típicos. El seguro de ustedes alguna vez tuvo que montar un
+
+114
+00:16:57.770 --> 00:17:10.090
+Rodrigo Ramele: servidor de público y tuvo que tener a veces se compra. Ahora, hoy hoy ya te levanto armado, ¿no? Pero en una época, pues tenías que comprar el certificado y lo comprabas a una a un
+
+115
+00:17:10.369 --> 00:17:16.130
+Rodrigo Ramele: a una entidad certificante que te los vendía, como por ejemplo, trasto o el design que eran muy famosas. No
+
+116
+00:17:16.270 --> 00:17:21.639
+Rodrigo Ramele: que siguen estando. Eso sigue estando, pero ahora está un poquito más oculto detrás de los proveedores cloud y
+
+117
+00:17:22.390 --> 00:17:27.310
+Rodrigo Ramele: de de Go Daddy también que los medios que te lo resuelve solo, no
+
+118
+00:17:27.790 --> 00:17:43.769
+Rodrigo Ramele: bueno. Y esto es una cosa hiperimportante de los certificados. Los certificados están, a su vez firmados digitalmente por una autoridad competente. Es decir, hay un mecanismo de certifique de autorities autorities que son las Eas, que se encarga de
+
+119
+00:17:44.150 --> 00:18:01.349
+Rodrigo Ramele: que son, en general, empresas, a veces algunas que es un popurrí de empresas privadas de organizaciones, grandes grandes empresas tecnológicas, empresas específicas que emiten certificado y gobiernos que todos son entidades certificantes.
+
+120
+00:18:01.450 --> 00:18:04.719
+Rodrigo Ramele: Entidades entidades certificantes.
+
+121
+00:18:04.830 --> 00:18:15.309
+Rodrigo Ramele: que son las que se encargan de la generación y la administración de estos certificados oficiales los que son oficiales, porque 1 puede todo esto, manejarlo como en una entidad cerrada
+
+122
+00:18:15.310 --> 00:18:27.309
+Rodrigo Ramele: que en que es totalmente independiente del oficial y y lo maneja por ahí. El lo maneja en un en un en un círculo cerrado que Tam y y hace implemente una validación, que es independiente de la general y la global. No.
+
+123
+00:18:28.040 --> 00:18:37.730
+Rodrigo Ramele: Bien, estos son los certificados. ¿para qué se usan? Bueno, normalmente lo que lo que se usan es Alex Solicita certificado de que puede ser provisto por B o cualquier otra entidad.
+
+124
+00:18:37.780 --> 00:18:50.560
+Rodrigo Ramele: es decir, el certificado es algo relativamente público. El certificado, El certificado en sí, donde está la parte es algo que es público, es decir, se lo puede dar ver, o lo puede dar una entidad también, que que que genere un certificado de
+
+125
+00:18:50.840 --> 00:18:57.879
+Rodrigo Ramele: y a lo que puede hacer es verificar la identidad del certificado, es decir, quién es este certificado, a quién representa A,
+
+126
+00:18:57.990 --> 00:19:05.280
+Rodrigo Ramele: y con eso, saber que la clave pública contenida en ese certificado está representando a esa entidad particular. Entonces.
+
+127
+00:19:05.280 --> 00:19:06.230
+Rodrigo Ramele: en
+
+128
+00:19:06.230 --> 00:19:29.820
+Rodrigo Ramele: el estándar que se usa dentro de los certificados. Los certificados derivan de unas de unos protocolos digitales que se llamaban A, C, N, 50 y pico que estaban asociados a las redes X 25 que eran en temas bancarios y es un protocolo con nombres rarísimos para los campos, entonces es un quilombo, pues esto binario digital ya es digital, por supuesto, que pero es binario, digamos, con todos códigos, medios raros
+
+129
+00:19:29.880 --> 00:19:39.359
+Rodrigo Ramele: que que derivan en nombre medios. Están entonces normalmente los certificados tienen un 100 que es el Common Name, que es como el nombre más importante.
+
+130
+00:19:39.400 --> 00:19:50.029
+Rodrigo Ramele: por ejemplo, los certificados que son públicos, que los certificados que representan un sitio web en el common name tienen el dominio. Entonces, por ejemplo, Cn es igual a mi panadería, punto com.
+
+131
+00:19:50.140 --> 00:19:56.599
+Rodrigo Ramele: Entonces, por ejemplo, el certificado de mi panadería. Punto. Com. Existe el sitio en mi panadería. Ya. Existía. mira, existe.
+
+132
+00:19:56.700 --> 00:19:57.690
+Rodrigo Ramele: qué loco?
+
+133
+00:19:57.990 --> 00:20:08.260
+Rodrigo Ramele: Ah, no, no, no existe Godaddy lo lo vende Si me mandó a la página de Godaddy que bueno, bueno, eché un nombre en mi panadería ¿Qué loco que no existe. Hay que hacer. ¿cómo se llama esto?
+
+134
+00:20:09.200 --> 00:20:17.139
+Rodrigo Ramele: Farming de dominio? ¿no? Entonces comprar mi panadería, punto com y y después, cuando alguien lo necesita, Se lo vendo?
+
+135
+00:20:17.440 --> 00:20:27.239
+Rodrigo Ramele: Bien que bueno, bueno, mi panadería no es un lindo lindo Nombre: Bueno, después, por ejemplo, para los emails en la en el como online va la dirección de email
+
+136
+00:20:27.330 --> 00:20:37.520
+Rodrigo Ramele: para los servidores en en como namebo. Es el hosten como les mostré o va en la Ip. A ese también puede ir la Ip en las empresas en como nameba a veces la razón social.
+
+137
+00:20:38.420 --> 00:20:47.900
+Rodrigo Ramele: Bueno, una vez que está el certificado que el certificado está A puede obtener la clave pública de B, arrancando por el certificado
+
+138
+00:20:47.960 --> 00:20:55.220
+Rodrigo Ramele: y, además, por supuesto, Lógicamente, el certificado va a tener toda la información que hace falta para la clave pública.
+
+139
+00:20:55.220 --> 00:21:09.140
+Rodrigo Ramele: que normalmente es son los números que corresponden a la clave. Dependiendo cómo es el Protocolo y incluye información justamente del tipo de clave si es R. C, a 2 048, si es D, C, A, D, 300, 20, etcétera.
+
+140
+00:21:09.160 --> 00:21:12.220
+Rodrigo Ramele: Cualquier tipo de protocolo que o sea, hacer un protocolo, de qué?
+
+141
+00:21:13.500 --> 00:21:14.780
+Rodrigo Ramele: ¿de qué creen que será.
+
+142
+00:21:17.570 --> 00:21:18.899
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Esa es la encriptación.
+
+143
+00:21:19.620 --> 00:21:23.340
+Rodrigo Ramele: De encriptación exacto en este caso de R. C, A es un protocolo
+
+144
+00:21:23.530 --> 00:21:37.339
+Rodrigo Ramele: de firma digital. Es un protocolo de encriptación de base, pero lo vamos a usar para hacer una firma. Normalmente se usa para firma D, C, A, también lo mismo en digital signature algoritm, que son protocolos de firmas. Estos son para firmar cosas normalmente.
+
+145
+00:21:37.640 --> 00:21:43.700
+Rodrigo Ramele: Pero esto está asociado obviamente a esto no a para qué se usa el vuelta A.
+
+146
+00:21:43.910 --> 00:21:51.500
+Rodrigo Ramele: Estaba por ahí? ¿para qué se usa tipo de uso de la clave? Entonces se llama esto, o sea tipo uso. La clave va a decir con el algoritmo, en definitiva, que cada
+
+147
+00:21:51.680 --> 00:21:53.239
+Rodrigo Ramele: con el que está la clave, no
+
+148
+00:21:54.160 --> 00:22:00.810
+Rodrigo Ramele: bien a entonces, y esto es importante, los certificados puede verificar la validez del certificado.
+
+149
+00:22:00.910 --> 00:22:15.930
+Rodrigo Ramele: Por eso es que el certificado de es es de B. Es algo que es público, que lo puede dar incluso B. Entonces B puede ser el que da el certificado público. ¿por qué? Porque ya tiene una una manera de poder verificar que eso es válido, que el certificado es válido
+
+150
+00:22:16.020 --> 00:22:27.110
+Rodrigo Ramele: como base. Comprueba el tipo de uso permitido, comprueba que el certificado que se lo están presentando y que están diciendo que use es para lo que la información del certificado dice y comprueba también la fecha de vigencia
+
+151
+00:22:27.290 --> 00:22:31.550
+Rodrigo Ramele: y, además, puede verificar la integridad del certificado.
+
+152
+00:22:31.740 --> 00:22:38.220
+Rodrigo Ramele: Como el certificado está está firmado hace una validación de la firma digital de la autoridad que lo certifica
+
+153
+00:22:39.210 --> 00:22:50.380
+Rodrigo Ramele: está bien, es decir, puede chequear que el certificado no está alterado, porque valida la integridad del certificado por el certificado está firmado. Y entonces con eso hace la validación de una firma digital, requiere de la clave pública.
+
+154
+00:22:50.480 --> 00:23:06.600
+Rodrigo Ramele: obviamente porque el certificado está firmado a su vez, y como está firmado, está firmado por una clave privada, y yo tengo que chequear que la firma del certificado me coincide. Por lo tanto, necesito la clave pública asociado a la clave privada que firmó el certificado.
+
+155
+00:23:07.160 --> 00:23:16.659
+Rodrigo Ramele: Está bien. Entonces acá. Está el tema. ¿cómo se obtiene? Bueno, como se obtiene, se arma, un árbol o varios árboles en donde en las raíces están las entidades certificantes.
+
+156
+00:23:16.830 --> 00:23:19.800
+Rodrigo Ramele: entonces se construye una cadena de certificación.
+
+157
+00:23:19.920 --> 00:23:31.969
+Rodrigo Ramele: Entonces yo puedo agarro un certificado que me presenta b me fijo quién firma ese certificado y voy a buscar el certificado público de quien lo firma para validar el certificado de B,
+
+158
+00:23:32.260 --> 00:23:35.950
+Rodrigo Ramele: y Pero a su vez, tengo que estar seguro de que el certificado que tengo.
+
+159
+00:23:36.090 --> 00:23:47.190
+Rodrigo Ramele: del cual saqué la clave pública para verificar el certificado de bebé también es válido. Entonces, necesito subir en la cadena y así sucesivamente. ¿no? Y eso es lo que se llama la cadena de certificación
+
+160
+00:23:47.190 --> 00:23:59.569
+Rodrigo Ramele: de los certificados, entonces que son cadenas de firmas. Entonces, las autoridades certificantes tienen, a su vez, un certificado y que normalmente se acostumbra incluirlo. El certificado de la de la autoridad junto con el certificado.
+
+161
+00:23:59.830 --> 00:24:18.059
+Rodrigo Ramele: Y quién valida a el certificado de la autoridad certificante de la C a otra C, A o la misma, sea hasta llegar a las raíces y que las raíces son aquellas autoridades que firman su propio certificado, es decir, son auto firmados y son el punto de confianza del sistema.
+
+162
+00:24:18.490 --> 00:24:19.450
+Rodrigo Ramele: Está bien.
+
+163
+00:24:20.340 --> 00:24:27.490
+Rodrigo Ramele: Esto lo entienden chicos. Miren que esto va a haber siempre preguntas imparciales y finales asociadas con esto, y es algo que lo tienen que manejar.
+
+164
+00:24:28.140 --> 00:24:38.190
+Rodrigo Ramele: que tiene que ver con entendimiento de los certificados algo muy importante. Y ahora, con inteligencia artificial, cada vez esto se vuelve más y más importante, seguro, eso ya lo habían hablado con Pablo.
+
+165
+00:24:38.330 --> 00:24:40.160
+Rodrigo Ramele: pero entienden cómo es el esquema.
+
+166
+00:24:42.140 --> 00:24:43.810
+MARTÍN GALLARDO BERTUZZI: Y profe una consulta.
+
+167
+00:24:44.110 --> 00:24:45.000
+Rodrigo Ramele: Dale.
+
+168
+00:24:45.170 --> 00:24:52.940
+MARTÍN GALLARDO BERTUZZI: Si se llega a a corromper algo de las autoridades certificantes ahí, ya
+
+169
+00:24:54.270 --> 00:24:56.080
+MARTÍN GALLARDO BERTUZZI: medio que estamos en el horno, no.
+
+170
+00:24:56.430 --> 00:24:59.749
+Rodrigo Ramele: ¿por qué? ¿por qué estarías en el horno? ¿a qué te referís con corbampano.
+
+171
+00:24:59.750 --> 00:25:03.299
+MARTÍN GALLARDO BERTUZZI: O sea, porque si las autoridades certificantes
+
+172
+00:25:03.540 --> 00:25:07.119
+MARTÍN GALLARDO BERTUZZI: tienen algún problema o algo y firman.
+
+173
+00:25:07.770 --> 00:25:10.999
+MARTÍN GALLARDO BERTUZZI: y que eso falsifican alguna firma de algo, lo que sea.
+
+174
+00:25:11.530 --> 00:25:14.130
+Rodrigo Ramele: Sí, o sea, por ejemplo.
+
+175
+00:25:14.130 --> 00:25:16.290
+MARTÍN GALLARDO BERTUZZI: Problema con los certificados ahí.
+
+176
+00:25:17.420 --> 00:25:24.560
+Rodrigo Ramele: Si alguien entra a un grupo comando a, por ejemplo, a Verisáin y empieza a firmar certificados.
+
+177
+00:25:25.390 --> 00:25:33.439
+Rodrigo Ramele: controla las computadoras y empieza a firmar todos certificados, tu tu tu tu tu tu tu tu tu tu tu tu Bueno, ahí ¿qué pasa?
+
+178
+00:25:34.570 --> 00:25:47.729
+Rodrigo Ramele: Creo que está más adelante. Pero lo que pasa ahí es que se cuando termina ese proceso, en algún momento, el grupo comando lo rajan, suponete y recupera Verisáin recupera el control. Hace emite unas listas de revocación de certificados
+
+179
+00:25:48.260 --> 00:25:52.979
+Rodrigo Ramele: entendés que dice: todos los que se generaron de Acá hasta acá son todos inválidos.
+
+180
+00:25:52.980 --> 00:25:54.300
+MARTÍN GALLARDO BERTUZZI: Animales.
+
+181
+00:25:54.300 --> 00:25:57.409
+Rodrigo Ramele: Entró un grupo comando y me controló el lugar exacto.
+
+182
+00:25:57.860 --> 00:26:00.280
+MARTÍN GALLARDO BERTUZZI: Perfecto.
+
+183
+00:26:00.280 --> 00:26:09.800
+Rodrigo Ramele: Después. Vos tenés después. Vos tenés. Todos los certificados se valían a sí mismo. Así que ahí nadie puede toquetear nada, nadie te lo puede alterar, porque si no, no te dan la no te dan la firma
+
+184
+00:26:09.950 --> 00:26:15.359
+Rodrigo Ramele: y acá que es esto, que son las raíces. Esto, ¿Cómo se distribuye normalmente?
+
+185
+00:26:17.180 --> 00:26:22.659
+Rodrigo Ramele: ¿alguien sabe cómo se distribuyen las raíces de de las entidades certificantes.
+
+186
+00:26:24.400 --> 00:26:29.469
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Me suena como que es algo parecido a esos servidores maestros de Dns que están esparcidos por todo el mundo, pero.
+
+187
+00:26:29.550 --> 00:26:43.899
+Rodrigo Ramele: No, no, no, porque ahí la razón por la cual no tenés, eso es porque te podrías tener un Mann in the midd en el medio, porque esto es el punto de anclaje de la confianza del sistema tenés que hacerlo por otro mecanismo
+
+188
+00:26:44.260 --> 00:26:50.540
+Rodrigo Ramele: me entiendes porque nunca sabrías si no es trucho también. Y entonces te están dando un árbol totalmente. Trucho.
+
+189
+00:26:52.480 --> 00:26:54.439
+Rodrigo Ramele: Alguien sabe cómo se distribuye esto.
+
+190
+00:26:57.040 --> 00:27:00.209
+TOMÁS PINAUSIG CASTILLO: Venía con el sistema operativo puede ser.
+
+191
+00:27:00.210 --> 00:27:18.659
+Rodrigo Ramele: Muy bien, Tomás exacto, vienen los applates de los sistemas operativos o de los binarios que vos. Te descargas, o sea, cuando en el sistema operativo viene, hay una base de datos que son los certificados raíces en todos los sistemas operativos. Por ejemplo, los browsers también manejan esto. Los browsers lo manejan en forma paralela.
+
+192
+00:27:18.660 --> 00:27:32.639
+Rodrigo Ramele: o sea, el Browser no confía del todo. Confía un poco en el sistema operativo, pero también tiene su propia base. Cuando vos te actualizas el binario del Browser, parte de lo que te estás actualizando con nuevas actualizaciones. Son la base de datos de los certificados raíces, que es el punto de anclaje.
+
+193
+00:27:32.740 --> 00:27:35.210
+Rodrigo Ramele: Entonces, vos. Confias en
+
+194
+00:27:35.330 --> 00:27:44.380
+Rodrigo Ramele: en este certificado porque te viene en el propio Browser. Entonces vos tenés esa validación? Entonces es como un mecanismo independiente. No me pueden decir.
+
+195
+00:27:45.130 --> 00:27:59.529
+Rodrigo Ramele: no te modifico el binario. Y te hago, sí, y es verdad. Y ese es un vector de ataque, también eventualmente podría ser un vector de ataque. Por eso es muy importante las distribución de no binarios a donde de repente tienen jarcodeado los certificados raíz
+
+196
+00:27:59.780 --> 00:28:14.100
+Rodrigo Ramele: bases que son certificados normalmente que, por ejemplo, vencen en el 2 000. 45 con con fecha de duran muchos años en general, y son los más importantes de toda la cadena, no en esos son
+
+197
+00:28:14.610 --> 00:28:20.909
+Rodrigo Ramele: que realmente están muy protegidos esos certificados, o sea, por ejemplo, si un grupo comando va y toma verisine.
+
+198
+00:28:21.080 --> 00:28:40.949
+Rodrigo Ramele: El grupo Comando va a tener, tiene que llegar a un punto donde no puede entrar a donde está la firma de estos asociados a estos certificados. Eso tiene que poner una bomba. Tiene que como hacer una cray de del ataque. No van a poder tomar todo el edificio y hacer un montón de control. Pero eso no van a poder acceder. Van a tener que acceder con mucha más power para hacerlo.
+
+199
+00:28:41.000 --> 00:28:43.750
+Rodrigo Ramele: Está muy pensado de esa manera. Son lugares realmente muy seguros.
+
+200
+00:28:44.210 --> 00:28:45.000
+Rodrigo Ramele: Bien.
+
+201
+00:28:45.440 --> 00:28:56.529
+Rodrigo Ramele: Bueno, el concepto de las de las de los sea raíces, que son los certificados autores, es que es confiar en una única entidad certificante, Dicha autoridades lea en otra en la capacidad de firmar certificados.
+
+202
+00:28:56.560 --> 00:29:02.960
+Rodrigo Ramele: entonces, por ejemplo, certificado de a firmado por S E a 3, entonces el el
+
+203
+00:29:02.960 --> 00:29:22.210
+Rodrigo Ramele: que se yo. En este caso, el certificado de A tiene. Este es la firma. Está firmado por sea 3, tiene la firma de C, a 2 y la firma de C a 1 también. Después certificado de B, está firmado por un C a 1, una entidad del certificante de primer nivel. Entonces, el certificado de B que tienen es el certificado en sí mismo de B, más
+
+204
+00:29:22.210 --> 00:29:26.460
+Rodrigo Ramele: han concatenado el certificado público desea 1 para poder hacer la validación de
+
+205
+00:29:26.480 --> 00:29:28.239
+Rodrigo Ramele: a este. Yo lo valido con este
+
+206
+00:29:28.320 --> 00:29:34.840
+Rodrigo Ramele: y a este después. En definitiva, tengo que validarlo con algún certificado de un nivel todavía superior.
+
+207
+00:29:35.580 --> 00:29:39.500
+Rodrigo Ramele: digamos así sucesivamente. Se arman cadenas de de certificación. No.
+
+208
+00:29:40.030 --> 00:29:59.440
+Rodrigo Ramele: Bueno, no existe una única autoridad científica entre raíz no es que exista una autoridad científica raíz, sino lo que hay. Es un conglomerado que, ya les digo, es un popurrí de varios actores de actores gubernamentales. Los grandes actores tecnológicos, por ejemplo, Google tiene mucho certificado raíz Microsoft etc. Y las entidades específicas que son de
+
+209
+00:29:59.440 --> 00:30:07.600
+Rodrigo Ramele: de la de comerciales, no como Verysain Trasti, haber cómo se llama
+
+210
+00:30:08.320 --> 00:30:17.689
+Rodrigo Ramele: algunas Com algunas comunica empresas de comunicación. También yo me acuerdo, ver Aizoon tenía, era, podía generar certificados, etcétera. Y eso como un
+
+211
+00:30:17.910 --> 00:30:30.580
+Rodrigo Ramele: un popurrí. Así de certificado, raíz válidos que bueno, de vez en cuando se ven juntar y deben acordar cosas entre ellos. Imagínate bien, si hay B, tienen 2, 2, sea diferentes. ¿cómo valida al certificado de B.
+
+212
+00:30:30.730 --> 00:30:49.560
+Rodrigo Ramele: Bueno, lo que hace A confía en la certifica de autority. Esta es la confianza que tiene directamente por la verificación y las entidades certificantes se certifican entre sí. Cada C a emite, un certificado de la identidad de la otra. Es decir.
+
+213
+00:30:50.090 --> 00:30:58.230
+Rodrigo Ramele: esto es si qué pasa si justo de casualidad hay 2 sistemas que no se confían entre sí. Hay certificados que están cruzados
+
+214
+00:30:58.480 --> 00:31:15.199
+Rodrigo Ramele: Entonces, por eso que les digo que a un punto, todas estas entidades, que es bastante caótico, se cruzan entre sí y se hacen verificaciones entre sí, entonces 1 le puede, además de haber algunos certificados que son raíz, puede hacer una certificación con el certificado del otro, y con eso, de alguna manera.
+
+215
+00:31:15.320 --> 00:31:19.020
+Rodrigo Ramele: confiarse, establecerse relaciones de confianza entre ellos.
+
+216
+00:31:19.270 --> 00:31:36.739
+Rodrigo Ramele: Bueno, en la práctica existe una lista deseadas reconocidas que están en el sistema operativo en los navegadores o en Round Times, como la Javier Tormes y o similar. No hay muchas de las actualizaciones. A veces son quizás hasta exclusivamente para actualizar la lista de certificados o a veces para bajar bajar alguno que no va.
+
+217
+00:31:36.880 --> 00:31:54.079
+Rodrigo Ramele: Bueno, el certificado, el tipo de certificado más general es el X 509 que es este que le digo que deriva originalmente la red de X 25. En otra época había otro estándar que desapareció. No me acuerdo El nombre. Creo que era el D. S. A. En un momento de ese A quiso
+
+218
+00:31:54.460 --> 00:32:04.800
+Rodrigo Ramele: el mismo el mismo grupo que armó el sistema de encriptación de D. S. A, que es una alternativa de R S. A. Había tratado de hacer como
+
+219
+00:32:04.970 --> 00:32:22.930
+Rodrigo Ramele: imponer su esquema de certificados, pero no prosperó, y el que quedó terminó siendo X 509, que es el que más se usa X 509. Incluye la versión. Incluye el número de serie. Tiene el identificador del algoritmo de firma tiene el nombre del emisor. ¿quién es el emisor? Se dice, se llama Ishuar.
+
+220
+00:32:22.930 --> 00:32:41.110
+Rodrigo Ramele: que es el isware del certificado, Tiene la validez tiene el subject del certificado, que es a quién estás certificando. Normalmente, esto tiene. Hay varias. Hay varios campos. Hay 1 que se llama Adn, que es el distinguista, etcétera, el país, etcétera, etcétera. Pero el que más el que más importa es el es el campo, el Common Name.
+
+221
+00:32:41.110 --> 00:32:49.980
+Rodrigo Ramele: Después tiene la clave pública del sujeto del sauceng y la firma, que es la firma del hash de todo lo anterior, o sea, la firma que incluye también el hash de todo esto.
+
+222
+00:32:50.260 --> 00:32:56.059
+Rodrigo Ramele: Entonces es como medio como que se hace la cola. ¿cómo puedo hacer un certificado que incluye la la firma en sí misma.
+
+223
+00:32:56.850 --> 00:32:59.309
+Rodrigo Ramele: no como se imaginan cómo se hace eso.
+
+224
+00:32:59.710 --> 00:33:04.630
+Rodrigo Ramele: O sea, es un certificado. Es como una hoja, no completa. Y yo quiero que esa hoja, nadie me la altere.
+
+225
+00:33:05.480 --> 00:33:11.179
+Rodrigo Ramele: Nadie me la entera. Entonces, ¿cómo puedo hacer para hacer la firma de eso
+
+226
+00:33:14.640 --> 00:33:16.800
+Rodrigo Ramele: cri cri Te imaginas cómo
+
+227
+00:33:17.920 --> 00:33:23.240
+Rodrigo Ramele: los trato de que lo piensen un toque, porque así eso nos ayudan a entenderlo, o sea.
+
+228
+00:33:23.240 --> 00:33:25.519
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Tiene una hoja de papel.
+
+229
+00:33:25.740 --> 00:33:38.509
+Rodrigo Ramele: No, no. Si tengo una hoja de papel, obviamente es digital, a lo que me refiero, que tenés, un mensaje que tiene toda esta información y vos lo vas a firmar con la clave privada imagínate rca de una entidad certificante.
+
+230
+00:33:39.090 --> 00:33:44.700
+Rodrigo Ramele: Y a esto mismo le vas a adosar la firma. El resultado de ese proceso entendés.
+
+231
+00:33:45.370 --> 00:33:46.100
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí.
+
+232
+00:33:46.530 --> 00:33:53.380
+Rodrigo Ramele: Y vos. No querés que nadie te lo pueda alterar eso. O querés que eso sea que esté que mantenga integridad.
+
+233
+00:33:56.250 --> 00:33:57.210
+Rodrigo Ramele: ¿cómo haces.
+
+234
+00:34:00.320 --> 00:34:03.950
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Le puedo poner un timestan o hacerlo con firma digital.
+
+235
+00:34:05.670 --> 00:34:15.699
+Rodrigo Ramele: Claro, claro. Sí, Sí, sí, sí, eso seguro. Firma digital, Tenés el timestum también. Lo tenés porque tenés una fecha. Bueno, acá no está. Pero hay una fecha. Es el momento de la firma. También está
+
+236
+00:34:15.840 --> 00:34:19.790
+Rodrigo Ramele: porque, y está el el intervalo de validez también. ¿desde cuándo? ¿hasta cuánto está?
+
+237
+00:34:19.920 --> 00:34:28.580
+Rodrigo Ramele: Bueno, nada por ahí? No se entiende por ahí mucho la pregunta que estoy haciendo, pero básicamente vos lo que haces vos tenés, la clave pública del sujeto. Vos juntás toda esta información que es digital.
+
+238
+00:34:28.790 --> 00:34:32.209
+Rodrigo Ramele: Toda esta información que es digital, la la la junta. Si es un paquete.
+
+239
+00:34:32.340 --> 00:34:40.110
+Rodrigo Ramele: y a esto primero generas un hash, y ese hash lo vas a encriptar con la clave pública de el
+
+240
+00:34:40.820 --> 00:34:45.529
+Rodrigo Ramele: este, por ejemplo, de R C, A, no con las con las sutilezas que tiene eso, pero básicamente haces eso.
+
+241
+00:34:46.250 --> 00:34:56.989
+Rodrigo Ramele: Una vez que eso te va a dar el output que es el vos generaste el hash, y a eso le aplicaste lo encriptaste, y eso te da un output. Y ese output lo adosas, acá
+
+242
+00:34:57.320 --> 00:35:03.129
+Rodrigo Ramele: baloncesto acá mismo y con esto armas, un nuevo paquete que tiene todo esto.
+
+243
+00:35:03.610 --> 00:35:10.830
+Rodrigo Ramele: Si cualquier bit de todo este paquete se altera la no vas a poder validar la firma incluyendo los bits de la firma.
+
+244
+00:35:11.070 --> 00:35:30.939
+Rodrigo Ramele: Si alguien te altera los Beat de la firma, la firma no se va a validar. Entonces es como que el ese es el detalle, Ten en cuenta que los Beats de la firma son auto integrados. Son son, tienen una una integridad intrínseca, porque si alguien te altera los Beats de la firma, la firma no te va a coincidir para la validación, Entonces, de alguna manera lo eso lo lo vas a detectar y vas a saber que el certificado es inválido.
+
+245
+00:35:30.980 --> 00:35:32.000
+Rodrigo Ramele: está bien.
+
+246
+00:35:32.800 --> 00:35:52.020
+Rodrigo Ramele: Y esto es importante, que el certificado tiene la clave pública, o sea, la clave pública de el sujeto está, digamos, la firma. Esta o es la sez y al alzar la firma parte de lo que le das. El Input va a ser la clave pública, y eso se lo vas a dar a la clave privada para generar el output. Se entiende
+
+247
+00:35:53.700 --> 00:36:00.410
+Rodrigo Ramele: esa vuelta, esa vuelta que hay que hacer, que tiene el certificado, es decir, la clave pública se distribuye firmada con la clave privada.
+
+248
+00:36:03.180 --> 00:36:06.700
+TOMÁS PINAUSIG CASTILLO: Con la clave privada del certificante sería que.
+
+249
+00:36:06.700 --> 00:36:11.089
+Rodrigo Ramele: Exacto de la autoridad certificante, tomas exactamente exactamente
+
+250
+00:36:11.960 --> 00:36:15.120
+Rodrigo Ramele: exacto. Sí, es así. Es así? Es exactamente así
+
+251
+00:36:15.470 --> 00:36:21.560
+Rodrigo Ramele: y en el único caso que se da exactamente lo que yo te dije es en los que son auto firmados, entendés
+
+252
+00:36:22.710 --> 00:36:24.700
+Rodrigo Ramele: en el que la raíz.
+
+253
+00:36:24.920 --> 00:36:28.689
+Rodrigo Ramele: Yo te estoy dando mi clave pública de entidad certificante
+
+254
+00:36:28.850 --> 00:36:34.580
+Rodrigo Ramele: y mi clave pública. Te la firmo con la clave privada asociada a esa clave pública porque es auto firmado
+
+255
+00:36:34.970 --> 00:36:40.350
+Rodrigo Ramele: en el auto firmado el Southet es el mismo que el Isward. Es el mismo que el emisor.
+
+256
+00:36:40.690 --> 00:36:57.740
+Rodrigo Ramele: Esto es lo mismo. Ustedes pueden generar fácilmente con opencl un certificado de auto firmado y lo ponen donde quieran, Lo firman por ustedes mismo, pero tiene esa particularidad que el que la clave pública, en definitiva, que está dentro del certificado, se firma con la clave privada que está asociada a esa misma clave pública.
+
+257
+00:36:58.480 --> 00:37:03.400
+Rodrigo Ramele: Entonces, dependiendo cómo se hace la firma es que vos vas estableciendo la cadena del árbol hasta llegar arriba.
+
+258
+00:37:04.210 --> 00:37:10.389
+TOMÁS PINAUSIG CASTILLO: Ah, eso es cuando que si lo hacías, el chrome, te tiraba un error. No te decía, como que no confíes y tenías.
+
+259
+00:37:10.390 --> 00:37:10.890
+Rodrigo Ramele: Exacto.
+
+260
+00:37:11.170 --> 00:37:12.359
+TOMÁS PINAUSIG CASTILLO: Lo veo clave.
+
+261
+00:37:12.780 --> 00:37:19.309
+Rodrigo Ramele: Imagínate por qué pasa eso ahora? ¿por qué que chequeo está haciendo el chrome de eso?
+
+262
+00:37:20.230 --> 00:37:23.680
+TOMÁS PINAUSIG CASTILLO: Que esté firmado con 1 de los C, a S, que él sí confía.
+
+263
+00:37:24.570 --> 00:37:39.770
+Rodrigo Ramele: Eso es lo que te exige exactamente. Cuando no confía. Cuando está firmado por algo, alguien por el el isware. No corresponde a 1 de los que él ni confía, ni tampoco puede establecer una relación de de una traza
+
+264
+00:37:39.770 --> 00:37:46.750
+Rodrigo Ramele: en el árbol a 1 de los que confía, te dice que ojo porque esto está firmado por alguien.
+
+265
+00:37:46.950 --> 00:38:00.950
+Rodrigo Ramele: Y, en definitiva, en una época esto cuando antes era como muy fácil, porque vos podías. Yo podía hacer un techo. Lo puedo hacer. ¿puedo hacer un certificado ahora que dice: Hola, yo soy Banco Santander Santander, y es un certificado firmado por Banco Santander.
+
+266
+00:38:01.000 --> 00:38:11.130
+Rodrigo Ramele: Entonces lo pongo en un sitio web y en el sitio web. Yo hola que tal yo soy banco. Santander. Mira, mira el como name. Mire como Name dice banco. Santander, entienden. Obviamente, cualquiera puede hacer eso.
+
+267
+00:38:12.230 --> 00:38:24.429
+Rodrigo Ramele: Lo que te lo que le da validez a eso es que el el Browser pueda establecer una relación de confianza desde ese certificado hasta alguno de los que, con el browser que vienen en el propio binario del browser
+
+268
+00:38:25.030 --> 00:38:25.930
+Rodrigo Ramele: está claro.
+
+269
+00:38:29.060 --> 00:38:31.589
+Rodrigo Ramele: buenísimo, no espectacular.
+
+270
+00:38:31.720 --> 00:38:40.459
+Rodrigo Ramele: Bueno, este es un típico certificado. Fíjense, estos están en el sistema este de la Acn, que era muy binario muy
+
+271
+00:38:40.490 --> 00:38:57.799
+Rodrigo Ramele: así que medio críptico. Este, por ejemplo, es versión 3, un certificado. Este es el número de serie. Este es el código del algoritmo. Se está usando Md 5. Esto obviamente ya es inválido m de 5 con inscripción con R. S. A: Este es el Isware. Este es el emisor.
+
+272
+00:38:57.920 --> 00:39:03.460
+Rodrigo Ramele: El emisor es: ¿quién es el firmante? Tauti acá? Está Tauti: Sí, Esto es una empresa sudafricana.
+
+273
+00:39:03.660 --> 00:39:08.710
+Rodrigo Ramele: Esta empresa regresa. Los sudafricanos son muy capos en temas de seguridad informática También
+
+274
+00:39:08.870 --> 00:39:14.500
+Rodrigo Ramele: esta empresa es regrosa. Yo, en un momento quería elaborar esta empresa era buenísima en el
+
+275
+00:39:14.830 --> 00:39:22.170
+Rodrigo Ramele: bueno Tauti. Es un es el emisor. Fíjense, esto está en cabo en cabo. ¿en
+
+276
+00:39:22.270 --> 00:39:30.279
+Rodrigo Ramele: ¿En qué town en Sudáfrica Esta es la validez. El primero del año. 1 996 al 20, 20 hay un montón de de validez.
+
+277
+00:39:30.340 --> 00:39:45.789
+Rodrigo Ramele: Este es el subsyeng. Este es un note certificado autofirmado. Fíjense que es un certificado raíz. Acá dice esta: la información de la clave pública es una clave pública del 1 024. Ese es el módulo. Y este es el exponente que es el exponente que se usa. Se usa siempre en la Rc, a
+
+278
+00:39:46.570 --> 00:39:49.070
+Rodrigo Ramele: que ese segundo exponente validante será 3. Este.
+
+279
+00:39:49.190 --> 00:39:54.570
+Rodrigo Ramele: Y esto es el el algoritmo de firma. Y acá está. Este es el
+
+280
+00:39:54.950 --> 00:39:56.740
+Rodrigo Ramele: la clave pública y está la firma.
+
+281
+00:39:57.520 --> 00:40:04.340
+Rodrigo Ramele: Está la firma que está firmada por la clave privada que está asociada a esta clave pública, pues esto es un certificado de raíz.
+
+282
+00:40:04.530 --> 00:40:16.830
+Rodrigo Ramele: Está bien y acá dice una marquita, seatro y criticar, obviamente chao
+
+283
+00:40:18.320 --> 00:40:22.720
+Rodrigo Ramele: espectacular. Bien, Bueno, acá está eso mismo que hicimos recién
+
+284
+00:40:22.870 --> 00:40:25.080
+Rodrigo Ramele: todos los datos específicos T A, C.
+
+285
+00:40:25.310 --> 00:40:45.210
+Rodrigo Ramele: Bueno, ¿cómo es el step bystep de la de la verificación que se hace? Lo primero que se hace es obtiene la clave pública del emisor del certificado. Yo tengo que validar. Tengo que saber que este certificado que B me dio es un certificado válido. Entonces lo primero que hago obtengo, la clave pública del emisor y en la cadena de certificados o del sistema o del sistema si es un certificado raíz.
+
+286
+00:40:45.530 --> 00:40:58.460
+Rodrigo Ramele: Y tengo que verificar recursivamente el certificado del emisor, tengo que ir para arriba hasta que llegue alguno, que es que es que está bien. Una vez que hago esto cheque, el Sardpath se llama esto serpat. Está verificado.
+
+287
+00:40:58.480 --> 00:41:06.289
+Rodrigo Ramele: Entonces, ahora tengo que ver la integridad del certificado. Tengo que ver que el certificado está válido. Entonces utilizo el algoritmo especificado y la clave pública del emisor.
+
+288
+00:41:06.290 --> 00:41:20.900
+Rodrigo Ramele: con la clave del de arriba, con la clave pública de arriba. Me fijo. Si puedo validar la firma del certificado. Si valida la firma significa que estoy haciendo un chequeo de integridad porque la firma implícitamente tiene Hash. Y entonces hago ese chequeo
+
+289
+00:41:21.100 --> 00:41:38.840
+Rodrigo Ramele: y después me fijo el verifico, el intervalo de valores que me fijo. Si el certificado que estoy que estoy viendo en este momento debe estar vigente y que está dentro del rango y la autoridad certificante debe estar vigente al comienzo del periodo de vigencia, o sea que el certificado tiene que estar.
+
+290
+00:41:39.020 --> 00:41:55.039
+Rodrigo Ramele: Todas las validaciones tienen que estar vigentes. Esto es algo que pasa. Vieron que ocurre mucho en, por ejemplo, sistemas embebidos. A veces que el sistema bebido tiene se conecta algo y de repente no tiene un sentido de la hora. Entonces termina en cualquier hora y algo que pasa a veces que se van para el otro lado
+
+291
+00:41:55.040 --> 00:42:09.259
+Rodrigo Ramele: termina siendo. ¿qué sé yo, se pone el primero del 1 del 1, del 2 000. Y hay muchos certificados certificados que el periodo de vigencia arranca después. Entonces empieza a dar errores, porque no justamente el certificado no está. No es válido porque todavía no entró en vigencia.
+
+292
+00:42:09.410 --> 00:42:21.019
+Rodrigo Ramele: entonces eso es algo un 1 de los problemas derivados de que cuando 1 no actualiza, si se conecta un sistema que se conecta con otras cosas y no tiene actualizar la fecha. Si no tiene actualizar la fecha, va a dar muchos errores en la variación de los certificados.
+
+293
+00:42:21.680 --> 00:42:23.930
+Rodrigo Ramele: Es lo que tiene que ocurrir
+
+294
+00:42:24.350 --> 00:42:32.269
+Rodrigo Ramele: bien. Bueno, luego se verifica la identidad del certificado que es comparar que el common name sea lo que lo que
+
+295
+00:42:32.270 --> 00:42:50.689
+Rodrigo Ramele: lo que se espera, ¿no? Ahora, después le voy a contar que, bueno, se lo cuento ahora. Normalmente, cuando 1 se qué es lo que hace Browser. Cuando se conecta al Ba al certificado del banco, se fija que el common name que el Hostname que está en el common name coincida con el common name con con el hostene al que está estableciendo la conexión.
+
+296
+00:42:51.090 --> 00:42:54.600
+Rodrigo Ramele: Entonces, si yo me estoy conectando a Santander, punto com
+
+297
+00:42:55.120 --> 00:43:12.659
+Rodrigo Ramele: Lo que espero que me dé el certificado. El certificado que recibo de cuando trato de establecer una conexión de Ssl con Santander es que el common name sea Santander, Punto com que coincida eso, esa verificación. Si no esa verificación no coincide, asumo, que acá hay algo raro y se corta todo
+
+298
+00:43:13.470 --> 00:43:27.510
+Rodrigo Ramele: bien. Y después, obviamente, que el uso del certificado que el certificado se está usando para lo que dice el certificado que se va a utilizar, y ahí está la parte de la revocación de claves de los certificados, que es la necesidad de invalidar una clave antes de su expiración.
+
+299
+00:43:27.510 --> 00:43:38.489
+Rodrigo Ramele: Este es esto que comentaba, entró un grupo comando, generó un montón de claves de certificados truchos de todas. Esas claves son inválidas y hay que revocarlas. Entonces se arman lo que se llaman listas de revocación
+
+300
+00:43:38.630 --> 00:43:45.920
+Rodrigo Ramele: en en que, bueno, es un poco tratar de de de implementar un mecanismo para
+
+301
+00:43:46.180 --> 00:44:03.380
+Rodrigo Ramele: hacer un back tranquing de esta de estas situaciones que pueden pasar de cuando se comprometen claves o cuando hay en certificados que se detectan, que tienen algún problema. Entonces se con la lista de revocación que son adicionales. Los browsers pueden tener información de que certificados están, y algo que pasa con la lista de revocación es que también
+
+302
+00:44:03.380 --> 00:44:08.670
+Rodrigo Ramele: se manejan de de las 2 formas. Una forma en la que se manejan es vienen también en el binario.
+
+303
+00:44:08.670 --> 00:44:23.079
+Rodrigo Ramele: Pero cuando 1 actualiza lo que también se actualiza son los certificados que se dieron de baja y que están en la lista de revocación. Entonces 1 puede, además de hacer toda la verificación, chequear, que este certificado o cualquiera de la cadena no esté en las listas de revocación.
+
+304
+00:44:23.690 --> 00:44:32.419
+Rodrigo Ramele: No que es esto que son las listas de certificados revocados y miráis a la lista de número de tarjetas de crédito robadas. Esto es una época, se hacía y se repartían en papeles que eran
+
+305
+00:44:32.420 --> 00:44:50.940
+Rodrigo Ramele: en los papeles de la lista. ¿no? Y hay un negocio tenía que chequear. ¡qué locura! La verdad que era una locura ahí en el negocio decía, ah, si usted quiere pagar con tarjeta de crédito espere. Un segundito agarrá la tarjeta de crédito, la ponía y buscaba en una lista, buscaba como en un papel que sacaba y se fijaba a ver si coincidía si si ese número de tarjeta figuraba figuraba ahí.
+
+306
+00:44:51.070 --> 00:45:04.609
+Rodrigo Ramele: Bueno, el listado actual son los certificados vigentes y revocados y listado, histórico, certificados, expirados y revocados puede ser de las 2 maneras. O sea, puede estar todo el histórico completo o una plate. Básicamente es eso. Es como se maneja la actualización
+
+307
+00:45:04.800 --> 00:45:05.730
+Rodrigo Ramele: en
+
+308
+00:45:06.320 --> 00:45:19.500
+Rodrigo Ramele: y los certificados 509, Normalmente solo el emisor es el que puede revocarlo. Y esto se llama Cr. L Certificate Revocation List y se agrega al Cr L de la autoridad certificante global no
+
+309
+00:45:19.960 --> 00:45:29.069
+Rodrigo Ramele: que normalmente es esto es, es, ¿es binario o hay un protocolo que es el online, certifica el status protocol ose ose ssp
+
+310
+00:45:29.140 --> 00:45:44.109
+Rodrigo Ramele: que lo que permite certificar si una firma está activa, es decir, si se comprometió a informaciones de un certificado, de una firma, el que es un servicio online con una api estandarizada que está administrada por los la seas, los certifica y autorities, y que
+
+311
+00:45:44.190 --> 00:45:47.540
+Rodrigo Ramele: el resultado es un certificado.
+
+312
+00:45:47.790 --> 00:46:02.519
+Rodrigo Ramele: que es un certificado temporal que dura de una a de una hora a 7 días y que el certificado me dice que el certificado Me incluye información de los certificados que fueron revocados. Es como un sistema online para verificar
+
+313
+00:46:02.920 --> 00:46:18.980
+Rodrigo Ramele: este justamente en lista de revocación y no tener que esperar a que sea una actualización de un binario con con applates. ¿no? Entonces bueno, es un protocolo muy estandar muy estandarizado que que funciona muy bien son entre esas cosas que funcionan en todos los lugares, ya están bastante estándar.
+
+314
+00:46:19.880 --> 00:46:37.409
+Rodrigo Ramele: Bien, Bueno, Wapapo, entonces de los certificados asocian una clave pública con una identidad de una entidad. Se pueden validar offline, que es que hay que tener cuidado con las posibles revocaciones. Esto que les digo en en la validación offline
+
+315
+00:46:37.530 --> 00:46:40.240
+Rodrigo Ramele: también incluye listas de revocaciones.
+
+316
+00:46:40.890 --> 00:46:56.790
+Rodrigo Ramele: son certificados por otra entidad. Hay una entidad que hace la certificación de esto y así se distribuyen las los certificados, arman una cadena de confianza y resuelven el tema de integridad de las claves públicas, o sea, todo este quilombo es para evitar esta situación.
+
+317
+00:46:56.900 --> 00:46:57.830
+Rodrigo Ramele: Esto de acá
+
+318
+00:46:58.310 --> 00:47:07.129
+Rodrigo Ramele: no que a cree que se está comunicando con B, cuando en realidad está usando una clave pública que es de E. Entonces, para hacer ese ese chequeo de que, bueno, de que pueda tener
+
+319
+00:47:07.260 --> 00:47:10.460
+Rodrigo Ramele: un mecanismo para hacer eso, ¿Estamos hasta acá
+
+320
+00:47:14.140 --> 00:47:15.490
+Rodrigo Ramele: alguna pregunta.
+
+321
+00:47:16.970 --> 00:47:21.099
+Rodrigo Ramele: Esto se toma siempre siempre una pregunta de certificado puede ser.
+
+322
+00:47:21.100 --> 00:47:22.050
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Acá estamos.
+
+323
+00:47:22.250 --> 00:47:38.079
+Rodrigo Ramele: Bien excelente. Joaquín. Gracias, que bien es algo muy, muy piol a que, en general, por suerte esto funciona bien y y es un aspecto clave de lo que son las infraestructuras Pk. Ahí no que este public infractor para montar y para y asociarse a los protocolos?
+
+324
+00:47:38.240 --> 00:47:39.880
+Rodrigo Ramele: Bueno.
+
+325
+00:47:40.210 --> 00:47:59.290
+Rodrigo Ramele: bien, normalmente, como son los ejercicios que tomamos en examen. Y eso es, les decimos, bueno, está esta situación de un ser que un servidor, por ejemplo, que se conecta para hacer tal y tal cosa cual es la cadena de validaciones que hay que hacer para estar seguros de que los certificados son válidos y que, y que, y que eso está validado, y es es hacer todo esto? Que que decíamos
+
+326
+00:47:59.860 --> 00:48:07.639
+Rodrigo Ramele: bien? Bueno, nos metemos en intercambio simétrico de claves. ¿cómo es que se maneja el tema de justamente de del del intercambio
+
+327
+00:48:08.750 --> 00:48:19.090
+Rodrigo Ramele: simétrico. ¿cómo yo puedo hablar con diferentes? Por un lado, con la parte como puede ser simétrico o puede ser asimétrico, no para generar, para generar.
+
+328
+00:48:19.090 --> 00:48:32.340
+Rodrigo Ramele: intercambiar mensajes que me permitan de generar hacer un protocolo válido de intercambio de claves es decir, que ambas entidades, tanto Bowe y Alice puedan confluir y puedan converger
+
+329
+00:48:32.530 --> 00:48:34.979
+Rodrigo Ramele: de Ma de cada 1 de ellos a una clave
+
+330
+00:48:35.090 --> 00:48:50.740
+Rodrigo Ramele: que coincidan entre ellas que sean la misma clave. ¿no? Entonces, bueno, el protocolo, Uno de los primeros protocolos es el de Nissan Sharer, que es un Protocolo de intercambio de claves simétricas con un calce. Es el protocolo que utiliza carveros y que usa actividad Directory
+
+331
+00:48:50.760 --> 00:48:55.780
+Rodrigo Ramele: actividad Electric es un un sistema corporativo de Microsoft que ahora
+
+332
+00:48:56.140 --> 00:49:03.480
+Rodrigo Ramele: no estoy seguro si existe con ese nombre. Ahora está vinculado dentro de los de los motores de administración de de
+
+333
+00:49:03.700 --> 00:49:12.339
+Rodrigo Ramele: este de usuarios. Identidades que tienen todas las empresas, incluyendo, por ejemplo, Lilba o cualquier otra empresa y carberos, es el estándar de Linux de toda la vida Para hacer eso mismo
+
+334
+00:49:12.470 --> 00:49:19.240
+Rodrigo Ramele: requiere un servicio centralizado. Requiere un k e y lo que hace genera claves de cesión entre pares. Es decir, hay
+
+335
+00:49:19.440 --> 00:49:31.549
+Rodrigo Ramele: me me permite, le permite a 2 entidades intercambiar mensajes con un K C para después poder a intercambiar, generar una clara decisión entre ellos y poder establecer una comunicación
+
+336
+00:49:31.660 --> 00:49:40.890
+Rodrigo Ramele: con una clave compartida. Habiendo Habiendo ofrecido garantías de que esa clave no hay un tercero que está en posesión de esa clave
+
+337
+00:49:41.120 --> 00:49:58.149
+Rodrigo Ramele: parte de la hipótesis de que es de que cada entidad comparte una clave con el A ese Eso es el arranque que era este tema de confianza, no que les decía con con el con el conté de P, G, P, o sea, todas las entidades tienen un acceso, Comparten una clave que está que es válida contra el cáncer.
+
+338
+00:49:58.210 --> 00:50:03.059
+Rodrigo Ramele: Y esa clase ya está preestablecida. Y ese es el punto de arranque de Nisshan Shore.
+
+339
+00:50:03.170 --> 00:50:16.679
+Rodrigo Ramele: Entonces esto vamos a acostúmbrense a este tipo de notación. Vamos a usar esta o la otra es con así como está. Acá. N. K. De M. Implica que M está encriptado con k
+
+340
+00:50:16.980 --> 00:50:17.660
+Rodrigo Ramele: No, claro.
+
+341
+00:50:17.800 --> 00:50:22.539
+Rodrigo Ramele: O este esquema es que todo esto, que está entre corchete, fue encriptado con carga
+
+342
+00:50:23.330 --> 00:50:27.370
+Rodrigo Ramele: con algún protocolo de de de inscripción no
+
+343
+00:50:27.560 --> 00:50:46.290
+Rodrigo Ramele: a veces especifica Protocolo y a veces no. Y de un lado tienen un actor y del otro lado, van teniendo. Van cambiando los diferentes sectores y se van intercambiando y muestra todo lo que es el registro completo. Todo el la traza de los mensajes que se enviaron todos completos. Los protocolos normalmente se tratan de todos los mensajes que se hacen
+
+344
+00:50:46.850 --> 00:51:00.089
+Rodrigo Ramele: bien. Entonces, por ejemplo, la primera aproximación que 1 puede implementar para ir al que para acceder a Neilham Shoreter, que no es este, son como versiones más simplificadas que la vamos a ir complejizando hasta que lleguemos a una versión definitiva
+
+345
+00:51:00.090 --> 00:51:07.840
+Rodrigo Ramele: es si yo quiero comunicarme con A con B y A y B comparten un k C. Básicamente, lo que necesitan hacer A y B es
+
+346
+00:51:08.180 --> 00:51:15.700
+Rodrigo Ramele: acceder al k D, C para para generar una clave de sesión y pedirles al K. D. C, alguna clave de sesión.
+
+347
+00:51:15.790 --> 00:51:31.869
+Rodrigo Ramele: Entonces lo primero que hace Ale le dice al K. S. Y se lo manda encriptado con su clave kayak, que solo puede leer el K. S. Le dice: Yo me quiero comunicar, quiero establecer una sesión con B. Yo soy A y quiero establecer una sesión con B. Entonces el K. C. Le empasa.
+
+348
+00:51:31.990 --> 00:51:38.110
+Rodrigo Ramele: te dice yo te mando una clave de sesión nueva que yo acabo de crear. Y esa te la encripto con la clave a
+
+349
+00:51:38.220 --> 00:51:44.020
+Rodrigo Ramele: y a su vez te mando un mensaje que es una para vos. Ah, esto va a ser una caja negra
+
+350
+00:51:44.270 --> 00:51:49.810
+Rodrigo Ramele: porque te lo estoy encriptando con la clave de B. Y ta ahí adentro, También está la clave de sesión
+
+351
+00:51:50.050 --> 00:51:52.159
+Rodrigo Ramele: y a le va a mandar eso a B.
+
+352
+00:51:52.730 --> 00:51:57.320
+Rodrigo Ramele: Le vamos a mandar ese ese choclo. Se lo va a mandar a B. ¿va a recibir Esto
+
+353
+00:51:58.550 --> 00:52:12.940
+Rodrigo Ramele: asume que en este mensaje a él le está diciendo que se quiere comunicar con él o quien sea que le mandó este mensaje, le dice que se quiere comunicar con él. Y lo que va a poder hacer es obtener la clave de sesión desencriptándolo con su clave b
+
+354
+00:52:13.060 --> 00:52:13.970
+Rodrigo Ramele: Okay.
+
+355
+00:52:14.990 --> 00:52:17.990
+Rodrigo Ramele: Estamos, Bueno, ¿qué problemas de base le encuentran a esto.
+
+356
+00:52:23.160 --> 00:52:29.650
+TOMÁS PINAUSIG CASTILLO: ¿cómo es que el K D. C obtiene las claves de A y B sin que tampoco pase Manha independiente, puede ser.
+
+357
+00:52:30.080 --> 00:52:36.770
+Rodrigo Ramele: No eso asumirlo. Tomás es un buen punto, pero partís de asumir que eso está resuelto
+
+358
+00:52:37.130 --> 00:52:55.340
+Rodrigo Ramele: entendés. Puedes asumir que ese alguien fue con un papel escrito y se lo dieron físicamente. Es una. Es algo que puedes asumir eso. Asumís, que está resuelto. Okay, muy buena, muy buena. Este está bien que enfatices eso porque eso es evidente, pero eso lo asumimos. Eso se hizo físicamente, listo.
+
+359
+00:52:55.480 --> 00:52:57.290
+Rodrigo Ramele: sí, Siguiente problema.
+
+360
+00:53:06.460 --> 00:53:10.210
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Si el Ca: D, C termina, si entra en el grupo comando del K. D. C.
+
+361
+00:53:10.440 --> 00:53:11.260
+Rodrigo Ramele: A mí.
+
+362
+00:53:11.260 --> 00:53:11.920
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: No.
+
+363
+00:53:12.190 --> 00:53:31.519
+Rodrigo Ramele: Excelente punto excelente punto, y eso es verdad y por eso es importante que la seguridad la consideren siempre como un problema holístico a donde tienen que considerar todo y tienen que ser. Tienen que poder ponerse y sacarse el gorro de paranoicos. Así que es muy bueno. Eso también que decís es correcto. Y eso puede pasar eventualmente. Entonces, vos.
+
+364
+00:53:31.520 --> 00:53:42.739
+Rodrigo Ramele: Y está bien que lo pienses, porque en un punto tenés que darte cuenta que la se que vos estás estableciendo una relación de confianza con el K. E. Entonces, si el K. D. C. Está comprometido, todo deja de tener sentido todo el resto.
+
+365
+00:53:43.190 --> 00:53:47.050
+Rodrigo Ramele: Muy bien. Así que bien, eso también hay hasta considerar. Por supuesto.
+
+366
+00:53:47.200 --> 00:53:55.649
+Rodrigo Ramele: no es el foco acá, de la pregunta, pero es algo que lo tiene que enseñar a nivel general. Eso. Pero ¿qué qué, en concreto, con estos mensajes que qué otro problema men.
+
+367
+00:54:05.360 --> 00:54:09.389
+TOMÁS PINAUSIG CASTILLO: Esto sería ibe, Ya se pusieran de acuerdo. Saben que van a hablar.
+
+368
+00:54:09.670 --> 00:54:16.050
+Rodrigo Ramele: No, Es decir, asi. Quiere comunicarse con B,
+
+369
+00:54:16.670 --> 00:54:21.500
+Rodrigo Ramele: pero B se entera acá que quieren comunicarse con él.
+
+370
+00:54:22.960 --> 00:54:27.210
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Yo me podría poner entre el A y el K C y decir o la C, K, S.
+
+371
+00:54:29.290 --> 00:54:36.659
+Rodrigo Ramele: Vos te podés poner entre el A y el K C y el Cis que sos el K. C, Ok a te manda esto. ¿y vos qué hacés.
+
+372
+00:54:37.830 --> 00:54:40.890
+TOMÁS PINAUSIG CASTILLO: Pasa que no tenés en ese.
+
+373
+00:54:40.890 --> 00:54:41.210
+Rodrigo Ramele: Claro.
+
+374
+00:54:41.210 --> 00:54:42.140
+TOMÁS PINAUSIG CASTILLO: Acuérdate que.
+
+375
+00:54:42.140 --> 00:54:43.610
+Rodrigo Ramele: La clave de a no la tenés.
+
+376
+00:54:47.070 --> 00:54:50.950
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Le puedo enviar la mía para que me envíe los mensajes a mí.
+
+377
+00:54:52.620 --> 00:54:59.420
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: En vez de a ver, le retransmito el mensaje a ver.
+
+378
+00:55:00.010 --> 00:55:01.940
+TOMÁS PINAUSIG CASTILLO: Pero no tenías que encriptarle
+
+379
+00:55:02.180 --> 00:55:07.100
+TOMÁS PINAUSIG CASTILLO: con la clave de a una clave de sesión, o sea, si vos nunca conseguiste la clave de A.
+
+380
+00:55:08.440 --> 00:55:11.589
+TOMÁS PINAUSIG CASTILLO: No le puedes mandar la clave de sesión encriptada con su clave.
+
+381
+00:55:11.590 --> 00:55:22.830
+Rodrigo Ramele: Muy bien, muy bien. Están Están dando en la en la en el primer problemón que tiene esto, y es que vos. Necesitas Necesitas alguna manera de poder establecer conexiones entre estos mensajes entre sí
+
+382
+00:55:22.850 --> 00:55:42.690
+Rodrigo Ramele: y después. Necesitas algunas validaciones extras para poder evitar situaciones parecidas a las que ustedes plantean de que de repente, bueno, Ok, en si yo me paro acá y me manda esto una clave a Okay. Quizás yo no tengo la claridad, pero, por ejemplo, yo podría tener mensajes anteriores. Esto y hacerle lo que se llama un ataque de Replay
+
+383
+00:55:43.000 --> 00:55:55.579
+Rodrigo Ramele: le mando este mensaje anterior, que yo ya pude capturar de alguna otra manera y que controlo porque, por ejemplo, lo habló conmigo. Y yo fui un efe que hablo con el K y C, Y recibí algo así, No.
+
+384
+00:55:55.640 --> 00:56:13.180
+Rodrigo Ramele: eventualmente. No tengo que tener esta clave a, o sea, también tendría que tener un mensaje previo que haya sido válido para también, pero le puedo reenviar este mensaje, y que es que de repente yo conozco la clave de ese, porque estuve, puso una computadora a pensar y la pude abrir, no. Entonces
+
+385
+00:56:13.290 --> 00:56:26.500
+Rodrigo Ramele: ahí ya aparece un problema que es conectar a los mensajes entre sí y poder ofrecer una idea. Bueno, eso es un poco. Lo que hay que son, que tiene que ver con los ataques de riplay ataque de riple. Son ataques activos donde el atacante está
+
+386
+00:56:26.510 --> 00:56:36.309
+Rodrigo Ramele: está atacando. Está haciendo cosas, ¿no? Entonces el atacante puede grabar mensajes de hacia B y luego reenviarlos y reenviar esos mensajes y los mensajes siguientes
+
+387
+00:56:36.350 --> 00:56:42.629
+Rodrigo Ramele: B no tiene forma de saber que no está hablando con a esto. Tiene, por ejemplo, un problema con esto no que esto también, que este es el primer punto.
+
+388
+00:56:42.730 --> 00:56:56.869
+Rodrigo Ramele: o sea, esto podría ser. Acá. Fíjense que es directamente una clara de sesión B, que está encriptada con B. Esto podría guardarlo B. No tiene manera de saber acá qué está hablando con A, porque no hay ninguna validación adicional que B puede hacer que le diga que está hablando con A
+
+389
+00:56:57.000 --> 00:57:09.689
+Rodrigo Ramele: de alguna forma. ¿no? Entonces ese es un problema que es ataque de Replay y ataque de reuso de claves que ríos que es un atacante, graba el mensaje del K S A. A, que es el K, dice a este mensaje.
+
+390
+00:57:10.480 --> 00:57:24.330
+Rodrigo Ramele: Y cuando adquiere iniciar otra conversación, se lo envía, O sea, re es como que rehúsa estas esta elección de mensajes que el atacante ya exploró y que de repente se rompió, por ejemplo, entonces que le está dando una calle vieja
+
+391
+00:57:24.340 --> 00:57:37.810
+Rodrigo Ramele: trucha que por ahí fue alguien en el pasado, pero que ya no tiene validez y que se la vuelve a enviar al atacante que se para en este punto, entonces es un ataque típico de de aquí reus. Entonces ahí B están utilizando la misma clave de sesión
+
+392
+00:57:37.810 --> 00:57:48.060
+Rodrigo Ramele: en ese caso, pero es una clara decisión que el atacante, si conoce. Por lo tanto, todos los mensajes subsiguientes que vienen acá acuérdense siempre. La idea de los protocolos
+
+393
+00:57:48.200 --> 00:57:53.020
+Rodrigo Ramele: tiene que ver con poder establecer un canal de comunicación seguro.
+
+394
+00:57:54.150 --> 00:58:05.040
+Rodrigo Ramele: Vamos ahora vamos a partir ese seguro en varias partes, no un canal seguro entre A y B. Ese canal de comunicación. Lo primero que yo quiero es que ofrezca confidencialidad. Por lo tanto, necesito una clara decisión.
+
+395
+00:58:05.150 --> 00:58:20.859
+Rodrigo Ramele: Lo segundo que quiero de ese canal de comunicación es que el canal de ese canal de comunicación, me dé alguna garantía de que yo estoy hablando con quien creo que estoy hablando, es decir, que haya alguna validación que ambos pueden hacer de que del otro lado
+
+396
+00:58:21.240 --> 00:58:26.079
+Rodrigo Ramele: hay algo de información que pueden verificar para asociar
+
+397
+00:58:26.240 --> 00:58:39.219
+Rodrigo Ramele: los elev los los datos criptográficos que generaron con la identidad de esta entidad de la entidad con la que están hablando y eventualmente, después, con la persona física, no, que es el el otro paso suficiente, que es
+
+398
+00:58:39.500 --> 00:58:51.880
+Rodrigo Ramele: entonces esa es la segunda cosa que yo a veces quiero en un en un canal puede ser. Por eso a veces seguro hay que partirlo ahí, la palabra. Esa yo puede ser un canal que ofrezca confidencialidad, pero además me ofrece autenticidad de las entidades.
+
+399
+00:58:52.110 --> 00:58:54.779
+Rodrigo Ramele: Y esas entidades están autenticadas de alguna manera.
+
+400
+00:58:55.010 --> 00:58:56.929
+Rodrigo Ramele: que son los pasos siguientes. No
+
+401
+00:58:57.500 --> 00:59:05.420
+Rodrigo Ramele: bien. Entonces vamos a hacer un toqueteo al protocolo para para mejorarlo un poquito para evitar este tipo de ataques.
+
+402
+00:59:05.700 --> 00:59:18.470
+Rodrigo Ramele: Entonces lo primero que se hace ahora es a ahora le envío un mensaje al K. S diciéndole. Este es un mensaje plano cuando está así. Es un mensaje plano, y dice: yo. Quiero hablar con B y te mando información fresca
+
+403
+00:59:18.610 --> 00:59:24.210
+Rodrigo Ramele: te mando un numerito, r 1 que es un número random al azar que generaba.
+
+404
+00:59:24.370 --> 00:59:27.960
+Rodrigo Ramele: Entonces ahora el K. D. C, que hace el K. C, ahora le dice, bueno.
+
+405
+00:59:28.650 --> 00:59:35.779
+Rodrigo Ramele: vos usá querés hablar con B, que me lo dijiste, me mandaste un R. Uno. Y yo te estoy mandando una clave de sesión. K, S,
+
+406
+00:59:35.990 --> 00:59:39.159
+Rodrigo Ramele: ¿Para vos para que vos. Accedes a esta clave de sesión
+
+407
+00:59:40.130 --> 00:59:54.269
+Rodrigo Ramele: a este mensaje? Además, te mando un mensaje que va a ser el mensaje que esto para Esto es un modo que cerrado que no lo puede ver, porque todo esto está encriptado con la clave D es el equivalente. Esto que estaba antes. No, esto que estaba. Acá
+
+408
+00:59:55.330 --> 01:00:01.400
+Rodrigo Ramele: Y a esto a todo esto que está acá te lo encripto con la clave que solo hablamos vos y yo.
+
+409
+01:00:01.570 --> 01:00:14.439
+Rodrigo Ramele: por lo tanto, ah, acá cuando recibe este mensaje, dice: ah, bueno, este mensaje que estoy recibiendo tiene una clara cesión está encriptado con la clave que solo acá se conoce. Por lo tanto, no.
+
+410
+01:00:14.590 --> 01:00:21.389
+Rodrigo Ramele: esto me da una garantía que es del K. N. C, Y además, como tiene la R, 1 que yo le mandé. Sé que el que me lo está dando es el que
+
+411
+01:00:21.520 --> 01:00:30.119
+Rodrigo Ramele: yo le mandé el mensaje original y que, asumiendo que solo hay y B, conocen, cada A tiene que ser el K, D, C,
+
+412
+01:00:30.610 --> 01:00:46.839
+Rodrigo Ramele: Y esa es la verificación que hace entonces. En este punto Alemania B, El bodoque que recibió entonces ve al recibir esto. Y dice. Bueno, esto viene de de viene de alguien que puedo verificar la clave. Me puedo obtener la clave de eso e identificar que esto es A.
+
+413
+01:00:47.190 --> 01:01:04.020
+Rodrigo Ramele: Y de acá como sé que este saque es 1 de los una de las de las entidades con las que me quiero comunicar. Sé que acá está la clave de sesión con la que voy a voy a comunicarme, y esto me vino encriptado con una clave de un K C. Valio. Por lo tanto, asumo que A se comunicó previamente con un K. D. C.
+
+414
+01:01:04.390 --> 01:01:15.469
+Rodrigo Ramele: Entonces, en este punto. B le dice A. S, A. Le dice: hola, este es el mensaje tipo de ola. Le dice: le manda un R, 2, que es un Random. Es de vuelta información fresca
+
+415
+01:01:15.740 --> 01:01:23.850
+Rodrigo Ramele: que la está encriptada con la clave simétrica que acaban de negociar y ale dice yo, agarro ese número y le resto 1.
+
+416
+01:01:24.310 --> 01:01:29.449
+Rodrigo Ramele: Esto es para mostrar que es un mensaje activo actual que es fresco
+
+417
+01:01:29.690 --> 01:01:45.209
+Rodrigo Ramele: esto para evitar ataques de Riplay y le dice, bueno, ese es R. Dos. Uno se lo encripta con K. S. B. Verifica que ese ese dato que recibió era el dato que él había mandado menos 1. Y en este punto A y B. Pueden estar seguros de que
+
+418
+01:01:45.450 --> 01:01:53.749
+Rodrigo Ramele: están hablando entre ellos, que pasaron por el K C, que la clave es válida, es una clave fresca nueva y pueden establecer una comunicación Okay.
+
+419
+01:01:55.880 --> 01:01:58.820
+Rodrigo Ramele: bien buenísimo. ¿qué problema puede tener esto?
+
+420
+01:02:00.410 --> 01:02:02.989
+TOMÁS PINAUSIG CASTILLO: Cómo, o sea, una parte que no me queda clara.
+
+421
+01:02:02.990 --> 01:02:03.430
+Rodrigo Ramele: Vale.
+
+422
+01:02:03.820 --> 01:02:06.450
+TOMÁS PINAUSIG CASTILLO: Sube. Y te acaba de hablar
+
+423
+01:02:08.130 --> 01:02:13.559
+TOMÁS PINAUSIG CASTILLO: si a vos lo que te llega, no adentro de la
+
+424
+01:02:15.790 --> 01:02:21.660
+TOMÁS PINAUSIG CASTILLO: busco, o sea que, ¿cómo sabes que ese mensaje, que es supuestamente una identidad?
+
+425
+01:02:21.910 --> 01:02:24.790
+TOMÁS PINAUSIG CASTILLO: ¿cómo lo chequeas contra la identidad del que te está hablando.
+
+426
+01:02:25.340 --> 01:02:34.169
+Rodrigo Ramele: Bien vos acá simplemente lo haces porque A tiene un identificador que vos reconoces que es un identificador de alguien válido dentro del sistema con el que vos te estás comunicando.
+
+427
+01:02:34.680 --> 01:02:35.500
+Rodrigo Ramele: Entonces
+
+428
+01:02:36.540 --> 01:02:46.829
+Rodrigo Ramele: es eso solo. Y hasta ahí eso tiene tiene limitaciones entendés en cuanto a lo que representa, Pero Pero ¿es eso? ¿es eso solo a lo que viene.
+
+429
+01:02:46.830 --> 01:02:47.200
+TOMÁS PINAUSIG CASTILLO: No es.
+
+430
+01:02:47.200 --> 01:02:47.550
+Rodrigo Ramele: En el.
+
+431
+01:02:47.550 --> 01:02:50.489
+TOMÁS PINAUSIG CASTILLO: Integridad del sistema en general.
+
+432
+01:02:51.210 --> 01:03:08.290
+Rodrigo Ramele: Es como que estás re estás relegando en información que vos que de alguna manera ahí ve, tienen que tener previa para saber que existe un like. Existe un B. Es como si hubiese un avance de datos global, adonde están los I D de todos entendés que tanto Bay como preconocen y asumen como válido y que no está modificada.
+
+433
+01:03:10.040 --> 01:03:15.279
+TOMÁS PINAUSIG CASTILLO: Claro. O sea, yo no podría estar escuchando justo copiarme un pedacito
+
+434
+01:03:15.850 --> 01:03:24.250
+TOMÁS PINAUSIG CASTILLO: y a partir de ahí, decirle a ver, yo soy A. Y te envío lo que a te hubiera mandado, porque veo vas a ver que el que le habla no está, digamos.
+
+435
+01:03:25.520 --> 01:03:28.390
+Rodrigo Ramele: Para repetir eso, repetí eso.
+
+436
+01:03:28.390 --> 01:03:32.339
+TOMÁS PINAUSIG CASTILLO: O estás escuchando justo cuando amanda eso.
+
+437
+01:03:32.770 --> 01:03:36.190
+Rodrigo Ramele: Acá. Sí, Hazlo mando y vos estás en el medio. Sí.
+
+438
+01:03:36.400 --> 01:03:38.449
+TOMÁS PINAUSIG CASTILLO: Sí hace que no les llegue a ver.
+
+439
+01:03:38.450 --> 01:03:39.909
+Rodrigo Ramele: Sí. Perfecto. ¿qué haces?
+
+440
+01:03:43.050 --> 01:03:45.859
+TOMÁS PINAUSIG CASTILLO: Vos le estarías mandando a B
+
+441
+01:03:46.150 --> 01:03:51.370
+TOMÁS PINAUSIG CASTILLO: una clave de sesión para que confíe en vos que supuestamente sos a.
+
+442
+01:03:52.690 --> 01:03:56.039
+Rodrigo Ramele: Claro, claro, claro, ¿Vos harías eso? Exacto?
+
+443
+01:03:56.560 --> 01:03:56.950
+TOMÁS PINAUSIG CASTILLO: Y si ves.
+
+444
+01:03:56.950 --> 01:03:57.439
+Rodrigo Ramele: Con mi.
+
+445
+01:03:57.440 --> 01:04:00.340
+TOMÁS PINAUSIG CASTILLO: Cosas supuestamente ya estaban porque el.
+
+446
+01:04:00.340 --> 01:04:04.830
+Rodrigo Ramele: Claro ahí muy bien exacto. Tomás. Ese es 1 de los problemas que tiene esto.
+
+447
+01:04:05.280 --> 01:04:08.729
+Rodrigo Ramele: El problema que tiene es que B está involucrado cada Solo
+
+448
+01:04:09.050 --> 01:04:12.679
+Rodrigo Ramele: entonces de algún punto u otro tiene que confiar en esto.
+
+449
+01:04:12.810 --> 01:04:18.880
+Rodrigo Ramele: ¿vos Podrías ser otro y mandarle la y decirle un k s y que generaste
+
+450
+01:04:19.160 --> 01:04:32.770
+Rodrigo Ramele: porque lo tuviste de otra manera. En un punto, este mensaje eventualmente podría llegar a fraguar lo que no está involucrado desde el principio. Eso es un problema. Eso eso es. Ese es un problema, un poco de de
+
+451
+01:04:33.260 --> 01:04:37.319
+Rodrigo Ramele: que aparecen eso. Ahora lo vamos a ver. Ese es 1. Bien
+
+452
+01:04:37.590 --> 01:04:40.789
+Rodrigo Ramele: que bueno, ahí es un poco eso, ¿no? El segundo mensaje. Lo
+
+453
+01:04:40.940 --> 01:04:44.819
+Rodrigo Ramele: bueno. Esta es la explicación de todo esto a esta.
+
+454
+01:04:45.590 --> 01:05:03.869
+Rodrigo Ramele: La explicación de todo esto, que es un poco yo, lo que les dije es que el segundo mensaje está encriptado con la clave compartida a Kc, ¿Que es esto, entonces eso te da seguridad de que eso el mensaje proviene de K. C, porque es la compartida. Hay frescura, entonces evita la repetición. El cuarto mensaje solo B puede enviarlo, que es este.
+
+455
+01:05:03.900 --> 01:05:07.529
+Rodrigo Ramele: Este mensaje solo puede lo puede reenviar B, porque es el el
+
+456
+01:05:07.710 --> 01:05:18.059
+Rodrigo Ramele: es el mensaje encriptado con Rre, 2 que recibió B con la clave. K. S, Entonces Ap: puede hacer ese chequeo que no lo habíamos visto. Y el quinto mensaje A confirma la comunicación B sabe que es una repetición.
+
+457
+01:05:18.260 --> 01:05:29.050
+Rodrigo Ramele: Bien, el problema que aparece el atacante obtiene una clave de sesión antigua. K. S. Y lo que hace comienza por el tercer paso, tal cual lo que mencionaba Tomás
+
+458
+01:05:29.170 --> 01:05:33.080
+Rodrigo Ramele: entonces se mete acá en este punto con una clave de sesión vieja.
+
+459
+01:05:33.130 --> 01:05:49.739
+Rodrigo Ramele: Entonces le manda a B un mensaje diciéndole A encriptado con K, s con una clave K que él ya conoce, B, le manda encriptado con K. S que el Malory lo conoce y Malory le dice: sí, hijo ya tu tu tu la clave es buena y B se comió
+
+460
+01:05:49.740 --> 01:05:56.260
+Rodrigo Ramele: que estaba hablando con a porque le reenviaron un mensaje previo que ya estaba roto. Hacen un key reus.
+
+461
+01:05:56.300 --> 01:05:59.670
+Rodrigo Ramele: o sea, este que reviews. Este Protocolo no lo soluciona
+
+462
+01:05:59.890 --> 01:06:15.239
+Rodrigo Ramele: porque B no está involucrado desde el principio. Entonces, en un punto se requiere alguna validación extra que es en en este caso, por ejemplo, hacer uso de tans Sams. Hay variantes del Protocolo Nissancio que incluyen
+
+463
+01:06:15.350 --> 01:06:22.850
+Rodrigo Ramele: una comunicación inicial con B también esta. Creo que no a ver si esta creo que no esta lo que hace va por el lado de usar un Times tan
+
+464
+01:06:23.140 --> 01:06:37.200
+Rodrigo Ramele: que es también el Times Time. Lo que permite es dar información de frescura información de que esto es actual. Entonces ahora le a ahora le manda al K. B, C y le dice: yo soy. A. Me quiero comunicar con B y con R. Uno.
+
+465
+01:06:37.200 --> 01:06:45.010
+Rodrigo Ramele: Esto es Esto es idéntico, pero el K. A. C ahora le manda un timesamp adentro del bloque que va para B.
+
+466
+01:06:45.130 --> 01:06:51.069
+Rodrigo Ramele: Entonces A le puede mandar a B este mensaje, Pero ahora a un atacante le va a costar más
+
+467
+01:06:51.230 --> 01:07:01.530
+Rodrigo Ramele: este mensaje, porque tiene que porque no puede reutilizar un mensaje viejo, porque tiene incluido un Timestom. Entonces, B puede chequear que este mensaje que está recibiendo este Timestume no sea muy viejo.
+
+468
+01:07:01.670 --> 01:07:06.250
+Rodrigo Ramele: entonces evita un poco el cómo fraguar este mensaje, No
+
+469
+01:07:06.480 --> 01:07:12.750
+Rodrigo Ramele: que el el el lo que se asume es que es un mensaje anterior que se puede reutilizar.
+
+470
+01:07:12.910 --> 01:07:15.860
+Rodrigo Ramele: y con esto un poco se rompe esa posibilidad.
+
+471
+01:07:17.170 --> 01:07:24.720
+Rodrigo Ramele: Algunas variantes del protocolo de Nisham Shoreter, por ejemplo, la de la que se usa en
+
+472
+01:07:26.590 --> 01:07:30.790
+Rodrigo Ramele: en una va en una va, una variante
+
+473
+01:07:31.040 --> 01:07:40.159
+Rodrigo Ramele: que no me acuerdo. Lo tengo anotado, pero no le puse el nombre, que es, incluyo un mensaje para B, que va al principio también y que ata
+
+474
+01:07:40.310 --> 01:07:54.589
+Rodrigo Ramele: ata la comunicación entre A y B con un valor que después vuelven a utilizar. Acá Entonces, B sabe que de alguna manera es un mensaje original y puede establecer que también tiene Timesam y puede establecer una conexión adicional
+
+475
+01:07:54.780 --> 01:08:02.580
+Rodrigo Ramele: que es una variante. Este es el de carveros, así como está acá que es la con la esto que se llama la modificación de demisako, que es agregarle Timestome
+
+476
+01:08:03.170 --> 01:08:04.849
+Rodrigo Ramele: en este punto, y en este punto.
+
+477
+01:08:05.400 --> 01:08:18.680
+Rodrigo Ramele: y con esto se establece un protocolo de comunicación simétrico entre A y B en base a una, un asumir que ya hay preestablecida. Una comunicación contra el cáncer
+
+478
+01:08:18.810 --> 01:08:19.640
+Rodrigo Ramele: está bien.
+
+479
+01:08:20.840 --> 01:08:21.670
+Rodrigo Ramele: Vamos.
+
+480
+01:08:26.649 --> 01:08:32.040
+Rodrigo Ramele: Cri cri cri Cri Cri Joya y nos metemos en Tls no
+
+481
+01:08:32.569 --> 01:08:47.010
+Rodrigo Ramele: directo en en el protocolo Tl: S que. Ss. L. Versión. Tres que bueno, lo vamos a ver un poco por por arriba, porque el detalle protocolo, todos los mensajes, etcétera. Es un megabardo, pero vamos a ver cual es la esencia del protocolo.
+
+482
+01:08:47.029 --> 01:08:58.880
+Rodrigo Ramele: Bueno, el el el Ca, el canal seguro de Tl S juega justamente. Esto que significa que sea seguro. Ese canal que establece Ssl, que hay confidencialidad y hay integridad
+
+483
+01:08:59.140 --> 01:09:03.160
+Rodrigo Ramele: sobre este canal, digamos.
+
+484
+01:09:04.399 --> 01:09:13.960
+Rodrigo Ramele: Ss. Le permite que en un canal que intrínsecamente es inseguro poder, proveer confidencialidad e integridad, y adicional y adicionalmente hay algunas
+
+485
+01:09:14.140 --> 01:09:17.769
+Rodrigo Ramele: verificaciones de autenticidad. De quiénes son las entidades?
+
+486
+01:09:18.260 --> 01:09:21.009
+Rodrigo Ramele: ¿quién ¿Quién es la identi? ¿cómo puedo
+
+487
+01:09:21.609 --> 01:09:29.979
+Rodrigo Ramele: autenticar que la identidad que se me está diciendo corresponde a alguna entidad particular que me dio. ¿me hizo algún chequeo o me dio alguna prueba?
+
+488
+01:09:30.220 --> 01:09:38.570
+Rodrigo Ramele: Bueno, S. S. L. Ofrece seguridad al nivel de la capa de transporte es un canal de transporte confiable, o sea, normalmente va sobre Tc: P I, P
+
+489
+01:09:38.729 --> 01:09:55.629
+Rodrigo Ramele: probé confidencialidad, integridad y autenticación de los participantes de origen y destino. Fíjense qué confidencialidad, integridad y autenticación de los participantes es la versión versión 3 de Sscl Layer, que la creó en Skate
+
+490
+01:09:55.720 --> 01:10:05.869
+Rodrigo Ramele: y la versión 3 se estandarizó, y es la que se llama Trans por Lagen Security, que ya va por la 3 3 en mejora de eficiencias encontradas es el estándar actual
+
+491
+01:10:06.290 --> 01:10:25.420
+Rodrigo Ramele: modificaciones que se fueron haciendo para el protocolo para mejorarlo. Y es en lengua franca en hoy, ya lo que es Internet, no hay sitio Si un sitio no tiene Ss: L ya está flaqueado como inseguro de por sí, porque significa que todo va plano y va plano por todos los intermediarios hasta llegar al sitio. Por lo tanto, eso es mucho riesgo por la por cómo funciona en sí mismo Internet.
+
+492
+01:10:25.540 --> 01:10:27.220
+Rodrigo Ramele: Entonces, en
+
+493
+01:10:27.590 --> 01:10:37.339
+Rodrigo Ramele: entonces, esa es la la la situación de de es súper estándar y casi lingua franca en todo en todo lo que es conectividad, no en Internet. Para cualquier cosa.
+
+494
+01:10:37.780 --> 01:10:46.930
+Rodrigo Ramele: Bueno, la conexión normal que es insegura. Hay una una capa de aplicación que baja una placa de transporte después una capa física donde se transmiten se transmiten los mensajes a nivel transporte.
+
+495
+01:10:46.970 --> 01:11:02.979
+Rodrigo Ramele: ese a nivel de transporte. Esto es con Tcp Ip. Por lo tanto, cada una de las partes. Ve como un tubo de información. Tengo un tubo donde meto datos, y tengo un tubo saco dato, que es como lo que se obtiene con los zoques de de Tcp Ip Desde el punto de vista desde el punto de de la a P y de programación
+
+496
+01:11:03.090 --> 01:11:05.439
+Rodrigo Ramele: con S. S. L.
+
+497
+01:11:05.910 --> 01:11:21.670
+Rodrigo Ramele: Sobre la capa de transporte se monta un protocolo de transporte también, y el respecto que provoca es que yo tengo lo mismo como un Socket de Ssl, donde meto datos y donde saco datos, y donde me olvido de las particularidades del de
+
+498
+01:11:21.670 --> 01:11:29.510
+Rodrigo Ramele: del propio sistema de inscripción. Eso lo está manejando. El propio protocolo de Scl es totalmente transparente desde el punto de vista de la Api.
+
+499
+01:11:29.810 --> 01:11:38.660
+Rodrigo Ramele: es decir, está está totalmente armado para que es totalmente transparente. Simplemente es como un Socket Metadato que quiero y saco dato que quiero no
+
+500
+01:11:38.880 --> 01:11:39.750
+Rodrigo Ramele: claro.
+
+501
+01:11:39.860 --> 01:11:45.620
+Rodrigo Ramele: Bien, Entonces, lo primero que hay, el primer concepto son los registros de Ssl, que es
+
+502
+01:11:45.780 --> 01:11:59.490
+Rodrigo Ramele: cuando Ssl recibe un mensaje que va a enviar. Lo divide en bloques de no más de 2 a 16 Byte. Cada bloque se comprime y se calcula en Hash, y cada bloque se encripta en cada 1 de los bloques y también se encripta el hash
+
+503
+01:11:59.630 --> 01:12:00.530
+Rodrigo Ramele: Está bien.
+
+504
+01:12:00.730 --> 01:12:15.570
+Rodrigo Ramele: acuérdense que esto es el esquema más seguro de hacer a donde 1 tiene. Cuando 1 tiene que mandar, manejar confidencialidad e integridad es justamente primero encriptar y después a calcular la integridad o calcular el Mac de lo que está encriptado
+
+505
+01:12:16.440 --> 01:12:19.509
+Rodrigo Ramele: bien y luego le envía al servicio inferior, por ejemplo, Tc, P, I, P,
+
+506
+01:12:19.790 --> 01:12:26.910
+Rodrigo Ramele: Y es, o sea, todo lo que se hizo con el Tls récord, es parte del paillón de Tcp de lo que va por Tcp. Ip.
+
+507
+01:12:27.590 --> 01:12:47.429
+Rodrigo Ramele: Bueno, tiene T Ls: Tiene diferentes tipos de mensajes. Tiene 1, que es el principal, que es el Hang Shake, que es la configuración inicial que está. Se es donde se establece la autenticación y donde se negocia el Cyford suite, que es el material criptográfico que se negocia. ¿cómo se va a hacer la inscripción y se negocian cada una de las opciones posibles.
+
+508
+01:12:47.560 --> 01:12:55.779
+Rodrigo Ramele: Luego están los paquetes que tienen datos de aplicación, que esto es lo que contiene los datos propios encapsulados. Hay mensajes de alerta.
+
+509
+01:12:55.890 --> 01:13:10.229
+Rodrigo Ramele: que es como cada una de las partes establecen, se van avisando al al otro lado del Ssl. Si tienen que cambiar algún saifersuite o similar, o alguna condición de alerta. Y el mensaje específico de cambiar el cyfer
+
+510
+01:13:10.240 --> 01:13:19.829
+Rodrigo Ramele: en en Seifern Spec o en seifer suite, que es cambiar, renegociar claves o cambiar. ¿cómo es que están haciendo la transmisión de la información desde el punto de vista criptográfico.
+
+511
+01:13:20.310 --> 01:13:31.579
+Rodrigo Ramele: Bueno, el primero tiene Tls. Ofrece un esquema para intercambiar claves que puede ser con Rca A. Puede ser con Difi Gelman, que ya lo saben, no difícilman. Si.
+
+512
+01:13:35.610 --> 01:13:37.810
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí, Esa es la potencia. No.
+
+513
+01:13:38.020 --> 01:13:44.419
+Rodrigo Ramele: Claro exactamente usando el el el logaritmo discreto. Acuérdense que Ifisgelman tiene un problemón con que
+
+514
+01:13:44.770 --> 01:13:46.430
+Rodrigo Ramele: que fue como empezamos esta clase?
+
+515
+01:13:51.900 --> 01:14:01.640
+Rodrigo Ramele: Bueno, se lo digo yolman El problemón que tiene es justamente con un Manning de Middle. Si hay alguien en el medio, Benifijelman va va por un tubo, No hay chance de chequear nada.
+
+516
+01:14:01.640 --> 01:14:18.399
+Rodrigo Ramele: Entonces, si hay en el medio que habla de los 2 costados como y negocia por los 2 costados, este 2 caras distintas. Uno cree que está hablando con la entidad final y no entonces ese es el problema difícilmente adicional que obviamente acá está resuelto porque porque porque son protocolos derivados de de
+
+517
+01:14:19.180 --> 01:14:26.040
+Rodrigo Ramele: de los esquemas para hacer chequeo para intentar evitar que eso pase. No, justamente eso va a ser por los certificados que tienen que ver. Ssd.
+
+518
+01:14:26.300 --> 01:14:45.050
+Rodrigo Ramele: Bueno, tiene un esquema de Difigelman, que utiliza certificados de Rca o de Css, justamente para evitar la situación de técnica de Manid y tiene un esquema de Fifijeman, que es también anónimo que esto eventualmente es susceptible a eso. No después tiene una variante de Iffi Gelman, que es sobre curvas elípticas que esté bastante estándar. Y también, obviamente, Ssl puede usar querberos.
+
+519
+01:14:45.530 --> 01:14:49.700
+Rodrigo Ramele: Y hay variantes obsoletas que utilizan protocolos de 511 vit.
+
+520
+01:14:49.720 --> 01:15:07.010
+Rodrigo Ramele: Y esto. Esto existía en un momento porque alrededor de la década del 2 000 Estados Unidos no dejaba exportar los algoritmos. No dejaba exportar software de Estados Unidos que tuviese implementado algoritmos particulares que el el ejército yanqui había marcado como que eran
+
+521
+01:15:07.010 --> 01:15:26.089
+Rodrigo Ramele: de sensibilidad militar. Por lo tanto, el software no lo podía tener. Esto era medio locura, una locura bárbara porque todo era conocido, pero Estados Unidos no querían que el software que se había hecho. Esto, señor, salga con esos protocolos. Entonces, por ejemplo, limitaba la longitud de las claves, etcétera. Entonces existen todavía están un par de protocolo, porque de alguna manera lo tuvieron que implementar. Y
+
+522
+01:15:26.170 --> 01:15:28.490
+Rodrigo Ramele: y y bueno, pero bueno, ya son obsoletos. Igual
+
+523
+01:15:29.270 --> 01:15:32.910
+Rodrigo Ramele: bueno, cifrado simétrico R. C. Cuatro
+
+524
+01:15:33.000 --> 01:15:47.339
+Rodrigo Ramele: existía, pero obviamente ya no se puede usar chacha 20, que es una versión de Tlc Uno, 2 que se puede usar para cifrado simétrico todavía des con Cdc, que este está es obsoleto triple. Es, se puede seguir usando dentro de todo todas las versiones de A E. S,
+
+525
+01:15:47.340 --> 01:15:53.850
+Rodrigo Ramele: que estos son los estándar. Este es el más estándar de todos a es Gsm. Es el más estándar y recomendado
+
+526
+01:15:54.010 --> 01:16:05.950
+Rodrigo Ramele: después con I D A, también, que es el protocolo regional que es como una variante que es el C, B, C y un protocolo se llama área también, y todas sus variantes de con C, C, A, Cccm y Gcm.
+
+527
+01:16:06.150 --> 01:16:23.049
+Rodrigo Ramele: También hay variantes obsoletas declaradas de 40 bits. Esto lo que es cifrado simétrico. Esto es lo que es intercambio clave cifrado. Simétrico y para Hash H Mac. Con M de 5. H. Mat: con ya 1. Creo que este todavía que acá Pablo no lo marcó como
+
+528
+01:16:23.280 --> 01:16:29.039
+Rodrigo Ramele: este no me acuerdo si este es válido, yo no lo usaría si es M de 5. Yo lo marcaría este con
+
+529
+01:16:29.110 --> 01:16:46.560
+Rodrigo Ramele: con raya. Después. H Mac con Sha, 2 con 256 bits. Y 384 después, Aer, que es autentica y tienen crip showe Associated Data, que son otros protocolos de Hash y protocolos de autenticación. Como con firma de Rca y firmas de de S. S. De S. S. Es el recomendado
+
+530
+01:16:46.990 --> 01:16:54.270
+Rodrigo Ramele: Bien, con T Ns. Se establece una sesión y tiene que ver justo con esta idea de poder tener un tubo donde yo mando datos y recibo datos, ¿no?
+
+531
+01:16:54.410 --> 01:17:06.179
+Rodrigo Ramele: Y la sesión de Tls es una asociación entre 2 pares que puede soportar múltiples conexiones. Puede haber muchas conexiones adonde informaciones. Primero, hay una idea de sesión
+
+532
+01:17:06.540 --> 01:17:07.640
+Rodrigo Ramele: mhm.
+
+533
+01:17:08.100 --> 01:17:19.399
+Rodrigo Ramele: Puede permitir la la presencia de un certificado, X 509. La tercera versión, que es lo que el estándar actual del otro lado. Esto es lo que se llama certificar request
+
+534
+01:17:19.400 --> 01:17:29.579
+Rodrigo Ramele: o sea 1 puede. Cuando 1 se conecta a un sitio como el Banco Santander, el Banco Santander, por Scl, Le presenta el certificado del Banco Santander y todos sus certificados de la cadena.
+
+535
+01:17:29.780 --> 01:17:35.879
+Rodrigo Ramele: Pero el banco puede exigir que yo presente también un certificado. Cuando me está armo la conexión Scn.
+
+536
+01:17:35.960 --> 01:17:55.030
+Rodrigo Ramele: hay cuando los bancos se conectan entre sí. Usan esto que es con certificado de los 2 extremos. Eso es opcional en Ss: L, Pero bueno, justamente como es opcional el que establece la conexión puede decir, bueno, yo necesito que esto sea con un certificado alguno de los 2 pares puede exigir que eso sea así.
+
+537
+01:17:55.380 --> 01:18:10.810
+Rodrigo Ramele: Bueno, se establece cuál es el método de compresión, el método de encriptado el Mac. Y hay un master secret que es una clave de sesión compartida de 28 Byte, que es la clave. La primera clave que se establece en ese Cn. La primera clave que se va a establecer para la comunicación.
+
+538
+01:18:11.450 --> 01:18:13.570
+Rodrigo Ramele: Bueno, la conexión S. S. L.
+
+539
+01:18:13.670 --> 01:18:20.940
+Rodrigo Ramele: Lo que lo que hace es primero, tiene una secuencia de bits aleatoria de calidad criptográfica. Estos son bits de
+
+540
+01:18:21.780 --> 01:18:25.979
+Rodrigo Ramele: generados por generadores de pseudo random
+
+541
+01:18:26.200 --> 01:18:32.840
+Rodrigo Ramele: que tienen que tener algunas condiciones sobre pasarlos. Pasar del típico. Hay 1 de los
+
+542
+01:18:33.030 --> 01:18:44.009
+Rodrigo Ramele: de las verificaciones de seguridad que es para para generar números que sean lo más parecidos posibles a a números aleatorios, con ciertas condiciones que no se puedan fácilmente
+
+543
+01:18:44.410 --> 01:18:50.950
+Rodrigo Ramele: generar por casualidad, eso es un poco lo que lo que implica que sean con calidad criptográfica.
+
+544
+01:18:51.110 --> 01:19:00.579
+Rodrigo Ramele: Luego hay claves de escritura para ambos lados que son diferentes claves para las Mac. Estos claves, para la parte de cifrado clave para las Mac Is para los protocolos de
+
+545
+01:19:00.580 --> 01:19:11.569
+Rodrigo Ramele: que me quieren ahí como se desee. Y hay un número de secuencia para cliente y servidor. Hay un manejo de números para decir, para secuenciar los mensajes, No, justamente para evitar cualquiera de los ataques típicos sobre protocolos.
+
+546
+01:19:11.720 --> 01:19:32.749
+Rodrigo Ramele: El primer mensaje, lo primero que se hace en Ssl es lo que se llama en Csl Hanshing es el el apretón de manos inicial adonde lo que hacen. Ambos puntos se ponen de acuerdo sobre cómo van a encriptar la información, ¿Cómo van a proveer todos los todos los las primitivas de seguridad que protocolo de hash, ¿Qué protocolo de cómo van a ser los certificados, cómo se van a intercambiar la clave, cómo van a encriptar los mensajes, etcétera, etcétera.
+
+547
+01:19:32.750 --> 01:19:36.190
+Rodrigo Ramele: Entonces se manda lo que se llama el Klein Claen Hello y el salvo el helo.
+
+548
+01:19:36.190 --> 01:19:42.300
+Rodrigo Ramele: Y ahí va el B C, que es la versión del cliente. Esta vez en la versión, nos nonces.
+
+549
+01:19:42.460 --> 01:19:45.010
+Rodrigo Ramele: que son los números una sola vez
+
+550
+01:19:45.370 --> 01:19:55.390
+Rodrigo Ramele: que algunos son time tans y otros y tienen también 28 Byte aleatorios. Después están los I D de la sesión 0 para iniciar una nueva sesión.
+
+551
+01:19:55.460 --> 01:20:01.309
+Rodrigo Ramele: una lista de los Ipers, que son los stands criptográficos disponibles y los coms, que son los métodos de compresión.
+
+552
+01:20:01.310 --> 01:20:16.640
+Rodrigo Ramele: Acá Hay un montón de cyfers que es como nombres que identifican todo el suite. No, Por ejemplo, Rca a con A es Gcm y certificado X 509. Así, así sucesivamente, que son identificadores que están establecidos en el propio Protocolo y que hacen referencia a los
+
+553
+01:20:16.640 --> 01:20:32.000
+Rodrigo Ramele: protocolos y primitivas criptográficas State of the App recomendados en cada una de las versiones de Scl al momento en que salen cada una de las versiones. Scl: Bueno, y en serverhelo, le manda su contraparte de versión, Acá le dicen: este B es la versión mínima
+
+554
+01:20:32.290 --> 01:20:47.270
+Rodrigo Ramele: porque le dice, bueno a ver de los que yo soporto. Éste viene de ese A, C, de los que vos me mandaste. Cuáles son los mínimos que yo también soporto para poder establecer un un patrón de compatibilidad. A veces puede ser que no haya, entonces no se puede establecer la conexión.
+
+555
+01:20:47.890 --> 01:20:49.160
+Rodrigo Ramele: Bien.
+
+556
+01:20:49.480 --> 01:21:01.749
+Rodrigo Ramele: Okay, este es el primer mensaje del Hanshick. Después. Eventualmente, el servidor le manda al cliente el certificado acá está el certificado X 509
+
+557
+01:21:02.730 --> 01:21:11.150
+Rodrigo Ramele: y después que va el certificado, el servidor le puede enviar un Server exchange que le pasa una clave de sesión
+
+558
+01:21:11.410 --> 01:21:24.930
+Rodrigo Ramele: que todo esto, perdón, le manda, un hash de R Uno, R. Dos, que estos son los mensajes anteriores. Los mensajes que se intercambian entre ellos de P, que son los parámetros criptográficos, por ejemplo, pueden ser los parámetros de para generar los los
+
+559
+01:21:25.100 --> 01:21:40.889
+Rodrigo Ramele: cuál tiene que ser la longitudes de los de los algoritmos de Rc a o de Ifigelman, etcétera. Puede ser, por ejemplo, el Gda para Iffije Gelman, que puede venir acá en este P y le manda un hash de esto. Y de todo lo anterior, y ese hash está encriptado con la clave
+
+560
+01:21:40.890 --> 01:21:48.239
+Rodrigo Ramele: con la clave K. S, que es una clave privada del servidor correspondiente a la pública del certificado. Esto que está acá encripta esto.
+
+561
+01:21:49.080 --> 01:21:58.430
+Rodrigo Ramele: Entonces con esto se puede validarlo porque justamente tiene el certificado que le mandó ese, y con eso puede verificar esto, que está acá y abrir esta información no
+
+562
+01:21:59.150 --> 01:22:03.759
+Rodrigo Ramele: que le va a servir para lo que viene después. Es como que cada mensaje va conectado mucho al anterior.
+
+563
+01:22:04.000 --> 01:22:12.420
+Rodrigo Ramele: Bueno, el servidor le puede pasar un certificado Request, que es exigirle al cliente que presente también un certificado que haga esto mismo.
+
+564
+01:22:12.770 --> 01:22:19.319
+Rodrigo Ramele: que que complete con estos 2 mensajes desde el cliente para tener una doble validación
+
+565
+01:22:19.760 --> 01:22:34.299
+Rodrigo Ramele: y le dice, bueno, qué tipo de certificados son permitidos y la la eventualmente le puede pasar la lista de de autoridades certificantes válidas que el Server va a aceptar. Eventualmente, Klient le manda el clan certificate
+
+566
+01:22:34.300 --> 01:22:40.740
+Rodrigo Ramele: y le manda un cliente. Exchange que esto es para la versión de R C. A esto puede ir cambiando dependiendo de la versión.
+
+567
+01:22:40.810 --> 01:22:51.909
+Rodrigo Ramele: que es algo muy similar a esto. No era lo que les decía que es un mensaje muy similar a esto, que manda el cliente y eventualmente, si es. En el caso de Ifigelman, le pasa el la versión del g p módulo P,
+
+568
+01:22:52.070 --> 01:23:07.790
+Rodrigo Ramele: que esto es para que lo pueda completar la otra parte del Ify Gelman para hacer el intercambio entre ellos. Pero fíjense que este edificio Gelman se está haciendo con justamente con las claves que surgieron del certificado. El primer certificado que mandó el servidor.
+
+569
+01:23:08.150 --> 01:23:17.520
+Rodrigo Ramele: Entonces esa es una ventaja, porque ahí hay un esquema de autenticación que que que está establecido y que es una ventaja en general a lo que puede ser
+
+570
+01:23:17.800 --> 01:23:23.160
+Rodrigo Ramele: difigelman sin eso, sin esa, sin esa auténtica autenticación de la parte. No.
+
+571
+01:23:23.450 --> 01:23:25.340
+Rodrigo Ramele: Mhm: Bien.
+
+572
+01:23:26.580 --> 01:23:43.279
+Rodrigo Ramele: Bueno, eventualmente el cliente le puede mandar un change del Safer Spec decirle: Che viste todo lo que con lo que estamos hablando hasta ahora. Bueno, cambiémoslo. Empecemos a usar 1 nuevo y renegociar esos parámetros. Entonces, hay de este se desprenden algunos más mensajes que renegocian esto.
+
+573
+01:23:43.770 --> 01:23:54.549
+Rodrigo Ramele: Esta parte, estos Iifers y estos compis entre de 1 y el otro, por ejemplo, puede haber podría haber casos a donde hay un intercambio de intercambio de mensajes y de repente.
+
+574
+01:23:54.570 --> 01:24:12.599
+Rodrigo Ramele: por alguna condición de los servidores que vencen, vencen las claves y requieren regenerar claves nuevas para el para el mensaje, o porque se puede flaquear. Eso se puede, se puede, se le puede decir desde la Api y se le que de repente cambie eso por alguna razón propia de del protocolo de aplicación
+
+575
+01:24:12.600 --> 01:24:15.310
+Rodrigo Ramele: eventualmente. Y bueno, cuando termina.
+
+576
+01:24:15.350 --> 01:24:22.620
+Rodrigo Ramele: hay un mensaje que es un finish que se terminó todo lo que se habló, Y en ese terminar todo lo que salió,
+
+577
+01:24:22.820 --> 01:24:35.800
+Rodrigo Ramele: se mandan, un montón de certificaciones para probar que que la comunicación estuvo bien hecha y que no se perdieron mensajes y que estuvo todo validado sin que nadie lo haya modificado
+
+578
+01:24:36.490 --> 01:24:39.379
+Rodrigo Ramele: bien. Vamos hasta acá. Estamos
+
+579
+01:24:40.010 --> 01:24:58.219
+Rodrigo Ramele: un poco el T. En ese Change Sanger Spake está aparece utilizado durante el handshing Puede aparecer en cualquier momento. Este mensaje implica la renegociación, lo puede solicitar tanto el cliente como el servidor no tiene contenido en sí mismo. Es un tipo de mensaje del protocolo. Esto no se ve desde el punto de vista de la aplicación. También está en alerta, que son
+
+580
+01:24:58.300 --> 01:25:09.419
+Rodrigo Ramele: para hacer envíos fuera de banda. Pueden ser advertencias o problemas fatales de conexión o una falta inválida en la conexión. Y después está el mensaje de cierre, que es el evento que indica el fin de la sesión.
+
+581
+01:25:09.420 --> 01:25:20.599
+Rodrigo Ramele: que no se van a enviar mensajes nuevos, entonces que no hace falta guardar más nada de lo que tiene que ver con la información criptográfica que está manteniendo la sesión. Y si llega un mensaje nuevo, va a ser ignorado. Es un poco lo que establece
+
+582
+01:25:20.630 --> 01:25:23.479
+Rodrigo Ramele: el este, este Close Shopify.
+
+583
+01:25:23.610 --> 01:25:34.449
+Rodrigo Ramele: Los alertas pueden ser un mensaje no inesperado. Por ejemplo, 1 de los recibe un mensaje que no corresponde. No, no, no conoce la variación integral del error, El maqui incorrecto, un error al descomprimir
+
+584
+01:25:34.450 --> 01:25:48.509
+Rodrigo Ramele: un error en el Handshai. Un parámetro que esté ilegal también puede ser por advertencias o errores a elección de quien lo recibe y en contexto, por ejemplo, que no hay certificado que el certificado no es válido que el certificado no soportado, expirado o revocado, no los alertas que de ese?
+
+585
+01:25:48.960 --> 01:25:59.900
+Rodrigo Ramele: Bueno. Tls es un estándar de comunicación segura en web. Es la base de https htps, es la s de s. S. L y Http, So montado sobre sobre s. S. L.
+
+586
+01:26:00.050 --> 01:26:11.060
+Rodrigo Ramele: Depende muchísimo de la infraestructura de pica. Ahí que se pueda establecer, porque hay un tema de los justamente de los certificados que, bueno tienen que estar mantenidos. Tienen que ser está justamente montados. Sobre eso
+
+587
+01:26:11.530 --> 01:26:23.889
+Rodrigo Ramele: no se utiliza mucho para la validación de clientes. Sin embargo, cuando los bancos, mucho se conectan entre sí, sí, aparecen lo que es el clan certificate, es decir, exigir que los 2 presenten un certificado
+
+588
+01:26:24.180 --> 01:26:26.359
+Rodrigo Ramele: en que haya una autenticación doble
+
+589
+01:26:26.720 --> 01:26:30.230
+Rodrigo Ramele: es soportado por todos los navegadores.
+
+590
+01:26:32.260 --> 01:26:36.859
+Rodrigo Ramele: Parte a algunos problemas de diseño del lado del cliente hicieron que pierde un poco su utilidad.
+
+591
+01:26:36.970 --> 01:26:45.470
+Rodrigo Ramele: Originalmente estaba más pensado para que la la relación entre clientes y servidores sea una relación más equitativa.
+
+592
+01:26:45.690 --> 01:26:56.169
+Rodrigo Ramele: Y de eso de todo eso que estaba originalmente en el protocolo, lo único que quedó es la idea de cliente, pero había más. Había Había como donde el cliente del servidor tenía un rol
+
+593
+01:26:56.170 --> 01:27:13.250
+Rodrigo Ramele: como más complementarios y equitativos. Ahora están como que el servidor y el cliente están realmente marcada la diferencia. Entonces eso distorsiona un poco el el origen o la manera en la que originalmente se lo había pensado esa escena, pero aún así se usa. Y es está superstardar
+
+594
+01:27:13.590 --> 01:27:20.539
+Rodrigo Ramele: también preguntas que me quieren hacer ahora de Csl Tiqui Tiqui Tiqui Tiqui.
+
+595
+01:27:21.140 --> 01:27:37.139
+Rodrigo Ramele: Alguna duda Surge es un protocolo muy técnico muy mandado que implementa todo lo bueno que sabemos hasta ahora de cómo tratar de evitar los problemas en los protocolos, es decir, trata de evitar los ataques de aquí reviews. Los ataques de Replay y
+
+596
+01:27:37.350 --> 01:27:40.039
+Rodrigo Ramele: Mann in the Middle hasta un punto.
+
+597
+01:27:40.440 --> 01:27:45.800
+Rodrigo Ramele: ¿cómo creen que yo puedo hackear s. C. L, La forma más fácil
+
+598
+01:27:47.510 --> 01:27:50.160
+Rodrigo Ramele: con una especie de Manning de Midle más sofisticado.
+
+599
+01:27:57.780 --> 01:28:02.770
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Podría ponerme en la misma red que la persona que está tratando de conectarse con el servidor.
+
+600
+01:28:02.770 --> 01:28:03.639
+Rodrigo Ramele: Muy bien.
+
+601
+01:28:03.700 --> 01:28:05.509
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Cuenta de que soy el servidor.
+
+602
+01:28:06.310 --> 01:28:07.399
+Rodrigo Ramele: Okay, ¿Qué haces?
+
+603
+01:28:08.430 --> 01:28:12.830
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Tendría que al azar, tendría que
+
+604
+01:28:15.010 --> 01:28:19.269
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: tener que hacerme pasar por el servicio. Tenía que tener un certificado trucho.
+
+605
+01:28:19.270 --> 01:28:21.640
+Rodrigo Ramele: Tenec: Muy bien, tienes un certificado trucho.
+
+606
+01:28:23.300 --> 01:28:26.640
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Tendría que también tener al lado de los
+
+607
+01:28:27.650 --> 01:28:30.779
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: pero los Zaifers y los Const Puedo ganar lo que yo quiera, pero.
+
+608
+01:28:31.150 --> 01:28:31.550
+Rodrigo Ramele: Claro.
+
+609
+01:28:31.550 --> 01:28:35.869
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Todos los mensajes. Nada, no importa mucho cuál ponga
+
+610
+01:28:36.390 --> 01:28:39.580
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: para hacerme pasar por el servidor.
+
+611
+01:28:40.660 --> 01:28:47.410
+Rodrigo Ramele: Primero es tenés que controlar de alguna manera hacer un spuffin de el D N. S.
+
+612
+01:28:48.220 --> 01:28:51.130
+Rodrigo Ramele: O sea que para que cuando
+
+613
+01:28:51.250 --> 01:28:58.169
+Rodrigo Ramele: claro que cuando el cliente dice, me quiere conectar a Santander Punto. Com. Punto, Ar.
+
+614
+01:28:58.990 --> 01:29:08.139
+Rodrigo Ramele: vos resolvés. Santander, punto, com punto. A y en vez de darle la dirección final, le das un 198 160 y 803.
+
+615
+01:29:08.700 --> 01:29:10.850
+Rodrigo Ramele: ¿me entiendes, entonces
+
+616
+01:29:10.990 --> 01:29:17.700
+Rodrigo Ramele: el cliente cree que se está conectando a Santander Punto. Com punto, Ar: Pero le das encendido, 192 168 003
+
+617
+01:29:18.100 --> 01:29:26.220
+Rodrigo Ramele: en y ahí lo otro que necesitas. Vas a necesitar poder firmar, hacer un certificado
+
+618
+01:29:26.880 --> 01:29:35.079
+Rodrigo Ramele: que lo puedes hacer con un certificado auto firmado, pero que esté firmado a nombre de Santander, punto com, punto ar en un certificado
+
+619
+01:29:35.570 --> 01:29:47.419
+Rodrigo Ramele: que vos vas a poner. Vas a verlo en la conexión de Tcs Ttls y vos Tendrías que hacer de alguna manera que ese sea claro. Pero el cliente de chequeado te dice perfecto. Tomás tenés que hacer que el cliente
+
+620
+01:29:47.420 --> 01:29:55.890
+Rodrigo Ramele: tenga en su lista de certificados válidos ese certificado también. Uno de la C a firmado por tu arbolito de alguna manera.
+
+621
+01:29:57.610 --> 01:30:05.160
+Rodrigo Ramele: Fíjense que es bastante. Se tienen que dar todas estas condiciones porque, según estas condiciones, no está, no va a funcionar.
+
+622
+01:30:05.260 --> 01:30:12.340
+Rodrigo Ramele: o sea, si el cliente se conecta, y ustedes no tienen lo que desea, le va, le va a salir un cartel de que el certificado no es válido.
+
+623
+01:30:12.370 --> 01:30:32.169
+Rodrigo Ramele: Pero, bueno, ahí está el vieron que muchos casos hay algunos bronzers que ya si el certificado no es válido. Así, ya tenían totalmente la conexión. No le dan la posibilidad al usuario y no le no le ponen un pop up al usuario. Antes, por ejemplo, era más que le ponían un pop up. Decían, se quiere conectar igual, igual. Le ponías que sí, y se conectaba igual, aunque el certificado sea trucho.
+
+624
+01:30:32.170 --> 01:30:35.610
+Rodrigo Ramele: Y entonces ahí digamos, caobo el que lo hace, ah, vos decís
+
+625
+01:30:35.980 --> 01:30:38.690
+Rodrigo Ramele: que por ahí haces medio phishing.
+
+626
+01:30:40.240 --> 01:30:48.250
+Rodrigo Ramele: Claro, tendrías que establecer como algo para vos poder meterle el certificado de la C A, para que lo crea o qué
+
+627
+01:30:48.480 --> 01:30:50.639
+Rodrigo Ramele: la persona no se quiere.
+
+628
+01:30:50.750 --> 01:30:59.239
+Rodrigo Ramele: No chequeé, No, no le dé vuelta al warning si es que el browser opera con el warning. Y pasa igual. Aunque el certificado es trucho entendés.
+
+629
+01:31:00.050 --> 01:31:03.200
+TOMÁS PINAUSIG CASTILLO: O sea, vos el ataque que harías sería contra.
+
+630
+01:31:03.310 --> 01:31:06.119
+TOMÁS PINAUSIG CASTILLO: literalmente el usuario, digamos, porque si es.
+
+631
+01:31:06.120 --> 01:31:06.440
+Rodrigo Ramele: En el.
+
+632
+01:31:06.440 --> 01:31:09.309
+TOMÁS PINAUSIG CASTILLO: Auto matizado. Va a chequear las cosas y va a rechazar.
+
+633
+01:31:09.310 --> 01:31:20.159
+Rodrigo Ramele: Obvio es lo que lo que lo que debería ser, Pero igual por muchos años, había muchos sistemas de validación grossos en software grosso que no hacían ese chequeo.
+
+634
+01:31:20.240 --> 01:31:33.810
+Rodrigo Ramele: Este fue un ban que apareció un montón de veces apareció. Era una vulnerabilidad. Justamente ese chiquillo no lo hacía. Entonces, vos podías poner un certificado auto firmado y pasaba como tubo y te decía que era válido entendés, pues en definitiva está en hacerlo en Chiqueo. Si Si el código no lo hace.
+
+635
+01:31:34.070 --> 01:31:35.010
+Rodrigo Ramele: va a pasar.
+
+636
+01:31:38.690 --> 01:31:39.830
+TOMÁS PINAUSIG CASTILLO: Y por.
+
+637
+01:31:40.640 --> 01:31:43.490
+Rodrigo Ramele: Porque el programador no lo probó así de boludo.
+
+638
+01:31:43.900 --> 01:31:48.650
+Rodrigo Ramele: Eso, en definitiva, termina siendo una programación. De pronto, digo, es una vulnerabilidad.
+
+639
+01:31:50.370 --> 01:32:00.449
+Rodrigo Ramele: se conectaba al servidor y nos validaba, por ejemplo, que el certificado tuviese, hacía chequeaba la integridad del certificado y no le valía el ceppad completo contra el certificado. Va a ser raíz
+
+640
+01:32:00.760 --> 01:32:19.839
+Rodrigo Ramele: entendés o aceptabas certificados. De eso. Pasaba mucho. Sabes, cuando pasaba mucho también cuando en algunos sistemas así de, por ejemplo, en desarrollo vos tenés que habilitar eso, porque si no por ahí no tienes un certificado real. Y tienes que llenar certificados. Vos Y está habilitado el Flight de que es que acepte un un auto firmante
+
+641
+01:32:22.130 --> 01:32:34.640
+Rodrigo Ramele: a ver, por ejemplo, a ver a en como era Security opacas.
+
+642
+01:32:35.790 --> 01:32:36.550
+Rodrigo Ramele: ¿sí?
+
+643
+01:32:37.350 --> 01:32:47.139
+Rodrigo Ramele: Selfside, de hecho, está en la propia a ver. Estoy buscando en código de Java.
+
+644
+01:32:47.730 --> 01:32:49.709
+Rodrigo Ramele: Así está. Ahí está mi lado.
+
+645
+01:32:52.280 --> 01:32:58.570
+Rodrigo Ramele: Voz en java. Podías ponerle esto, fíjense y
+
+646
+01:32:59.210 --> 01:33:05.540
+Rodrigo Ramele: le decís ahí que el trastor, es decir, el Stor, a donde están los certificados de
+
+647
+01:33:05.670 --> 01:33:10.440
+Rodrigo Ramele: que tiene que acertar. Es 1 que vos querés entendés. Entonces ahí le pones truchos.
+
+648
+01:33:10.690 --> 01:33:19.429
+Rodrigo Ramele: Pero vos por ejemplo, desde el punto de vista de podías correr un programa que hacer. Esto, que se suponía que era para desarrollo. Imagínate que algo así. Se filtra en producción y te acepta cualquier certificado. Entonces.
+
+649
+01:33:20.520 --> 01:33:22.129
+Rodrigo Ramele: o sea, es algo opuesto que tiene
+
+650
+01:33:28.500 --> 01:33:31.059
+Rodrigo Ramele: Bien, pregunta chicos.
+
+651
+01:33:32.590 --> 01:33:41.719
+Rodrigo Ramele: se entiende más o menos, pero se tienen que dar varias condiciones para poder para que ese cel no sea acepte un manning de mi vida, pero es posible
+
+652
+01:33:58.430 --> 01:34:04.020
+Rodrigo Ramele: En bruto. Nos dijeron que ir con White Jack a un bar y ponernos en tercer tráfico era ilegal y no lo podíamos hacer.
+
+653
+01:34:05.200 --> 01:34:07.210
+Rodrigo Ramele: ¿en qué ley está Joaquín, eso?
+
+654
+01:34:09.650 --> 01:34:10.210
+Rodrigo Ramele: Bueno.
+
+655
+01:34:10.210 --> 01:34:15.070
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Ahora mismo no me acuerdo, pero nos dijeron que no lo intentemos hacer porque nos íbamos a meter en problemas.
+
+656
+01:34:15.670 --> 01:34:20.289
+Rodrigo Ramele: Te pueden meter en problemas. Eso es verdad. No sé si es ilegal.
+
+657
+01:34:21.340 --> 01:34:26.449
+Rodrigo Ramele: no sé si califica como ilegal, o sea, deja de pensar a ver.
+
+658
+01:34:26.590 --> 01:34:28.510
+Rodrigo Ramele: Y
+
+659
+01:34:33.640 --> 01:34:41.700
+Rodrigo Ramele: si vos te si vos te ponés Wildhack y monitoreas, todo lo que está pasando, y no haces nada. No estás cometiendo ningún crimen
+
+660
+01:34:41.890 --> 01:34:42.950
+Rodrigo Ramele: en un punto.
+
+661
+01:34:43.140 --> 01:34:48.429
+Rodrigo Ramele: porque no estás afectando en nada de lo que está ahí. Simplemente estás viendo toda la información que se está transmitiendo.
+
+662
+01:34:48.880 --> 01:34:58.300
+Rodrigo Ramele: Entonces, hasta ahí no es ningún crimen. Si vos ves datos que están que no están encriptados y que y y haces algo con eso, Eso es otra cosa.
+
+663
+01:34:58.410 --> 01:35:01.259
+Rodrigo Ramele: Pero el hecho de vos mirar la información
+
+664
+01:35:01.500 --> 01:35:08.130
+Rodrigo Ramele: directamente con Whatsapp que sea tu propia computadora que sea tu computadora
+
+665
+01:35:08.930 --> 01:35:11.300
+Rodrigo Ramele: núcleo, Ahí no está haciendo nada, en definitiva.
+
+666
+01:35:14.480 --> 01:35:17.019
+Rodrigo Ramele: Pero, bueno, no sé si les dijeron eso, no sé.
+
+667
+01:35:17.020 --> 01:35:18.770
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Es una zona medio raras.
+
+668
+01:35:18.770 --> 01:35:27.590
+Rodrigo Ramele: Es una zona gris. Sí, sí, sí, porque alguien podría decir que está es como hacer como una cosa de correspondencia y eso, Pero pero en general, sería raro que digamos.
+
+669
+01:35:28.180 --> 01:35:37.909
+Rodrigo Ramele: Ok, Si yo soy perito y un juez dice: dice, establece la situación. Yo digo, mira hoy por hoy, ¿no? Porque el cualquier sistema que vos hacés
+
+670
+01:35:38.060 --> 01:35:51.529
+Rodrigo Ramele: vos asumís, que todos los intermediarios que están en el medio. Pueden ver la información que vos estás dando, porque de hecho, todos los sistemas son así por cómo funciona Internet. Por lo tanto, vos. Está en vos proveer
+
+671
+01:35:51.760 --> 01:36:05.069
+Rodrigo Ramele: el mecanismo para esa información, ofrecer una protección básica de confidencialidad de confidencialidad entendés. Es como alguien que le roban en auto y dejó el auto abierto con la llave puesta y el botón en marcha.
+
+672
+01:36:05.250 --> 01:36:09.270
+Rodrigo Ramele: Entonces bueno, sí, es como un gris, Pero bueno, de alguna manera.
+
+673
+01:36:09.570 --> 01:36:23.230
+Rodrigo Ramele: digamos, el auto estaba ahí, ¿no? O por ejemplo, una billetera en el suelo que tiene plata, es difícil eso juzgarlo como un robo, porque, bueno, a alguien se le cayó. Y bueno que ahora, en la cuestión ética de cada 1 que es lo que tiene que hacer con eso, Pero
+
+674
+01:36:24.480 --> 01:36:33.869
+Rodrigo Ramele: pero bueno, nada, no sé, no me quiero meter ahí, pero bueno, pero si eso es un poco. Es acuérdense que la la premisa máxima de seguridad es
+
+675
+01:36:33.910 --> 01:36:45.559
+Rodrigo Ramele: todo. Es con lo ustedes. Todos los bits que escriben y digitalizan, tienen que asumir que ya están perdidos legalmente. El tema que es: ¿qué haces después? No, ¿A qué te referís tomás.
+
+676
+01:36:49.890 --> 01:36:53.999
+TOMÁS PINAUSIG CASTILLO: Y que, o sea, si solo te engancharan, poner el que estás haciendo burjark.
+
+677
+01:36:54.450 --> 01:36:55.180
+Rodrigo Ramele: Sí.
+
+678
+01:36:57.030 --> 01:37:00.899
+TOMÁS PINAUSIG CASTILLO: No tenés ninguna intención si no cometiste ningún acto o no.
+
+679
+01:37:01.110 --> 01:37:02.690
+Rodrigo Ramele: Claro, claro, eso está.
+
+680
+01:37:02.690 --> 01:37:05.220
+TOMÁS PINAUSIG CASTILLO: Lo podemos probar esa parte y ya está. No pasa nada.
+
+681
+01:37:05.220 --> 01:37:11.329
+Rodrigo Ramele: Exacto. Eso es vos. ¿estás vos? Estás viendo la información que llega llega de alguna manera a tu computadora con Wizark.
+
+682
+01:37:11.770 --> 01:37:24.589
+Rodrigo Ramele: diferente. Si vos rompés una, si vos haces, por ejemplo, llamen de una red, eso es otra cosa, o si vos hacés en entras a una clave en la cual no te dieron autorización. Eso es otra cosa ahí en.
+
+683
+01:37:24.590 --> 01:37:24.910
+TOMÁS PINAUSIG CASTILLO: A un.
+
+684
+01:37:24.910 --> 01:37:25.240
+Rodrigo Ramele: De la.
+
+685
+01:37:25.240 --> 01:37:26.960
+TOMÁS PINAUSIG CASTILLO: Ya está ahí. Sí.
+
+686
+01:37:26.960 --> 01:37:40.370
+Rodrigo Ramele: Exacto exacto, escuchen esta que pasó en un momento. Y esta es esta es que era del otro lado en un momento, cuando vos te conectabas a la red de de Starbucks, estaba un servicio. No sé si com con
+
+687
+01:37:40.540 --> 01:37:53.859
+Rodrigo Ramele: en telecentro o algo así, y algún crack de telecentro. Porque, en definitiva, acá entre nosotros vamos a decir que es crack porque porque se le ocurrió esa idea, pero es complicada. También. No agarró y hizo.
+
+688
+01:37:53.960 --> 01:37:55.199
+Rodrigo Ramele: puse un script
+
+689
+01:37:55.910 --> 01:38:02.909
+Rodrigo Ramele: en el cual usaba parte de la conexión que vos hacías cuando te conectabas ese servidor para mirar.
+
+690
+01:38:03.070 --> 01:38:06.770
+Rodrigo Ramele: para probar un par de hash para hacer minado.
+
+691
+01:38:07.300 --> 01:38:25.409
+Rodrigo Ramele: Entonces cada vez que vos te conectabas a la red y pasabas por el portal cautivo que se portal donde vos ponías tu ahí Ta: Ta: Ta: Ahí hay una página. Cuando vieron lo que es el portal cautivo es cuando ustedes se conecta a una página que usa wifi. Lo primero que hace es una de las variantes que tiene wifi en los en los protocolos de para conectarte cuando es abierto.
+
+692
+01:38:25.410 --> 01:38:38.870
+Rodrigo Ramele: te mando una página de un portal cautivo que eso es punto Apple, Com, que es un dns fijo que tienen todas las computadoras, todas las computadoras de cada 1 de los sistemas operativos. Entonces lo que hace es separa en la red con un Dns trucho
+
+693
+01:38:38.890 --> 01:38:48.750
+Rodrigo Ramele: y te manda el cuando no te conectas al portal cautivo. Te atiende ese eso. Y te arma una página web en la página web, vos pones el I D y el password, que es lo tipo de lo típico que haces.
+
+694
+01:38:49.700 --> 01:38:57.370
+Rodrigo Ramele: Y lo que hicieron en su momento era que en ese portal cautivo, minaban con el tiempo de procesamiento de quién se conectaba, minaban cripto.
+
+695
+01:38:57.820 --> 01:39:14.560
+Rodrigo Ramele: Pero bueno, acá dice Joaquín. Siempre que escucho las palabras, puso un skin un frío. Te roban todo a tu rapín. Por supuesto, tienen que sumar. Todo eso es es mundo. Es mundo en que hay que manejarse con muchísimo cuidado que es muy probable que ahí pueda haber de todo. Entonces es como un principio fuerte de seguridad. No
+
+696
+01:39:16.210 --> 01:39:17.140
+Rodrigo Ramele: está bien.
+
+697
+01:39:24.840 --> 01:39:26.300
+Rodrigo Ramele: Estamos Acá chicos.
+
+698
+01:39:27.530 --> 01:39:28.260
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí.
+
+699
+01:39:30.400 --> 01:39:34.070
+Rodrigo Ramele: Bien, creo que queda solo bien.
+
+700
+01:39:34.240 --> 01:39:44.850
+Rodrigo Ramele: Está bien. Vamos a hacer esto. El El método de chamir lo van a ver en la práctica. Yo le voy a avisar a Ana que lo ve con Ana. Lo ven súper en detalle. Así que en en
+
+701
+01:39:45.250 --> 01:39:57.790
+Rodrigo Ramele: Creo que es mejor directamente que lo vean con el con ella ya directamente. El método de chamir. Básicamente, Bueno, les hago la intro los métodos de el método de chamil son métodos que se llaman basados en umbrales.
+
+702
+01:39:57.850 --> 01:40:09.189
+Rodrigo Ramele: ¿cuál es la idea de los métodos umbrales? Bueno, sirven mucho estos métodos, porque la idea es que es son métodos que son ternas de algoritmos, donde hay una parte de generación de una clave con un tamaño de
+
+703
+01:40:10.230 --> 01:40:24.800
+Rodrigo Ramele: con una longitud de la clave de seguridad, con un parámetro de seguridad. Después hay un mecanismo de inscripción, que es un mecanismo de inscripción que es cifrado, pero ese cifrado que se hace tiene un umbral
+
+704
+01:40:24.930 --> 01:40:35.139
+Rodrigo Ramele: de relación de de cuántos son claves distribuidas donde las claves se aglomeran entre sí y que para cifrar
+
+705
+01:40:35.340 --> 01:40:53.879
+Rodrigo Ramele: se utiliza. Bueno, se utiliza el umbral, pero se puede hacer un cifrado de algo, pero para descifrarlo se requiere un mínimo de las claves que hacen falta Entonces, por ejemplo, es una clave que se distribuye en 4 partes, y basta con 3 partes para poder descifrar la información
+
+706
+01:40:54.250 --> 01:40:55.000
+Rodrigo Ramele: que está.
+
+707
+01:40:55.010 --> 01:41:08.720
+Rodrigo Ramele: Entonces son un par de algoritmos no son muchos, pero hay un par de algoritmos entre el más conocido es el del gran Shamir que Jamir. Por cierto, es la Sdr S R A. Es un investigador israelí que es un capo hiper gapo.
+
+708
+01:41:08.720 --> 01:41:20.940
+Rodrigo Ramele: y él armó. Este es el creador de este método, que es 1 de los que se utilizan de este estilo. Entonces, para todo. M y caene válidos. Lo que ocurre es que
+
+709
+01:41:20.990 --> 01:41:23.109
+Rodrigo Ramele: en yo puedo en
+
+710
+01:41:23.840 --> 01:41:32.710
+Rodrigo Ramele: realizar una inscripción de todo el tema de y o sea, cualquier inscripciones que yo realice tanto de ca prima como de ca prima prima.
+
+711
+01:41:33.020 --> 01:41:39.990
+Rodrigo Ramele: yo puedo hacer una desenscripción con ca prima que tiene las 3 sombras
+
+712
+01:41:40.210 --> 01:41:48.970
+Rodrigo Ramele: y la desencripción de ca prima prima que hago con te sombras es equivalente a la inscripción con la T prima sombras.
+
+713
+01:41:49.200 --> 01:41:55.500
+Rodrigo Ramele: entonces es justamente esta idea que yo puedo encriptar con una distribución que hago en 4 partes.
+
+714
+01:41:55.610 --> 01:42:05.029
+Rodrigo Ramele: pero puedo desencriptar solamente teniendo 3. Entonces imagínense la situación, no como si fuesen llaves llaves físicas y tengo un un Stach, un
+
+715
+01:42:05.200 --> 01:42:24.209
+Rodrigo Ramele: una caja de seguridad que necesita que para los datos para que yo pueda cerrar la caja. Tengo que tener 4 llaves y con 4 llaves la caja. Físicamente. El mecanismo de de cerrado de la caja se cierra, pero me bastan con 3 claves para poder abrirla, independientemente de cuál de las 3 a
+
+716
+01:42:24.820 --> 01:42:41.390
+Rodrigo Ramele: ese es el esquema. Esto se usan también Este tipo de protocolos se usan mucho para el esquema de votaciones, etcétera. La gracia sería que le puedes dar a personas distintas los pedacitos, exacto. Tomás. Entonces se usan mucho para esquemas de votación para esquemas de que son esquema de clave compartida.
+
+717
+01:42:41.390 --> 01:42:50.029
+Rodrigo Ramele: Es como una variante de de estos protocolos es muy interesante. Se usa mucho en temas de cripto, y eso porque justamente está muy.
+
+718
+01:42:50.300 --> 01:42:56.710
+Rodrigo Ramele: es para cuando se involucran varios actores y proveer relaciones criptográficas entre los actores.
+
+719
+01:42:57.290 --> 01:43:12.480
+Rodrigo Ramele: Bueno, el método de Shamir es el método Shamir tiene un 3 hall y tiene un N que son la cantidad que hacen falta para poder entrar. Y está basado en que hay un polinomio de grado T que puede ser especificado mediante su evaluación en t puntos diferentes.
+
+720
+01:43:12.950 --> 01:43:18.109
+Rodrigo Ramele: Entonces imagínense que ustedes tienen un polinomio para ustedes poder
+
+721
+01:43:18.670 --> 01:43:28.340
+Rodrigo Ramele: evaluar el polinomio necesitan de valores específicos para poder hacerlo. Y encima es obviamente, todo modular, no módulo. P:
+
+722
+01:43:28.530 --> 01:43:42.490
+Rodrigo Ramele: Entonces el polinomio que cuando ustedes lo tienen, lo establecen tiene a a la T, que estos son los coeficientes del polinomio. Los valores de X son todos valores modulares. En p todas las cuentas que se hacen en polinomio son modulares en P,
+
+723
+01:43:42.520 --> 01:44:01.600
+Rodrigo Ramele: hay un valor, s, que es el secreto que el secreto coincide con el P igual a 0 con p evaluado en X, igual a 0, que es el secreto que es el término independiente que normalmente es este valor a 0, que es el término independiente que es este, y después están todos los todos los valores de los de los coeficientes que van de 0 a P. Uno.
+
+724
+01:44:02.060 --> 01:44:15.469
+Rodrigo Ramele: Y 1 puede, una vez que tiene este polinomio, evalúa el polinomio en diferentes puntos en hasta n puntos que son lo que se llaman las sombras, es decir, agarra. Este valor le pone X igual a 1 y hace todas las cuentas modulares.
+
+725
+01:44:15.490 --> 01:44:27.680
+Rodrigo Ramele: Y eso, y con eso conforma un par que va a ser el par X Perdón. Uno, coma el valor del polinomio, el valor que da el polinomio, y eso es lo que se distribuye a cada una de las personas
+
+726
+01:44:27.680 --> 01:44:37.619
+Rodrigo Ramele: que tiene que mantener el secreto, ¿no? ¿para qué valor que ¿para qué valor? X Particular obtuvo qué valor del polinomio, y eso es lo que se distribuye son las sombras que son ene sombras.
+
+727
+01:44:38.260 --> 01:44:44.960
+Rodrigo Ramele: pero acuérdense que el polinomio tiene T, valores, en definitiva, porque son las evaluaciones. Entonces
+
+728
+01:44:45.000 --> 01:44:58.389
+Rodrigo Ramele: el método Shamir permite reconstruir el secreto con con ene sombra, solamente que ene normalmente es menor que T. Entonces, ¿cómo hago yo para reconstruir el secreto. Bueno, lo que voy a hacer es
+
+729
+01:44:58.470 --> 01:45:06.050
+Rodrigo Ramele: va a ser utilizar las n sombras para reevaluar el protocolo y reconstruir el Protocolo.
+
+730
+01:45:06.200 --> 01:45:08.889
+Rodrigo Ramele: y esto se hace con lo que se llama el método de Lagrange.
+
+731
+01:45:08.920 --> 01:45:18.490
+Rodrigo Ramele: donde ustedes lo que hacen, cada 1 de estos son los I A van a ser los puntos y el valor de X y el valor de de obtenido del polinomio.
+
+732
+01:45:18.490 --> 01:45:36.659
+Rodrigo Ramele: Hacer una multiplicación de todos esos valores por los S I que van a ser los valores que se de los secretos compartidos, y esto después se suma. Esto surge del polinomio de la gracia. Esto lo van a ver bien con Ana en algún ejemplo, y después, una vez que con con esto reconstruyen el polinomio. Lo pueden evaluar en 0. Y con eso averiguan en secreto
+
+733
+01:45:36.730 --> 01:45:42.620
+Rodrigo Ramele: final que se compartió Este protocolo está buenísimo, y está demostrado que
+
+734
+01:45:42.650 --> 01:45:57.409
+Rodrigo Ramele: hacer es equivalente a averiguar si 1 no tiene todas las sombras y le falta una sombra en esa situación, Identificar la sombra faltante es igual a a la situación de similar al secreto perfecto.
+
+735
+01:45:57.410 --> 01:46:11.880
+Rodrigo Ramele: O sea, es algo que no hay forma de averiguarlo y que da seguridad absoluta, lo cual en su momento Bueno, este Protocolo fue súper importante porque parecía que tenía eso pero Bueno, Obviamente, hay restricciones sobre cómo usar eso de todas formas.
+
+736
+01:46:11.880 --> 01:46:19.119
+Rodrigo Ramele: pero se usan muchísimas situaciones. Se usan muchos lados y es muy piola porque, en definitiva, hacen cálculo que se hace con una cuenta.
+
+737
+01:46:20.130 --> 01:46:38.609
+Rodrigo Ramele: Bueno, por ejemplo, en este caso, el secreto de compartir es el secreto de 7. Y el esquema es un esquema, 3, 5 que sea de 3. Significa que es el polinomio. Es de grado 2, que porque es t menos 1 y que solamente que hacen falta con 5 sombras. Uno puede recomponer todo este secreto, entonces lo que hace evalúa
+
+738
+01:46:38.760 --> 01:46:45.010
+Rodrigo Ramele: el polinomio en 5 valores distintos. Se hacen las cuentas y lo que se comparten son estos valores
+
+739
+01:46:45.510 --> 01:47:00.180
+Rodrigo Ramele: con estas sombras que están, acá que son 5. Basta con tener solamente 3 de estas, en definitiva, tomando 3. Cualquiera de esas sombras que de las 5, que es un subconjunto. Yo con eso ya puedo recomponer el polinomio.
+
+740
+01:47:00.350 --> 01:47:19.579
+Rodrigo Ramele: Puedo hacer esta cue hacer estas cuentas directas que surgen de acá y recomponer el polinomio. Fíjense que en cada 1 de estos, bueno está usando ahí de la sombra. Esto surge justamente de las sombras, la recomposición del polinomio, y yo puedo rearmar ese segmento de Lagrange, rearmo el polinomio en sí, y lo evaluó en 0. Y con eso me dan secreto.
+
+741
+01:47:19.970 --> 01:47:20.830
+Rodrigo Ramele: Está bien.
+
+742
+01:47:21.210 --> 01:47:26.419
+Rodrigo Ramele: Bueno, esta es una intro a esto porque después lo ven bien en la en la parte práctica, lo van a ver con Ana.
+
+743
+01:47:26.590 --> 01:47:33.840
+Rodrigo Ramele: Y con esto terminamos la última clase antes del parcial teórica, Ok, preguntas.
+
+744
+01:47:37.360 --> 01:47:38.280
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Intensa.
+
+745
+01:47:39.440 --> 01:47:41.949
+Rodrigo Ramele: Intensa, Sí, sí, sí, bastante intensa.
+
+746
+01:47:43.160 --> 01:47:44.580
+Rodrigo Ramele: Este examen.
+
+747
+01:47:44.580 --> 01:47:45.080
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: No se.
+
+748
+01:47:45.540 --> 01:47:46.920
+Rodrigo Ramele: Bien bárbaro.
+
+749
+01:47:47.230 --> 01:47:51.799
+Rodrigo Ramele: Agosto, más también Joaquín, que participaron mucho. Gracias chicos
+
+750
+01:47:52.630 --> 01:47:59.760
+Rodrigo Ramele: hacen que que no sea tan terrible hablarle a una pantalla fría y y vacía.
+
+751
+01:48:01.700 --> 01:48:02.980
+Rodrigo Ramele: Pregunta chicos.
+
+752
+01:48:10.260 --> 01:48:21.229
+Rodrigo Ramele: bien, buen finde para ustedes, también. Chicos, Así que nos vemos. Ya saben, voy a subir los exámenes. Y me encuentro acá en la de neurotrónica en la en segundo piso de ese rec
+
+753
+01:48:21.380 --> 01:48:23.759
+Rodrigo Ramele: mandan mails o vienen a darme y nos vemos
+
+754
+01:48:24.020 --> 01:48:26.340
+Rodrigo Ramele: el lunes van a estar con Ana
+
+755
+01:48:26.480 --> 01:48:39.519
+Rodrigo Ramele: y nos vemos también. Joaquín: Muy bien, esa es la actitud y nos vemos el jueves el jueves. Ya les voy a pasar el aula ahí. Voy a mandar una notificación con el aula. Creo que es acá en esa red que me dieron una cadena en el rectorado.
+
+756
+01:48:40.230 --> 01:48:43.949
+Rodrigo Ramele: Bueno, nos vemos chicos, buena suerte en la vida.
+
+757
+01:48:43.950 --> 01:48:45.710
+NICOLÁS CANZONIERI: Vamos con el de.
+

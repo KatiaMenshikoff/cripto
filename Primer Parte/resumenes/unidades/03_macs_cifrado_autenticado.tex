@@ -1,0 +1,461 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+\section{MACs y Cifrado Autenticado}
+
+Hasta ahora la criptografía vista resolvía \textbf{confidencialidad} (controlar la
+diseminación de información). Esta unidad ataca el otro gran problema: la
+\textbf{integridad}, es decir, cómo confiar en que la información no fue
+modificada, aun cuando el origen es confiable. La primitiva básica para esto es
+el \textbf{MAC} (Message Authentication Code), y luego veremos funciones de hash y
+cómo combinar confidencialidad con integridad (cifrado autenticado).
+
+\prof{En general el problema de integridad no es evitar la modificación, porque muchas veces no se puede, sino detectarla.}
+
+\subsection{El nuevo escenario de ataque: integridad}
+
+El cifrado por sí solo no protege contra \textbf{modificaciones} del texto cifrado.
+El profesor lo motiva con un sistema de RR.HH. que guarda sueldos cifrados en una
+base de datos, con un criptosistema de flujo CPA-Secure.
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{No se puede extraer el valor:} aunque el atacante sepa que un sueldo
+  es \$1.000.000, como el criptosistema es \emph{no determinista} (usa IV), cifrar
+  ese valor da algo distinto cada vez. No puede identificar qué fila es ni aproximar
+  el sueldo. La parte de confidencialidad es realmente segura.
+  \item \textbf{Pero sí se puede manipular:} un administrador que conoce su legajo
+  (2678) y el de su jefe (2890) puede copiar el texto cifrado del jefe sobre el suyo
+  ($update$) y obtener un aumento de sueldo, \emph{sin conocer ningún valor}. El
+  escenario CPA se mantiene (nunca extrajo información), pero igual rompió el
+  sistema.
+\end{itemize}
+
+\paragraph{Maleabilidad.} Es la propiedad de que una modificación del texto cifrado
+se propaga de forma sistemática/controlable al texto plano.
+
+\begin{definicion}{Maleabilidad}
+Cuando una modificación en el texto cifrado se puede traducir de forma sistemática
+en alguna modificación en el texto plano. La más simple: cambio un bit del cifrado
+y cambia un bit del plano.
+\end{definicion}
+
+\paragraph{Ataque quirúrgico sobre cifrado de flujo.} Si $\mathrm{Enc}_k(m)=G(k)\oplus m=c$,
+entonces definiendo $c'=c\oplus x$ resulta $\mathrm{Dec}_k(c')=m\oplus x$. Conociendo
+el propio sueldo en plano ($m=1345$) y su cifrado, el atacante hace:
+$$c'' = c \oplus (1345) \oplus (100000)$$
+y al descifrarse da $1345 \oplus 1345 \oplus 100000 = 100000$. Cambió el sueldo a un
+valor arbitrario aunque la información estuviera cifrada. Aclaración: agregar el
+legajo dentro del cifrado (\texttt{empleado\textbar\textbar sueldo}) frena la copia
+de columnas, pero \textbf{no} frena este ataque de maleabilidad.
+
+\paragraph{CCA: el modelo formal.} Para modelar esto se define el escenario de
+\textbf{texto cifrado escogido} (Chosen Ciphertext Attack, $\mathrm{CCA}_{A,\Pi}$).
+Es como CPA pero el adversario además tiene un \textbf{oráculo de descifrado}
+$g(x)=d_k(x)$ (no solo el de cifrado $f(x)=e_k(x)$). Restricción para no hacerlo
+trivial: al recibir el desafío $c=e_k(m_b)$ \emph{no} puede pedir $g(c)$.
+
+\begin{destacado}
+\textbf{Ningún criptosistema visto (ni de los no vistos) es CCA-Secure.} El cifrado
+está pensado para confidencialidad (transferencia de información), no para
+manipulación. Por eso la integridad requiere otra primitiva: el \textbf{MAC}.
+\end{destacado}
+
+\begin{examen}
+Ejercicio de cátedra: \textbf{demostrar que el cifrado de flujo en general no es
+CCA-Secure.} Ayuda: considerar $m_0=(0\ldots0)$ y $m_1=(1\ldots1)$ y ver qué
+consultas se pueden hacer a $g(x)$ al recibir $c$. La idea es usar la maleabilidad
+($\oplus$) para transformar $c$ en otro cifrado consultable.
+\end{examen}
+
+\subsection{Qué es un MAC}
+
+\begin{definicion}{MAC (Message Authentication Code)}
+Terna de algoritmos $(\mathrm{Gen}, \mathrm{Mac}, \mathrm{Vrfy})$:
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item $\mathrm{Gen}: () \to K$ \quad — generador de clave.
+  \item $\mathrm{Mac}: K \times P \to T$ \quad — etiquetador (genera la etiqueta/tag).
+  \item $\mathrm{Vrfy}: K \times P \times T \to \{0,1\}$ \quad — verificador.
+\end{itemize}
+\textbf{Propiedad básica (correctitud):} para todo $m$ y $k$ válidos,
+$\mathrm{Vrfy}_k(m, \mathrm{Mac}_k(m)) = 1$.
+\end{definicion}
+
+Los conjuntos: $K$ = espacio de claves, $P$ = espacio de mensajes, $T$ = espacio de
+etiquetas. A diferencia de los criptosistemas, hay etiquetado y verificación (no
+cifrado/descifrado). La verificación es parte del diseño del MAC; en muchos casos
+recalcula la etiqueta y compara (\texttt{Mac\_k(m) == t}), pero no siempre (ver
+ejemplo del cifrado de la longitud).
+
+\paragraph{Integridad = detectar, no evitar.} En un canal inseguro alguien puede
+pararse en el medio; no se puede impedir la modificación. Lo que da el MAC es la
+capacidad de \textbf{detectarla} para luego decidir qué hacer (retransmitir, alertar,
+abortar).
+
+\subsection{Seguridad de un MAC: infalsificabilidad (Mac-forge)}
+
+\begin{definicion}{Experimento Mac-forge$_{A,\Pi}$}
+Dado nivel de seguridad $n$, adversario $A$ y MAC $\Pi(n)$:
+\begin{enumerate}[leftmargin=1.6em,nosep]
+  \item Se genera una clave $k \leftarrow K$.
+  \item $A$ obtiene un oráculo etiquetador $f(x)=\mathrm{Mac}_k(x)$ (caja negra: nunca ve $k$).
+  \item $A$ realiza todas las evaluaciones que quiera. Sea $Q$ el conjunto de mensajes evaluados.
+  \item $A$ emite $(m, t)$ con $m \notin Q$.
+\end{enumerate}
+$\mathrm{Mac\text{-}Forge}_{A,\Pi} = 1$ si $\mathrm{Vrfy}_k(m,t)=1$ (falsificación válida).\\
+Si $\Pr[\mathrm{Mac\text{-}Forge}_{A,\Pi}=1] \le \mathrm{neg}(n)$ entonces $\Pi$ es
+\textbf{infalsificable} (existencialmente infalsificable bajo ataque de mensaje
+elegido, CMA).
+\end{definicion}
+
+La restricción $m \notin Q$ evita el ataque trivial: si pedí el tag de ``Hola'' no
+puedo emitir ``Hola'' con ese tag. Una falsificación es generar, \emph{sin conocer la
+clave}, un par $(m,t)$ que pase la verificación.
+
+\paragraph{Observaciones clave.}
+\begin{itemize}[leftmargin=1.4em]
+  \item El adversario puede obtener el MAC de cualquier mensaje que elija.
+  \item Se considera \textbf{roto} el MAC si el adversario puede falsificar cualquier
+  mensaje, \emph{independientemente de si tiene sentido o no}. (Históricamente el
+  ataque de Wang 2004 a MD5 generaba falsificaciones ``sin sentido'', pero al
+  acelerarse y poder restringir la salida a caracteres imprimibles, pasó a ser un
+  ataque real. Lección: un ataque debilitado no se debe tomar a la ligera.)
+  \item Demostrar que algo es infalsificable es muy difícil (hay que cubrirse de todo
+  adversario); demostrar que es \textbf{falsificable} es más fácil: basta exhibir
+  \emph{un} adversario (contraejemplo).
+\end{itemize}
+
+\subsection{MÉTODO para romper un MAC inseguro}
+
+\begin{examen}
+\textbf{Pregunta recurrente (2015, 2017): romper un MAC vía Mac-forge.}\\
+Método general para mostrar que un MAC es \textbf{falsificable} (= inseguro):
+\begin{enumerate}[leftmargin=1.6em]
+  \item Ubicarse como adversario $A$ con acceso al oráculo $f(x)=\mathrm{Mac}_k(x)$.
+  \item Hacer una o pocas evaluaciones inteligentes (típicamente $f(00\ldots0)$ para
+  ``leer'' material de la clave/keystream, o el MAC de un prefijo).
+  \item \textbf{Exhibir una falsificación existencial:} construir un par $(m,t)$
+  con $m \notin Q$ (distinto de lo evaluado) tal que $\mathrm{Vrfy}_k(m,t)=1$, sin
+  haber consultado el tag de ese $m$.
+  \item Verificar que el par propuesto pasa la verificación.
+\end{enumerate}
+\end{examen}
+
+\paragraph{Tres MACs de juguete (ejercicio de cátedra) y por qué fallan.}
+
+\textbf{(1) $\mathrm{Mac}_k(m) = G(k) \oplus m$} (usar un cifrado de flujo como MAC).
+La verificación: $\mathrm{Vrfy}_k(m,t) = (t \oplus m == G(k))$. Es \emph{falsificable}:
+$G(k)$ es determinístico, así que si averiguo $G(k)$ puedo etiquetar cualquier cosa.
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item Evalúo $f(00\ldots0)$. Como $G(k)\oplus 0 = G(k)$, obtengo directamente $G(k)$.
+  \item Emito $m=11\ldots1$ (distinto de $0\ldots0$) con tag $t = G(k)\oplus(11\ldots1)$.
+  \item Verifica: $t \oplus m = G(k)\oplus 1\ldots1 \oplus 1\ldots1 = G(k)$. Falsificación válida.
+\end{itemize}
+\emph{Lección:} el problema es el determinismo que se puede extraer en un mensaje y
+reusar en otro.
+
+\textbf{(2) $\mathrm{Mac}_k(m) = k \oplus \mathrm{first\_k\_bits}(m)$} (solo usa los
+primeros bits del mensaje). Doblemente falsificable:
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item Evalúo $f(00\ldots0)$: como los primeros bits son 0, el tag es $k$. ¡Recuperé la clave!
+  Luego emito cualquier $m$ con tag $k \oplus \mathrm{first\_k\_bits}(m)$.
+  \item Más fácil aún: como solo mira \emph{parte} del mensaje, tomo un $m$, calculo su
+  MAC, y emito $m$ con un carácter extra al final (la parte no chequeada). La etiqueta
+  sigue siendo válida.
+\end{itemize}
+\begin{destacado}
+Un MAC que \textbf{no procesa la totalidad del mensaje} es trivialmente falsificable:
+modifico el bit/byte que quedó afuera y reuso la misma etiqueta. Un MAC robusto
+\textbf{siempre} es resultado de procesar todo el contenido del mensaje.
+\end{destacado}
+
+\textbf{(3) $\mathrm{Mac}_k(m) = \mathrm{Enc}_k(|m|)$} (cifrar la \emph{longitud} con un
+cripto CPA-Secure). Como $\mathrm{Enc}$ es no determinista, dos mensajes de la misma
+longitud dan tags distintos (parece robusto desde afuera). La verificación debe
+\emph{descifrar} el tag y comparar con $|m|$ (no se puede recifrar). Falsificable
+porque \textbf{la etiqueta no depende del contenido}, solo de la longitud:
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item Pido el MAC de un mensaje de longitud 2 (p.ej. $00$); obtengo un tag $t$ tal que
+  $\mathrm{Dec}_k(t)=2$.
+  \item Emito otro mensaje distinto de la misma longitud (p.ej. $11$) con el \emph{mismo} $t$.
+  Pasa la verificación porque al descifrar $t$ vuelve a dar $2 = |11|$.
+  \item Equivalente: pedir el etiquetado de dos mensajes de igual longitud e
+  \textbf{intercambiar las etiquetas} (ambas validan).
+\end{itemize}
+
+\begin{examen}
+\textbf{Falsificación por bloques (parcial 2015):} dado
+$\mathrm{Mac}_k(m)=\langle F_k(m_1), F_k(F_k(m_2))\rangle$ y similares, el método es
+\textbf{reusar/intercambiar bloques} entre mensajes para forjar el tag de otro
+mensaje (los bloques se calculan de forma independiente).\\[2pt]
+\textbf{MAC por bit de paridad (parcial 2017):} si el tag es la paridad del mensaje,
+\textbf{cambiar dos bits} del mensaje conserva la paridad $\Rightarrow$ el tag sigue
+válido $\Rightarrow$ falsificación existencial.
+\end{examen}
+
+\subsection{Construcción de MAC: CBC-MAC}
+
+A partir de una primitiva de \textbf{cifrado de bloque} (sea $F$ una función
+pseudoaleatoria) se construye un MAC infalsificable. Existe CBC-MAC con cualquier
+primitiva: 3DES, IDEA, AES, etc.
+
+\begin{definicion}{CBC-MAC (longitud de mensaje fija)}
+$\mathrm{Gen}: k \leftarrow \{0,1\}^n$.\\
+$\mathrm{Mac}$: sea $m = m_1\|m_2\|\cdots\|m_j$, con $t_0 = 00\ldots0$ (IV en cero, fijo):
+$$t_i = F_k(t_{i-1} \oplus m_i), \qquad \mathrm{Mac}_k(m) = t_j.$$
+$\mathrm{Vrfy}$: $\mathrm{Vrfy}_k(m,t)=1 \iff t = \mathrm{Mac}_k(m)$ (se recalcula; $F_k$ es
+determinística).
+\end{definicion}
+
+Es CBC pero \emph{sin} interés en recuperar el mensaje: se tiran todos los resultados
+intermedios y se conserva solo el cifrado del último bloque, que ``depende'' de todos
+los bloques anteriores por el encadenamiento. El IV se pone en cero (no estamos
+cifrando, no necesita ser aleatorio).
+
+\begin{examen}
+\textbf{¿Bajo qué condiciones es seguro CBC-MAC? (parcial 2016)}\\
+La construcción básica es infalsificable \textbf{SOLO si se permiten mensajes de una
+misma longitud fija} (ni más grandes ni más chicos), con \textbf{IV constante/cero}.
+Con longitud variable aparecen \textbf{ataques de extensión}.
+\end{examen}
+
+\paragraph{Ataque de extensión (longitud variable).} Idea de la falsificación:
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item Crear dos bloques aleatorios $A$ y $B$. Definir $m_1 = A$ (un bloque) y $m_2 = A\|B$.
+  \item Calcular $t_1 = f(A)$ (= $F_k(A)$) y $t_2 = f(A\|B)$.
+  \item Emitir el mensaje de \textbf{tres bloques} $A \,\|\, B \,\|\, (A \oplus t_1)$ con tag $t_2$.
+\end{itemize}
+\emph{Por qué valida:} el estado tras procesar los dos primeros bloques $A\|B$ es
+$t_1$. El tercer bloque entra como $F_k(t_1 \oplus (A\oplus t_1)) = F_k(A) = t_1 = f(A)$...
+es decir, abusando del encadenamiento se fuerza la entrada del bloque final a un valor
+$A$ cuyo MAC ya se conoce. El truco general: construir mensajes por \textbf{prefijo}
+para acceder a los \textbf{estados intermedios} que normalmente se descartan, y luego
+anular el estado con $\oplus$ y forzar el valor deseado (muy parecido al ataque de
+maleabilidad del cifrado de flujo).
+
+\paragraph{Extensiones seguras de CBC-MAC (mensajes arbitrarios).} Tres formas (todas
+seguras; ninguna es perfecta):
+\begin{enumerate}[leftmargin=1.6em,nosep]
+  \item \textbf{Clave dependiente de la longitud:} $k' = F_k(|m|)$ y usar $t_i = F_{k'}(t_{i-1}\oplus m_i)$.
+  Así dos mensajes de distinta longitud usan claves distintas y no se aprenden los
+  estados intermedios. (Requiere conocer $|m|$ a priori.)
+  \item \textbf{Longitud como prefijo:} $m' = |m| \,\|\, m$, y $\mathrm{Mac}_k(m)=\mathrm{CBC\text{-}MAC}_k(m')$.
+  Rompe que un mensaje sea prefijo de otro. (Requiere conocer $|m|$ a priori.)
+  \item \textbf{Doble clave (recifrado del último estado):} $k_1, k_2$; calcular
+  $t' = \mathrm{CBC\text{-}MAC}_{k_1}(m)$ y luego $t = F_{k_2}(t')$. No requiere conocer
+  $|m|$ a priori, pero usa el doble de material de clave.
+\end{enumerate}
+
+\begin{ojo}
+Poner la longitud como \textbf{sufijo} (procesar el mensaje y agregar $|m|$ al final)
+\textbf{NO es seguro}: hay ataques de extensión parecidos.
+\end{ojo}
+
+\subsection{Funciones de hash}
+
+\begin{definicion}{Función de hash}
+Par de algoritmos: un selector que elige una función de una familia (información
+\textbf{pública}, no es clave) y la función $h$ que convierte un mensaje arbitrario en
+una etiqueta (``hash'' / digest / resumen) de tamaño \textbf{fijo y reducido}.
+\textbf{No tiene clave} (diferencia fundamental con MAC y criptosistemas).
+\end{definicion}
+
+Acepta mensajes de tamaño arbitrario (hasta terabytes) y devuelve una etiqueta chica
+(p.ej. 128 bits). El hash depende de \textbf{todos y cada uno} de los bits del mensaje
+(efecto avalancha: cambiar 1-2 bits cambia totalmente la salida). Sirve como
+identificador de contenido (deduplicación en backups, índice en redes P2P como
+eDonkey/Kademlia, etc.). No permite reconstruir el mensaje original.
+
+\paragraph{Colisiones.} Como hay más mensajes posibles que etiquetas, \textbf{las
+colisiones existen forzosamente} (dos mensajes distintos con el mismo hash). Como no
+hay clave, no se habla de ``falsificación'' sino de colisión.
+
+\begin{definicion}{Tres propiedades de un hash criptográfico}
+``Resistencia'' = la única forma de hallar lo buscado es por fuerza bruta (no hay
+atajo algorítmico polinómico; es ``computacionalmente imposible'').
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \textbf{Resistencia a preimagen:} dado un hash $y$, es computacionalmente
+  imposible hallar un $x$ con $h(x)=y$.
+  \item \textbf{Resistencia a segunda preimagen:} dado un mensaje $x$, es imposible
+  hallar un segundo $x' \neq x$ con $h(x')=h(x)$.
+  \item \textbf{Resistencia a colisión:} es imposible hallar \emph{dos} mensajes
+  cualesquiera $x \neq x'$ con $h(x)=h(x')$. Es la más fuerte: implica las otras dos.
+\end{itemize}
+\end{definicion}
+
+\paragraph{Usos.}
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \emph{Resistencia a preimagen} $\to$ protocolos de \textbf{prueba de
+  conocimiento}: demostrar que algo existe sin revelarlo (publicar el hash de una
+  fórmula/patente y luego probar que se la tenía; juegos de cartas con compromiso).
+  \item \emph{Resistencia a segunda preimagen} $\to$ índices de contenido /
+  deduplicación: dos archivos con igual contenido tienen igual hash (match semántico).
+\end{itemize}
+
+\paragraph{Paradoja del cumpleaños.} Buscar una \textbf{colisión} es más fácil que una
+preimagen: al ir generando mensajes se compara cada nuevo contra \emph{todos} los
+anteriores, con complejidad del orden de la \textbf{raíz cuadrada} del espacio.
+Medido en bits, el nivel de seguridad frente a colisiones es \textbf{la mitad}:
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Propiedad & Objetivo & Costo fuerza bruta \\
+\midrule
+Preimagen & dado $y$, hallar $x$: $h(x)=y$ & $\sim 2^{b}$ \\
+2.\textsuperscript{a} preimagen & dado $x$, hallar $x' \neq x$ con igual hash & $\sim 2^{b}$ \\
+Colisión & hallar cualquier par $x \neq x'$ colisionante & $\sim 2^{b/2}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\noindent (con $b$ = bits de salida). Por eso el nivel de seguridad de una función se
+mide por su resistencia a colisiones. Hoy el mínimo práctico de salida es 160 bits
+(colisiones $> 2^{80}$).
+
+\paragraph{Funciones en la práctica.}
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \textbf{MD5}: \emph{quebrada}, no usar (aparece en protocolos viejos).
+  \item \textbf{SHA-1} (160 bits): borderline, complicada.
+  \item \textbf{SHA-2}: durante mucho tiempo la recomendada (3 variantes), pero $\sim$1 orden
+  de magnitud más lenta que SHA-1.
+  \item \textbf{SHA-3 (Keccak)}: ganador del concurso abierto, mismos tamaños que SHA-2
+  pero velocidad de SHA-1 y estructura distinta. \textbf{Estándar recomendado hoy};
+  256 bits ``alcanza y sobra''. SHA = Secure Hash Algorithm (estándares del NIST).
+\end{itemize}
+
+\begin{ojo}
+Errores típicos de Verdadero/Falso (parciales 2025):
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \textbf{``Un hash sirve para encriptar''} $\to$ \textbf{FALSO} (Recup. 2025). Un hash
+  \emph{no es reversible}: no permite recuperar el mensaje, no encripta.
+  \item \textbf{``MD5 es un criptosistema asimétrico''} $\to$ \textbf{FALSO} (2025-2). MD5 es
+  una función de \emph{hash}, no un criptosistema asimétrico.
+\end{itemize}
+\end{ojo}
+
+\subsection{HMAC: MAC a partir de una función de hash}
+
+La segunda gran forma de construir un MAC infalsificable es a partir de una función de
+hash libre de colisiones. Los HMAC suelen ser 1-2 órdenes de magnitud \textbf{más
+rápidos} que un CBC-MAC (los hash están diseñados para procesar grandes volúmenes muy
+rápido), por eso se prefieren a escala.
+
+\begin{definicion}{HMAC (especificado en una RFC)}
+Dada una función de hash $H$ y una clave $k$, con constantes públicas fijas
+\texttt{ipad} y \texttt{opad}:
+$$\mathrm{HMAC}_k(m) = H\big((k \oplus \texttt{opad}) \,\|\, H((k \oplus \texttt{ipad}) \,\|\, m)\big).$$
+\end{definicion}
+
+La clave concatenada como prefijo rompe la posibilidad de aprender estados
+intermedios (misma idea que en CBC-MAC). El mensaje se procesa una sola vez (el hash
+exterior solo procesa la etiqueta interna), por lo que es muy eficiente. Hay
+\textbf{demostración formal}: si $H$ es libre de colisiones, HMAC es infalsificable.
+En sistemas se ven HMAC-SHA1, HMAC-MD5 (evitar), HMAC-SHA3.
+
+\begin{examen}
+\textbf{Validar sin exponer el secreto (parcial 2017, caso CVV).} Se quiere verificar
+un dato sensible (p.ej. el CVV de una tarjeta) sin almacenarlo ni transmitirlo en
+claro: se usa un \textbf{HMAC con clave simétrica}. Se guarda/compara el tag en vez
+del valor; quien no tiene la clave no puede generar ni validar el tag.
+\end{examen}
+
+\subsection{Cifrado autenticado: confidencialidad + integridad}
+
+Cuando se necesitan \textbf{las dos cosas} (confidencialidad e integridad) hay tres
+formas de combinar un criptosistema con un MAC. Dos son seguras, una no:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{p{4.6cm}p{6.2cm}p{2.2cm}}
+\toprule
+\textbf{Construcción} & \textbf{Idea} & \textbf{¿Seguro?} \\
+\midrule
+\textbf{Encrypt-and-MAC} (en paralelo) & cifrar $m$ por un lado y etiquetar $m$ por el otro & \textbf{NO} \\
+\textbf{MAC-then-Encrypt} (autenticar y luego cifrar) & etiquetar $m$, luego cifrar $m$ y el tag juntos & \emph{Puede} \\
+\textbf{Encrypt-then-MAC} (cifrar y luego autenticar) & cifrar $m$, luego etiquetar el \emph{texto cifrado} $c$ & \textbf{SÍ} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Encrypt-and-MAC (paralelo) — inseguro:} no hay garantía de que la
+  etiqueta del mensaje no revele información sobre $m$. La seguridad de un MAC cubre
+  infalsificabilidad, \emph{no} confidencialidad. Publicar $t=\mathrm{Mac}(m)$ junto al
+  cifrado puede filtrar información del plano.
+  \item \textbf{MAC-then-Encrypt — puede ser seguro:} se cifra también el tag, así su
+  posible filtración queda protegida. Lo usa SSH. Pero \textbf{no hay prueba genérica};
+  solo pruebas para combinaciones concretas, y hay que tener cuidado si el MAC es un
+  CBC-MAC con la misma primitiva de cifrado (simetrías explotables).
+  \item \textbf{Encrypt-then-MAC — siempre seguro:} hay \textbf{demostración general}.
+  Es lo que se llama \textbf{cifrado autenticado}.
+\end{itemize}
+
+\begin{definicion}{Cifrado autenticado (Encrypt-then-MAC)}
+Requiere un criptosistema \textbf{CPA-Secure} y un MAC \textbf{infalsificable}, con
+\textbf{claves independientes} ($k_1 \neq k_2$). Se construye un criptosistema nuevo:
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item $\mathrm{Gen}$: genera ambas claves ($k_1$ del cifrado, $k_2$ del MAC).
+  \item Cifrado: se cifra $m$ obteniendo $c$, y se acompaña con la \textbf{etiqueta del
+  texto cifrado} $t=\mathrm{Mac}_{k_2}(c)$.
+  \item Descifrado/verificación: \textbf{primero se verifica} el tag sobre $c$; si pasa,
+  se descifra; si no, la operación \textbf{falla} (error/excepción).
+\end{itemize}
+\end{definicion}
+
+\begin{destacado}
+\textbf{Encrypt-then-MAC = MAC sobre el CIFRADO $c$, con claves independientes
+$k_1 \neq k_2$.} Aparece en parciales 2016, 2018, 2023. La novedad: si alguien
+manipula el texto cifrado, el descifrado \textbf{falla} (antes solo quedaba ``basura''
+según la maleabilidad).
+\end{destacado}
+
+\begin{examen}
+\textbf{V/F (parciales 2018, 2023, 2016):} ``Cifrar y al mismo tiempo hacer MAC de $m$
+con $k_1=k_2$'' (Encrypt-and-MAC con clave única) es \textbf{INSEGURO}
+$\Rightarrow$ la afirmación de que es seguro es \textbf{FALSA}. El orden correcto es
+MAC sobre el cifrado $c$, con claves \textbf{independientes}.
+\end{examen}
+
+\begin{examen}
+\textbf{Construcción analizada a mano (parcial 2025-1): $c = E_{k_1}(m \,\|\, H(k_2\|m))$.}
+Hay que describir los pasos del receptor: descifra $c$ con $k_1$, separa $m$ y el hash
+adjunto, recomputa $H(k_2 \| m)$ con su clave $k_2$ y compara. Si coincide, el mensaje
+es \textbf{íntegro y autenticado} (solo quien tiene $k_2$ pudo generar ese
+``HMAC casero''). Da confidencialidad ($E_{k_1}$), integridad y autenticación, pero
+\textbf{NO da no-repudio} (clave simétrica compartida).
+\end{examen}
+
+\paragraph{Modos AEAD en la práctica.} Modos de encadenamiento que convierten una
+primitiva de bloque en cifrado autenticado, sin el overhead de doble función/doble
+clave:
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \textbf{CCM} (Counter with CBC-MAC): sigue la variante MAC-then-Encrypt (tiene
+  prueba específica). Calcula el CBC-MAC y lo cifra junto al mensaje en modo Counter;
+  pasa una sola vez por el mensaje pero procesa cada bloque dos veces. Usa una sola
+  clave. Seguro si el IV y el nonce no se repiten.
+  \item \textbf{GCM} (Galois Counter Mode): usa modo Counter (cifra cada bloque una
+  vez) y combina los resultados con una función de hash rápida (GHASH, aritmética de
+  polinomios). Mucho más rápido que CCM. \textbf{AES-GCM} es la recomendación práctica:
+  rápido, estandarizado, libre de patentes, en todas las librerías serias.
+\end{itemize}
+
+\begin{destacado}
+\prof{Si se tienen que llevar algo: en sistemas reales usen criptosistemas
+autenticados.} En el 99\% de los casos, si se necesita confidencialidad también se
+necesita integridad (el cifrado común puede ser manipulado). Recomendación concreta:
+\textbf{AES en modo GCM}.
+\end{destacado}
+
+\subsection{No-repudio: por qué los MAC no lo dan}
+
+\begin{ojo}
+\textbf{ERROR TÍPICO MUY IMPORTANTE (parciales 2025-1 Ej.3d, 2025-2 Ej.5b):}
+afirmar que un \textbf{MAC/HMAC da NO-REPUDIO}.\\[4pt]
+\textbf{NO lo da.} La clave simétrica es \textbf{compartida}: ambas partes (emisor y
+receptor) tienen la misma clave y \emph{ambas} pueden generar un tag válido. Por lo
+tanto, el receptor no puede probar ante un tercero que el mensaje lo originó el
+emisor (él mismo pudo haberlo generado). El MAC da \textbf{integridad} y
+\textbf{autenticación de origen} entre las partes que comparten la clave, pero
+\textbf{no} no-repudio.\\[4pt]
+El \textbf{no-repudio requiere firma digital} (criptografía \textbf{asimétrica}:
+clave privada que solo posee el firmante).
+\end{ojo}
+
+\end{document}

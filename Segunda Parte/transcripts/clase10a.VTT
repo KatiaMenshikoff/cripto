@@ -1,0 +1,1722 @@
+WEBVTT
+
+1
+00:00:07.610 --> 00:00:10.440
+Leandro Ariel Suarez: Bueno, así arrancamos.
+
+2
+00:00:10.690 --> 00:00:17.890
+Leandro Ariel Suarez: Hoy nos toca ver lo que es seguridad en la empresa un poco
+
+3
+00:00:18.390 --> 00:00:27.589
+Leandro Ariel Suarez: toda esta segunda parte de la materia. Estuvimos viendo. Estuvieron viendo lo conmigo, comienzo. Lo vieron autenticación, pero y estuvieron viendo políticas de control de acceso.
+
+4
+00:00:27.920 --> 00:00:33.140
+Leandro Ariel Suarez: autenticación, principios de diseño de seguridad, vulnerabilidades.
+
+5
+00:00:33.230 --> 00:00:50.149
+Leandro Ariel Suarez: Bueno, vieron que son cosas ya más relacionadas con la seguridad en las aplicaciones, con seguridad en aplicaciones, sobre todo web, que es un poco lo que hoy se está se está usando, se hace, se la moneda corriente, digamos en en nuestra industria.
+
+6
+00:00:50.270 --> 00:00:59.410
+Leandro Ariel Suarez: Y, bueno, esta segunda parte de la materia va interconectando, no también, como fue la primer parte.
+
+7
+00:00:59.410 --> 00:01:14.090
+Leandro Ariel Suarez: pero con cosas como les decía antes de que de que arranquemos más terrenales son más tangibles, tanto de matemática, probabilidad y todas las demás cuestiones, sino que son cosas
+
+8
+00:01:14.150 --> 00:01:26.160
+Leandro Ariel Suarez: tienen implementaciones reales. Bueno, hablando de implementaciones reales, hoy vamos a enfocarnos un poco en eso, en la visión de de una empresa y de cómo adoptas distintas
+
+9
+00:01:26.230 --> 00:01:31.420
+Leandro Ariel Suarez: maneras de protegerse o proteger sus sistemas que
+
+10
+00:01:31.730 --> 00:01:38.359
+Leandro Ariel Suarez: para poder tener un un redil, o sea, para poder cubrirse de un montón de de amenazas y también tienen un rédito.
+
+11
+00:01:38.930 --> 00:01:54.860
+Leandro Ariel Suarez: esta segunda, esta segunda parte, no esta. Esta. Esto de clase que vamos a ver hoy no está en Bishop. Hay hay cosas en Bishop que se pueden que pueden leer y estaría bueno que puedan leer todo el libro.
+
+12
+00:01:54.940 --> 00:02:04.329
+Leandro Ariel Suarez: pero está más enfocado en lo que es un panorama actual: el panorama contemporáneo, el el lo que es, digamos.
+
+13
+00:02:04.620 --> 00:02:20.830
+Leandro Ariel Suarez: lo profesional. ¿cómo se maneja esto en un ambiente profesional de una organización, una corporación incluso de alguna Pyme con con buenas con buenas prácticas y y ya bien avanzada en lo que es la tecnología.
+
+14
+00:02:23.400 --> 00:02:25.789
+Leandro Ariel Suarez: Bueno, a ver si puedo pasar esto.
+
+15
+00:02:27.740 --> 00:02:31.960
+Leandro Ariel Suarez: Bueno, empezamos hablando de lo que es gobernar gobernanza.
+
+16
+00:02:32.140 --> 00:02:35.759
+Leandro Ariel Suarez: Cuando decimos gobernanza, ustedes, ¿qué
+
+17
+00:02:35.920 --> 00:02:44.309
+Leandro Ariel Suarez: que les hace? ¿a qué le parece que nos estamos refiriendo? O sea, escuchan gobernanza gobernanza dentro de una organización.
+
+18
+00:02:44.670 --> 00:02:48.579
+Leandro Ariel Suarez: Bueno, hay un par de palabras, pero aquel aquel es.
+
+19
+00:02:48.910 --> 00:02:52.240
+Leandro Ariel Suarez: ¿qué les parece que se refiere go gobernaz, gobernanza.
+
+20
+00:02:56.550 --> 00:03:02.890
+Leandro Ariel Suarez: monopolio del amor de la oficina, el estado de bienestar, no y
+
+21
+00:03:03.970 --> 00:03:13.219
+Leandro Ariel Suarez: a ver espera un segundito. Porque no me está dejando avanzar a ver
+
+22
+00:03:16.290 --> 00:03:17.560
+Leandro Ariel Suarez: ahí. Ves bien.
+
+23
+00:03:19.160 --> 00:03:21.379
+MARTÍN GALLARDO BERTUZZI: Sí Profe: Sí, sí será.
+
+24
+00:03:21.960 --> 00:03:23.820
+Leandro Ariel Suarez: Tengo que salir. Ha salido Okay.
+
+25
+00:03:24.170 --> 00:03:34.340
+Leandro Ariel Suarez: Las reglas que editan quien tiene que tener, si, o sea, si hay reglas, hay reglas y y hay equipos dentro de las de las organizaciones
+
+26
+00:03:34.470 --> 00:03:53.719
+Leandro Ariel Suarez: que son los responsables, digamos, de emitir esas reglas, de de decidir qué reglas hay que tomar y hacerse responsable, porque se cumpla, ¿no? Entonces el medio como ese gobierno expide leyes y después es responsable de alguna forma hacer que esas redes leyes se cumplan.
+
+27
+00:03:53.830 --> 00:03:54.890
+Leandro Ariel Suarez: entonces
+
+28
+00:03:55.200 --> 00:04:08.029
+Leandro Ariel Suarez: dentro de una empresa existe algo bastante análogo. Generalmente, la gobernanza está dada dentro de lo que es un equipo de de seguridad.
+
+29
+00:04:08.370 --> 00:04:12.569
+Leandro Ariel Suarez: puede estar alineado con con objetivos de
+
+30
+00:04:13.420 --> 00:04:32.700
+Leandro Ariel Suarez: de otras. Estoy teniendo problemas. Puede estar alineado con otros equipos de la organización y, y, bueno, compartir intereses y demás cuestiones. Pero la gobernanza sigue dentro de lo que se define como este conjunto de procesos de políticas, procedimientos, controles
+
+31
+00:04:32.750 --> 00:04:37.480
+Leandro Ariel Suarez: que requieren ser implementados para poder
+
+32
+00:04:37.620 --> 00:04:50.230
+Leandro Ariel Suarez: gestionar y mitigar los ri los diversos riesgos, diversas amenazas, diversas cuestiones que pueda atravesar la organización y que puedan tener un impacto en ella. ¿no?
+
+33
+00:04:50.550 --> 00:04:52.660
+Leandro Ariel Suarez: Entonces
+
+34
+00:04:55.670 --> 00:05:05.750
+Leandro Ariel Suarez: el propósito es el mismo de siempre. Lo que queremos dentro de la organización es asegurar que la el la tría, siga de la información
+
+35
+00:05:05.850 --> 00:05:12.670
+Leandro Ariel Suarez: se cumpla, no no sea intervenida, no no tenga que
+
+36
+00:05:12.870 --> 00:05:18.609
+Leandro Ariel Suarez: no, no se atente contra la disponibilidad ni contra la confidencialidad ni con de deidad de los de los datos
+
+37
+00:05:18.890 --> 00:05:20.870
+Leandro Ariel Suarez: tanto de forma proactiva.
+
+38
+00:05:21.010 --> 00:05:37.969
+Leandro Ariel Suarez: No, pues poniendo barreras, poniendo controles, evitando no que se expongan vulnerabilidades de la y y se hagan
+
+39
+00:05:38.600 --> 00:05:54.490
+Leandro Ariel Suarez: que se aprovechen de amenazas de de de la Co, de la compañía y también de forma reactiva, No, una vez que ya nos atacaron. Bueno, ¿qué medida tomo? ¿qué es lo que hago para poder defenderme de eso a ahora? Y bueno, el día de mañana, no.
+
+40
+00:05:59.650 --> 00:06:14.729
+Leandro Ariel Suarez: Si tienen alguna duda, siempre Fred, entonces los objetivos principales, por así decirlo, son: tenemos que alinear la Estrategia de seguridad de la organización, que es a lo que se define, tiene que estar alineada en base a los objetivos del negocio. Entonces
+
+41
+00:06:15.260 --> 00:06:26.439
+Leandro Ariel Suarez: 1 va a tratar de elegir una estrategia de seguridad que no atente contra los objetivos del negocio, No, o sea.
+
+42
+00:06:27.520 --> 00:06:40.070
+Leandro Ariel Suarez: 1 no va a poner medidas de seguridad que vaya en contra de la forma en la que la empresa logra hacer dinero. No, Si bien si la empresa tiene es una venta a través venta online.
+
+43
+00:06:40.340 --> 00:06:43.149
+Leandro Ariel Suarez: No voy a poner un montón de medidas
+
+44
+00:06:43.320 --> 00:06:55.219
+Leandro Ariel Suarez: para que sea complicado que los clientes puedan comprar 3 sitio web o que los empleados no puedan gestionar la poventa esa venta, suponiendo que sea, por ejemplo, la venta de productos
+
+45
+00:06:55.410 --> 00:07:14.380
+Leandro Ariel Suarez: después de una venta que recibe una joven. Entonces, si yo a mis empleados les pongo un montón de trabas y bloqueo para que puedan trabajar, vamos a terminar en un contexto como era el el problema de la aceptación psicológica. No sé si si lo recuerdas, no.
+
+46
+00:07:14.660 --> 00:07:22.030
+Leandro Ariel Suarez: esto de el usuario va a terminar haciendo cosas para atentar a la seguridad del sistema. Entonces.
+
+47
+00:07:22.390 --> 00:07:29.850
+Leandro Ariel Suarez: ¿qué va a terminar pasando? Si yo le pongo muchas barreras para que un empleado que tiene que hacer posventa pueda. No sé
+
+48
+00:07:30.060 --> 00:07:49.660
+Leandro Ariel Suarez: acceder a ver ciertos datos de cliente. Y yo le meto 80 logins, le digo que pida 30 permisos que se tiene que registrar en algún lado, y, bueno, se lo van a llegar haciendo. Se van a bajar todos los datos en un Cs B, lo van a publicar en drive o en algún lugar, y van a empezar a elaborar ahí.
+
+49
+00:07:49.740 --> 00:08:03.720
+Leandro Ariel Suarez: Y esto lo digo porque sé que ha pasado, o sea, a veces poniendo demasiadas trabas y siendo muy friccionando mucho la forma en la que trabajan los empleados termina haciendo que estos busquen
+
+50
+00:08:04.670 --> 00:08:08.180
+Leandro Ariel Suarez: otros caminos para llegar al mismo lugar, ¿no?
+
+51
+00:08:08.570 --> 00:08:10.570
+Leandro Ariel Suarez: Entonces, bueno, por eso es que hay que
+
+52
+00:08:10.920 --> 00:08:20.040
+Leandro Ariel Suarez: definir una estrategia alineada de los objetivos de de nuestro negocio y, bueno, obviamente, hacerla cumplir y y estar constantemente
+
+53
+00:08:20.600 --> 00:08:28.829
+Leandro Ariel Suarez: controlando de que eso siga alineado, porque a veces el negocio va cambiando y y la estrategia queda obsoleta o queda
+
+54
+00:08:28.950 --> 00:08:41.419
+Leandro Ariel Suarez: digamos, alineada otra a un estado previo de de la organización. Sabemos que las organizaciones sobre evolucionan a lo largo del tiempo hoy son una cosa. Y mañana pueden migrar de
+
+55
+00:08:41.520 --> 00:08:45.280
+Leandro Ariel Suarez: de objetivos de negocio y de cualquier tipo.
+
+56
+00:08:46.100 --> 00:08:52.949
+Leandro Ariel Suarez: Y entonces, bueno, muchas veces también. Si hay que cumplir regulaciones normativas.
+
+57
+00:08:52.970 --> 00:09:11.620
+Leandro Ariel Suarez: Por ejemplo, las empresas que cotizan en bolsa tienen que tener el la pauta de informar cualquier incidente de seguridad que tengan a la bolsa de valores, al no sé si al Gobierno de los Estados Unidos, bueno a los accionistas, porque si no puede tener consecuencias penales
+
+58
+00:09:12.000 --> 00:09:27.000
+Leandro Ariel Suarez: hablando de datos personales. Bueno, los datos personales deben estar protegidos. No pueden, no pueden ser visibilizados masa ni ni robados, y 1 sufre un robo.
+
+59
+00:09:27.000 --> 00:09:37.639
+Leandro Ariel Suarez: quiere decir que no protegió esos datos personales como se tiene que proteger. Y eso implica multas millonarias. Entonces, Bueno, También hay que tener en cuenta eso a la hora de elegir una estrategia de de seguridad
+
+60
+00:09:37.670 --> 00:09:40.350
+Leandro Ariel Suarez: en el contexto en el que se mueve tu organización.
+
+61
+00:09:41.580 --> 00:09:49.220
+Leandro Ariel Suarez: Obviamente, reducir y mitigar los riesgos que existen por la operación de de esta de esta organización
+
+62
+00:09:49.590 --> 00:10:00.079
+Leandro Ariel Suarez: y adicional. Adicionalmente, a todo esto, 1 como equipo que se encarga de la gobernanza, debiera generar una cultura, no
+
+63
+00:10:00.350 --> 00:10:03.760
+Leandro Ariel Suarez: de seguridad dentro de la organización, porque, como bien sabemos
+
+64
+00:10:03.970 --> 00:10:08.129
+Leandro Ariel Suarez: cuál es el eslabón más débil en un sistema
+
+65
+00:10:09.660 --> 00:10:17.979
+Leandro Ariel Suarez: siempre donde termina últimamente más que nadie, claro, exactamente vos yo, los clientes.
+
+66
+00:10:18.230 --> 00:10:26.549
+Leandro Ariel Suarez: los usuarios. Los la gente que está interactuando con esos sistemas terminan siendo los más expuestos.
+
+67
+00:10:26.720 --> 00:10:46.010
+Leandro Ariel Suarez: Y hoy, s sobre todo los más débiles, porque son los que terminan. Pueden terminar haciendo voltear un un sistema muy bien diseñado con mucho bueno, seguro nunca es nada. Pero siempre hay formas de atraer de un empleado, lograr obtener
+
+68
+00:10:47.220 --> 00:10:53.430
+Leandro Ariel Suarez: entrada a ciertos sectores del sistema donde no debieran, donde debieran entrar intrusos. Digamos
+
+69
+00:10:53.550 --> 00:11:05.380
+Leandro Ariel Suarez: Entonces, bueno crear esta conciencia de seguridad al hacer campañas, concientizar campañas de phishing, campañas para capacitar a los empleados, sobre todo los empleados que trabajan
+
+70
+00:11:05.660 --> 00:11:16.079
+Leandro Ariel Suarez: con tarjeta de crédito con datos personales, con información crítica, datos financieros. Bueno, todo eso es importante, también.
+
+71
+00:11:21.320 --> 00:11:25.469
+Leandro Ariel Suarez: Bridge management o gestión de riesgos.
+
+72
+00:11:27.560 --> 00:11:46.630
+Leandro Ariel Suarez: Esto también es algo que le compete al equipo que se esté encargando. Seguramente el equipo de seguridad y pueda haber un equipo de seguridad dentro un equipo, incluso de Rich Manager y otro equipo de gobierno, o son el mismo equipo. Todo seguridad se encarga de Lo mismo varía mucho del tipo de empresa de la magnitud y demás cuestiones.
+
+73
+00:11:47.030 --> 00:11:55.600
+Leandro Ariel Suarez: Pero, bueno, porque nace todo esto de la gestión de riesgo anteriormente y todavía se sigue haciendo
+
+74
+00:11:55.630 --> 00:12:12.430
+Leandro Ariel Suarez: la seguridad se gestionaba como un riesgo más. Como los riesgos. Cualquier empresa sabe de riesgos sabe cómo manejar los ríos, sabe cómo mitigarlos, eliminarlos, disminuirlos, lo que sea. Entonces se la seguridad se trataba como algo más.
+
+75
+00:12:12.660 --> 00:12:15.569
+Leandro Ariel Suarez: y por eso es que
+
+76
+00:12:15.690 --> 00:12:25.660
+Leandro Ariel Suarez: quedó mucho. Y y se mantiene este modelo de manejo de riesgos. Y la verdad que funciona, digamos, o sea, muchas veces, sobre todo en las grandes corporaciones.
+
+77
+00:12:26.150 --> 00:12:29.379
+Leandro Ariel Suarez: Cuando hablamos de gestión de riesgos.
+
+78
+00:12:29.790 --> 00:12:35.720
+Leandro Ariel Suarez: Partimos de este modelo que lo que trata es identificar, evaluar.
+
+79
+00:12:36.080 --> 00:12:40.540
+Leandro Ariel Suarez: mitigar y monitorear estos riesgos es un ciclo
+
+80
+00:12:40.630 --> 00:13:00.180
+Leandro Ariel Suarez: nunca. ¿para por qué? Porque los griegos evolucionan porque los riegos decrecen, pero pueden transformarse pueden aparecer nuevos. Entonces estamos todo el tiempo. Es un el equipo que se encarga de esto Está todo el tiempo ejecutando este ciclo y tratando de que no se escape nada.
+
+81
+00:13:04.100 --> 00:13:12.800
+Leandro Ariel Suarez: Hay varios pasos para poder gestionar. No, como vimos. Primero, tenemos la parte de identificación de riesgos donde por lo general
+
+82
+00:13:12.900 --> 00:13:17.909
+Leandro Ariel Suarez: se identifican los sentidos más críticos de de la compañía.
+
+83
+00:13:17.950 --> 00:13:23.620
+Leandro Ariel Suarez: que son los sentidos más crítico. Los datos datos de los empleados, datos de los clientes.
+
+84
+00:13:23.620 --> 00:13:40.299
+Leandro Ariel Suarez: datos comerciales, datos financieros, datos de proveedores, bueno, información información que pasa a través de toda la organización y muy probablemente sean datos de de gran valor que no debieran ser expuestos al público o a otra o a la competencia.
+
+85
+00:13:41.840 --> 00:13:49.619
+Leandro Ariel Suarez: También tenemos los sistemas, los sistemas que las empresas de tecnología en los últimos 40 años o más.
+
+86
+00:13:49.700 --> 00:14:05.080
+Leandro Ariel Suarez: son básicamente 1 de los principales activos. Yo tengo empresas. Hay empresas tecnológicas que viven de la tecnología. Ya no no hay empresas que usan la tecnoc. Hay empresas que viven de la tecnología, la fin tech todo lo que es
+
+87
+00:14:05.080 --> 00:14:16.709
+Leandro Ariel Suarez: como le comentaba venta online en el caso de despegar el caso de mercado libre empresas co de que ofrecen servicios
+
+88
+00:14:16.710 --> 00:14:31.980
+Leandro Ariel Suarez: y no, como, por ejemplo, Uber Netflix, y viven de su infraestructura, por ejemplo. Tienes el lo siguiente: dentro de esa infraestructura que soporta estos sistemas, los servidores, las las mismas oficinas, las oficinas
+
+89
+00:14:32.140 --> 00:14:36.709
+Leandro Ariel Suarez: físicas son activos de la empresa si
+
+90
+00:14:36.920 --> 00:14:55.229
+Leandro Ariel Suarez: viene un huracán y se lleva puesto una oficina o un data Center. Probablemente no. No sé si una oficina, pero si yo ha puesto un dato cente, y y la empresa no tiene Backup no tiene nada para para poder hacer un fallback. Esa empresa deje de funcionar. Entonces son activos que hay que tenerlos en cuenta como crítico.
+
+91
+00:14:55.290 --> 00:15:02.099
+Leandro Ariel Suarez: Y bueno, obviamente que las personas, que es algo que se que se oía muchas veces son activos, no
+
+92
+00:15:02.360 --> 00:15:13.329
+Leandro Ariel Suarez: cualquier cualquier puesto de una persona. Si bien hay cosas que obviamente todo es repleta de las personas que trabajan en la empresa es lo que terminan haciendo la empresa. La empresa no se mueve por sí solas.
+
+93
+00:15:14.200 --> 00:15:32.100
+Leandro Ariel Suarez: Entonces, ¿cómo y que que es lo que identificamos como riesgo potencial. Es bueno, malware, ataques externos de ya sea de gente malintencionada que quiere obtener algo de la de la compañía o robar información dinero
+
+94
+00:15:32.100 --> 00:15:41.910
+Leandro Ariel Suarez: Mismo errores humanos. Se puede ahí, se puede equivocar. Y se puede copia y pega una Power y la publica en redes. No sé,
+
+95
+00:15:41.940 --> 00:15:45.200
+Leandro Ariel Suarez: toca algo y borra todo un servidor.
+
+96
+00:15:45.280 --> 00:15:50.830
+Leandro Ariel Suarez: Va mucho. Hay tantas posibilidades que es imposible abarcarlas, todas
+
+97
+00:15:51.100 --> 00:16:04.129
+Leandro Ariel Suarez: sabotaje cuando el error no es un tanto un error humano, sino es alguien desde adentro, tratando de sabotear la empresa porque está descontento porque no sé. Lo amenazaron por diversos motivos
+
+98
+00:16:04.820 --> 00:16:20.239
+Leandro Ariel Suarez: problemas externos. No está acá, pero, por ejemplo, pueden ser prob problemas de los proveedores de infraestructuras de Cloud, Problemas de Internet, D. N, S. Un montón de cuestiones y son externas a la misma empresa también.
+
+99
+00:16:20.290 --> 00:16:28.130
+Leandro Ariel Suarez: y que tienen un impacto importante en la empresa o en la empresa. Pero si se cae a alguna región de adolescente
+
+100
+00:16:28.290 --> 00:16:41.130
+Leandro Ariel Suarez: probable que la empresa, si tiene solamente esa región contratada, deja de funcionar el año pasado o en este año. Esto se daba muy seguido. Había habido casos donde
+
+101
+00:16:41.160 --> 00:16:52.020
+Leandro Ariel Suarez: se caía una región adolescente y creo que casi todas las empresas argentinas o de Latam están subidas a esa región, que creo que la Juve es pizjuán. Y
+
+102
+00:16:52.160 --> 00:16:53.670
+Leandro Ariel Suarez: y bueno, y
+
+103
+00:16:54.060 --> 00:17:07.930
+Leandro Ariel Suarez: se se caían tipo, por ejemplo, pedido ya me acuerdo que se caía y no se podía usar. Bueno, pasó el caso de de Adolb. S también, que se cayó y se cayeron un montón de empresas a Estados Unidos también, que dejaron de funcionar. Bueno.
+
+104
+00:17:08.010 --> 00:17:15.740
+Leandro Ariel Suarez: son son riesgos que están dados. Y bueno, los ambientales, no como el caso del huracán, incendios y demás cuestiones.
+
+105
+00:17:17.780 --> 00:17:23.450
+Leandro Ariel Suarez: Si hay alguna duda, no estoy viendo, voy tratando. Voy voy volviendo. Y
+
+106
+00:17:23.690 --> 00:17:26.639
+Leandro Ariel Suarez: y bueno, me avisa cualquier cosa o aprende en el micro.
+
+107
+00:17:27.040 --> 00:17:28.199
+Leandro Ariel Suarez: Somos poquitos.
+
+108
+00:17:29.400 --> 00:17:35.329
+Leandro Ariel Suarez: Bueno, después lo que se hace una evaluación de esos riesgos acá
+
+109
+00:17:35.840 --> 00:17:50.760
+Leandro Ariel Suarez: nos podemos poner tan creativos como como queramos. O sea, podemos identificar primero la probabilidad de ocurrencia y el impacto. Podemos ver la cantidad de de probabilidades de cosas que se pueden llegar a dar
+
+110
+00:17:50.850 --> 00:18:05.970
+Leandro Ariel Suarez: lo que termina pasando, acá que se hacen matrices de probabilidad versus impacto. Entonces bueno, lo primero que se ataca es máxima probabilidad, Max, mayor impacto, y después empieza a barrer en diagonal para abajo. ¿no?
+
+111
+00:18:06.200 --> 00:18:15.429
+Leandro Ariel Suarez: Y se lo suele grasificar con alto bajo y medio. Obviamente, siendo altos los que deben tener un
+
+112
+00:18:15.600 --> 00:18:32.919
+Leandro Ariel Suarez: tipo de tratamiento a ver a veces se puede decir, bueno, esto tiene un riesgo alto. A veces hay hay hay casos donde se clasifican por impacto y por riesgo. Entonces, por por probabilidad y por impacto. Entonces bueno, y esto tiene una alta probabilidad.
+
+113
+00:18:33.000 --> 00:18:45.990
+Leandro Ariel Suarez: pero el impacto es muy poco. Entonces terminan diciendo ahora el el la probabilidad es alta, el impacto es bajo. A veces es al revés. Es muy poco poco probable que pase esto.
+
+114
+00:18:46.120 --> 00:18:59.649
+Leandro Ariel Suarez: Pero si llega a pasar, estamos al horno. Entonces ahí? Bueno, hay que ver qué se hace con cada 1 de esos casos, las decisiones que toman los equipos y la empresa. Ya la Eso ya lo toma más la empresa
+
+115
+00:18:59.710 --> 00:19:06.639
+Leandro Ariel Suarez: como un ente que que tiene que afrontar una pérdida económica. Probablemente entonces eso, como yo le decía.
+
+116
+00:19:06.720 --> 00:19:15.110
+Leandro Ariel Suarez: las empresas ya están acostumbradas de prácticamente que se inventaron de de poder lidiar con estos riesgos.
+
+117
+00:19:15.680 --> 00:19:19.340
+Leandro Ariel Suarez: Entonces, bueno, es un poco más sencillo, quizás verlo de esta forma.
+
+118
+00:19:21.430 --> 00:19:29.639
+Leandro Ariel Suarez: Y pasamos a la parte del meollo más más más lindo que bueno, ¿qué hacemos en ese río, hay que mitigarlo de alguna forma. Hay que hacer algo en ese río
+
+119
+00:19:32.150 --> 00:19:35.570
+Leandro Ariel Suarez: tenemos múltiples maneras de manejarlo.
+
+120
+00:19:36.280 --> 00:19:46.079
+Leandro Ariel Suarez: Una puede ser evitarlo, O sea, a veces esto suele ser bastante costoso si es un riesgo
+
+121
+00:19:47.160 --> 00:19:53.240
+Leandro Ariel Suarez: grande y que tiene muy bastante impacto, Puede ser costoso y complejo. Por ejemplo.
+
+122
+00:19:53.500 --> 00:20:11.160
+Leandro Ariel Suarez: solucionar vulnerabilidades en un sistema Legacy. Hacer una grey del del sistema a veces es demasiado costoso, complejo, puede tener y Side, Effects, que 1 no no llega a identificar, se puede romper el sistema. Se puede caer. Entonces a veces
+
+123
+00:20:11.860 --> 00:20:18.499
+Leandro Ariel Suarez: muchas veces se se si se quiere evitarlo? Bueno, hay que probablemente pagar ese costo
+
+124
+00:20:18.670 --> 00:20:22.190
+Leandro Ariel Suarez: y quitarlo. Si realmente es algo que hay que solucionar
+
+125
+00:20:24.540 --> 00:20:29.420
+Leandro Ariel Suarez: ahí. Estoy viendo a Nicolás Dale, sí, Ahí lo Ahí lo habilito.
+
+126
+00:20:30.770 --> 00:20:42.549
+Leandro Ariel Suarez: Ahí ya un segundito perdón. Generalmente lo habilito después de de habla, pero ahí está bueno, no nada.
+
+127
+00:20:42.930 --> 00:21:02.350
+Leandro Ariel Suarez: Otra Otra posibilidad sería reducir ese impacto está bien. No lo puedo eliminar. No lo puedo evitar. Que lo puedo llegar a reducir. Esto suele ser lo más común. Por ejemplo, tengo una autenticación débil con soy Power. Bueno, le sumo factor extra de autenticación
+
+128
+00:21:02.990 --> 00:21:08.809
+Leandro Ariel Suarez: no es tan costoso, O sea, probablemente sí haya que pedir a todos los empleados que
+
+129
+00:21:09.180 --> 00:21:17.330
+Leandro Ariel Suarez: se den de alta el ese factor extra, pero bueno, no es tan caro como salir a, por ejemplo, el caso anterior, de tener que
+
+130
+00:21:17.550 --> 00:21:21.350
+Leandro Ariel Suarez: migrar un sistema o incluso darlo de baja muchas veces.
+
+131
+00:21:21.890 --> 00:21:22.980
+Leandro Ariel Suarez: Y
+
+132
+00:21:23.540 --> 00:21:38.779
+Leandro Ariel Suarez: después otra opción que tenemos es transferirlo, pero delegó a alguien, probablemente un proveedor y me desprendo de ese riesgo, o sea, ese riesgo se lo transfiero, se hay un problema. Será el proveedor el que tiene que responder
+
+133
+00:21:38.880 --> 00:21:47.379
+Leandro Ariel Suarez: por por ese problema y ya no es un riesgo, O sea, se supone que 1 contrata un proveedor estando seguro de que ese proveedor se dedica a eso no.
+
+134
+00:21:47.510 --> 00:22:01.540
+Leandro Ariel Suarez: por ejemplo, el caso de Cloudler. Si 1 tiene una web donde está expuesto Internet, y 1 quisiera protegerla. Bueno, podría contratar Cloudler poner un proxy reverso
+
+135
+00:22:01.570 --> 00:22:13.479
+Leandro Ariel Suarez: que sea el punto de entrada y bueno, de esa forma, empezar a aplicar un montón de políticas de de cuestiones que te permiten Crawford para evitar que ese sitio web sea atacado.
+
+136
+00:22:13.640 --> 00:22:18.280
+Leandro Ariel Suarez: Claramente, lo que hacen las empresas que viven de la de la
+
+137
+00:22:20.120 --> 00:22:27.360
+Leandro Ariel Suarez: de tener un sistema, un un sitio web y hacer sus operaciones a través de
+
+138
+00:22:28.990 --> 00:22:40.629
+Leandro Ariel Suarez: otra forma que tenemos es compensarlo, que no es lo mismo que reducirlo, o sea, a veces no se puede evitar. Tampoco se puede reducir, o sea, no no puedo hacer nada para iniciarse arriba
+
+139
+00:22:40.880 --> 00:22:46.330
+Leandro Ariel Suarez: disminuya. Pero si puedo contrarrestar el impacto, esto
+
+140
+00:22:46.550 --> 00:22:48.700
+Leandro Ariel Suarez: se le da. Un ejemplo puede ser
+
+141
+00:22:48.990 --> 00:23:02.560
+Leandro Ariel Suarez: cuando tengo bul dependencias, y esas dependencia podrían llegar a tener vulnerabilidades. Yo tengo que tener esa dependencia porque son parte code del funcionamiento del sistema, por ejemplo.
+
+142
+00:23:02.760 --> 00:23:17.310
+Leandro Ariel Suarez: pero una forma de decir. Ok, que esto no tenga tanto tiempo es auditar y controlar esa dependencia para ver si no tienen vulnerabilidad si no aparece vulnerabilidad de todos los días a cada hora. Eso, dependiendo de del
+
+143
+00:23:17.450 --> 00:23:23.350
+Leandro Ariel Suarez: de la crediticidad, ¿no? Pero podrías tener alguna especie de control que revise eso.
+
+144
+00:23:24.750 --> 00:23:31.200
+Leandro Ariel Suarez: Y el último, que es el como bueno lo acepto. O sea, aceptamos el riesgo, se entiende ese riesgo
+
+145
+00:23:31.300 --> 00:23:51.129
+Leandro Ariel Suarez: y que la probabilidad. Probablemente a veces esto pasa con los riesgos que tienen baja probabilidad, y a veces no sé si tienen riesgo, alto, o sea impacto alto, pero pero sí quizás medio. Dices, Bueno, entiendo la probabilidad es muy baja. Lo acepto si no llega a pasar. Y Bueno, ¿qué se le va a hacer, o sea.
+
+146
+00:23:51.220 --> 00:23:53.729
+Leandro Ariel Suarez: pero a veces es mucho más costoso
+
+147
+00:23:53.890 --> 00:24:11.879
+Leandro Ariel Suarez: tomar alguna de estas otras alternativas que aceptarlo. Y bueno, lo que sí se hace es documentar. No es que dice nada listo. Bueno, hago como que no existe. No no se documenta el equipo de Rich Manager se lleva documentales de arriba y dice: mira, la empresa tomó la decisión de que se acepta, y ahí se termina la cuestión.
+
+148
+00:24:13.380 --> 00:24:26.979
+Leandro Ariel Suarez: Un ejemplo de esto puede ser las empresas, generalmente las más grandes importantes que cotizan en bolsa que tienen accionistas. Y bueno, tienen que velar por por los intereses de sus accionistas.
+
+149
+00:24:27.500 --> 00:24:37.360
+Leandro Ariel Suarez: Se les exige tener un plan de desastre de recuperaciones de desastres o desastre. Rigober y plan se suele llamar D. R. P,
+
+150
+00:24:37.400 --> 00:24:51.560
+Leandro Ariel Suarez: Por ejemplo, para el caso de los bancos digitales, la finchach y todas estas cuestiones que operan a través del banco central, el banco central sacó una normativa en el que les exige que todos tienen que tener un plan de Rp
+
+151
+00:24:51.620 --> 00:24:59.529
+Leandro Ariel Suarez: documentado y probado. Bueno, eso es porque trabaja con el Banco Central y el Banco Central Le dice: hágalo.
+
+152
+00:24:59.710 --> 00:25:05.440
+Leandro Ariel Suarez: pero muchas empresas solamente se les exige que tengan ese plan y que lo tengan.
+
+153
+00:25:05.550 --> 00:25:09.060
+Leandro Ariel Suarez: Pero ahora de ahí de tenerlo a ejecutarlo. Hay
+
+154
+00:25:09.250 --> 00:25:29.060
+Leandro Ariel Suarez: un montón, un montón de de camino, O sea, imagínense que un plan de desastre que influye lo que es tener toda la infra probablemente duplicada con todos los enlaces, todas las aplicaciones levantadas o por lo menos algunas, para asegurar el camino crítico de una venta o de una operación.
+
+155
+00:25:29.310 --> 00:25:39.399
+Leandro Ariel Suarez: Y todo eso es un montón de costo y probablemente ejecutarlo incluya un montón de plata, Entonces la empresa dice, Bueno.
+
+156
+00:25:39.680 --> 00:25:40.950
+Leandro Ariel Suarez: yo tengo el plan
+
+157
+00:25:41.120 --> 00:25:54.140
+Leandro Ariel Suarez: está, o sea, está aceptado el riesgo, pero no lo ejecuto porque ejecutarlo me sale un montón de delitas, Y la realidad es que prefiero que, bueno, si pasa algo. Y si pasa pasa y confiamos en que funcione.
+
+158
+00:25:54.740 --> 00:26:01.650
+Leandro Ariel Suarez: Pero bueno, es un ejemplo de un riesgo aceptado por muchas empresas en
+
+159
+00:26:01.930 --> 00:26:06.560
+Leandro Ariel Suarez: y muchas veces también, no solamente por tema de dinero, sino por tema de dificultad. No. Pero bueno.
+
+160
+00:26:09.030 --> 00:26:19.100
+Leandro Ariel Suarez: seguimos monitoreo, lo que es el monitoreo una vez que 1
+
+161
+00:26:19.210 --> 00:26:35.630
+Leandro Ariel Suarez: ya ejecutó todos estos pasos. Como le dije, esto es cíclico, O sea, es un sistema vivo de la organización, entonces hay que estar ejecutándolo ejecutando esto todo el tiempo y revisándolo, y haciendo cronológicamente y viendo, bueno, eso se aceptó. Ahora cambia. No cambia. No
+
+162
+00:26:35.630 --> 00:26:43.140
+Leandro Ariel Suarez: hay un equipo, como le dije que se dedica a llevar a cabo esta tarea y también hay Frameworks, como puede ser el Nyst.
+
+163
+00:26:43.390 --> 00:26:48.840
+Leandro Ariel Suarez: que es la organización de estándares de Estados Unidos.
+
+164
+00:26:49.260 --> 00:27:01.439
+Leandro Ariel Suarez: análogo a lo que sería el ira M acá en Argentina desarrollaron frameworks que nos permiten tener una especie de un punto de partida, un gall guy line
+
+165
+00:27:01.440 --> 00:27:09.559
+Leandro Ariel Suarez: de cosas a tener en cuenta para medir los riesgos, para mitigarlo, para hacer un una gestión segura.
+
+166
+00:27:13.210 --> 00:27:14.010
+Leandro Ariel Suarez: Bueno.
+
+167
+00:27:14.300 --> 00:27:20.290
+Leandro Ariel Suarez: la gestión de riesgo es fundamental un enfoque proactivo de lo mejor es medio lo que propone también el Nis
+
+168
+00:27:20.510 --> 00:27:25.850
+Leandro Ariel Suarez: y bueno, hay que revisar y adaptar continuamente. Como dije, la organización es un sistema vivo
+
+169
+00:27:30.890 --> 00:27:35.429
+Leandro Ariel Suarez: hasta acá alguna duda vamos bien.
+
+170
+00:27:41.800 --> 00:27:48.159
+Leandro Ariel Suarez: Bueno, pues ya gracias. Martín y políticas de seguridad. Bueno.
+
+171
+00:27:48.850 --> 00:27:58.560
+Leandro Ariel Suarez: la política de seguridad es como una especie de Biblia para lo que es la seguridad de la empresa. O sea, es generalmente es un documento bastante extenso y y
+
+172
+00:27:59.470 --> 00:28:07.529
+Leandro Ariel Suarez: y denso que se confecciona una sola vez cada cierto tiempo. Y Y bueno, luego se va revisando
+
+173
+00:28:07.550 --> 00:28:22.179
+Leandro Ariel Suarez: y se va aprobando por el director de seguridad. Probablemente el sitio y el C E, o no, estoy seguro, pero bueno, lo lo aprueban y y y queda, o sea, se confecciona. Lleva bastante tiempo.
+
+174
+00:28:22.220 --> 00:28:30.280
+Leandro Ariel Suarez: Es muy genérica, muy abarcativa. Entonces lo que suele pasar es que se empiezan a desglosar en cosas más alcanzables.
+
+175
+00:28:30.300 --> 00:28:43.110
+Leandro Ariel Suarez: Primero, por los estándares que a veces son cosas que empiezan a no ahí. Lo empieza a hacer más especificidad y se empieza a alejar del del.
+
+176
+00:28:43.190 --> 00:28:52.580
+Leandro Ariel Suarez: digamos, de del management o del Seabel. Y bueno, por ejemplo, un estándar puede ser un estándar para hacer un desarrollo seguro dentro de la empresa.
+
+177
+00:28:53.430 --> 00:29:05.240
+Leandro Ariel Suarez: Luego se baja un poco más al procedimiento, donde son pasos por pasos de cómo se deben ejecutar ciertos estándares. Probablemente después vienen las guías o guine lines.
+
+178
+00:29:05.240 --> 00:29:14.050
+Leandro Ariel Suarez: que son documentos ya más cercanos a los equipos de trabajo. Hay mejores prácticas, hay recomendaciones
+
+179
+00:29:14.050 --> 00:29:25.430
+Leandro Ariel Suarez: y, bueno, ya. Por último, los beige lines, que son generalmente están en forma de cursos, capacitaciones, concientizaciones y demás cuestiones.
+
+180
+00:29:25.510 --> 00:29:33.550
+Leandro Ariel Suarez: Pero bueno, es como que empieza ya a ir bajando línea desde la política hasta el empleado
+
+181
+00:29:33.650 --> 00:29:34.950
+Leandro Ariel Suarez: más raso, digamos.
+
+182
+00:29:38.120 --> 00:29:40.000
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Leyendo lo que era la política. Perdón.
+
+183
+00:29:41.130 --> 00:29:42.330
+Leandro Ariel Suarez: La política.
+
+184
+00:29:43.180 --> 00:29:45.800
+Leandro Ariel Suarez: ¿qué ¿Qué es la política? Perdón? No, No entendí.
+
+185
+00:29:45.800 --> 00:29:46.850
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí que es la política.
+
+186
+00:29:47.140 --> 00:29:57.560
+Leandro Ariel Suarez: La política es un documento donde se define a modo genérico, muy abarragativo todo lo que compete a la seguridad de la organización.
+
+187
+00:29:57.910 --> 00:30:01.079
+Leandro Ariel Suarez: Entonces es como la Biblia. Digamos, seguridad.
+
+188
+00:30:01.310 --> 00:30:15.659
+Leandro Ariel Suarez: Eso lo hacen equipos súper especializados supera conciencia y se va definiendo todo lo que se refiere a la seguridad de una empresa, sobre todo más a
+
+189
+00:30:15.690 --> 00:30:31.130
+Leandro Ariel Suarez: ya, en llegando al punto legal. Quizás a veces no, por ejemplo, el tema de cómo se manejan los datos personales de de los empleados y de los clientes de la compañía que acciones se deben tomar.
+
+190
+00:30:31.390 --> 00:30:32.580
+Leandro Ariel Suarez: ¿con
+
+191
+00:30:32.930 --> 00:30:49.600
+Leandro Ariel Suarez: qué qué estándares hay que seguir de de de industria, nada, un montón de cuestiones que generalmente no no son del día a día de los empleados. Entonces eso se empieza a ir bajando. Esa es la Biblia. Después. Ahí lo empiezan a ir bajando
+
+192
+00:30:49.610 --> 00:31:07.320
+Leandro Ariel Suarez: a través de otros documentos que siguen siendo documentos. Los estándares son documentos. Los procedimientos son documentos, pero ya más focalizados a los distintos equipos, o sea, el equipo de venta. Se le va a bajar algún estándar, un procedimiento o un guy line, y a los equipos de Haití se le baja otro a los equipos de seguridad se le baja. Otro
+
+193
+00:31:07.990 --> 00:31:09.160
+Leandro Ariel Suarez: me explicó.
+
+194
+00:31:12.020 --> 00:31:12.969
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí. Gracias.
+
+195
+00:31:16.880 --> 00:31:17.489
+Leandro Ariel Suarez: No, ¿no?
+
+196
+00:31:20.280 --> 00:31:31.429
+Leandro Ariel Suarez: Y bueno, Y después ya pasamos si acá hasta acá no hay alguna duda. Ya empezamos con la parte de las estrategias para llevar adelante todo esto
+
+197
+00:31:31.590 --> 00:31:32.900
+Leandro Ariel Suarez: de forma práctica.
+
+198
+00:31:40.560 --> 00:31:45.399
+Leandro Ariel Suarez: Bueno, en lo que son estrategias
+
+199
+00:31:45.550 --> 00:32:04.570
+Leandro Ariel Suarez: en el tiempo fueron surgiendo distintas formas de aplicar todas estas políticas. Todas estas políticas de seguridad y las políticas de seguridad de las distintas empresas son suelen ser bastante similares. O sea, yo imagino que la política de una empresa tipo mercado libre debe ser la misma que hoy L X o que pedido, ya o sea, son.
+
+200
+00:32:04.720 --> 00:32:09.229
+Leandro Ariel Suarez: y y y la política de de una empresa que no sé
+
+201
+00:32:09.360 --> 00:32:22.190
+Leandro Ariel Suarez: no es tecnológica. Muy probablemente sea también muy similar al de otros. Ya están conviviendo todos en un mismo contexto de negocio y muy probablemente tengan objetivos similares, y las políticas se van a parecer también, entonces.
+
+202
+00:32:22.440 --> 00:32:36.860
+Leandro Ariel Suarez: naturalmente, empezaron a aparecer estrategias que genéricamente se pueden aplicar a para poder llevar adelante y poder implementar estas políticas en las empresas. Entonces se hoy se destacan 2 que vamos a ver ahora.
+
+203
+00:32:37.130 --> 00:32:42.090
+Leandro Ariel Suarez: Una de ellas es defense index o defensa en profundidad.
+
+204
+00:32:42.960 --> 00:32:48.490
+Leandro Ariel Suarez: Y este tipo de estrategia, lo que hace es
+
+205
+00:32:49.250 --> 00:33:03.159
+Leandro Ariel Suarez: asumir que ningún control de seguridad va a ser perfecto, porque sabemos, la seguridad no está asegurada nunca. O sea, nunca se puede asegurar que un sistema es 100 por 100 de seguro. Entonces con esa premisa
+
+206
+00:33:03.160 --> 00:33:11.740
+Leandro Ariel Suarez: se diseña. Digamos lo que son capas distintas, capas que están pensadas para contener a la capa que sigue. No.
+
+207
+00:33:12.020 --> 00:33:18.610
+Leandro Ariel Suarez: esto pensaba como si fuera una cebolla, No, pues agarrando gafas y metiendo cada vez más adentro hasta llegar.
+
+208
+00:33:18.710 --> 00:33:20.620
+Leandro Ariel Suarez: Y lo más importante, digamos.
+
+209
+00:33:21.950 --> 00:33:34.659
+Leandro Ariel Suarez: Entonces esto lo que nos permite es a la hora de nosotros enfrentar un ataque o algún incidente es tener una especie de redundancia que, bueno, si falla capa de arriba. Yo
+
+210
+00:33:35.160 --> 00:33:38.459
+Leandro Ariel Suarez: contengo si fallo. Yo contiene la de abajo. Y así,
+
+211
+00:33:40.010 --> 00:33:44.139
+Leandro Ariel Suarez: acá por lo que puedo mover de de la
+
+212
+00:33:44.970 --> 00:34:02.119
+Leandro Ariel Suarez: de esta estrategia tiene distintas capas. Son 5: el perímetro, El perímetro, por ejemplo, puede ser un firewall que deniega llamadas que vienen de Internet de Internet. Eso solamente acepta las llamadas de
+
+213
+00:34:02.620 --> 00:34:11.679
+Leandro Ariel Suarez: de la de la red en la que de cierta red, o incluso D, v. P Ns: Entonces, bueno, eso podría ser un la capa de perímetro podría estar contemplada con eso.
+
+214
+00:34:12.040 --> 00:34:26.559
+Leandro Ariel Suarez: La capa de red, que es dentro de lo que sería la red de la corporativa. Por ejemplo, yo podría querer separar la red corporativa donde trabajan la gente de operaciones de la red, donde viven los servidores que soportan las aplicaciones
+
+215
+00:34:26.770 --> 00:34:38.999
+Leandro Ariel Suarez: que que luego usa esa gente. Entonces yo a alguien que está trabajando en un Call Center. Yo no le voy a permitir que llegue un servidor que se encarga de la venta de cierto producto.
+
+216
+00:34:39.280 --> 00:34:44.919
+Leandro Ariel Suarez: Entonces, Bueno, eso ahí aplicó una segmentación de red. Eso es una protección adicional.
+
+217
+00:34:45.070 --> 00:34:47.650
+Leandro Ariel Suarez: Después a nivel de juego.
+
+218
+00:34:48.000 --> 00:35:07.730
+Leandro Ariel Suarez: hay hay ciertas medidas de seguridad donde esos servidores o unos Host se pueden jardinizar de alguna forma que, básicamente, lo que que es jardínizar, Es decir, okay, este software va a tener este software y no, no se puede modificar. O sea, es como una especie de
+
+219
+00:35:08.470 --> 00:35:15.370
+Leandro Ariel Suarez: contenedor. Digamos, si lo queremos llevar a Docker es como yo le doy este contenedor a esto y y nada si
+
+220
+00:35:15.570 --> 00:35:26.179
+Leandro Ariel Suarez: no puedo aplicar cambios sobre esto, está jardinizado y eso está jardinizado con buena práctica, medidas de seguridad, un montón de cuestiones
+
+221
+00:35:26.240 --> 00:35:36.239
+Leandro Ariel Suarez: para optimizar que sea lo más seguro posible ese House. Entonces, después. Si yo quiero atacar eso, quiero hacerle modificaciones. No se puede. Es inmutable, digamos.
+
+222
+00:35:37.850 --> 00:35:40.249
+Leandro Ariel Suarez: y a nivel aplicación
+
+223
+00:35:40.490 --> 00:35:50.340
+Leandro Ariel Suarez: que es, digamos, la aplicación que, por ejemplo, una aplicación web que está recibiendo tráfico. Se supone que con todo lo que vieron ustedes a lo largo de estas semanas
+
+224
+00:35:50.460 --> 00:35:58.369
+Leandro Ariel Suarez: tendrían buenos principios para desarrollar con buenas prácticas esa aplicación y que no tenga vulnerabilidades. Pero, bueno.
+
+225
+00:35:58.490 --> 00:36:06.459
+Leandro Ariel Suarez: también, o sea, la idea sería que a nivel aplicación tenga un buen diseño, una buena protección, buenas medidas que no se metan vulnerabilidades
+
+226
+00:36:06.620 --> 00:36:07.909
+Leandro Ariel Suarez: y demás cuestiones
+
+227
+00:36:08.810 --> 00:36:22.369
+Leandro Ariel Suarez: y después ya llegas a los datos, que es quizás lo que más importa, ¿no? Pero para llegar a esta a esta última capa tienes que pasar primero a espacial. Si un atacante quisiera accidente, primero hay espacial. Ese firewall
+
+228
+00:36:22.740 --> 00:36:25.279
+Leandro Ariel Suarez: está bien. Quizás para hacerse fire después.
+
+229
+00:36:25.430 --> 00:36:38.630
+Leandro Ariel Suarez: tendrías que lograr moverte lateralmente entre las redes, porque, naturalmente, la red que tiene los servidores que contra los servidores está oculta o de cierta forma en la que no sé, no está publicando en la está en la red usada.
+
+230
+00:36:38.870 --> 00:36:49.550
+Leandro Ariel Suarez: Probablemente si alguien logra acceder, va a lograr acceder a la a la red corporativa. Después la red corporativa, si tienes más lateralmente o lograr tener acceso a la red
+
+231
+00:36:49.900 --> 00:37:08.939
+Leandro Ariel Suarez: de los servidores que ya de por sí, como le digo, no se debería poder llegar Si logra hacer todo eso. Después tiene que vulnerar el host que está protegido o está jardinizado. Bueno, tendré que buscar ciertas vulnerabilidades y lograr pasear todos los controles que tengas organizado. Y por último, vulnerar la aplicación.
+
+232
+00:37:09.260 --> 00:37:14.289
+Leandro Ariel Suarez: Entonces fíjense todo lo que tiene que hacer un atacante para poder lograr llegar los datos.
+
+233
+00:37:14.640 --> 00:37:21.680
+Leandro Ariel Suarez: Bueno, muchas veces sí se se logra, Pero la idea es esta: digamos, empezar a
+
+234
+00:37:22.010 --> 00:37:25.339
+Leandro Ariel Suarez: a poner capas que defiendan a
+
+235
+00:37:25.900 --> 00:37:27.689
+Leandro Ariel Suarez: que se defiendan entre sí. Digamos.
+
+236
+00:37:31.950 --> 00:37:33.420
+Leandro Ariel Suarez: Y
+
+237
+00:37:34.490 --> 00:37:44.810
+Leandro Ariel Suarez: bueno, acá. Tenemos una especie de corte con las distintas capas y distintos softwares que o soluciones o herramientas que nos permiten, digamos.
+
+238
+00:37:45.450 --> 00:37:47.950
+Leandro Ariel Suarez: contemplar esta supuesta seguridad.
+
+239
+00:37:49.120 --> 00:38:03.779
+Leandro Ariel Suarez: Bueno, algunas cosas. Ya las vimos por ahí y aparece Honipot en la seguridad del perímetro. Es lo mismo que aplicamos a autenticación. Acá se aplica para el perímetro. Generalmente
+
+240
+00:38:03.810 --> 00:38:21.440
+Leandro Ariel Suarez: se lo suele cuando se detecta un atacante en el perímetro. Se lo suele derivar a una red boba, que es donde no hay nada, o hay cosas para mantener entretenido al atacante y que no logre llegar nunca a a la red que que importa.
+
+241
+00:38:21.480 --> 00:38:28.579
+Leandro Ariel Suarez: Después que tenemos. Bueno, firewalls de perímetro, se encargan de bloquear cierto tráfico
+
+242
+00:38:28.880 --> 00:38:38.270
+Leandro Ariel Suarez: y de Y E. Y de ese y E. I, p. S, que son intrusos de Techon system intru intrusan Prevention system.
+
+243
+00:38:38.420 --> 00:38:47.799
+Leandro Ariel Suarez: lo que hace. Básicamente detectan patrones tipo antivirus a través de firmas o anomalías, Y bueno, determinan si hay que bloquearlas o no
+
+244
+00:38:48.270 --> 00:38:51.180
+Leandro Ariel Suarez: alertar o hacer algún tipo de acción.
+
+245
+00:38:52.230 --> 00:38:58.840
+Leandro Ariel Suarez: Después Bueno, las zonas de de mitad egresadas seguras. Eso también.
+
+246
+00:38:59.310 --> 00:39:08.619
+Leandro Ariel Suarez: Y pasando lo que es de network de de red. Tenemos Nac que el Arlock es una especie de
+
+247
+00:39:08.910 --> 00:39:13.439
+Leandro Ariel Suarez: lo que hace es, define si un dispositivo se puede conectar o no a través de
+
+248
+00:39:14.120 --> 00:39:28.649
+Leandro Ariel Suarez: si es la Ip a través de la Mac a través del firmware, ciertas credenciales, algún criterio medio, más o menos lo que hace el Router. Cuando Uds. Le ponen, por ejemplo, limitar para que solamente acceda cierta mac o cierta.
+
+249
+00:39:28.950 --> 00:39:33.320
+Leandro Ariel Suarez: No sé, o ciertos dispositivos. A veces los los router en el firmware traen
+
+250
+00:39:33.440 --> 00:39:40.000
+Leandro Ariel Suarez: ese tipo de funcionalidad. El Nark es network, accede proto network, accede, control perdón.
+
+251
+00:39:41.020 --> 00:39:56.049
+Leandro Ariel Suarez: Después tenemos web proxies content fltering que es Básicamente, lo más conocido que se conoce hoy es Fortinet, o ese tipo de cosas que tipo firewalls específicos que bloquean tráfico o lo filtran.
+
+252
+00:39:56.150 --> 00:40:07.509
+Leandro Ariel Suarez: Por ejemplo, esto se usa mucho en las empresas para que la gente no acceda a Netflix, a Ver Netflix o no acceda a sitios maliciosos o sitios que no están que no tienen una seguridad
+
+253
+00:40:07.640 --> 00:40:11.840
+Leandro Ariel Suarez: importante que en el din Htt de Pc expuesto, Bueno.
+
+254
+00:40:12.860 --> 00:40:21.969
+Leandro Ariel Suarez: y después. Como interesante, también ahí en Application Security tenemos el W A, P, que es web application Firewall. Esto es
+
+255
+00:40:22.560 --> 00:40:28.760
+Leandro Ariel Suarez: y como un firware, Pero para el tráfico de una aplicación web Htt, P. Https.
+
+256
+00:40:28.990 --> 00:40:38.609
+Leandro Ariel Suarez: se supervisan todo ese tráfico en base a la Reewell, determinan si quizás tienen que filtrarlo si tienen que tomar alguna medida
+
+257
+00:40:39.210 --> 00:40:45.599
+Leandro Ariel Suarez: o mismo pueden hacer reemplazos, o sea, para que el tráfico llegue limpio o distintas cuestiones
+
+258
+00:40:46.500 --> 00:41:01.109
+Leandro Ariel Suarez: por ahí está muy seguido de Lp: También de lepes data a los prevention. Estos en realidad no es de que se pierda data dentro de la compañía o de los clientes, sino que no se filtre datos hacia afuera.
+
+259
+00:41:01.220 --> 00:41:17.869
+Leandro Ariel Suarez: A veces son escanean y están mirando a ver si se exiltró datos de tarjeta, datos de personales y demás cuestiones. Y están todo el tiempo corriendo y viendo que eso no pasa. Y si pasa, se levantan alertas y, bueno, se toman medidas.
+
+260
+00:41:19.040 --> 00:41:26.439
+Leandro Ariel Suarez: y y ahí dentro, por ejemplo, toda la parte de
+
+261
+00:41:26.530 --> 00:41:42.270
+Leandro Ariel Suarez: manejar lo que son las identidades, todas las soluciones que resuelven la parte de autenticación, acceso, autorización, gestión de identidad, roles, permisos. Bueno, toda esa parte, me dedico yo, así que puedo hablar horas y horas.
+
+262
+00:41:46.090 --> 00:41:50.210
+Leandro Ariel Suarez: Bueno, cuáles son los principios de
+
+263
+00:41:51.310 --> 00:42:01.560
+Leandro Ariel Suarez: de esta de esta estrategia? Digamos, por un lado de diversificar, o sea, diversificar tenés, distintos métodos y distintas tecnologías. Entonces.
+
+264
+00:42:01.650 --> 00:42:19.639
+Leandro Ariel Suarez: cuando hay una vulnerabilidad, una sola vulnerabilidad no te va a afectar a todo o está segmentado en un montón de de soluciones y y tecnologías, y es muy difícil que una sola vulnerabilidad atraviese todo. Entonces, bueno, vos vas conteniendo con todas estas soluciones?
+
+265
+00:42:19.710 --> 00:42:31.329
+Leandro Ariel Suarez: Las posible? Quizás una buena idea en el perímetro, pero después la otra capa lo contiene. Quizás es una vulnerabilidad en el W A, F, Pero tenés todas las capas de arriba que te contienen, incluso la
+
+266
+00:42:31.440 --> 00:42:34.649
+Leandro Ariel Suarez: soluciones en la capa de abajo en la capa de datos.
+
+267
+00:42:34.790 --> 00:42:44.490
+Leandro Ariel Suarez: Bueno, redundancia, como le decía, cada capa contiene a la que sigue en
+
+268
+00:42:44.990 --> 00:42:52.019
+Leandro Ariel Suarez: segmentas fragmentás al dividir la red tenés, segmentos controlados, donde se limita mucho ya esos.
+
+269
+00:42:52.330 --> 00:42:53.370
+Leandro Ariel Suarez: Es
+
+270
+00:42:53.680 --> 00:43:06.849
+Leandro Ariel Suarez: una medida de seguridad muy fuerte. Incluso hay segmentaciones donde ciertas aplicaciones, algunas compañías muy avanzadas donde tu aplicación no vea nada. O sea, vos. Si vos. Tenés manejas una aplicación que
+
+271
+00:43:06.960 --> 00:43:14.340
+Leandro Ariel Suarez: que realiza cierta responsabilidad y solamente tiene que hablar con otra aplicación. Bueno, solamente tiene visibilidad con esa otra aplicación.
+
+272
+00:43:14.580 --> 00:43:16.939
+Leandro Ariel Suarez: Es hasta ese punto se puede llegar.
+
+273
+00:43:16.950 --> 00:43:35.859
+Leandro Ariel Suarez: Y bueno, todo eso obviamente requiere que se den ciertos permisos o accesos. Entonces un atacante llega a vulnerar una aplicación. Está bien. Quizás pueda llegar a esa otra aplicación, pero no puede llegar a todo o a todas las bases de datos o no. No todos los endpoints o los work station pueden llegar a, no sé, a un sitio.
+
+274
+00:43:36.020 --> 00:43:45.289
+Leandro Ariel Suarez: Entonces bueno, esa segmentación es muy importantes y suele depende el nivel que 1 le quiera dar suele ser económica según el caso
+
+275
+00:43:46.220 --> 00:43:48.999
+Leandro Ariel Suarez: y después, bueno, el monitoreo no
+
+276
+00:43:49.160 --> 00:43:59.159
+Leandro Ariel Suarez: nada de esto importa, o sea, si si 1 no está monitoreando, no a través de estas herramientas, cómo cómo están performando las capas.
+
+277
+00:43:59.190 --> 00:44:10.790
+Leandro Ariel Suarez: empezar a correlacionar eventos, porque quizás, evidentemente, una capa y en otro, y si están correlacionados, y 1 no lo ve, entonces también hay hay ciertas soluciones en la industria, que permiten.
+
+278
+00:44:11.230 --> 00:44:16.630
+Leandro Ariel Suarez: podré hacer una especie de y agregación de todo eso para empezar a detectar problemas.
+
+279
+00:44:20.320 --> 00:44:25.049
+Leandro Ariel Suarez: Y hablando de problemas, ¿Qué problema tiene esta esta estrategia?
+
+280
+00:44:25.560 --> 00:44:27.730
+Leandro Ariel Suarez: Bueno, lo primero son los costos.
+
+281
+00:44:28.600 --> 00:44:32.310
+Leandro Ariel Suarez: Imagínense que si volvemos para atrás.
+
+282
+00:44:32.960 --> 00:44:36.720
+Leandro Ariel Suarez: miren todos los software o todas las soluciones que hay
+
+283
+00:44:37.020 --> 00:44:45.120
+Leandro Ariel Suarez: ya de por sí, aunque 1 elija no solo que se usan varias de todas estas, sino que imagínense que ya se usan. Cinco
+
+284
+00:44:45.600 --> 00:44:54.830
+Leandro Ariel Suarez: son 5 productos, 5 presupuestos que hay que contemplar. Y no son 5, suelen ser muchísimos más.
+
+285
+00:44:55.040 --> 00:45:07.580
+Leandro Ariel Suarez: porque no todo acapara todo. Entonces. Y bueno, toda la parte de de acá abajo, que tampoco hemos mencionado mucho, pero es muy costoso. Este tipo de estrategia.
+
+286
+00:45:07.760 --> 00:45:16.800
+Leandro Ariel Suarez: no solo que los productos de tecnología que se encargan de de poder defender
+
+287
+00:45:16.840 --> 00:45:28.889
+Leandro Ariel Suarez: son costosos, sino que también después, cada 1 es distinto. Entonces tenés que no hay una bala de plata para todo tenés que capacitar a los equipos para que sepan poder operarlos. Una sola persona no va a estar operando todo
+
+288
+00:45:28.890 --> 00:45:40.269
+Leandro Ariel Suarez: Después, como les dije, hay que monitorear. Hay que usar eventos datos para poder identificar, porque quizás hay falsos positivos en una pero en otra ¿no? Entonces bueno.
+
+289
+00:45:40.270 --> 00:45:45.079
+Leandro Ariel Suarez: montón de cuestiones por ahí. Está 100 que medio que hace eso.
+
+290
+00:45:45.270 --> 00:45:51.529
+Leandro Ariel Suarez: pero bueno, es es bastante. Es un punto bastante crítico de
+
+291
+00:45:51.640 --> 00:45:53.520
+Leandro Ariel Suarez: de de este tipo de estrategia.
+
+292
+00:45:54.430 --> 00:46:03.429
+Leandro Ariel Suarez: Después que otros problemas tenemos no lo pro lo eficientemente. Digamos, los ataques internos suelen s
+
+293
+00:46:03.880 --> 00:46:15.050
+Leandro Ariel Suarez: ser bastante difíciles de de acaparar. Esto es ya sea alguien de adentro, queriendo hacer algo o mismo.
+
+294
+00:46:15.500 --> 00:46:23.030
+Leandro Ariel Suarez: Alguien ha logrado ya acceder de alguna forma. No sé, le robó las creencias, un empleado, y ya estás adentro. Tipo. Es muy difícil darte cuenta
+
+295
+00:46:23.140 --> 00:46:24.520
+Leandro Ariel Suarez: de que
+
+296
+00:46:24.750 --> 00:46:42.019
+Leandro Ariel Suarez: de que fuiste vulnerado, no, O sea, estas herramientas, no son, no todas son bidireccionales, o sea, no todas tienen forma de entender. Cuando alguien ya pasó todas las capas y está del otro lado o mismo, está dentro de la organización haciendo cosas maliciosas
+
+297
+00:46:43.630 --> 00:46:50.790
+Leandro Ariel Suarez: y después, algo que también no es menor, que es lo difícil que es implementar esto en infraestructura distribuida, no
+
+298
+00:46:50.920 --> 00:46:52.889
+Leandro Ariel Suarez: que hoy por hoy.
+
+299
+00:46:53.040 --> 00:47:12.359
+Leandro Ariel Suarez: esto esto estuvo pensado para la época de data center o premis, donde las empresas realmente tenían un data center donde estaban cuestionando todos sus servidores del fierro. Lo era de ellos propio. Y hoy sabemos que eso quedó en el medio en el pasado, no del todo. Pero
+
+300
+00:47:12.440 --> 00:47:26.420
+Leandro Ariel Suarez: Pero hoy ya todas las empresas están yendo a un esquema cloud con data centers híbridos. A veces con la trazantes Clown a ti, con multi nubes con multiproveedores de nubes A, L, B, C, C. P:
+
+301
+00:47:26.690 --> 00:47:29.890
+Leandro Ariel Suarez: Eso según el el grado de
+
+302
+00:47:30.060 --> 00:47:39.430
+Leandro Ariel Suarez: de la organización y de la madurez que tenga, ¿no? Pero bueno, este tipo de máquina es implementar esto, sobre todo en esquemas.
+
+303
+00:47:39.640 --> 00:47:47.110
+Leandro Ariel Suarez: Multinehe es muy complejo. Entonces, Bueno, esto es una contra que también tiene muy fuerte.
+
+304
+00:47:48.980 --> 00:47:57.250
+Leandro Ariel Suarez: Y antes de pasar al próximo, y hoy la
+
+305
+00:47:58.230 --> 00:48:08.359
+Leandro Ariel Suarez: la gran mayoría de las empresas ya tienen intranets que son como una red que es interna de la compañía. Entonces.
+
+306
+00:48:08.920 --> 00:48:25.730
+Leandro Ariel Suarez: los empleados generalmente dentro de ese intranet? No tienen los mismos controles o es está, como buena práctica decir que dentro del intranetional le voy a poner barreras. Esto que hablábamos al principio, yo no le voy a pedir
+
+307
+00:48:26.940 --> 00:48:36.749
+Leandro Ariel Suarez: al empleado que pase por 80 barreras para poder operar, porque lo que va a terminar haciendo es desviándose yendo por otro lado.
+
+308
+00:48:36.890 --> 00:48:55.300
+Leandro Ariel Suarez: y bueno, atentando contra la seguridad, entonces se tuvo como buena práctica. Hoy eso está cambiando, pero se tuvo buena práctica. Y, Ok, dentro del Intranet de la compañía al usuario probablemente no le pido autenticación, probablemente no tanta política de control de acceso. Quizás no.
+
+309
+00:48:55.690 --> 00:49:01.680
+Leandro Ariel Suarez: no sé, no le permito que la sesión duren un poco más distintas medidas.
+
+310
+00:49:01.880 --> 00:49:14.620
+Leandro Ariel Suarez: Eso durante mucho tiempo se consideró que era buena práctica y seguro. Hoy sabemos de que hoy estamos mirando otras otro tipo de de de estrategias, que es la que viene.
+
+311
+00:49:14.810 --> 00:49:17.600
+Leandro Ariel Suarez: que es Ciro trust architecture.
+
+312
+00:49:18.320 --> 00:49:28.289
+Leandro Ariel Suarez: Bueno, ciro tras nace de esto, de decir, che ninguna red es segura.
+
+313
+00:49:28.460 --> 00:49:34.689
+Leandro Ariel Suarez: La empresa, o sea, estás en la oficina. Por ejemplo, la la escaneo. Te contestaste por el VPN, pero yo no sé
+
+314
+00:49:34.920 --> 00:49:36.730
+Leandro Ariel Suarez: que tenés en la máquina.
+
+315
+00:49:37.080 --> 00:49:42.109
+Leandro Ariel Suarez: Si vos fuiste a Starbucks y te fuiste al baño dejaste la máquina y vino un chaval con el de un pendrive
+
+316
+00:49:42.360 --> 00:49:52.929
+Leandro Ariel Suarez: y te instale un explot malware o un taylover, lo que sea, y vos venís y me conectáis, Yo no te pido nada. Yo sumo, no tu computadora está en boluta
+
+317
+00:49:53.270 --> 00:49:59.729
+Leandro Ariel Suarez: y y y vos probablemente ya estás inyectando algo dentro de la red.
+
+318
+00:49:59.860 --> 00:50:05.950
+Leandro Ariel Suarez: Y Y yo no estoy controlando eso. Yo, como seguridad, como equipo de infraestructura y seguridad, no estamos siguiendo eso.
+
+319
+00:50:06.260 --> 00:50:09.510
+Leandro Ariel Suarez: Entonces empezó a a
+
+320
+00:50:09.730 --> 00:50:18.069
+Leandro Ariel Suarez: empezó a nacer todo este esta idea de Che, en realidad, ninguna ninguna red de segura siempre hay que estar chequeando, porque
+
+321
+00:50:18.550 --> 00:50:23.330
+Leandro Ariel Suarez: la computadora de un empleado puede ser tan peligrosa. Como no sé un
+
+322
+00:50:23.830 --> 00:50:27.790
+Leandro Ariel Suarez: un hacker chino entrando tratando de conectarse a la red.
+
+323
+00:50:28.010 --> 00:50:37.049
+Leandro Ariel Suarez: Entonces, no no sabes en qué estado está la War Station de un empleado, ya sea en la oficina o mismo remoto a través del a V. P. N,
+
+324
+00:50:37.360 --> 00:50:44.219
+Leandro Ariel Suarez: puede tener un montón de de cosas instaladas y sin darse cuenta, incluso
+
+325
+00:50:44.880 --> 00:50:48.749
+Leandro Ariel Suarez: puede haber un atacante en persona en la oficina
+
+326
+00:50:50.180 --> 00:50:53.670
+Leandro Ariel Suarez: por algún motivo, porque no se controló bien porque
+
+327
+00:50:54.010 --> 00:51:06.120
+Leandro Ariel Suarez: no sé, no hay una buena. El empleado que estaba de seguridad ahí y le dejó pasar, ¿no? Sí. Me olvidé de la tarjeta de mi casa. ¿me deja pasar. ¿sí? ¿sí? Y hay una persona ahí. Agarró una máquina y fue con un pendrive
+
+328
+00:51:06.340 --> 00:51:07.300
+Leandro Ariel Suarez: está bien.
+
+329
+00:51:07.660 --> 00:51:13.069
+Leandro Ariel Suarez: No, no es el no es la mayoría de los casos, pero hay que tomar eso en cuenta
+
+330
+00:51:13.340 --> 00:51:21.180
+Leandro Ariel Suarez: y, sobre todo. Bueno, ahora, con el tema del trabajo remoto. Menos que menos 1 sabe quién está accediendo a la red.
+
+331
+00:51:21.400 --> 00:51:33.310
+Leandro Ariel Suarez: Entonces pasamos a considerar que cualquier red interna ahora es tan peligrosa como Internet. Internet, básicamente es Bad Max, o sea, estás en la tierra de nadie.
+
+332
+00:51:33.810 --> 00:51:34.910
+Leandro Ariel Suarez: En
+
+333
+00:51:36.280 --> 00:51:46.099
+Leandro Ariel Suarez: Con esa premisa vamos a hacer. Vamos a aplicar todos los controles que ya aplicábamos afuera. Lo vamos a aplicar adentro, también. No vamos a distinguir.
+
+334
+00:51:46.400 --> 00:52:05.039
+Leandro Ariel Suarez: Entonces esto también plantea que la arquitectura que que armemos con Ciro Trust tiene que forcear, digamos, cada aplicación tiene que forcear esto, independientemente, o sea, cada componente que yo tenga dentro de mi arquitectura, deberían forcear esto.
+
+335
+00:52:05.650 --> 00:52:07.070
+Leandro Ariel Suarez: ¿qué es lo que pasa?
+
+336
+00:52:07.630 --> 00:52:16.300
+Leandro Ariel Suarez: Eso Se suele relajar un poco. O sea, si tomamos en cuenta que cualquier red puede puede ser peligrosa. Ahora
+
+337
+00:52:16.380 --> 00:52:31.490
+Leandro Ariel Suarez: no le voy a pedir Yo tengo, en mi en mi empresa hay 20 aplicaciones. No le voy a pedir a las 20 aplicaciones que hagan exactamente lo mismo que el por 100 todos los porque de nuevo ganamos a la misma el empleado, después se va a terminar hinchando
+
+338
+00:52:31.520 --> 00:52:48.860
+Leandro Ariel Suarez: y no vamos a, o sea el mismo. Van a haber quejas entonces, en la práctica se suele relajar eso. Un ejemplo puede ser Yo le voy a pedir al empleado que se logue en cada portal que requiere utilizar. O sea, por lo general le digo, ok, yo te federo se logín
+
+339
+00:52:49.200 --> 00:53:02.049
+Leandro Ariel Suarez: de una sola forma, por ejemplo a través de Directory listo o lo de una vez, y ya está después cada aplicación que deba hacer algo. Tienen los infederados. No te va a pedir un loggin nuevo.
+
+340
+00:53:02.370 --> 00:53:16.399
+Leandro Ariel Suarez: pero los controles de seguridad se aplican porque el oín se hizo una sola vez, pero pero vos y vos tenés la identidad de esa persona? Y para cada aplicación se van a heredar los permisos y los roles que tiene esa persona en cada pieza.
+
+341
+00:53:23.050 --> 00:53:29.310
+Leandro Ariel Suarez: si no, no, no voy a estar leyendo todo lo que existe porque si no la termino más. Pero bueno, estoy leyendo, y no, no comentando mucho. Por ahora.
+
+342
+00:53:30.040 --> 00:53:38.320
+Leandro Ariel Suarez: Bueno, esto tiene 3 principios básicos, que es el nunca confíes en nadie o never. Trump siempre verificar
+
+343
+00:53:38.460 --> 00:53:43.080
+Leandro Ariel Suarez: al West Very fire y azul bridge que es asumir que
+
+344
+00:53:43.240 --> 00:53:46.159
+Leandro Ariel Suarez: fuiste atacado y que ya fuiste vulnerado. Digamos
+
+345
+00:53:48.460 --> 00:53:54.070
+Leandro Ariel Suarez: ya que tenemos un panel, un poco de los componentes que exige la arquitectura. Así atrás
+
+346
+00:53:54.180 --> 00:53:58.519
+Leandro Ariel Suarez: vamos a ir desglosándolos 1 por 1.
+
+347
+00:53:59.460 --> 00:54:03.329
+Leandro Ariel Suarez: Este framework. Esto es un framework que lo
+
+348
+00:54:05.250 --> 00:54:12.479
+Leandro Ariel Suarez: que lo estandarsionista, no toda esta esta clase va a estar muy enfocada en en en este estándar de nees.
+
+349
+00:54:13.750 --> 00:54:23.849
+Leandro Ariel Suarez: Y bueno, se ahí está la Url también, para que puedan acceder. Pero, bueno, vamos a estar viendo componente por componente.
+
+350
+00:54:26.940 --> 00:54:27.690
+Leandro Ariel Suarez: Oye
+
+351
+00:54:29.750 --> 00:54:38.250
+Leandro Ariel Suarez: si lo tras o el Framework, decir otra denis exige que hace un componente de diagnóstico, mitigación continua, o Cdm.
+
+352
+00:54:38.940 --> 00:54:46.380
+Leandro Ariel Suarez: que lo que hace es en force de reglas y políticas sobre los activos de la organización, entonces
+
+353
+00:54:46.680 --> 00:54:52.610
+Leandro Ariel Suarez: controla que que esto se cumpla, ¿no? Y
+
+354
+00:54:52.870 --> 00:55:01.330
+Leandro Ariel Suarez: si pasara algo sobre ese activo, porque no se cumple de cierta regla, probablemente desactive ese recurso.
+
+355
+00:55:02.830 --> 00:55:08.590
+Leandro Ariel Suarez: por ejemplo, para el caso de la abortation de las work Stations.
+
+356
+00:55:08.850 --> 00:55:26.699
+Leandro Ariel Suarez: Un empleado tiene el antivirus autorizado en su computadora, tiene los últimos de de seguridad no los tiene. Por lo general, esto se force a través de de un de un sistema, de un software que, si están en las computadoras de los de los empleados y que
+
+357
+00:55:26.950 --> 00:55:32.419
+Leandro Ariel Suarez: que está chequeando todo el tiempo. O sea, es como una especie de antivirus, pero que ellos no lo pueden desinstalar. Entonces
+
+358
+00:55:32.590 --> 00:55:35.920
+Leandro Ariel Suarez: cuando pasa algo detecta algún tipo de anomalía.
+
+359
+00:55:36.040 --> 00:55:45.039
+Leandro Ariel Suarez: hasta puede incluso desactivar la computadora o ser que el sistema operativo no sea accesible de esa forma. Bueno, pos
+
+360
+00:55:45.200 --> 00:55:49.429
+Leandro Ariel Suarez: estos pies, que un posible atacante pueda seguir
+
+361
+00:55:51.020 --> 00:55:57.480
+Leandro Ariel Suarez: ingiriendo daño sobre porque bueno puede escalar a través de ese World Station. No sé, bueno, puede haber distintas
+
+362
+00:55:57.770 --> 00:55:59.570
+Leandro Ariel Suarez: distintas posibilidades.
+
+363
+00:56:02.650 --> 00:56:08.530
+Leandro Ariel Suarez: Después todo lo que es el sistema de cumplimiento de industria o industria, compras
+
+364
+00:56:08.910 --> 00:56:22.450
+Leandro Ariel Suarez: Acá entra todo lo que son los las normativas o reglamentaciones. Cuando 1, trabaja, por ejemplo, con datos de médicos de personas, el I P. A el banco central. Bueno.
+
+365
+00:56:22.470 --> 00:56:35.150
+Leandro Ariel Suarez: se trabaja con datos financieros de las personas shock. Generalmente, cuando cotisás en bolsa socios, un estándar para y
+
+366
+00:56:35.560 --> 00:56:53.850
+Leandro Ariel Suarez: para asegurar que todo lo que se haga sea transparente. Digamos entonces una cuenta cotiza en Bolsa. Se supone que tiene que que que tener eso no solo transparente, sino que que es transparente, que está todo controlado y seguro. Hay auditorías que se encargan de eso. Y Pci para el tema de los datos de tarjeta de crédito. Bueno, si 1 quiere
+
+367
+00:56:53.940 --> 00:57:00.390
+Leandro Ariel Suarez: poner una empresa que trabaje con que que venda a través de tarjeta de crédito tiene que cumplir con que sí
+
+368
+00:57:00.720 --> 00:57:02.759
+Leandro Ariel Suarez: es un estándar también. Y
+
+369
+00:57:06.030 --> 00:57:22.260
+Leandro Ariel Suarez: Trending Tell o amenaza fuentes de inteligencia sobre amenazas. Bueno, esto es un componente que se encarga de estar proveyendo información de fuentes externas e internas sobre Cvs descubiertos
+
+370
+00:57:22.260 --> 00:57:30.940
+Leandro Ariel Suarez: sobre hay algunos proveedores que esto se puede cumplir a través de un proveedor que te te te dan información de los mercados negros
+
+371
+00:57:30.940 --> 00:57:45.399
+Leandro Ariel Suarez: donde se están probablemente vendiendo datos. Entonces, si se están vendiendo datos de de tus clientes o de clientes que son o de personas que son clientes de tu empresa? Bueno, hay suscripción para novedades de amenazas, de ataques de
+
+372
+00:57:45.510 --> 00:57:46.930
+Leandro Ariel Suarez: vulnerabilidades.
+
+373
+00:57:47.190 --> 00:57:58.409
+Leandro Ariel Suarez: demás cuestiones que 1 tiene que tener corriendo dentro de su arquitectura para poder estar informado. Digamos esto es como estar informado del Twitter de de las
+
+374
+00:58:01.490 --> 00:58:04.109
+Leandro Ariel Suarez: Bueno, ahora hay algunos ejemplos.
+
+375
+00:58:04.330 --> 00:58:10.770
+Leandro Ariel Suarez: no algunas firmas de ataques y bueno y pez comprometida y peces botnets. Y demás cuestiones
+
+376
+00:58:13.910 --> 00:58:21.149
+Leandro Ariel Suarez: en la parte de registro de logs de actividad y de en la red y en los sistemas.
+
+377
+00:58:21.280 --> 00:58:31.300
+Leandro Ariel Suarez: Bueno, estos datos crudos que hay que guardar. Eso exige que se guarde la actividad y los eventos de los distintos sistemas. Y como intera, como traccionan en en la red.
+
+378
+00:58:31.420 --> 00:58:50.879
+Leandro Ariel Suarez: y después le pasamos al 100 que les había dicho Security information a nivel management. Esto que hace recolecta, recolecta, digamos una solución que reconec recolecta eventos y los empieza a correlacionar. Entonces, a partir de eso, 1 puede detectar anomalías y
+
+379
+00:58:50.940 --> 00:58:56.490
+Leandro Ariel Suarez: están un poco encubiertas generar alertas, incluso
+
+380
+00:58:56.720 --> 00:59:03.859
+Leandro Ariel Suarez: hay software que también pueden desactivar recursos, pueden hacer algún tipo de acción sobre esa recolección de de eventos.
+
+381
+00:59:09.930 --> 00:59:27.789
+Leandro Ariel Suarez: sistema de gestión de identidades de la universidad Hay Idem. Obviamente management, Lo vimos, lo vimos hace un ratito bueno, manejar toda la información de la identidad de los empleados de los usuarios de los empleados, que no es lo mismo. Uno tiene una identidad. Yo soy nando Suárez, pero en Milpa soy Lee Suárez.
+
+382
+00:59:27.790 --> 00:59:33.120
+Leandro Ariel Suarez: entonces ese es mi usuario de arte directory con el que me lo veo, pero puedo tener otro.
+
+383
+00:59:33.120 --> 00:59:47.009
+Leandro Ariel Suarez: Entonces puede tener varios. Puede tener otros usuarios para otras aplicaciones, toda esa gestión. ¿cómo se vinculan esos usuarios a los sistemas y qué qué privilegios tiene, qué acceso que roles
+
+384
+00:59:47.470 --> 00:59:49.809
+Leandro Ariel Suarez: demás cuestiones que tienen que estar contempladas
+
+385
+00:59:52.930 --> 01:00:00.520
+Leandro Ariel Suarez: después. Tenemos peca ahí otra estructura de cara de pollo y ahora también hay que gestionar los certificados de
+
+386
+01:00:00.900 --> 01:00:09.020
+Leandro Ariel Suarez: tenemos que tener un sistema que gestiona los certificados para todos los sujetos para todos los recursos y para todos los sistemas.
+
+387
+01:00:09.190 --> 01:00:12.620
+Leandro Ariel Suarez: El uso de instalar gestión generalmente se contratan también.
+
+388
+01:00:13.080 --> 01:00:29.489
+Leandro Ariel Suarez: y data axe policy Bueno, políticas para acceso de los datos. Esto suele estar gestionado en en lo que es el Arietity management, pero bueno, compete a todo lo que es la utilización de acceso sobre los distintos recursos
+
+389
+01:00:29.680 --> 01:00:33.049
+Leandro Ariel Suarez: de la de los sistemas y de la compañía.
+
+390
+01:00:37.060 --> 01:00:48.310
+Leandro Ariel Suarez: Acá Tenemos como implementar Z T T A en las distintas Cloud que existen los distintos proveedores de infraestructura, cloud
+
+391
+01:00:48.470 --> 01:00:59.059
+Leandro Ariel Suarez: o infraestructura. No necesariamente Cloud Shure adolescente Hat y windowserver Si quieren pegarles una pipeada y ver qué onda
+
+392
+01:00:59.440 --> 01:01:10.440
+Leandro Ariel Suarez: está Bastante insta. ¿se estaba instaurando bastante últimamente, o hay una oleada de que trata de querer instalarlo en las distintas compañías
+
+393
+01:01:10.890 --> 01:01:13.510
+Leandro Ariel Suarez: a ver.
+
+394
+01:01:14.630 --> 01:01:31.779
+Leandro Ariel Suarez: hay una desventaja que tiene seda que parece la panacea no que resuelve un montón de problemas. Así que Bueno, para mí, vos No te conozco, te voy a exigir todo. Si es lo mejor, parece la mejor solución, ¿no? Incluso ¿por qué no siempre fuimos así.
+
+395
+01:01:32.020 --> 01:01:37.729
+Leandro Ariel Suarez: Bueno, es muy fácil que esto lo implementemos mal. Por eso están todas estas guías también.
+
+396
+01:01:38.000 --> 01:01:39.260
+Leandro Ariel Suarez: Bueno.
+
+397
+01:01:39.390 --> 01:01:55.940
+Leandro Ariel Suarez: generalmente, o se implementa de forma deficiente o no se entiende simplemente mal, entonces es importante que se respeten los las guías, el framework, que está dado y se apliquen los controles de lo que está implementado. Mucha gente
+
+398
+01:01:56.220 --> 01:02:02.940
+Leandro Ariel Suarez: implementa mucha gente. Digo, a veces organizaciones lo implementan, dice si tenemos ir atrás, pero no están controlando nada.
+
+399
+01:02:03.260 --> 01:02:16.400
+Leandro Ariel Suarez: No están controlando. Está implementado. No están evolucionando. Lo no están viendo ¿Qué pasa con eso y creen que se están protegiendo por tener cierto tiempo implementado y no. O sea, no están viendo la V toda la película
+
+400
+01:02:16.870 --> 01:02:26.480
+Leandro Ariel Suarez: que, haciendo una comparativa entre las 2, pu podemos ver, no las grandes diferencias que hay
+
+401
+01:02:26.780 --> 01:02:31.399
+Leandro Ariel Suarez: Differs Index parece venir del siglo pasado. No.
+
+402
+01:02:31.820 --> 01:02:44.900
+Leandro Ariel Suarez: no es tan así. Hoy, muchas empresas trabajan con este esquema y no pueden salir, O sea, están tratando de salir y y e ir a hacer a T A, y es muy difícil
+
+403
+01:02:45.030 --> 01:02:50.169
+Leandro Ariel Suarez: por cómo están construidas y y lo también
+
+404
+01:02:50.880 --> 01:02:55.419
+Leandro Ariel Suarez: los distintos, las distintas circunstancias que pasan
+
+405
+01:02:55.630 --> 01:03:13.419
+Leandro Ariel Suarez: dentro de una compañía que no están. Las compañías no están pensando todo el tiempo. Están pensando en vender, en generar ganancias, revenue y no están pensando ahí, ¿no? Si la verdad que tengo un framework malo de de seguridad, entonces bueno, me convendría no. O sea, hay también un
+
+406
+01:03:14.250 --> 01:03:26.160
+Leandro Ariel Suarez: un esfuerzo muy grande. Los símbolos de seguridad que tienen que tratar de impulsar todo esto, marcar. ¿por qué es importante llevarlo a cabo? Porque emigrar a un esquema totalmente nuevo e implantarlo. Bien.
+
+407
+01:03:27.190 --> 01:03:36.250
+Leandro Ariel Suarez: si vos arrancas de 0, ya casi seguro que tienes que ir por ser ateneado. O sea, prácticamente lo mejor es ir, por cierta tarde, a porque es arrancar de 0
+
+408
+01:03:36.420 --> 01:03:43.169
+Leandro Ariel Suarez: sin ningún tipo de de sesgo y y y de balash que tengas.
+
+409
+01:03:45.130 --> 01:03:47.700
+Leandro Ariel Suarez: ¿hay algún al alguno premio del Mix. No sé si.
+
+410
+01:03:47.700 --> 01:03:49.499
+MARTÍN GALLARDO BERTUZZI: Sí profe una consulta.
+
+411
+01:03:51.090 --> 01:04:03.840
+MARTÍN GALLARDO BERTUZZI: Por ejemplo, el el ejemplo que dio de que, por ejemplo, una empresa quiere usar, Has hacer Ze. Pero al final del día, básicamente no está cubriendo todo. Es porque se está implementando, se tatea
+
+412
+01:04:04.530 --> 01:04:11.630
+MARTÍN GALLARDO BERTUZZI: de mala manera, o por ¿Qué sería que en realidad no es que se está implementando Bien, ese zeta T, a.
+
+413
+01:04:12.330 --> 01:04:24.080
+Leandro Ariel Suarez: Claro, muchas veces hay hay diversos casos, muchas veces lo implementan mal por estar mal informado. Muchas veces lo implementan, pero no lo controlan, ¿no? Muchas veces lo implementan y no hacen una una.
+
+414
+01:04:24.170 --> 01:04:39.469
+Leandro Ariel Suarez: un control de cómo evoluciona todo eso. La empresa evoluciona y evolucionan un montón de cuestiones. Entonces 1 tiene que mantener actualizado el framework y la arquitectura que construye la arquitectura de la de la compañía no
+
+415
+01:04:39.610 --> 01:04:57.120
+Leandro Ariel Suarez: evoluciona todo el tiempo, entonces 1 tiene que estar haciendo el captcha, porque los equipos de desarrollo van a un a un ritmo. Ahora lo vamos a ver, y los equipos de seguridad van a otro, Entonces hay que hacer este cachete. También. Yo sí implementamos. En Tatiana
+
+416
+01:04:57.290 --> 01:05:03.400
+Leandro Ariel Suarez: pasó un año, y toda esa arquitectura que plantearon quedó obsoleta, o sea, porque ya no
+
+417
+01:05:03.660 --> 01:05:21.650
+Leandro Ariel Suarez: no in se desarrollaron cosas nuevas portales. Se cambió las redes. Generalmente eso no pasa tanto porque el equipo de infraestructura también está metido con esto, o sea, están siguiendo de cerca todo este tipo de de
+
+418
+01:05:21.810 --> 01:05:25.409
+Leandro Ariel Suarez: de arquitecturas y y están metidos con seguridad.
+
+419
+01:05:25.600 --> 01:05:35.310
+Leandro Ariel Suarez: Pero a veces la la empresa viste. Esto es como cuando se te empieza la enredadera a a meter en la casa, viste. Y si vos la dejas
+
+420
+01:05:35.630 --> 01:05:42.559
+Leandro Ariel Suarez: te diste aguante, ya te como pasan en esas casas que están llenas de de hojas. Si te dejaste de ser.
+
+421
+01:05:42.880 --> 01:06:02.089
+Leandro Ariel Suarez: te pasa por arriba. Y bueno, hay que estar atrás viendo qué pasa viendo también qué pasa en la industria. No es cuestión de decir algo implemento, listo, controlar controlar que lo que simplemente esté bien. Bueno, después hay auditorías, no que que bueno, si 1 no, simplemente si otras
+
+422
+01:06:02.270 --> 01:06:04.749
+Leandro Ariel Suarez: bueno vienen y se fijan, ¿no? Y
+
+423
+01:06:05.000 --> 01:06:11.960
+Leandro Ariel Suarez: muchos contratan auditoría también para ver qué es lo que preguntaron. Está bien, Pero bueno, muchos no. Y ahí surge que
+
+424
+01:06:12.520 --> 01:06:19.690
+Leandro Ariel Suarez: que lo implementan mal o bueno, o no lo tienen implementado, pero no controlan que eso realmente esté Sí,
+
+425
+01:06:20.010 --> 01:06:23.430
+Leandro Ariel Suarez: dando los los resultados que 1 espera, no de la arquitectura.
+
+426
+01:06:24.400 --> 01:06:27.309
+MARTÍN GALLARDO BERTUZZI: Perfecto. Lo entendido. Muchas gracias.
+
+427
+01:06:27.900 --> 01:06:28.620
+Leandro Ariel Suarez: Cuál era
+
+428
+01:06:29.680 --> 01:06:43.999
+Leandro Ariel Suarez: bueno si les parece, y porque me estoy quedando sin vos, hacemos un corte y esta clase va a ser mío larga, también hacemos un corte ahora y volvemos en 10. Le parece 5 y media.
+
+429
+01:06:44.000 --> 01:06:46.310
+MARTÍN GALLARDO BERTUZZI: Un poquito, Dale.
+
+430
+01:06:46.310 --> 01:06:46.970
+Leandro Ariel Suarez: Bueno.
+

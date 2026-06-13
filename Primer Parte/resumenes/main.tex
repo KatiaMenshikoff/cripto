@@ -1,0 +1,98 @@
+\documentclass[11pt,a4paper]{article}
+
+%======================================================================
+%  Resúmenes - Criptografía y Seguridad (72.44) - ITBA
+%  PRIMERA PARTE (Criptografía) - Primer Parcial
+%  Preámbulo común. Cada unidad es un subfile que referencia este main.
+%  Compilar todo:      tectonic main.tex   (o pdflatex main.tex x2)
+%  Compilar una unidad: tectonic unidades/0X_....tex
+%======================================================================
+
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+  \usepackage{lmodern}
+\else
+  \usepackage{fontspec}
+\fi
+\usepackage[spanish,es-tabla,es-noshorthands]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{geometry}
+\geometry{margin=2.3cm}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black,
+            citecolor=blue!50!black,linktoc=all}
+\usepackage{subfiles}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{longtable}
+
+\frenchspacing
+
+%----------------------------------------------------------------------
+%  Cajas de estilo
+%----------------------------------------------------------------------
+
+% IMPORTANTE: cosas que el profesor remarcó explícitamente como importantes
+\newtcolorbox{destacado}[1][]{
+  breakable, enhanced,
+  colback=red!5!white, colframe=red!70!black,
+  fonttitle=\bfseries, title={\faExclam Importante --- remarcado en clase},
+  coltitle=white, #1}
+
+% EN EL PARCIAL: cómo se toma este tema, qué piden, cómo resolverlo
+\newtcolorbox{examen}[1][]{
+  breakable, enhanced,
+  colback=blue!5!white, colframe=blue!60!black,
+  fonttitle=\bfseries, title={\faGraduation En el parcial},
+  coltitle=white, #1}
+
+% CUIDADO: errores típicos que penalizan
+\newtcolorbox{ojo}[1][]{
+  breakable, enhanced,
+  colback=orange!10!white, colframe=orange!80!black,
+  fonttitle=\bfseries, title={\faWarning Cuidado --- error típico},
+  coltitle=black, #1}
+
+% DEFINICION: definiciones formales
+\newtcolorbox{definicion}[1]{
+  breakable, enhanced,
+  colback=gray!8!white, colframe=gray!50!black,
+  fonttitle=\bfseries, title={Definición: #1},
+  coltitle=white}
+
+% Cita textual del profesor
+\newcommand{\prof}[1]{\medskip\noindent\textit{``#1''}\\[-2pt]\hspace*{1em}{\footnotesize\textcolor{gray}{--- dicho en clase}}\medskip}
+
+% Iconos simples sin dependencia de fontawesome
+\newcommand{\faExclam}{\textbf{!}\ }
+\newcommand{\faGraduation}{$\blacktriangleright$\ }
+\newcommand{\faWarning}{$\triangle$\ }
+
+%----------------------------------------------------------------------
+\title{\textbf{Resúmenes --- Criptografía y Seguridad (72.44)}\\[4pt]
+       \large Primera Parte: Criptografía --- Primer Parcial \\ ITBA}
+\author{Material de estudio basado en clases, transcripts y parciales}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\subfile{unidades/01_introduccion}
+\newpage
+\subfile{unidades/02_cifrado}
+\newpage
+\subfile{unidades/03_macs_cifrado_autenticado}
+\newpage
+\subfile{unidades/04_asimetrico_firma_digital}
+\newpage
+\subfile{unidades/05_protocolos}
+
+\end{document}

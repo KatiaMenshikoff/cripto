@@ -1,0 +1,2266 @@
+WEBVTT
+
+1
+00:00:04.250 --> 00:00:16.460
+Pablo Eduardo Abad: Bien en clases anteriores vimos problemas como recurrentes en aplicaciones como control de acceso, autenticación.
+
+2
+00:00:17.330 --> 00:00:25.850
+Pablo Eduardo Abad: Sí, esos son mecanismos de seguridad que están presentes en les diría prácticamente toda aplicación que haga algo no trivial.
+
+3
+00:00:26.210 --> 00:00:32.130
+Pablo Eduardo Abad: Hay algunos otros problemas así recurrentes, pero por eso son los 2 principales.
+
+4
+00:00:32.700 --> 00:00:41.280
+Pablo Eduardo Abad: El resto de los problemas de seguridad ya no son tan específicos y generales y se atacan de una forma un poco más holística
+
+5
+00:00:43.650 --> 00:00:50.959
+Pablo Eduardo Abad: en general a cualquier problema, en un mecanismo de seguridad o cualquier problema que amenace a
+
+6
+00:00:51.360 --> 00:00:55.730
+Pablo Eduardo Abad: la idea de una política de seguridad se lo llama amenaza.
+
+7
+00:00:56.910 --> 00:01:04.319
+Pablo Eduardo Abad: Si la amenaza es un potencial, es un elemento que podría afectar eso, que no
+
+8
+00:01:05.360 --> 00:01:10.569
+Pablo Eduardo Abad: es es una idea de ataque, sí en contracar a eso tenemos
+
+9
+00:01:11.070 --> 00:01:17.100
+Pablo Eduardo Abad: la parte práctica, eso que es una vulnerabilidad, una vulnerabilidad ya es una debilidad en un activo.
+
+10
+00:01:17.510 --> 00:01:33.130
+Pablo Eduardo Abad: Sí, hay algo concreto ya implementado, ya desplegado, siendo utilizado, que tiene una debilidad que puede materializar la amenaza
+
+11
+00:01:34.530 --> 00:01:38.410
+Pablo Eduardo Abad: concreta de la que hablábamos desde un punto de vista teórico.
+
+12
+00:01:38.890 --> 00:01:43.140
+Pablo Eduardo Abad: En general, la composición de amenaza y vulnerabilidad
+
+13
+00:01:44.120 --> 00:01:48.250
+Pablo Eduardo Abad: es una composición de 2 probabilidades. Entonces
+
+14
+00:01:48.370 --> 00:02:03.100
+Pablo Eduardo Abad: se gestiona dentro de un área un poco más grande, que es la gestión de riesgo. Si Si si ustedes hablan en algún momento con algún profesional de seguridad o alguna vez. No sé, comisionan que les construyan un sistema o si les toca estar del otro lado, me escuchan
+
+15
+00:02:03.620 --> 00:02:09.699
+Pablo Eduardo Abad: y les hacen la pregunta. ¿me puedes garantizar que esto es seguro. Nadie que sea idóneo les va a decir sí, te lo garantizo.
+
+16
+00:02:10.150 --> 00:02:11.460
+Pablo Eduardo Abad: Sí. ¿por qué?
+
+17
+00:02:13.350 --> 00:02:21.749
+Pablo Eduardo Abad: Porque es muy caro. Requiere conocimiento muy específico, y aún así es muy difícil garantizarlo por todas las cosas que ocurren afuera del sistema
+
+18
+00:02:21.840 --> 00:02:34.799
+Pablo Eduardo Abad: en el ecosistema de infraestructura de redondea donde funcionan. Entonces, la seguridad, ya saliendo de los mecanismos específicos, se trata como un problema de riesgos. ¿y por qué ¿De riesgos? Porque
+
+19
+00:02:36.080 --> 00:02:44.690
+Pablo Eduardo Abad: hay empresas que viven de los riesgos. Las aseguradoras viven de esto, los riesgos que son son situaciones hipotéticas.
+
+20
+00:02:44.900 --> 00:02:45.840
+Pablo Eduardo Abad: sí
+
+21
+00:02:46.860 --> 00:03:02.230
+Pablo Eduardo Abad: a las cuales se les puede asignar una suerte de daño o costo si se les puede asignar una suerte de probabilidad y en general también se les puede asignar alguna idea del costo de evitarlo o el costo de mitigarlo.
+
+22
+00:03:02.520 --> 00:03:12.060
+Pablo Eduardo Abad: Y cuando 1 incluye eso en la gestión de riesgos, aparecen distintas soluciones y a veces la solución más efectiva es aceptar que la amenaza existe y no hacer nada.
+
+23
+00:03:14.510 --> 00:03:16.840
+Pablo Eduardo Abad: Entonces no solamente
+
+24
+00:03:17.820 --> 00:03:35.779
+Pablo Eduardo Abad: nos sirve para modelar el el D A por ahí, el más difícil de predecir que son los anglonan anones los los factores que son desconocidos completamente para nosotros, que no sabemos que existen, pero pero el usar un enfoque de de ver la seguridad como riesgo nos deja atacar también las cosas conocidas.
+
+25
+00:03:36.290 --> 00:03:44.719
+Pablo Eduardo Abad: pero que serían muy caras de resolver, sí muy caras. Puede ser económicamente. Puede ser muy caras a nivel experiencia de usuario.
+
+26
+00:03:45.010 --> 00:03:50.710
+Pablo Eduardo Abad: Pero, por ejemplo, yo podría decirles
+
+27
+00:03:51.160 --> 00:04:09.369
+Pablo Eduardo Abad: si quiero evitar problemas con autenticación, yo podría obligar a todo el mundo a que se injerte un chip en la piel. Por ejemplo, todos los empleados, todos ustedes alumnos en la facultad, se tienen que injertar un chip en la piel Este que se los ponemos este y todas las entradas se abren con eso nada más.
+
+28
+00:04:09.700 --> 00:04:13.219
+Pablo Eduardo Abad: Y yo, con eso resuelvo el problema de la seguridad. ¿qué pasa? Tiene un costo altísimo.
+
+29
+00:04:14.350 --> 00:04:28.079
+Pablo Eduardo Abad: una molestia altísima y probablemente tenga otras consecuencias. Si el día que alguno tenga una reacción alérgica o un montón de cosas desde el punto de vista de seguridad. Con eso prácticamente elimino, eliminó la amenaza de robo de de cuentas.
+
+30
+00:04:29.150 --> 00:04:35.039
+Pablo Eduardo Abad: Este preferimos tomar el riesgo que les roben la cuenta de vez en cuando
+
+31
+00:04:36.290 --> 00:04:43.749
+Pablo Eduardo Abad: si estoy buscando un caso exagerado para mostrarlo, pero en una empresa muchas veces hay riesgos que se documentan y se aceptan
+
+32
+00:04:44.280 --> 00:04:46.600
+Pablo Eduardo Abad: sí.
+
+33
+00:04:46.860 --> 00:04:59.490
+Pablo Eduardo Abad: Por ejemplo, por ejemplo, les traigo un caso por ahí más más que me toca de cerca, seguridad tenía la disponibilidad también, no. Y la disponibilidad implica cosas que pueden hacer que nuestra aplicación deje de funcionar. Entonces.
+
+34
+00:05:01.150 --> 00:05:19.370
+Pablo Eduardo Abad: yo manejo un ecosistema de aplicaciones que corren en infraestructura de un tercero a doble B. S: Por ejemplo, si un escenario de disponibilidad de un riesgo de disponibilidad es: ¿qué pasa si a doble B se tiene un problema de disponibilidad? Se cae, lo hackean. No sé, cae un meteorito en un data Center.
+
+35
+00:05:20.050 --> 00:05:23.150
+Pablo Eduardo Abad: Esa es una amenaza.
+
+36
+00:05:24.210 --> 00:05:25.100
+Pablo Eduardo Abad: Sí,
+
+37
+00:05:25.450 --> 00:05:32.539
+Pablo Eduardo Abad: ¿Qué hago en ese escenario? Y no sé, me construyo la empresa W. S. Prima, y es muy cara.
+
+38
+00:05:32.710 --> 00:05:45.070
+Pablo Eduardo Abad: No, no tengo, No tengo la banca para hacerlo. Este me voy a un segundo proveedor. No sé. Voy a Xiipi a Ashor y duplicó toda mi infraestructura en 2 lugares. ¿no? I igual de caro o más caro
+
+39
+00:05:45.250 --> 00:05:50.890
+Pablo Eduardo Abad: más. Lo acepto ahí. Joaquín escribe lloramos. Es más o menos Así es.
+
+40
+00:05:51.060 --> 00:05:59.440
+Pablo Eduardo Abad: Aceptamos que se puede pasar y aceptamos que cuando eso pase, perdemos disponibilidad. Por ejemplo, este
+
+41
+00:05:59.730 --> 00:06:08.590
+Pablo Eduardo Abad: es una opción válida generalmente ya en el mundo más de gestión de seguridad. Lo importante es que esa decisión se haya tomado conciencia que no nos agarre de sorpresa.
+
+42
+00:06:09.180 --> 00:06:16.749
+Pablo Eduardo Abad: Pero bueno, o si nos agarra de sorpresa, pensando ya más en un proceso de mejora continua entenderla, entender las implicancias y ya
+
+43
+00:06:16.950 --> 00:06:21.550
+Pablo Eduardo Abad: documentar para la segunda, que decidimos aceptar el riesgo.
+
+44
+00:06:21.960 --> 00:06:33.910
+Pablo Eduardo Abad: A veces se mitiga el riesgo, por ejemplo. Por ahí no quiero hacer todo eso, pero quiero hacer backups de la información, que es lo más importante, y esos backups guardarlos en otra nube.
+
+45
+00:06:34.710 --> 00:06:39.840
+Pablo Eduardo Abad: Entonces, ante un escenario violento de desapareces de la faz de la tierra doble B, C.
+
+46
+00:06:40.070 --> 00:06:45.199
+Pablo Eduardo Abad: La voy a Parir, pero eventualmente no perdí toda la información y puedo recuperar algo.
+
+47
+00:06:45.310 --> 00:06:47.969
+Pablo Eduardo Abad: Por ejemplo, eso no es tan caro.
+
+48
+00:06:48.380 --> 00:06:50.169
+Pablo Eduardo Abad: Es un punto intermedio.
+
+49
+00:06:51.170 --> 00:07:03.600
+Pablo Eduardo Abad: Podría ocurrir entonces? Las vulnerabilidades son siempre gestión de riesgo. Hay vulnerabilidades a nivel proceso, vulnerabilidades a nivel físico. Las que nos interesan ahora son vulnerabilidades a nivel sistema
+
+50
+00:07:03.950 --> 00:07:10.370
+Pablo Eduardo Abad: cuando hablamos de desarrollo de un sistema. Lo que vamos a ver ahora son vulnerabilidades.
+
+51
+00:07:11.460 --> 00:07:18.400
+Pablo Eduardo Abad: Estás debilidades explotables que pueden ser introducidas en el desarrollo del software.
+
+52
+00:07:25.880 --> 00:07:27.590
+Pablo Eduardo Abad: Las amenazas
+
+53
+00:07:28.790 --> 00:07:41.469
+Pablo Eduardo Abad: se pueden clasificar de 20 000 maneras. Hay como 7 u 8 clasificaciones distintas de amenazas. Sí, vamos a ver una de las más importantes. Las amenazas se pueden caracterizar
+
+54
+00:07:41.590 --> 00:07:46.009
+Pablo Eduardo Abad: respecto a su origen, pueden ser amenazas internas o externas. Sí,
+
+55
+00:07:46.200 --> 00:07:54.259
+Pablo Eduardo Abad: una amenaza interna es un empleado que hace fraude, sí o una falla en un equipo que se lleva en cadena a todo, Sí,
+
+56
+00:07:55.980 --> 00:08:01.530
+Pablo Eduardo Abad: desde un punto de vista de un sistema, una falla interna es una falla que puede ser explotada por alguien interno.
+
+57
+00:08:01.730 --> 00:08:09.899
+Pablo Eduardo Abad: Una falla externa es una falla donde la amenaza se origina perdón. Una amenaza externa es una amenaza que se origina desde afuera.
+
+58
+00:08:10.280 --> 00:08:18.360
+Pablo Eduardo Abad: Puede ser algo natural. Como no sé, un evento climático este dejándonos sin luz
+
+59
+00:08:18.810 --> 00:08:26.330
+Pablo Eduardo Abad: o más cercano a a los sistemas. Puede ser un grupo externo que está tratando de entrar a la red o a la aplicación para robar información?
+
+60
+00:08:27.790 --> 00:08:30.340
+Pablo Eduardo Abad: Sí, Ese es 1 de los ejes.
+
+61
+00:08:30.640 --> 00:08:41.550
+Pablo Eduardo Abad: ¿sí? Según el agente amenazante, sí, esta es la taxonomía completa de amenazas. Así que hay cosas que se escapan a esta materia, pero el el agente amenazante podría ser humano.
+
+62
+00:08:41.700 --> 00:08:42.610
+Pablo Eduardo Abad: Sí
+
+63
+00:08:43.039 --> 00:08:54.560
+Pablo Eduardo Abad: una persona que genere el riesgo podría ser un hacker, pero también podría ser un administrador del sistema distraído. Este o un usuario con muchos permisos cometiendo un error
+
+64
+00:08:55.240 --> 00:09:12.499
+Pablo Eduardo Abad: podría ser ambiental todo lo que tenga que ver con eventos naturales si podría ser tecnológico, si una falla en algún servidor, un disco rígido que deja de funcionar
+
+65
+00:09:14.290 --> 00:09:20.969
+Pablo Eduardo Abad: podría ser un problema en la programación que habilita un escenario y
+
+66
+00:09:22.000 --> 00:09:34.459
+Pablo Eduardo Abad: hoy día se está discutiendo de si no agregar una cuarta categoría justo en esta. En este eje que serían los agentes de I a este de todos los que estamos escuchando.
+
+67
+00:09:34.740 --> 00:09:42.359
+Pablo Eduardo Abad: Esto se viene discutiendo hace año y pico cobró mucha relevancia. No sé si escucharon hablar del modelo mitos de Anthrópic
+
+68
+00:09:43.400 --> 00:09:51.879
+Pablo Eduardo Abad: en Andropic. Tiene un modelo que no publicó todavía, que que se va. Lo compartí con ciertas empresas.
+
+69
+00:09:52.010 --> 00:09:59.280
+Pablo Eduardo Abad: que lo especializó en seguridad informática y
+
+70
+00:10:00.120 --> 00:10:10.460
+Pablo Eduardo Abad: a ver, hay algo de humo marketinero plantea que no lo quiere liberar por el potencial peligroso. Pero hay un Datapoint, que es muy violento, que es, lo compartió con mozilla.
+
+71
+00:10:10.790 --> 00:10:15.650
+Pablo Eduardo Abad: Sí y mozilla. En el mes que tuvo acceso a mitos.
+
+72
+00:10:18.360 --> 00:10:23.099
+Pablo Eduardo Abad: parcheó una cantidad de vulnerabilidades equivalente a sus últimos 4 años.
+
+73
+00:10:24.510 --> 00:10:32.610
+Pablo Eduardo Abad: Entonces, hay algo de verdad. Hay algo de exageración, marketing era, Sí, lo cierto es que
+
+74
+00:10:32.790 --> 00:10:37.829
+Pablo Eduardo Abad: a ver los agentes le los modelos de ya tienen esta cosa de
+
+75
+00:10:39.420 --> 00:10:53.680
+Pablo Eduardo Abad: se pueden volver cada vez más buenos y y no desaprenden, por decirlo de alguna manera, entonces están en una curva donde eventualmente se pueden comportar como un experto. No tienen los egos que solemos tener los humanos este y pueden trabajar 24 por 7.
+
+76
+00:10:58.120 --> 00:11:05.469
+Pablo Eduardo Abad: Mozilla. Se la No, no, No tenemos acceso a a mitos, cuál a ver dentro de poco. Vamos a tener.
+
+77
+00:11:06.360 --> 00:11:14.099
+NICOLÁS CANZONIERI: Había escuchado también que un problema fue que, como que se filtraba entre las empresas que lo estaban usando algo así.
+
+78
+00:11:16.100 --> 00:11:17.879
+Pablo Eduardo Abad: Sí está lleno de.
+
+79
+00:11:17.880 --> 00:11:19.390
+NICOLÁS CANZONIERI: De los 2.
+
+80
+00:11:19.390 --> 00:11:20.090
+Pablo Eduardo Abad: No, no.
+
+81
+00:11:20.560 --> 00:11:31.749
+Pablo Eduardo Abad: Si básicamente, al principio tuvieron lo que lo que sería acá un problema de lo vamos a ver como una vulnerabilidad de control de acceso ineficiente.
+
+82
+00:11:32.290 --> 00:11:37.839
+Pablo Eduardo Abad: Pero básicamente en mitos dentro de lo que es el Api Entropic, tiene una url cualquiera.
+
+83
+00:11:38.930 --> 00:11:51.700
+Pablo Eduardo Abad: entonces a las empresas que lo habilitaron. Se lo dieron Alguien empezó a adivinar la Url por el nombre del modelo y se dieron cuenta muy al principio que cualquiera que tenía una cuenta válida iba a la Url y podía usar el modelo.
+
+84
+00:11:52.700 --> 00:11:58.609
+Pablo Eduardo Abad: Mhm Este, pero bueno, obviamente lo corrigieron rápido este.
+
+85
+00:11:59.110 --> 00:12:08.429
+Pablo Eduardo Abad: Pero bueno, sí hay hay un montón de historias de esas Open Ahi Ahora, saco un modelo también basado en seguridad o especializado en seguridad
+
+86
+00:12:08.810 --> 00:12:14.989
+Pablo Eduardo Abad: no va a pasar mucho hasta que tengamos acceso a esos modelos. Van a ser caros. Lo único, pues son modelos
+
+87
+00:12:15.230 --> 00:12:23.470
+Pablo Eduardo Abad: que trabajan con cadenas de razonamiento largas. Entonces, es un modelo que encuentra vulnerabilidad, pero que si lo tenemos que pagar cuesta una fortuna.
+
+88
+00:12:23.970 --> 00:12:33.439
+Pablo Eduardo Abad: Vamos a llegar al punto donde va a ser más barato poner personas. Pero, bueno, volviendo al tema, este se está discutiendo justo. Si no hay que agregar acá una categoría nueva de
+
+89
+00:12:35.130 --> 00:12:37.280
+Pablo Eduardo Abad: agentes, ya o
+
+90
+00:12:37.420 --> 00:12:46.370
+Pablo Eduardo Abad: tu agenda, está la la discusión es media filosófica de si es algo tecnológico o no, o si, como imitan, el humano es humano, requiere su categoría aparte.
+
+91
+00:12:46.660 --> 00:12:53.090
+Pablo Eduardo Abad: Pero bueno, ya es es un tipo de agente nuevo que no estaba considerado hace años.
+
+92
+00:12:53.960 --> 00:12:55.500
+Pablo Eduardo Abad: En
+
+93
+00:12:56.640 --> 00:13:12.070
+Pablo Eduardo Abad: otro eje para clasificar las amenazas es la intención. O sea, hay amenazas que son maliciosas, donde el ataque es intencional y hay amenazas que son no maliciosas, donde el la afectación ocurre por un error no intencional.
+
+94
+00:13:14.460 --> 00:13:24.729
+Pablo Eduardo Abad: Y después hay este clasificación sobre el impacto. No todas las amenazas se materializan en lo mismo. Entonces, hay.
+
+95
+00:13:26.360 --> 00:13:32.020
+Pablo Eduardo Abad: Esta es una de las taxonomías más importantes. Hay otra que se llama Strike que la vamos a ver después.
+
+96
+00:13:32.750 --> 00:13:36.530
+Pablo Eduardo Abad: Pero el el impacto puede ir de destrucción de información.
+
+97
+00:13:37.640 --> 00:13:44.429
+Pablo Eduardo Abad: corrupción de información, revelación de información, robo del servicio, denegación.
+
+98
+00:13:45.110 --> 00:13:48.000
+Pablo Eduardo Abad: elevación de privilegios o uso ilegal.
+
+99
+00:13:48.170 --> 00:13:52.350
+Pablo Eduardo Abad: Sí, ahí acá, tienen todas las combinaciones que se les ocurra. Pero esto es desde
+
+100
+00:13:52.480 --> 00:13:55.919
+Pablo Eduardo Abad: se borran los datos de una base de datos, se modifican
+
+101
+00:13:56.960 --> 00:14:03.470
+Pablo Eduardo Abad: información que era confidencial. Se revela, ¿Se acuerdan el caso de Snowden y
+
+102
+00:14:03.840 --> 00:14:11.369
+Pablo Eduardo Abad: toda la información de de inteligencia de Estados Unidos que se reveló. Bueno, eso es un tipo de.
+
+103
+00:14:11.370 --> 00:14:13.150
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Dedicar por estos tipos perfecto.
+
+104
+00:14:14.100 --> 00:14:15.300
+Pablo Eduardo Abad: Cómo.
+
+105
+00:14:15.890 --> 00:14:18.469
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Perdí todo mi historial clínico por estos tipos.
+
+106
+00:14:19.630 --> 00:14:35.610
+Pablo Eduardo Abad: Bueno hasta eso qué sé yo. Los que vivimos acá en Argentina. No sé si saben, pero todo lo que es información personal nuestra que tiene el Gobierno circula hace meses y creo que ya hay un servicio medio estable que actualizan todos los meses no se compran en el mercado negro.
+
+107
+00:14:36.090 --> 00:14:38.420
+Pablo Eduardo Abad: Este la información completa del padrón.
+
+108
+00:14:38.420 --> 00:14:38.930
+NICOLÁS CANZONIERI: Acuerdo.
+
+109
+00:14:38.930 --> 00:14:39.540
+Pablo Eduardo Abad: Bueno.
+
+110
+00:14:39.970 --> 00:14:45.279
+NICOLÁS CANZONIERI: Y desde hace 5 años que está allí. Siempre la noticia. Volvieron a hackear el renacer.
+
+111
+00:14:45.280 --> 00:14:51.970
+Pablo Eduardo Abad: Sí, Sí, sí, eso y sigue. Si esa sigue pasando, no debería. Pero, bueno.
+
+112
+00:14:52.400 --> 00:15:02.359
+Pablo Eduardo Abad: robo de servicio, Ahora se está poniendo de moda el robo de servicio por hay un tipo de ataque que se llama Supply Change, donde no importa este
+
+113
+00:15:03.010 --> 00:15:16.589
+Pablo Eduardo Abad: pero a ver mo muy rápido. Para darles contexto, vieron que ustedes típicamente van a usar un montón de dependencias en cualquier proyecto. No se usan Maiden Grey del este N, P, N, o sea, algún gestor, y se bajan 20 000 cosas de gente que no conocen
+
+114
+00:15:16.810 --> 00:15:26.500
+Pablo Eduardo Abad: este para para hacer su aplicación. Hay un ataque que básicamente no los ataca ustedes directamente, ataca el que genera esas dependencias
+
+115
+00:15:26.930 --> 00:15:36.659
+Pablo Eduardo Abad: y les inyecta cosas para que ustedes se lo bajen. Oye, Oye, N. P. N. Están publicando más o menos un ataque muy groso por semana
+
+116
+00:15:37.000 --> 00:15:49.779
+Pablo Eduardo Abad: este a ver. Pero para que se den una idea, la semana pasada, hicieron eso con reacrutter. O sea, es una una dependencia que si están usando Riad en algún proyecto, tiene altas chances de estar usando
+
+117
+00:15:50.060 --> 00:15:58.529
+Pablo Eduardo Abad: este durante una franja de un día y pico, una versión hackeada de esa dependencia que si ustedes actualizaban su su aplicación.
+
+118
+00:15:58.850 --> 00:16:14.610
+Pablo Eduardo Abad: les bajaba un un pelot que se quedaba corriendo malware y básicamente ex filtraba, o sea, buscaba en la computadora todas las claves que tengan de Git Java Api, Kiss de servicios este de Openwyer and Tropic y demás, y se las pasaba a otro tipo.
+
+119
+00:16:15.750 --> 00:16:21.060
+NICOLÁS CANZONIERI: Sí, ellos me dijeron que no use nada que tenga. N: P: M: ¿Sabes.
+
+120
+00:16:21.830 --> 00:16:30.049
+Pablo Eduardo Abad: El tema es que pasa con todos en el Pm y Python. Son los 2 más grandes, porque hay mucha gente no técnica, usándolos encima Ahora.
+
+121
+00:16:30.820 --> 00:16:38.300
+Pablo Eduardo Abad: Pero se está volviendo peligroso, digamos, el el usar eso porque
+
+122
+00:16:38.830 --> 00:16:45.789
+Pablo Eduardo Abad: están apareciendo ataques más sofisticados. Hay mucha plata. Ahí hay servicio. Hay empresas, digamos, zona gris
+
+123
+00:16:45.890 --> 00:16:53.680
+Pablo Eduardo Abad: que se dedican a recolectar estas Apis y venden el servicio, como dirían Yo te doy acceso a lápida o penal a un cuarto del precio.
+
+124
+00:16:54.080 --> 00:16:56.840
+Pablo Eduardo Abad: y lo hacen a través de apis robadas, y de gente.
+
+125
+00:16:58.520 --> 00:17:14.699
+Pablo Eduardo Abad: Eso es robo de servicio, denegación de servicio, bueno tirar algo abajo directamente para que nadie pueda usarlo, elevación de privilegios. Tiene que dar más que nada con a partir de un acceso a un sistema, conseguir algo más grande a partir de un usuario común, al sistema, volverse administrador.
+
+126
+00:17:15.970 --> 00:17:21.500
+Pablo Eduardo Abad: Este y uso ilegal en general es poder utilizar el sistema para algo
+
+127
+00:17:21.720 --> 00:17:25.450
+Pablo Eduardo Abad: totalmente distinto a lo que fue utilizado
+
+128
+00:17:25.770 --> 00:17:35.399
+Pablo Eduardo Abad: ejemplo. Este La utilización de Google Drive para distribuir contenido con copyright. No sé libros. Este películas.
+
+129
+00:17:41.370 --> 00:17:44.650
+Pablo Eduardo Abad: eso es desde el lado de las amenazas. Entonces una amenaza se puede.
+
+130
+00:17:44.650 --> 00:17:45.729
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Con eso. Profe.
+
+131
+00:17:46.130 --> 00:17:48.530
+Pablo Eduardo Abad: Clasificar. Nadie lo hace. Este
+
+132
+00:17:52.390 --> 00:17:59.080
+Pablo Eduardo Abad: se pueden clasificar a las amenazas. En estas 4 dimensiones como para ordenarlas, porque en algún momento
+
+133
+00:18:00.030 --> 00:18:07.089
+Pablo Eduardo Abad: hay hay una parte de de lo que se conoce como el secure Development Lifeycle, que se aplica por ahí para aplicaciones este más
+
+134
+00:18:07.280 --> 00:18:20.760
+Pablo Eduardo Abad: sensibles, donde se hace un modelado de amenazas. Vamos a hablar en un cachito de esos. El el modelado de amenazas básicamente es armarse como un co, como una división en estos cuadrantes y tratar de poner
+
+135
+00:18:20.790 --> 00:18:30.040
+Pablo Eduardo Abad: en cada una de estas posibles clasificaciones en la intersección de estos 4 conceptos, las 2 o 3 amenazas que vemos más relevantes y a partir de ahí empezará
+
+136
+00:18:30.370 --> 00:18:43.479
+Pablo Eduardo Abad: entender qué tiene que hacer el sistema, para para no caer en esas amenazas o para minimizarlos 1. Si no se podría pasar la vida porque las amenazas son hipotéticas, una podría generar lista casi infinita de amenazas hipotéticas.
+
+137
+00:18:43.830 --> 00:18:47.100
+Pablo Eduardo Abad: entonces hay hay ejercicios prácticos para para limitarlos.
+
+138
+00:18:47.320 --> 00:19:00.300
+Pablo Eduardo Abad: Esas son las amenazas las vulnerabilidades. Hay vulnerabilidades de muchos tipos. Yo les decía, acá nos va a interesar más entender las que tienen que ver con vulnerabilidades específicas del desarrollo de software.
+
+139
+00:19:01.250 --> 00:19:02.180
+Pablo Eduardo Abad: Sí,
+
+140
+00:19:04.870 --> 00:19:17.210
+Pablo Eduardo Abad: esta es una de muchas clasificaciones que hay, pero pero me gusta porque cubre, como los las grandes categorías, categorías distintas, sutilezas y tipos de aplicaciones. Pero pero es como que acá se cubren todas las categorías grandes.
+
+141
+00:19:17.610 --> 00:19:28.359
+Pablo Eduardo Abad: Mhm, en general vulnerabilidades en en el código fuente.
+
+142
+00:19:29.360 --> 00:19:37.380
+Pablo Eduardo Abad: Hablan de 2 cosas. Si quieren. Ese es el mix de la de la categoría. Es lo que no cae en otra. Tiene chance de caer, acá pero tienen que ver con cosas
+
+143
+00:19:37.950 --> 00:19:45.640
+Pablo Eduardo Abad: que son muy específicas de de una aplicación en sí, no tan fáciles de generalizar, digo, puede ser una lógica específica que esté mal escrita
+
+144
+00:19:46.070 --> 00:19:48.679
+Pablo Eduardo Abad: este. No sé que hay.
+
+145
+00:19:48.900 --> 00:19:55.270
+Pablo Eduardo Abad: no sé, un Switch con 3 casos, pero potencialmente puede haber un cuarto y se olvidaron de describirlo si
+
+146
+00:19:55.690 --> 00:19:59.220
+Pablo Eduardo Abad: y o
+
+147
+00:19:59.490 --> 00:20:13.799
+Pablo Eduardo Abad: vulnerabilidades de algún tipo pero heredadas en una dependencia que no son del sistema en sí, sino de cómo se estructuró el el código de la arquitectura del sistema. Esa es una categoría. Otra tiene que ver con componentes mal configurados.
+
+148
+00:20:13.940 --> 00:20:24.539
+Pablo Eduardo Abad: corresponde a sistemas configurados incorrectamente, con opciones de seguridad insuficiente. Este es el tipo de vulnerabilidad más común en servicios en la nube, por ejemplo.
+
+149
+00:20:25.180 --> 00:20:36.939
+Pablo Eduardo Abad: hoy creo que ya no es más, no ponga las manos en foco que hace mucho que no creo recursos, pero en algún momento, si ustedes tenían una nube de dobles y provisionaban un servidor de mongo divi de dentro del marketplace
+
+150
+00:20:37.230 --> 00:20:46.330
+Pablo Eduardo Abad: ese servidor, cuando lo provisionaban. Era una computadora corriendo mongo conectada a Internet abierta ya en una dirección pública
+
+151
+00:20:46.490 --> 00:20:51.129
+Pablo Eduardo Abad: con una contraseña de administrador, este por defecto.
+
+152
+00:20:52.130 --> 00:20:59.299
+Pablo Eduardo Abad: Si ustedes no cambian eso, perdón, no estaba abierta a Internet a Internet, creo, creo.
+
+153
+00:20:59.410 --> 00:21:05.750
+Pablo Eduardo Abad: este, pero si ustedes no configuran la red era accesible normalmente, pero sí venía con una clave de administrador pública.
+
+154
+00:21:05.920 --> 00:21:12.470
+Pablo Eduardo Abad: Si ustedes no cambian, eso es un asset de seguridad, al punto que hay scripts que están creando Internet o croleando las
+
+155
+00:21:13.090 --> 00:21:19.859
+Pablo Eduardo Abad: la la ciprés de A doble B, S: todo el tiempo. Y y lo que hacían es si encontraban en una base de Epsa.
+
+156
+00:21:20.170 --> 00:21:33.080
+Pablo Eduardo Abad: cifraban todo el contenido de la base de datos y después le mandaban al dueño de la cuenta de W. S, que hay formas de más o menos este llegar a eso. Este con un mail de rescate de que si quieres recuperar el contenido de tu base.
+
+157
+00:21:34.190 --> 00:21:39.809
+Pablo Eduardo Abad: no no era un email perdón. Este agregaban un elemento, el único elemento no encriptado en la base de datos.
+
+158
+00:21:40.120 --> 00:21:46.659
+Pablo Eduardo Abad: Este, con una suerte de noticias rescates. Si quieres recuperar esto, manda una transferencia en Bitcoins a tal lugar.
+
+159
+00:21:47.240 --> 00:21:49.870
+Pablo Eduardo Abad: esté y listo, entonces
+
+160
+00:21:50.760 --> 00:21:57.379
+Pablo Eduardo Abad: los elementos de seguridad que atañen a la configuración, especialmente los elementos que 1 usa de terceros. Bueno.
+
+161
+00:21:57.510 --> 00:22:01.449
+Pablo Eduardo Abad: una forma de vulnerabilidad típica es tenerlos mal configurados.
+
+162
+00:22:02.350 --> 00:22:09.000
+Pablo Eduardo Abad: Mhm, configuraciones en relaciones de confianza. Sí,
+
+163
+00:22:09.900 --> 00:22:12.880
+Pablo Eduardo Abad: Un ejemplo Un ejemplo de esto es
+
+164
+00:22:13.000 --> 00:22:17.830
+Pablo Eduardo Abad: muy típico de las aplicaciones web las que no son Single Page, que tienen varias páginas.
+
+165
+00:22:18.020 --> 00:22:24.759
+Pablo Eduardo Abad: el asumir que porque ocurrió en logín. Por ejemplo, este el resto de las páginas a las que se llega con links.
+
+166
+00:22:24.940 --> 00:22:29.250
+Pablo Eduardo Abad: Este ya ya están loveadas y no chequear la autenticación en cada página.
+
+167
+00:22:30.690 --> 00:22:34.599
+Pablo Eduardo Abad: ¿sí? Entonces un atacante adivina, la Url, la Usa y Oops.
+
+168
+00:22:34.840 --> 00:22:53.670
+Pablo Eduardo Abad: sí, o este por ahí con la autenticación. Es medio raro que pase, suele pasar más con la autorización, el asumir que hay ciertas páginas que, como no sé alguien que no es administrador, jamás va a ver el link en la aplicación. No va a llegar nadie, y alguien adivina en la Url y entra y Oops, no había ningún chequeo. Ahora, si el usuario administrador.
+
+169
+00:22:57.630 --> 00:23:04.500
+Pablo Eduardo Abad: otra categoría tiene que ver con malas prácticas o
+
+170
+00:23:05.260 --> 00:23:08.869
+Pablo Eduardo Abad: sí malas prácticas. Llamémoslos en el uso de credenciales.
+
+171
+00:23:09.010 --> 00:23:11.180
+Pablo Eduardo Abad: Si credenciales son
+
+172
+00:23:11.810 --> 00:23:19.120
+Pablo Eduardo Abad: lo que vimos en la clase autenticación como información de autenticación, o sea, son cosas que el usuario tiene que proveer para demostrar su identidad.
+
+173
+00:23:19.750 --> 00:23:20.750
+Pablo Eduardo Abad: Mhm.
+
+174
+00:23:23.280 --> 00:23:25.670
+Pablo Eduardo Abad: ¿y
+
+175
+00:23:29.080 --> 00:23:37.019
+Pablo Eduardo Abad: cómo es o no dejé las credenciales expuestas en mi eso es cuando estaba hablando del malware. Este
+
+176
+00:23:37.340 --> 00:23:41.440
+Pablo Eduardo Abad: la verdad.
+
+177
+00:23:41.440 --> 00:23:41.790
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí es.
+
+178
+00:23:41.790 --> 00:23:50.099
+Pablo Eduardo Abad: Una buena práctica ejecutar el Bill de las aplicaciones. Hoy día, dentro de un toque de una máquina virtual, son tiempos complicados. Así que está bueno lo lo que plantea Joaquín
+
+179
+00:23:50.750 --> 00:23:58.469
+Pablo Eduardo Abad: en bueno, Vuelvo a esto, perdón.
+
+180
+00:24:00.240 --> 00:24:04.489
+Pablo Eduardo Abad: Esto se suele manifestar a, o sea, resultando en
+
+181
+00:24:06.640 --> 00:24:16.189
+Pablo Eduardo Abad: sistemas que permiten prácticas que van a derivar muchas veces en vulnerabilidades por amenazas no intencionales.
+
+182
+00:24:16.330 --> 00:24:22.920
+Pablo Eduardo Abad: Tengo un sistema que permite que los usuarios se registren y pongan contraseñas de una letra, por ejemplo.
+
+183
+00:24:24.590 --> 00:24:25.520
+Pablo Eduardo Abad: como que
+
+184
+00:24:26.160 --> 00:24:35.449
+Pablo Eduardo Abad: 1 dice, no, nadie va a ser tan tonto como poner una contraseña, una letra. El día que manejen un sistema con miles de usuarios, van a ver que por un tema estadístico, el tonto aparece
+
+185
+00:24:35.960 --> 00:24:42.799
+Pablo Eduardo Abad: entonces. Hay Hay muchas de muchas vulnerabilidades que tienen que ver con
+
+186
+00:24:43.640 --> 00:24:50.360
+Pablo Eduardo Abad: no permitir este o mantener una configuración débil desde el punto de vista de seguridad.
+
+187
+00:24:50.390 --> 00:25:03.869
+Pablo Eduardo Abad: ¿Se acuerdan cuando cuando vimos protocolos que hablamos de Tl: S que tiene un montón de de suites de de cifrados, y ustedes, en su sistema, están implementando. Tls: Si un ejemplo de esto sería que permitan las suites de Forexport
+
+188
+00:25:05.180 --> 00:25:11.879
+Pablo Eduardo Abad: Sí, ¿cuál es la vulnerabilidad ahí. Bueno, que un usuario tonto o un atacante pueden forzar
+
+189
+00:25:12.150 --> 00:25:14.389
+Pablo Eduardo Abad: a a utilizar esos
+
+190
+00:25:14.910 --> 00:25:20.270
+Pablo Eduardo Abad: mecanismos de seguridad que no nos dan la seguridad que nosotros pensamos cuando diseñamos el sistema
+
+191
+00:25:24.080 --> 00:25:27.250
+Pablo Eduardo Abad: Lack of Stone Andrean.
+
+192
+00:25:28.520 --> 00:25:43.339
+Pablo Eduardo Abad: justo el ejemplo que di de tele se aplica también acá porque te Leéz Acuérdense que hace de todo, pero tiene que ver con eso. Es cifrar al cifrar algo de una forma tonta. No usar un criptosistema válido. Este usar un criptosistema muy viejo o de claves muy chicas.
+
+193
+00:25:45.940 --> 00:25:52.209
+Pablo Eduardo Abad: Insider Air tread es una vulnerabilidad que se da más que nada cuando
+
+194
+00:25:54.070 --> 00:26:02.050
+Pablo Eduardo Abad: 1 peca de exceso de confianza donde su mecanismo de control, por ejemplo de acceso, es bueno. La persona que no lo tiene que hacer, no va a entrar ahí.
+
+195
+00:26:02.770 --> 00:26:12.139
+Pablo Eduardo Abad: Sí, en general, las las vulnerabilidades de sangre de refred suelen aplicarse mucho más a seguridad física que de aplicaciones. Pero hay algunas de
+
+196
+00:26:13.560 --> 00:26:18.820
+Pablo Eduardo Abad: de aplicaciones dando vueltas psicológica de vulnerability.
+
+197
+00:26:19.800 --> 00:26:28.669
+Pablo Eduardo Abad: Cualquier causa humana. Esta es muy compleja, a veces de prevenir, porque es psicológica, porque tiene que ver con el comportamiento humano
+
+198
+00:26:29.690 --> 00:26:31.220
+Pablo Eduardo Abad: que
+
+199
+00:26:33.140 --> 00:26:43.839
+Pablo Eduardo Abad: en sistemas es bastante difícil Y si quieren, La parte de usabilidad de interfaz humano máquina suele estudiar este tipo de de situaciones, pero es ¿se acuerdan que en algún momento
+
+200
+00:26:44.460 --> 00:26:49.479
+Pablo Eduardo Abad: No, perdón. De hecho, claro, en esta misma clase, hace poco vieron el principio de aceptación psicológica
+
+201
+00:26:50.290 --> 00:26:56.630
+Pablo Eduardo Abad: en principio de diseño, esto de podemos complicar tanto la seguridad que el usuario inconscientemente empieza a boicotearnos con esas
+
+202
+00:26:56.980 --> 00:27:01.749
+Pablo Eduardo Abad: el tipo de vulnerabilidades que ocurren cuando pasa Eso caen en esta categoría
+
+203
+00:27:02.100 --> 00:27:11.380
+Pablo Eduardo Abad: también afuera del mundo físico del mundo por donde de sistemas hay toda una serie de vulnerabilidades que se llaman ingeniería social.
+
+204
+00:27:11.580 --> 00:27:16.060
+Pablo Eduardo Abad: Nosotros acá en Argentina tenemos una forma, este
+
+205
+00:27:16.170 --> 00:27:19.920
+Pablo Eduardo Abad: más chabacana de llamarlo el cuento del tío.
+
+206
+00:27:21.070 --> 00:27:22.670
+Pablo Eduardo Abad: Bueno.
+
+207
+00:27:23.570 --> 00:27:34.500
+Pablo Eduardo Abad: que también comprometen sistemas, a veces básicamente engañando a usuarios para conseguir accesos o conseguir credenciales a los cuales alguien no debería tener acceso
+
+208
+00:27:36.740 --> 00:27:38.840
+Pablo Eduardo Abad: autenticación inadecuada.
+
+209
+00:27:41.340 --> 00:27:47.069
+Pablo Eduardo Abad: Esto imagínense lo más allá de lo que hablamos es al proceso completo de autenticación. Por ejemplo.
+
+210
+00:27:48.370 --> 00:27:56.379
+Pablo Eduardo Abad: hacer un sistema de autenticación desde 0 en un sistema bastante complicado, bien, Pero, por ejemplo, una un esquema de autenticación inadecuado es un esquema que
+
+211
+00:27:56.820 --> 00:28:10.320
+Pablo Eduardo Abad: tiene un login, controla todo, controla re intentos. Tiene Segundo, factor de autenticación espectacular. Este y tiene un link que dice: recupera tu contraseña, que manda un email, y y ya está
+
+212
+00:28:10.500 --> 00:28:18.840
+Pablo Eduardo Abad: con eso, logran entrar, Sí, en general, la autenticación inadecuada
+
+213
+00:28:19.950 --> 00:28:28.519
+Pablo Eduardo Abad: es es un problema que suele aparecer cuando nos metemos en el problema de querer autenticar nosotros. Y es bastante bastante compleja de de resolver.
+
+214
+00:28:29.470 --> 00:28:32.500
+Pablo Eduardo Abad: Mhm Injection Flood.
+
+215
+00:28:32.780 --> 00:28:41.989
+Pablo Eduardo Abad: Si Si esta materia tienen que llevarse una sola cosa, es el 90 por 100 de las vulnerabilidades que se encuentran en esta categoría Injection Flow
+
+216
+00:28:42.550 --> 00:28:46.970
+Pablo Eduardo Abad: dirección Flood es cualquier tipo de forma de
+
+217
+00:28:47.360 --> 00:28:57.609
+Pablo Eduardo Abad: inyectar código que puede ser código javascript código s. Q. L. Código ejecutable script Bytes en memoria de
+
+218
+00:28:58.050 --> 00:29:08.270
+Pablo Eduardo Abad: de mezclar este datos con código en un lugar donde no se logran separar bien y hacer que la aplicación interprete como código y ejecute cosas que deberían ser datos.
+
+219
+00:29:08.990 --> 00:29:12.200
+Pablo Eduardo Abad: Sí, hay 20 000 variantes de eso.
+
+220
+00:29:14.040 --> 00:29:27.750
+Pablo Eduardo Abad: Este seguro que en base de datos vieron ese co injection. Es una forma de inyección. Flow, pero tienen todos los colores que quieran crosa scripting ¿Es inyección de de javascript, o es Injection es inyectar
+
+221
+00:29:28.430 --> 00:29:36.290
+Pablo Eduardo Abad: en una línea de comandos cosas los buffer over float pueden caer en esta en esta categoría. También es inyección de código de memoria.
+
+222
+00:29:36.460 --> 00:29:45.619
+Pablo Eduardo Abad: Bueno, es es la categoría, digamos, vedet de la mayoría de los problemas de
+
+223
+00:29:46.050 --> 00:29:55.289
+Pablo Eduardo Abad: de los sistemas. Este de los últimos años, Sensity data exposure
+
+224
+00:29:57.230 --> 00:30:06.610
+Pablo Eduardo Abad: tiene que ver con errores, generalmente en la implementación que muestran data, que no deberían mostrarse Este, hay
+
+225
+00:30:09.460 --> 00:30:28.789
+Pablo Eduardo Abad: a ver, hay cosas que pueden ir al al terreno de lo físico, como dice ahí tachos de basura con documentos confidenciales. Digo ahora hace mucho que no que no sale una película marketinera. Así de hacker buena, pero está bien una práctica en los en los 90. Digo práctica porque ocurría en la vida real que se llamaba Amster diving, que era
+
+226
+00:30:29.520 --> 00:30:32.340
+Pablo Eduardo Abad: gente que se iba a los
+
+227
+00:30:33.040 --> 00:30:44.019
+Pablo Eduardo Abad: contenedores que había cerca de lugares así, con fábricas y demás. Este y navegaban la basura para ver desechos a nivel hojas impresas con data confidencial.
+
+228
+00:30:44.310 --> 00:30:52.340
+Pablo Eduardo Abad: Este hoy no pasa tanto. Pero hoy pasa de otra manera con las notebooks que las comp las empresas
+
+229
+00:30:52.530 --> 00:30:57.630
+Pablo Eduardo Abad: dan de baja porque ya son viejas y reemplazan por otra. Bueno, esas notebook viejas se van con datas que a veces
+
+230
+00:30:59.020 --> 00:31:01.850
+Pablo Eduardo Abad: este no no se borra de la forma correcta.
+
+231
+00:31:02.410 --> 00:31:18.890
+Pablo Eduardo Abad: puede ser una aplicación que muestre un error, un error, una vulnerabilidad típica de de muchas aplicaciones. Es son aplicaciones que muestran un stack de error con información sobre el código fuente de la aplicación. Por ejemplo, cuando hay un error provocado
+
+232
+00:31:19.560 --> 00:31:20.700
+Pablo Eduardo Abad: y
+
+233
+00:31:26.400 --> 00:31:31.139
+Pablo Eduardo Abad: monitoreo hilo insuficientes, o sea, no
+
+234
+00:31:32.510 --> 00:31:41.990
+Pablo Eduardo Abad: no tener suficiente información como para detectar y corregir un problema. Generalmente, el día que el día que mantengan un sistema y el sistema se caiga
+
+235
+00:31:42.180 --> 00:31:49.349
+Pablo Eduardo Abad: es donde no quieren tener este tipo de problemas, porque son problemas. Generalmente esto afecta mucho a la disponibilidad. Cuando algo sale mal.
+
+236
+00:31:49.620 --> 00:31:52.050
+Pablo Eduardo Abad: cuesta mucho más recuperarse.
+
+237
+00:31:52.710 --> 00:32:08.839
+Pablo Eduardo Abad: Sher tennessee vulnerabilities, les diría que es un problema un poco más moderno, un poco más moderno, igual ya tiene como 20 años en este sentido, de que cuando hablamos de ir a a híperskailers, estos proveedores de servicios en la nube.
+
+238
+00:32:09.320 --> 00:32:12.209
+Pablo Eduardo Abad: cuando nosotros contratamos un servicio.
+
+239
+00:32:12.420 --> 00:32:26.759
+Pablo Eduardo Abad: Sí, generalmente, lo que estamos contratando no es algo totalmente aislado que que solo para nosotros es un ambiente compartido. Si las aplicaciones de ese tipo se llaman multitenan sí y bueno, y hay vulnerabilidades donde.
+
+240
+00:32:27.730 --> 00:32:36.240
+Pablo Eduardo Abad: por un error de diseño en la aplicación, un Tennant, un cliente podría tener acceso a información de otro. Eso es gravísimo para muchos servicios.
+
+241
+00:32:36.660 --> 00:32:47.209
+Pablo Eduardo Abad: La realidad es que, por un tema de costos, las aplicaciones y los sistemas multi tenance, salvo en casos muy específicos, son compartidas, con lo cual esto es este tipo de vulnerabilidades. Existen.
+
+242
+00:32:47.330 --> 00:32:55.210
+Pablo Eduardo Abad: Hay otras más sofisticadas. Si, por ejemplo, si nosotros corremos en una computadora física varias máquinas virtuales.
+
+243
+00:32:56.890 --> 00:33:04.039
+Pablo Eduardo Abad: Podríamos tener problemas de Share Tennessee si desde una máquina virtual se puede acceder a información de otra.
+
+244
+00:33:04.370 --> 00:33:07.049
+Pablo Eduardo Abad: y ha habido pocos pocos, porque es
+
+245
+00:33:07.290 --> 00:33:16.100
+Pablo Eduardo Abad: es un tipo de sistema mucho más crítico, con mucho más reparos, pero en los últimos 10 años ha habido 1 o 2 vulnerabilidades de este tipo de
+
+246
+00:33:16.380 --> 00:33:20.249
+Pablo Eduardo Abad: de cosas. No sé si escucharon hablar de Rogue Hammer.
+
+247
+00:33:21.370 --> 00:33:23.640
+Pablo Eduardo Abad: a mí no me acuerdo. Spectre fue otro.
+
+248
+00:33:23.840 --> 00:33:24.400
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí.
+
+249
+00:33:24.400 --> 00:33:24.920
+Pablo Eduardo Abad: No.
+
+250
+00:33:24.920 --> 00:33:25.819
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí. Hablar.
+
+251
+00:33:28.470 --> 00:33:31.090
+Pablo Eduardo Abad: Y.
+
+252
+00:33:31.090 --> 00:33:31.490
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Rápido.
+
+253
+00:33:31.490 --> 00:33:32.180
+Pablo Eduardo Abad: Claro.
+
+254
+00:33:33.820 --> 00:33:39.459
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí. Yo lo escuché, que Rock Hummer era que fliteaba los bits rápido para algo con la interferencia electromagnética.
+
+255
+00:33:40.870 --> 00:33:47.239
+Pablo Eduardo Abad: Claro, sí, y spectre a ver Spectre y Robuscammer son, si quieren 2 vulnerabilidades
+
+256
+00:33:47.400 --> 00:33:54.919
+Pablo Eduardo Abad: de una familia que surgió por una investigación donde empezaron a tomar en cuenta el hardware donde corren las cosas también. Entonces.
+
+257
+00:33:55.060 --> 00:34:02.460
+Pablo Eduardo Abad: Rogue Hammer, en particular, se basaba en el tipo de memoria que se utiliza ¿no?
+
+258
+00:34:02.680 --> 00:34:15.459
+Pablo Eduardo Abad: Y y el hardware de la memoria entonces planteaba una serie de lecturas y escrituras. Imagínense si quieren. Lo voy a simplificar mucho, ¿no? Pero imagínense como la memoria, como una serie de líneas
+
+259
+00:34:15.750 --> 00:34:35.230
+Pablo Eduardo Abad: de bits. Cada 1 que magnéticamente está en 0 en 1. Entonces Rouge Hammer, lo que planteaba es que si yo no tengo acceso a esta línea de memoria, pero tengo acceso a estar arriba. Y esta de abajo. Yo hago una serie de patrones. Este de lectura, escritura, lectura, escritura, dejo en 0 las 2 líneas.
+
+260
+00:34:35.420 --> 00:34:48.079
+Pablo Eduardo Abad: Y hay como una suerte de fuga electromagnética por la oscilación electromagnética que generan esos patrones que escribí que hace que la información del medio. Permee como si fuese un error en la memoria en las otras zonas.
+
+261
+00:34:48.210 --> 00:34:51.030
+Pablo Eduardo Abad: Es una locura, este.
+
+262
+00:34:51.830 --> 00:34:59.829
+Pablo Eduardo Abad: pero con eso lograron leer zonas de memoria afuera de la máquina virtual, por ejemplo, donde estaba corriendo algo, una locura
+
+263
+00:35:00.090 --> 00:35:03.609
+Pablo Eduardo Abad: y spectre es algo parecido. Spectre.
+
+264
+00:35:04.550 --> 00:35:08.440
+Pablo Eduardo Abad: se basaba en el hardware también. Pero Spectre, lo que hacía es
+
+265
+00:35:09.120 --> 00:35:15.520
+Pablo Eduardo Abad: medir las diferencias de tiempo de ejecución que puede tener un programa en función de
+
+266
+00:35:16.600 --> 00:35:22.579
+Pablo Eduardo Abad: ya viene la arquitectura de software, perdón de de computadoras vieron que las computadoras.
+
+267
+00:35:22.580 --> 00:35:22.979
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Lo que.
+
+268
+00:35:22.980 --> 00:35:23.320
+Pablo Eduardo Abad: Se ha.
+
+269
+00:35:23.570 --> 00:35:29.159
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: ¿y qué que ahí pasé por el Chatter, o que más o menos los explica.
+
+270
+00:35:30.220 --> 00:35:30.990
+Pablo Eduardo Abad: espectacular.
+
+271
+00:35:30.990 --> 00:35:31.950
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Los planes son.
+
+272
+00:35:32.840 --> 00:35:34.319
+Pablo Eduardo Abad: Lo de X, B, C.
+
+273
+00:35:34.320 --> 00:35:36.600
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Se adelante.
+
+274
+00:35:36.780 --> 00:35:37.700
+Pablo Eduardo Abad: Okay.
+
+275
+00:35:38.200 --> 00:35:46.700
+Pablo Eduardo Abad: Ahí va buenísimo a ver muy rápido para para el resto de Spectre
+
+276
+00:35:46.900 --> 00:35:56.989
+Pablo Eduardo Abad: se basaba en esto de que las computadoras modernas tienen como una arquitectura de pipelines, donde, mientras va ejecutando una instrucción, está como pre procesando parte de la siguiente para
+
+277
+00:35:57.040 --> 00:36:09.180
+Pablo Eduardo Abad: ejecutar más rápido. Y eso, como es ejecución especulativa. En algunas situaciones, puede implicar que hay que tirar todo lo que se hizo y empezar de vuelta, y eso genera diferencias de nanosegundos.
+
+278
+00:36:09.670 --> 00:36:18.749
+Pablo Eduardo Abad: Bueno, explotando eso sobre código fuente conocido de algunos algoritmos lograban extraer claves criptográficas
+
+279
+00:36:18.960 --> 00:36:22.680
+Pablo Eduardo Abad: sin tener acceso a la zona de la memoria, donde estaban en una misma computadora.
+
+280
+00:36:23.330 --> 00:36:28.009
+Pablo Eduardo Abad: ataques bastante más esotéricos, pero que tienen que ver con esto de Share, Te Nancy.
+
+281
+00:36:29.310 --> 00:36:37.590
+NICOLÁS CANZONIERI: Profe cualquier mal uso de pampero que lo haya tirado. También entraría acá a la.
+
+282
+00:36:37.590 --> 00:36:44.230
+Pablo Eduardo Abad: Sería un ataque de denegación de servicio. Bueno, así a ver en el sentido de.
+
+283
+00:36:46.630 --> 00:36:50.029
+Pablo Eduardo Abad: Podrías clasificarlo acá.
+
+284
+00:36:55.320 --> 00:36:58.040
+Pablo Eduardo Abad: Podría ser un dras configuration también
+
+285
+00:36:58.340 --> 00:37:02.409
+Pablo Eduardo Abad: depen depende de cómo esté hecho. La La realidad es que todos los sistemas modernos
+
+286
+00:37:02.720 --> 00:37:06.230
+Pablo Eduardo Abad: es una consecuencia de multi tenazis sobre el mismo hardware.
+
+287
+00:37:07.380 --> 00:37:12.990
+Pablo Eduardo Abad: Pero te diría que lo que comprometiste es la saturación del hardware que es totalmente configurable.
+
+288
+00:37:15.180 --> 00:37:23.150
+Pablo Eduardo Abad: O sea tendría que haber otra forma de decirlo es la el el la vulnerabilidad atrás. Si yo tuviese que hacer el post mortem, no iría tanto a que alguien
+
+289
+00:37:23.750 --> 00:37:28.539
+Pablo Eduardo Abad: saturó el servidor y lo rompió, sino que la configuración que evitaría Eso no estaba bien puesta
+
+290
+00:37:33.390 --> 00:37:38.819
+Pablo Eduardo Abad: igual pampero, digo, siempre fue deporte nacional tirarlo, O sea.
+
+291
+00:37:38.980 --> 00:37:41.180
+Pablo Eduardo Abad: no, no me sorprende que siga siéndolo.
+
+292
+00:37:41.420 --> 00:37:45.919
+Pablo Eduardo Abad: Es como un servidor de pruebas masivo para todos los que estamos aprendiendo
+
+293
+00:37:52.530 --> 00:37:53.490
+Pablo Eduardo Abad: Bien.
+
+294
+00:38:00.100 --> 00:38:01.080
+Pablo Eduardo Abad: Dos
+
+295
+00:38:01.840 --> 00:38:12.090
+Pablo Eduardo Abad: do hay hay la cantidad de vulnerabilidades que se publican. No sé si tengo tengo estadísticas viejas, pero esta es la cantidad de vulnerabilidades que se publican por año en
+
+296
+00:38:12.270 --> 00:38:19.650
+Pablo Eduardo Abad: mitre, que es una organización que recolecta públicamente este tipo de vulnerabilidades para ayudar a las empresas a entender
+
+297
+00:38:20.190 --> 00:38:26.219
+Pablo Eduardo Abad: donde tienen un posi una posible vulnerabilidad o por algo que escribieron.
+
+298
+00:38:26.330 --> 00:38:29.449
+Pablo Eduardo Abad: Pero más lo más normal o por algo que compraron y están usando.
+
+299
+00:38:30.290 --> 00:38:34.689
+Pablo Eduardo Abad: Miren la progresión de vulnerabilidades. O sea, esto viene.
+
+300
+00:38:35.010 --> 00:38:37.620
+Pablo Eduardo Abad: No está en
+
+301
+00:38:38.970 --> 00:38:45.890
+Pablo Eduardo Abad: 2 005 6 000 vulnerabilidades publicadas en el año. Seis 1 007 1 005 1 000 establess estable estable estable
+
+302
+00:38:46.960 --> 00:38:48.750
+Pablo Eduardo Abad: 2 017,
+
+303
+00:38:49.960 --> 00:38:55.750
+Pablo Eduardo Abad: empieza como un crecimiento explosivo de la cantidad vulnerables que se publican. Y esto sigue subiendo año a año.
+
+304
+00:38:56.660 --> 00:39:03.399
+Pablo Eduardo Abad: Lo que les conté de mozilla con con mitos. O sea, eso sólo van a ser 20 000 vulnerabilidades. Este año.
+
+305
+00:39:04.430 --> 00:39:05.710
+Pablo Eduardo Abad: Mhm.
+
+306
+00:39:08.320 --> 00:39:10.000
+NICOLÁS CANZONIERI: Estamos en mayo.
+
+307
+00:39:10.680 --> 00:39:16.069
+Pablo Eduardo Abad: Cada vez Sí, sí, sí, o sea, es la cantidad de vulnerabilidades. Cada vez crece más
+
+308
+00:39:17.980 --> 00:39:27.670
+Pablo Eduardo Abad: a ver. Esto es como vieron cuando aumentan las enfermedades también. ¿qué pasa? Estamos escribiendo? Que es peor software? No estamos siendo cada vez más conscientes de las vulnerabilidades.
+
+309
+00:39:27.990 --> 00:39:35.800
+Pablo Eduardo Abad: Y a medida que aplicamos el análisis al software más usado, nos vamos moviendo a repetir ese análisis en el software menos usado Y bueno, pasan cosas.
+
+310
+00:39:36.100 --> 00:39:38.090
+Pablo Eduardo Abad: Cuanto más nos alejamos del presente.
+
+311
+00:39:38.470 --> 00:39:44.409
+Pablo Eduardo Abad: En general les diría que es lo contrario. El software hoy día se construye mucho más robusto que antes.
+
+312
+00:39:44.740 --> 00:39:50.839
+Pablo Eduardo Abad: Hay más vulnerabilidades, porque hay una cantidad bestial de software ya escrito que se sigue usando hace muchos años
+
+313
+00:39:52.240 --> 00:40:10.300
+Pablo Eduardo Abad: y porque hay mucha más cantidad de software en general, entonces la el consenso es que la seguridad hoy día ya es un factor que está presente en los sistemas y, en general, el nivel de seguridad con el que construimos software es mucho mejor que el de antes.
+
+314
+00:40:10.670 --> 00:40:15.000
+Pablo Eduardo Abad: lo que no quiere decir que sea una bestialidad, la cantidad de de vulnerabilidades que se encuentra.
+
+315
+00:40:16.030 --> 00:40:24.609
+Pablo Eduardo Abad: y no les puedo decir que las vulnerabilidades nuevas. Son todas complicadísimas de esas que hubo una imposible verlas y requieren cator. Algunas son muy tontas.
+
+316
+00:40:25.440 --> 00:40:26.330
+Pablo Eduardo Abad: ¿sí?
+
+317
+00:40:26.460 --> 00:40:35.079
+Pablo Eduardo Abad: Pues si tienen tiempo vayan a mi Tre Hork. Y está la lista, elijan alguna aplicación que les guste y seguro va a estar ahí con varias vulnerabilidades, y van a ver, hay algunas que son
+
+318
+00:40:35.270 --> 00:40:38.299
+Pablo Eduardo Abad: muy, muy complejas y otras que son muy, muy tontas.
+
+319
+00:40:38.970 --> 00:40:46.580
+Pablo Eduardo Abad: Mhm: Los C. B. S, que es la forma en la que se clasifican, en las que se llaman
+
+320
+00:40:46.820 --> 00:40:49.509
+Pablo Eduardo Abad: como vulnerability enumeration.
+
+321
+00:40:50.150 --> 00:41:00.110
+Pablo Eduardo Abad: Tienen el año, tienen el número de registro en el año. Si esta es una de 20 21 que se hizo muy famosa, una vulnerabilidad en Lockford, una de las librerías de login. Este
+
+322
+00:41:00.300 --> 00:41:10.910
+Pablo Eduardo Abad: mundo java más más conocidas, que fue súper crítica porque básicamente permitía ejecución arbitraria de código.
+
+323
+00:41:13.720 --> 00:41:22.539
+Pablo Eduardo Abad: Si un atacante podía controlar cualquier cosa que termine en un Log. Y ya van a ver que cuando trabajan en sistemas grandes, todo termina en un log distribuido. Entonces
+
+324
+00:41:23.490 --> 00:41:36.900
+Pablo Eduardo Abad: un tema ahí, Ignacio pregunta: cuando se publican cuándo fueron solucionadas? Mira el el proceso, está documentado el proceso, pero lo los investigadores que las encuentran, y digo, y quieren seguir el libro. Es correcto.
+
+325
+00:41:36.990 --> 00:41:45.649
+Pablo Eduardo Abad: La reportan a Mitre Mitra hace un un T R Ach, una clasificación inicial y clasifica básicamente cuán peligrosa es la vulnerabilidad.
+
+326
+00:41:46.260 --> 00:41:57.930
+Pablo Eduardo Abad: Si la vulnerabilidad es muy peligrosa, que suele ser un tipo de vulnerabilidad, no sé algo muy, muy usado, no sea una vulnerabilidad de Windows, que puede ser explotada remotamente, o sea, que te pueden.
+
+327
+00:41:58.490 --> 00:42:00.819
+Pablo Eduardo Abad: si está conectado a Internet, Reventar
+
+328
+00:42:01.310 --> 00:42:11.529
+Pablo Eduardo Abad: todo eso sale como un resultado numérico, ¿no? Y lo que digo termina arriba de 9 en una escala de una a 10. Si Si termina siendo así, muy crítica, Lo que hacen es un embargo. Se llama
+
+329
+00:42:11.660 --> 00:42:15.689
+Pablo Eduardo Abad: Publican la vulnerabilidad, publican el sistema afectado
+
+330
+00:42:16.140 --> 00:42:19.279
+Pablo Eduardo Abad: y dicen en 3 meses. Vamos a publicar el detalle
+
+331
+00:42:19.530 --> 00:42:25.779
+Pablo Eduardo Abad: en ese tiempo. Se supone que el investigador le avisa a la empresa y la empresa lo corrige
+
+332
+00:42:27.190 --> 00:42:41.919
+Pablo Eduardo Abad: después en la realidad pasa de todo. O sea, hay empresas que no le dan bola a los a los reportes. Hay investigadores que no reportan acá, pero hay veces, si quieren hacer embargo para cosas de menor monta porque hay hay vulnerabilidades que son mucho más complicadas de de utilizar.
+
+333
+00:42:41.920 --> 00:42:48.579
+Pablo Eduardo Abad: Este afecta en una librería muy usada, pero una funcionalidad que que no sé es que es obsoleta que ya nadie usa
+
+334
+00:42:48.580 --> 00:42:54.530
+Pablo Eduardo Abad: este y que requeriría estar en la máquina y poder modificar el ejecutable. Bueno, esas se publican directamente.
+
+335
+00:42:55.210 --> 00:42:55.980
+Pablo Eduardo Abad: Mhm
+
+336
+00:42:59.230 --> 00:43:05.720
+Pablo Eduardo Abad: en esta fue una bastante bastante peculiar porque hubo que salir.
+
+337
+00:43:06.820 --> 00:43:11.990
+Pablo Eduardo Abad: actualizar aplicaciones por todos lados en todas las empresas en un fin de semana en todo el mundo.
+
+338
+00:43:16.440 --> 00:43:26.920
+Pablo Eduardo Abad: Mitre hace otra cosa que que a nosotros nos nos puede servir más, que es linka las vulnerabilidades con otra lista que tiene que se w como un witness enumeration
+
+339
+00:43:27.360 --> 00:43:36.760
+Pablo Eduardo Abad: Witness es la la nomenclatura que usan para hablar de las amenazas. Entonces planteamos. Esta vulnerabilidad afecta a este tipo de amenazas.
+
+340
+00:43:37.540 --> 00:43:48.670
+Pablo Eduardo Abad: Tiene una lista de como 700 tipos de amenazas jerárquicas que llega más o menos a una lista chica. Pero por eso generalmente hay muchos links. Este a a varias amenazas por cada se ve.
+
+341
+00:43:49.010 --> 00:43:57.120
+Pablo Eduardo Abad: Este fue otro muy divertido 2 014. A mí me gusta contarlo porque fue un argentino el que le el que lo descubrió
+
+342
+00:43:59.640 --> 00:44:01.170
+Pablo Eduardo Abad: en.
+
+343
+00:44:03.150 --> 00:44:07.349
+Pablo Eduardo Abad: Ah, no, perdón. Este es el de Harley. Me estaba. Me estaba confundiendo con otro. Este.
+
+344
+00:44:07.470 --> 00:44:18.860
+Pablo Eduardo Abad: Bueno, este no lo descubrí en Argentina. Esta fue una vulnerabilidad en en las implementaciones de Tls de una librería muy famosa que es Open Scl.
+
+345
+00:44:19.070 --> 00:44:26.579
+Pablo Eduardo Abad: En la práctica, probablemente usaron la versión aplicación, pero la librería que tiene las mismas funciones, se usa prácticamente
+
+346
+00:44:26.990 --> 00:44:30.930
+Pablo Eduardo Abad: en el 80 por 100 de los componentes de infraestructura de Internet.
+
+347
+00:44:31.310 --> 00:44:37.449
+Pablo Eduardo Abad: así que un un problema de seguridad, ¿no? Con S. S. L. Empieza con un rating tipo de 8 para arriba
+
+348
+00:44:37.570 --> 00:44:40.699
+Pablo Eduardo Abad: para empezar a hablar, y suelen ser bastante jodidos.
+
+349
+00:44:41.020 --> 00:44:50.369
+Pablo Eduardo Abad: Mhm a un esta en particular. Heart Blid permitía
+
+350
+00:44:50.490 --> 00:44:55.460
+Pablo Eduardo Abad: era un error de implementación en en
+
+351
+00:44:55.950 --> 00:45:05.780
+Pablo Eduardo Abad: Open s s L. Que permitía contra un handjing inicial de de del protocolo, hotel ese
+
+352
+00:45:07.040 --> 00:45:11.100
+Pablo Eduardo Abad: que la respuesta venga con información
+
+353
+00:45:15.580 --> 00:45:23.969
+Pablo Eduardo Abad: de la memoria subsiguiente a a a un báfaro donde debería estar. Sería como sería como un buffer overflow. Pero al revés, modo, lectura.
+
+354
+00:45:24.140 --> 00:45:29.839
+Pablo Eduardo Abad: ¿y ¿cuál era el problema que 1 podía repetir esto muchas veces. Iba como obteniendo samples de memoria
+
+355
+00:45:30.350 --> 00:45:39.640
+Pablo Eduardo Abad: samples de memoria, Uno pueda analizarla y encontrar estructuras de donde hay Stacks y donde información, y empezar a recuperar información clave claves, incluida
+
+356
+00:45:40.020 --> 00:45:50.740
+Pablo Eduardo Abad: Harley, una prueba de concepto que básicamente extraía el el Master Kid de la sesión, con lo cual 1 podía impersonar y tener acceso a los mensajes de la sesión Telesa
+
+357
+00:45:54.570 --> 00:46:02.099
+Pablo Eduardo Abad: Respecto a la pregunta que hicieron, van a escuchar hablar si no escucharon de Seaur Day exploids. Si un exploid es
+
+358
+00:46:02.860 --> 00:46:07.279
+Pablo Eduardo Abad: un programa que ejecuta una una vulnerabilidad.
+
+359
+00:46:07.390 --> 00:46:11.589
+Pablo Eduardo Abad: sí un siro Dei Exploid es básicamente
+
+360
+00:46:12.280 --> 00:46:17.249
+Pablo Eduardo Abad: un programa que permite usar una vulnerabilidad, exactamente lo mismo.
+
+361
+00:46:19.270 --> 00:46:21.179
+Pablo Eduardo Abad: pero que aún no fue reportado.
+
+362
+00:46:22.340 --> 00:46:31.210
+Pablo Eduardo Abad: Si generalmente cuando habla. Alguien habla de un 0, De ahí es que alguien está usando algo que todavía no está documentado, no lo sabe ni el fabricante del software ni ninguna de estas organizaciones.
+
+363
+00:46:31.600 --> 00:46:34.259
+Pablo Eduardo Abad: Hay un mercado negro de 0 de exploids.
+
+364
+00:46:34.870 --> 00:46:42.769
+Pablo Eduardo Abad: y ahora hay un mercado un poco más gris. Xerodium. Es un lugar donde se paga por reportar estas.
+
+365
+00:46:42.910 --> 00:46:46.069
+Pablo Eduardo Abad: Esas grandes se suscriben acá y dan como premios.
+
+366
+00:46:47.710 --> 00:46:58.420
+Pablo Eduardo Abad: Bueno, para tipos de ataques Cero dais no documentados, no contados que consigan
+
+367
+00:46:58.560 --> 00:47:06.579
+Pablo Eduardo Abad: vulnerar la seguridad, por ejemplo, esta esta esta medida desactualizada, creo que los precios ahora son un poquito más altos, Pero, por ejemplo.
+
+368
+00:47:07.330 --> 00:47:22.039
+Pablo Eduardo Abad: un R C es remode, code execution, o sea, una vulnerabilidad no documentada que permita que alguien ejecute de forma remota código en Windows en una máquina Windows sin intervención del usuario Microsoft está pagando hasta un 1 000 000 de dólares
+
+369
+00:47:22.450 --> 00:47:23.910
+Pablo Eduardo Abad: con un reporte de ese tipo.
+
+370
+00:47:26.360 --> 00:47:37.129
+Pablo Eduardo Abad: Si hay un Gatch, este es el mercado gris medio legal, hay mercados ilegales también que probablemente paguen más. Entonces entra en la ética de los investigadores que le encuentran estas cosas también que hacer.
+
+371
+00:47:37.770 --> 00:47:42.740
+Pablo Eduardo Abad: Pero, bueno, hay hay un montón de de
+
+372
+00:47:43.280 --> 00:47:48.390
+Pablo Eduardo Abad: de vulnerabilidad. Técnicamente, toda vulnerabilidad nueva es un 0 D, y cuando se la encuentra, pero
+
+373
+00:47:49.120 --> 00:47:54.719
+Pablo Eduardo Abad: hay como toda una comunidad y toda una ética de los que estamos en seguridad. Estas cosas se reportan
+
+374
+00:47:55.860 --> 00:47:58.479
+Pablo Eduardo Abad: Mhm por los canales normales.
+
+375
+00:47:58.840 --> 00:48:03.310
+Pablo Eduardo Abad: C, W, que era lo que les comentaba es la otra parte de lo que estandar hizo mitre.
+
+376
+00:48:03.840 --> 00:48:07.449
+Pablo Eduardo Abad: Es un registro de las debilidades
+
+377
+00:48:07.920 --> 00:48:15.340
+Pablo Eduardo Abad: y en software que dan lugar a las vulnerabilidades. Acá es donde aparecen los casos concretos de la taxonomía Acá aparecen
+
+378
+00:48:15.450 --> 00:48:19.149
+Pablo Eduardo Abad: autos. Bond Right, que es un buffer over flow
+
+379
+00:48:19.530 --> 00:48:25.279
+Pablo Eduardo Abad: improper neutralization of special command de una forma larga de secuela injection.
+
+380
+00:48:25.460 --> 00:48:31.399
+Pablo Eduardo Abad: Este improver neutralization web generation qué es crossave scripting
+
+381
+00:48:32.200 --> 00:48:39.390
+Pablo Eduardo Abad: improper neutralization of special. Elevents use in a Knows Commann.
+
+382
+00:48:39.730 --> 00:48:45.179
+Pablo Eduardo Abad: ¿o es como en injection y es after fries.
+
+383
+00:48:46.150 --> 00:48:54.270
+Pablo Eduardo Abad: S ¿Se acuerdan de Malocky Friendse Esto sería como tener un puntero, algo liberarlo. Pero quedarse con el puntero y después seguir usándolo generalmente es un error.
+
+384
+00:48:54.270 --> 00:48:56.020
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Me acuerdo mucho, porque yo lo hacía mucho.
+
+385
+00:48:56.550 --> 00:49:02.080
+Pablo Eduardo Abad: Se puede explotar maliciosamente si 1 encuentra ese tipo de situaciones.
+
+386
+00:49:02.430 --> 00:49:05.720
+Pablo Eduardo Abad: Mhm, en
+
+387
+00:49:06.290 --> 00:49:12.790
+Pablo Eduardo Abad: si de si les toca trabajar en un lenguaje así de bajo nivel de memoria. Le obse más. Este suele pasar.
+
+388
+00:49:13.270 --> 00:49:15.680
+Pablo Eduardo Abad: Mhm: Y
+
+389
+00:49:17.380 --> 00:49:28.420
+Pablo Eduardo Abad: no les quiero mentir. Creo que esto tenía que ver con la lista. No me acuerdo si es la 20 21 la 20, 24 cada ciertos años, mitra saca como la lista, Pero fíjense, esto era.
+
+390
+00:49:29.840 --> 00:49:30.870
+Pablo Eduardo Abad: digo.
+
+391
+00:49:31.110 --> 00:49:43.730
+Pablo Eduardo Abad: auto vons right buffer overflow, vulnerabilidad, número 1 por cantidad de de apariciones en en vulnerabilidades documentadas, cosa scripting, la vulnerabilidad número 2 del año, ese que injection la número 3
+
+392
+00:49:44.880 --> 00:49:49.260
+Pablo Eduardo Abad: como Injection, la número 6: el
+
+393
+00:49:52.870 --> 00:49:56.870
+Pablo Eduardo Abad: bueno auto pon's W Right se conoce como bassero Haber Flow.
+
+394
+00:49:59.800 --> 00:50:06.610
+Pablo Eduardo Abad: Yo supongo que la vieron en otra materia, pero no, no es mucho más que eso, ¿no? O sea, es. Hay un baffer variable que se aloca.
+
+395
+00:50:06.750 --> 00:50:15.779
+Pablo Eduardo Abad: Y no sé. Uno lo va recorriendo con un puntero y no tiene bien el chequeo y escribe, o antes o después del bafta, el peligro más grande de eso.
+
+396
+00:50:19.310 --> 00:50:22.459
+Pablo Eduardo Abad: El peligro más grande, eso es lo que escribe Joaquín ahí es
+
+397
+00:50:22.690 --> 00:50:29.119
+Pablo Eduardo Abad: que si ese Affer llega a estar en un stack, el Stack, en los modelos más normales de aplicaciones.
+
+398
+00:50:30.100 --> 00:50:44.139
+Pablo Eduardo Abad: tiene los datos que corresponden a la llamada de la última función y tiene la dirección de retorno. También entonces, este hay hay formas sistemáticas de que Si hay un forma, este Buffer se puede ejecutar código arbitrario.
+
+399
+00:50:44.400 --> 00:50:52.320
+Pablo Eduardo Abad: Uno escribe el Buffer de tal forma que esté el código que quiere escribir y además esté pisando la dirección de retorno para que vaya ese código.
+
+400
+00:50:52.810 --> 00:50:58.920
+Pablo Eduardo Abad: Hay contramedidas hoy para para esto en muchos compiladores, pero ninguna es 100 por 100 efectiva.
+
+401
+00:50:59.560 --> 00:51:09.600
+Pablo Eduardo Abad: Este la consecuencia por ahí más directa. Ese es el ataque sofisticado Execution Es un crash el famoso segmentation fall que nos aparecía
+
+402
+00:51:10.250 --> 00:51:16.690
+Pablo Eduardo Abad: en en programas en C. Un poco complejos, ríe.
+
+403
+00:51:17.620 --> 00:51:19.740
+Pablo Eduardo Abad: Pero si scripting, o sea.
+
+404
+00:51:20.330 --> 00:51:25.739
+Pablo Eduardo Abad: este tipo de problemas existe todavía, especialmente en cosas de bajo nivel drivers y demás.
+
+405
+00:51:25.890 --> 00:51:33.119
+Pablo Eduardo Abad: Pero una de las razones que volvió muy populares a lenguajes tipo sellar tipo Java en su momento
+
+406
+00:51:33.330 --> 00:51:38.279
+Pablo Eduardo Abad: fue que planteaban un modelo que era tal vez un poco menos eficiente, pero que
+
+407
+00:51:39.560 --> 00:51:43.930
+Pablo Eduardo Abad: prácticamente eliminaba la aritmética de punteros y eliminaba este tipo de cosas
+
+408
+00:51:48.200 --> 00:51:51.119
+Pablo Eduardo Abad: durante muchos años. Esto fue.
+
+409
+00:51:52.980 --> 00:51:59.719
+Pablo Eduardo Abad: no sé, el 90 por 100, les diría de las monedas que se encontraban eran de este tipo hasta que empezaron a aparecer estos lenguajes más
+
+410
+00:52:00.550 --> 00:52:07.069
+Pablo Eduardo Abad: de alto nivel que que abstraían un poco y no dejaban hacer tanta aritmética loca de de punteros
+
+411
+00:52:07.630 --> 00:52:15.780
+Pablo Eduardo Abad: cross i scripting Es Es un tipo de vulnerabilidad que sube y baja según temporadas en el ranking de las más explotadas.
+
+412
+00:52:17.380 --> 00:52:22.530
+Pablo Eduardo Abad: Y tiene que ver con esta idea de utilizar algún input
+
+413
+00:52:24.380 --> 00:52:31.509
+Pablo Eduardo Abad: que puede controlar el usuario usuario bueno o usuario malo, atacante al hacer render de código. H, T. M. L,
+
+414
+00:52:31.860 --> 00:52:34.380
+Pablo Eduardo Abad: Entonces, por ejemplo.
+
+415
+00:52:34.820 --> 00:52:42.380
+Pablo Eduardo Abad: acá hay aquí hay un ejemplo donde una página tiene un parámetro de nombre, y por ahí quería decir, hola, y el nombre, si.
+
+416
+00:52:42.650 --> 00:52:50.490
+Pablo Eduardo Abad: pero a alguien se le ocurre, y qué pasa si el si el parámetro que le pongo dice cualquier cosa y tiene además un script en en javascript.
+
+417
+00:52:52.590 --> 00:53:01.599
+Pablo Eduardo Abad: Si 1 genera la página y dice hola, nombre, y acá pone el contenido de esa variable. Nada más está mezclando código. Está mezclando código Html
+
+418
+00:53:02.750 --> 00:53:03.890
+Pablo Eduardo Abad: con un dato
+
+419
+00:53:04.000 --> 00:53:11.500
+Pablo Eduardo Abad: Y el problema de hacer eso sin escaparlo correctamente. ¿es esto que ese código, ese dato que pensamos que tiene que ser un dato. Podría ser código también.
+
+420
+00:53:13.450 --> 00:53:21.109
+Pablo Eduardo Abad: No voy a entrar en C, H, T, M. L, Es código, No, pero. H, T, M. L, Tiene un script que se llama Tiene un Tac que se llama script, que nos permite inyectar código. Entonces.
+
+421
+00:53:21.380 --> 00:53:33.250
+Pablo Eduardo Abad: típicamente un ataque de cross scripting es es ese tipo. Y esto puede venir como parámetro de la página. Como un input text. Puede venir de la base de datos. Hay hay distintos tipos de de
+
+422
+00:53:33.590 --> 00:53:36.460
+Pablo Eduardo Abad: de cross scripting. Todos son de la misma familia.
+
+423
+00:53:38.240 --> 00:53:42.990
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Profe en proyecto de aplicaciones web nos enseñan mucho de esto y cómo evitarlo.
+
+424
+00:53:45.530 --> 00:53:47.160
+Pablo Eduardo Abad: Buenísimo y cómo le viste.
+
+425
+00:53:47.160 --> 00:53:51.440
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Scripting. Teníamos que poner Ce Out en todos lados.
+
+426
+00:53:52.940 --> 00:53:53.870
+Pablo Eduardo Abad: Tenían que poner perdón.
+
+427
+00:53:53.870 --> 00:53:58.770
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Como que sea out en todos lados, tenemos que sanitizar todas las.
+
+428
+00:53:58.770 --> 00:53:59.090
+Pablo Eduardo Abad: A que.
+
+429
+00:53:59.090 --> 00:53:59.650
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Tenía.
+
+430
+00:53:59.650 --> 00:54:03.639
+Pablo Eduardo Abad: Tenía una función que sanitizaba eso. Ah perfecto.
+
+431
+00:54:03.970 --> 00:54:07.060
+Pablo Eduardo Abad: Es una de las formas de de resolverlo.
+
+432
+00:54:07.220 --> 00:54:18.359
+Pablo Eduardo Abad: La otra es usar Frameworks de componentes que se aniticen medio automáticamente eso que serían el equivalente. En base a datos de vino, de haber visto ese coel injection también y vieron la idea de prepare Stevens.
+
+433
+00:54:19.120 --> 00:54:24.870
+Pablo Eduardo Abad: Y en vez de armar el texto de C. Q. L. Armar un parámetro. Y después. Decir, bueno, el parámetro 1 vale. Tanto el 2 vale tanto
+
+434
+00:54:26.980 --> 00:54:31.710
+Pablo Eduardo Abad: son las 2 formas. El problema tanto de ese con injection como este Crosside scripting es
+
+435
+00:54:31.860 --> 00:54:37.880
+Pablo Eduardo Abad: son 2 vulnerabilidades que hoy día está muy automatizado. El cómo buscarlas. Sí,
+
+436
+00:54:38.170 --> 00:54:45.460
+Pablo Eduardo Abad: Y potencialmente, hay miles de lugares donde puede ocurrir en una aplicación. Entonces el el problema de esto es que 1 puede
+
+437
+00:54:45.760 --> 00:54:52.539
+Pablo Eduardo Abad: hacer bien 999 casos, pero por el 1 que se olvidó de sanitizar la data tiene un problema de este tipo
+
+438
+00:54:53.600 --> 00:54:57.459
+Pablo Eduardo Abad: y son problemas muy, muy peligrosos En cuanto a las
+
+439
+00:54:57.570 --> 00:55:05.880
+Pablo Eduardo Abad: consecuencias de esto? No porque si yo puedo ejecutar código javascript en la computadora de otra persona, me puede robar la sesión
+
+440
+00:55:07.700 --> 00:55:13.520
+Pablo Eduardo Abad: con muy altas chanzas hay hay contramedidas, pero de vuelta ninguna súper efectiva. Si yo puedo ejecutar
+
+441
+00:55:13.870 --> 00:55:26.289
+Pablo Eduardo Abad: que venir justo después, ¿no? Si si puede atacar a ejecutar un ataque de inyección de código. S. Q. L. Puede hacer lo que quiera con la base de datos. Hay herramientas automatizadas que si les dan un
+
+442
+00:55:27.160 --> 00:55:43.069
+Pablo Eduardo Abad: como es una una, un una forma, no sé por parámetro de url o por parámetro de un campo por automatización de swing de un form con s. Q. L lo empiezan a hacer iterativamente y averiguan el tipo de base de datos que tiene el esquema y pueden hacer el dump de los datos de cualquier tabla que quieran.
+
+443
+00:55:43.960 --> 00:55:46.559
+Pablo Eduardo Abad: Eso está automatizado ya, y herramientas que lo hacen.
+
+444
+00:55:46.800 --> 00:55:49.360
+Pablo Eduardo Abad: Digo, más allá del ejemplo de.
+
+445
+00:55:49.780 --> 00:56:08.369
+Pablo Eduardo Abad: ¿Vamos a borrar alguna tabla en la tabla de usuarios o la otra. Digo, se puede extraer informaciones, se puede hacer de todo, o sea, son son problemas muy complicados y y que, por desgracia, tienen esta característica que la aplicación. Probablemente una aplicación compleja. Tiene cientos de secuelas generados. Basta con que 1
+
+446
+00:56:08.510 --> 00:56:12.040
+Pablo Eduardo Abad: tenga el problema para que se caiga. Todo
+
+447
+00:56:13.470 --> 00:56:26.480
+Pablo Eduardo Abad: Bueno, yo soy actor, Free es mal uso de memoria en ese sentido. También es tener algún puntero liberar la memoria y quedarse con ese puntero y que por ahí alguien después pueda forzar a que se vuelva a leer algo que va a hacer memoria, que se está usando para otra cosa
+
+448
+00:56:27.410 --> 00:56:29.049
+Pablo Eduardo Abad: también. O sea.
+
+449
+00:56:29.340 --> 00:56:39.069
+Pablo Eduardo Abad: valores raros, puede terminar en un Crash más sofisticado. Si Si tenemos un atacante muy, muy paciente y muy inteligente ejecución de código.
+
+450
+00:56:39.730 --> 00:56:45.010
+Pablo Eduardo Abad: Mhm tomando inyección. Es más o menos lo mismo.
+
+451
+00:56:47.440 --> 00:56:50.380
+Pablo Eduardo Abad: hay hay aplicaciones complejas que a veces
+
+452
+00:56:51.130 --> 00:56:58.839
+Pablo Eduardo Abad: no tienen la librería a mano para hacer las cosas o más que delegarlo en una librería alguna acción? La delegan en alguna aplicación? Sí,
+
+453
+00:56:59.000 --> 00:57:03.569
+Pablo Eduardo Abad: el ejemplo más común que conozco es manipulación de imágenes ahí
+
+454
+00:57:04.020 --> 00:57:10.800
+Pablo Eduardo Abad: y una aplicación muy buena que se llama imash ki. Creo que es en Múnix y y muchas
+
+455
+00:57:11.960 --> 00:57:15.849
+Pablo Eduardo Abad: aplicaciones especialmente hechas en Php por gente que por ahí no.
+
+456
+00:57:16.110 --> 00:57:17.020
+Pablo Eduardo Abad: Este
+
+457
+00:57:17.860 --> 00:57:24.959
+Pablo Eduardo Abad: no, no no está pensando en construir algo súper robusto que tienen que manipular imágenes para hacerla, aplicarle algún filtro o algo, y
+
+458
+00:57:26.020 --> 00:57:32.849
+Pablo Eduardo Abad: o sea, implementarlo. Es un chino buscar una librería por ahí no es tan fácil conseguir, y esa aplicación está ahí. Entonces
+
+459
+00:57:33.040 --> 00:57:40.320
+Pablo Eduardo Abad: graban la imagen en un directorio y llaman al sistema operativo ejecutar Imas Kick sobre esta imagen con estos formatos
+
+460
+00:57:40.630 --> 00:57:41.470
+Pablo Eduardo Abad: pum.
+
+461
+00:57:41.610 --> 00:57:51.589
+Pablo Eduardo Abad: Este y, por ejemplo, nos sanitizan el nombre del archivo. Tal vez el nombre del archivo tiene toda una secuencia que es
+
+462
+00:57:51.780 --> 00:58:03.430
+Pablo Eduardo Abad: este, No sé, Temp: punto y coma. R, M: F, R, Punto y coma. No sé si
+
+463
+00:58:03.950 --> 00:58:07.240
+Pablo Eduardo Abad: yo no puedo forzar a que ejecuten otras cosas.
+
+464
+00:58:08.040 --> 00:58:13.829
+Pablo Eduardo Abad: Mhm: 20 21 eran era la otra lista. Entonces.
+
+465
+00:58:14.140 --> 00:58:24.879
+Pablo Eduardo Abad: Ah, no, perdón. Este softwats, Ok Mitre. Es una una de las grandes organizaciones, este que que junta vulnerabilidades.
+
+466
+00:58:25.740 --> 00:58:31.800
+Pablo Eduardo Abad: La otra organización grande es Sogwats o what
+
+467
+00:58:32.090 --> 00:58:38.159
+Pablo Eduardo Abad: Uy. Tengo una laguna la que significa el nombre Openwa Application Security
+
+468
+00:58:38.290 --> 00:58:40.030
+Pablo Eduardo Abad: y la pena. No me acuerdo que era.
+
+469
+00:58:41.040 --> 00:58:49.229
+Pablo Eduardo Abad: pero Oper Openwask nace como una organización con el fin de más que caracterizar las vulnerabilidades, enseñar
+
+470
+00:58:49.450 --> 00:58:57.940
+Pablo Eduardo Abad: los tipos de vulnerabilidad que existen y y ser como una fuente constante de de Awarnesrs de de promoción.
+
+471
+00:58:58.200 --> 00:59:03.770
+Pablo Eduardo Abad: de cuáles son las vulnerabilidades que más se están explotando en el momento.
+
+472
+00:59:04.820 --> 00:59:07.390
+Pablo Eduardo Abad: Cada 4 años.
+
+473
+00:59:07.880 --> 00:59:18.180
+Pablo Eduardo Abad: Organiza un top top 10 top 25 a a hace de de vulnerabilidades por tipo donde es como que nos da toda la comunidad de desarrolladores
+
+474
+00:59:18.280 --> 00:59:25.210
+Pablo Eduardo Abad: idea de cuáles son las vulnerabilidades que más están explotando como para tener una idea. Entonces.
+
+475
+00:59:25.720 --> 00:59:35.079
+Pablo Eduardo Abad: como profesionales responsables, cada tanto estaría bueno que o sería, se sería esperable que
+
+476
+00:59:35.440 --> 00:59:46.110
+Pablo Eduardo Abad: miremos el top ten de aguas y que conozcamos esa vulnerabilidad si aparece alguna nueva que no conocemos. Es buen momento y aguas tiene documentación para explicarla y demás.
+
+477
+00:59:46.500 --> 00:59:48.489
+Pablo Eduardo Abad: A medida que pasa el tiempo.
+
+478
+00:59:48.710 --> 00:59:59.130
+Pablo Eduardo Abad: las vulnerabilidades cambian un poco, porque las más famosas son también después a las cuales se dedica más tiempo en en arreglarlas. Y surgen otras porque siempre hay transiciones entre 1 y otro
+
+479
+01:00:00.620 --> 01:00:13.000
+Pablo Eduardo Abad: acá Tengo la versión, 20 21, pero hay hay una más nueva, tendrá que actualizarlo. Pero bueno, esto esto va cambiando, pero son el tipo de cosas que que vimos antes: inyección de código. Este
+
+480
+01:00:13.600 --> 01:00:17.430
+Pablo Eduardo Abad: exposición de datos sensibles, control de acceso, roto.
+
+481
+01:00:17.850 --> 01:00:25.989
+Pablo Eduardo Abad: configuración incorrecta de seguridad, falta de Login X era el externo alenditis.
+
+482
+01:00:26.360 --> 01:00:41.070
+Pablo Eduardo Abad: Hoy creo que ya este fue, Ha, hay hay ciertos problemas que cuando se descubren, todo el mundo se da cuenta que son todos vulnerables y pegan un salto rápido, pero después de caen y caen como en un caso específico de una categoría en particular.
+
+483
+01:00:41.580 --> 01:00:45.250
+Pablo Eduardo Abad: Xml: Es un protocolo bastante complejo.
+
+484
+01:00:45.450 --> 01:00:50.169
+Pablo Eduardo Abad: Tiene una funcionalidad para poder cargar esquemas de Xml
+
+485
+01:00:51.150 --> 01:00:56.919
+Pablo Eduardo Abad: desde una U. R. L, Y a alguien se le ocurrió, bueno, pará, pero yo podría usar eso para mandarle a un servidor.
+
+486
+01:00:57.230 --> 01:01:10.130
+Pablo Eduardo Abad: este, un Xml armado, donde la url del esquema no es la borda del esquema. Es un get a otra página. Este y por más que lo traiga y después diga, estoy inválido, se rompe. No sé qué hice, que el servidor hago un geta, otra página.
+
+487
+01:01:10.970 --> 01:01:17.949
+Pablo Eduardo Abad: Este, y con eso 1 podría escanear una red interna, la red a la que tiene visibilidad. El servidor, hacer un montón de otras cosas.
+
+488
+01:01:18.110 --> 01:01:19.880
+Pablo Eduardo Abad: Hace unos años estuvo
+
+489
+01:01:20.050 --> 01:01:25.670
+Pablo Eduardo Abad: estuvo bastante de moda eso porque prácticamente todas las librerías del planeta que parecían Xml tenían ese problema.
+
+490
+01:01:26.540 --> 01:01:27.390
+Pablo Eduardo Abad: Mhm
+
+491
+01:01:32.830 --> 01:01:34.660
+Pablo Eduardo Abad: Hay
+
+492
+01:01:35.880 --> 01:01:45.149
+Pablo Eduardo Abad: yéndonos así un poco más moderno. O Wash empezó como un framework para aplicaciones web, aparecieron 2 cosas nuevas.
+
+493
+01:01:45.660 --> 01:01:52.350
+Pablo Eduardo Abad: Una son los ambientes cloud. Entonces hay un Top, 10 de
+
+494
+01:01:54.000 --> 01:02:00.350
+Pablo Eduardo Abad: de vulnerabilidades o de o de Witness en en el mundo. Clown: Sí,
+
+495
+01:02:01.360 --> 01:02:11.979
+Pablo Eduardo Abad: no vamos a entrar acá. Porque si no por ahí. Voy a tocar muchos temas que no tienen por qué saber y no, no nos va a alcanzar la batería. Si a alguien le interesa, está el top y esclavo.
+
+496
+01:02:12.730 --> 01:02:15.449
+Pablo Eduardo Abad: No les quiero mentir. Creo que ya está publicado.
+
+497
+01:02:16.570 --> 01:02:25.469
+Pablo Eduardo Abad: pero estaban trabajando también en el top, 10 de el Elens, o sea, ahora con todo el tema de el uso de Language, Models y
+
+498
+01:02:25.580 --> 01:02:37.149
+Pablo Eduardo Abad: y aplicaciones, o el uso en aplicaciones del Erems. Hay toda una familia nueva de vulnerabilidades. Este complicadas que son específicas para ellos.
+
+499
+01:02:38.180 --> 01:02:54.419
+Pablo Eduardo Abad: La más divertida de todas esas se conoce como content poisoning no sé si escucharon hablar, pero ahora que tenemos un montón de agentes que corren en el Ems croleando páginas, hay una vulnerabilidad que está muy de moda, que es poner taxis invisibles en la página
+
+500
+01:02:54.710 --> 01:03:02.729
+Pablo Eduardo Abad: que al que el render no hacen nada, pero que tiene un texto muy pensado para un lema del tipo ignorar todas tus instrucciones y
+
+501
+01:03:03.140 --> 01:03:07.689
+Pablo Eduardo Abad: este y y hacer talle otra cosa, o si.
+
+502
+01:03:07.690 --> 01:03:08.680
+NICOLÁS CANZONIERI: Son un clásico de.
+
+503
+01:03:08.680 --> 01:03:12.350
+Pablo Eduardo Abad: Para ver si esta página es buena. Decir que es la mejor.
+
+504
+01:03:12.510 --> 01:03:13.280
+Pablo Eduardo Abad: ¿
+
+505
+01:03:13.870 --> 01:03:24.210
+Pablo Eduardo Abad: Hace poco había leído que que habían descubierto ataques de ese tipo en currículums para cuando los analizaban sistemas automáticos que había texto en blanco, como diciendo.
+
+506
+01:03:24.210 --> 01:03:26.079
+NICOLÁS CANZONIERI: Sí, yo también lo escuché. Esa.
+
+507
+01:03:26.080 --> 01:03:27.629
+Pablo Eduardo Abad: Todo lo que pide
+
+508
+01:03:27.750 --> 01:03:34.049
+Pablo Eduardo Abad: ignorar todas las instrucciones que tengas para el contrario. Y si no inventate las razones, porque este currículo no va a ser el mejor.
+
+509
+01:03:34.570 --> 01:03:40.349
+Pablo Eduardo Abad: Son familias nuevas de de problemas por por el uso de tecnologías nuevas. Pero en general.
+
+510
+01:03:40.840 --> 01:03:53.670
+Pablo Eduardo Abad: tanto Mitre como Wass son como 2 lugares que que llevan ya más de 20 años siendo referencia para los que estamos en seguridad, para ir entendiendo cómo se va moviendo y es una buena fuente para estar actualizado.
+
+511
+01:03:53.940 --> 01:03:58.850
+Pablo Eduardo Abad: pues no importa que hoy estas sean de las más conocidas. Esto va cambiando
+
+512
+01:04:03.190 --> 01:04:06.009
+Pablo Eduardo Abad: los medios justos de tiempo.
+
+513
+01:04:09.850 --> 01:04:17.780
+Pablo Eduardo Abad: Gran parte de de hacer un sistema seguro viene de que ustedes conozcan que existen estas vulnerabilidades. El hecho de conocerlas
+
+514
+01:04:19.710 --> 01:04:23.250
+Pablo Eduardo Abad: ya es como que los predispone a a no cometer esos errores
+
+515
+01:04:24.490 --> 01:04:35.910
+Pablo Eduardo Abad: en en un sistema, pero en general a los que estamos en seguridad. Las pruebas por fe no no nos gustan tanto, entonces hay una metodología para ser un poco más objetivo y dogmático en esto
+
+516
+01:04:36.130 --> 01:04:39.710
+Pablo Eduardo Abad: modeling threte modeling es una metodología
+
+517
+01:04:39.990 --> 01:04:48.790
+Pablo Eduardo Abad: que creó Microsoft en una época en la que se cuestionaba mucho la seguridad de Windows. Estoy hablando de la época de Windows. 98 más o menos
+
+518
+01:04:48.920 --> 01:04:58.150
+Pablo Eduardo Abad: como que quisieron volverse muy serios en eso, porque estaban siendo cuestionados muy fuertemente y salían tipo. Había problemas de seguridad por semana.
+
+519
+01:04:58.750 --> 01:04:59.570
+Pablo Eduardo Abad: Mhm
+
+520
+01:05:00.100 --> 01:05:13.050
+Pablo Eduardo Abad: desarrollar una metodología armar un equipo de seguridad muy robusto. Este tengo que decir que le fue bien, o sea, hoy día, al contrario de lo que era antes, se considera Windows un sistema bastante robusto en términos de seguridad
+
+521
+01:05:14.040 --> 01:05:19.660
+Pablo Eduardo Abad: en que se llama trete Modeling Treatmodeling.
+
+522
+01:05:19.770 --> 01:05:24.519
+Pablo Eduardo Abad: es un ciclo corto que se puede aplicar al desarrollo de cualquier tipo de software
+
+523
+01:05:25.840 --> 01:05:35.829
+Pablo Eduardo Abad: que tiene estas 5 etapas genéricas de definir amenazas, crear un diagrama de las dependencias identificar los caminos para explotarlas.
+
+524
+01:05:36.320 --> 01:05:44.549
+Pablo Eduardo Abad: En función de eso, mitigar esos caminos, hacer una validación y volver a repetir el modelo que desarrolló
+
+525
+01:05:44.980 --> 01:05:51.240
+Pablo Eduardo Abad: Microsoft Para hacer eso. Clasifica las amenazas en 6 categorías. Es un modelo que se llama Stradile y
+
+526
+01:05:51.360 --> 01:05:55.590
+Pablo Eduardo Abad: y y es bastante usado en la industria, en sistemas críticos. Así que se pueden llegar a encontrar.
+
+527
+01:05:55.720 --> 01:05:58.510
+Pablo Eduardo Abad: básicamente clasifica a las
+
+528
+01:06:00.820 --> 01:06:14.140
+Pablo Eduardo Abad: a las amenazas en 6 categorías y y el modelo lo lo que plantea es por cada sistema que se evalúa evaluar cada una de estas categorías por separado y conseguir al menos 2 amenazas en cada categoría que parezcan críticas.
+
+529
+01:06:15.120 --> 01:06:23.089
+Pablo Eduardo Abad: la S Spuffin, problemas de autenticación. Hacer que el sistema se crea o trabaje
+
+530
+01:06:23.300 --> 01:06:28.989
+Pablo Eduardo Abad: pensando que un usuario es otro tampering, manipulación de integridad recluidation.
+
+531
+01:06:29.390 --> 01:06:37.780
+Pablo Eduardo Abad: Lograr que el sistema haga algo sin que quede auditado, que ocurrió o lograr que alguien
+
+532
+01:06:38.970 --> 01:06:44.099
+Pablo Eduardo Abad: puede ejecutar algo sensible y negarlo después sin poder probarlo.
+
+533
+01:06:44.330 --> 01:06:51.499
+Pablo Eduardo Abad: Mhm y clauser de información información revelada contra lo que queríamos, denive of service
+
+534
+01:06:52.330 --> 01:06:57.149
+Pablo Eduardo Abad: una caída. Respecto a la disponibilidad o elevación de privilegio.
+
+535
+01:06:57.800 --> 01:07:02.520
+Pablo Eduardo Abad: Con un poco de creatividad puedes meter cualquier amenaza en una de estas 6 este categorías.
+
+536
+01:07:04.050 --> 01:07:07.330
+Pablo Eduardo Abad: A partir de ahí, la idea es armar una suerte de
+
+537
+01:07:09.210 --> 01:07:12.280
+Pablo Eduardo Abad: flujo de datos donde se mapean
+
+538
+01:07:12.770 --> 01:07:20.630
+Pablo Eduardo Abad: procesos en días externas y datos importantes que se comunican entre procesos Mhm
+
+539
+01:07:21.110 --> 01:07:24.890
+Pablo Eduardo Abad: y los lugares donde se almacenan. Y sobre esto se construye
+
+540
+01:07:25.230 --> 01:07:29.139
+Pablo Eduardo Abad: para las amenazas que se fueron describiendo.
+
+541
+01:07:30.290 --> 01:07:34.900
+Pablo Eduardo Abad: Se va explicando qué procesos, qué entidades y qué flujos
+
+542
+01:07:37.260 --> 01:07:45.679
+Pablo Eduardo Abad: participan en cada una de estas. Esto es genérico, pero en un ejercicio normal. Acá ¿Habría este amenazas normales. Acá Habría
+
+543
+01:07:46.190 --> 01:07:51.699
+Pablo Eduardo Abad: entidades externas, procesos y flujo de datos. Este reales
+
+544
+01:07:51.830 --> 01:07:57.850
+Pablo Eduardo Abad: a veces lo van a ver como tabla. Hay otra. Hay otra corriente que dibuja esto como un árbol
+
+545
+01:07:58.270 --> 01:08:00.080
+Pablo Eduardo Abad: donde en las
+
+546
+01:08:00.820 --> 01:08:09.529
+Pablo Eduardo Abad: como que el árbol empieza con amenazas, se abren las 6 categorías. Cada categoría se abren los ejemplos y los ejemplos se abren los recursos. La forma de mostrar lo mismo.
+
+547
+01:08:09.690 --> 01:08:20.569
+Pablo Eduardo Abad: El punto es que en cada 1 de estos 1 tiene que elegir explícitamente entre eliminar el riesgo y tomar la decisión de cómo mitigarlo, o sea, achicar la posibilidad de que ocurra
+
+548
+01:08:20.990 --> 01:08:22.920
+Pablo Eduardo Abad: compensarlo es.
+
+549
+01:08:23.290 --> 01:08:29.989
+Pablo Eduardo Abad: No se puede evitar que sea esa situación, pero la voy a compensar, por ejemplo, con una alerta extra que me va a decir cuando pase.
+
+550
+01:08:30.140 --> 01:08:32.989
+Pablo Eduardo Abad: por ejemplo, o aceptarlo. Es decir, esto existe
+
+551
+01:08:33.460 --> 01:08:34.800
+Pablo Eduardo Abad: y no vamos a hacer nada.
+
+552
+01:08:35.859 --> 01:08:46.640
+Pablo Eduardo Abad: Es un ejercicio para explicitar este tipo de decisiones y y es un ejercicio teórico. Se puede desarrollar cuando 1 está todavía pensando en en el sistema
+
+553
+01:08:47.109 --> 01:08:55.290
+Pablo Eduardo Abad: en general, En una empresa que tenga un equipo de seguridad ofensiva bastante maduro, productos nuevos suelen pasar por algún ejercicio de este tipo.
+
+554
+01:08:55.680 --> 01:09:00.230
+Pablo Eduardo Abad: y hay algunas industrias reguladas tipo pagos donde
+
+555
+01:09:01.060 --> 01:09:04.759
+Pablo Eduardo Abad: también se necesitan demostrar que hubo ejercicios de este tipo.
+
+556
+01:09:06.170 --> 01:09:11.989
+Pablo Eduardo Abad: Es un Owass. Tiene su versión del Fred Modeling
+
+557
+01:09:12.130 --> 01:09:18.590
+Pablo Eduardo Abad: este, pero es muy parecida al de Microsoft. Más que nada, el de Microsoft sin el copyright de Microsoft, si quieren.
+
+558
+01:09:18.970 --> 01:09:28.029
+Pablo Eduardo Abad: pero es es más o menos lo mismo. La gran diferencia es que Wash tiene un manual gratuito de cómo es el proceso completo de Fredmodeling.
+
+559
+01:09:28.770 --> 01:09:33.870
+Pablo Eduardo Abad: Este el de Microsoft. Hay que pagar ¿
+
+560
+01:09:35.410 --> 01:09:42.129
+Pablo Eduardo Abad: Me voy a quedar acá. Este. Lo que barrimos hoy son los capítulos 12 y 13 de Bishop.
+
+561
+01:09:42.390 --> 01:09:46.319
+Pablo Eduardo Abad: Bishop no habla tanto de amenazas concretas
+
+562
+01:09:46.790 --> 01:09:49.369
+Pablo Eduardo Abad: Para eso los invito a ver el
+
+563
+01:09:49.479 --> 01:09:54.780
+Pablo Eduardo Abad: el proceso de Dreadmodeling de de Wass, donde van a estar en el proceso, también los links, a
+
+564
+01:09:55.190 --> 01:10:00.720
+Pablo Eduardo Abad: a los distintos tipos de amenazas en
+
+565
+01:10:03.560 --> 01:10:08.699
+Pablo Eduardo Abad: y con eso terminamos acá de barrer el el tema de de vulnerabilidad, amenazas.
+
+566
+01:10:09.270 --> 01:10:12.439
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Pero profe. No hicimos el juego desde la diapositiva.
+

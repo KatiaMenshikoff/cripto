@@ -1,0 +1,1578 @@
+WEBVTT
+
+1
+00:00:06.290 --> 00:00:07.290
+Leandro Ariel Suarez: Ahí estamos.
+
+2
+00:00:09.820 --> 00:00:26.190
+Leandro Ariel Suarez: Bueno, naturalmente, cuando cuando estamos trabajando con con sistemas y con la seguridad de sus sistemas, empiezan a surgir
+
+3
+00:00:26.500 --> 00:00:38.149
+Leandro Ariel Suarez: naturalmente usuarios como podemos tener en un sistema operativo con anding con privilegios altos con con permisos elevados.
+
+4
+00:00:39.130 --> 00:00:44.709
+Leandro Ariel Suarez: y estos usuarios generalmente son lo que más buscan los atacantes. Porque porque
+
+5
+00:00:44.870 --> 00:00:49.050
+Leandro Ariel Suarez: una vez que te haces con 1 de ellos, ya puedes medio.
+
+6
+00:00:49.160 --> 00:00:56.539
+Leandro Ariel Suarez: Eres allanado el camino para poder ha hacer daño para poder robar cosas, y tienes menos trabas a la hora de
+
+7
+00:00:56.830 --> 00:01:01.910
+Leandro Ariel Suarez: de poder ejecutar tus acciones. No, pues es
+
+8
+00:01:02.790 --> 00:01:13.480
+Leandro Ariel Suarez: access Management. Es una una forma de gestionar estos usuarios para poder
+
+9
+00:01:14.390 --> 00:01:23.980
+Leandro Ariel Suarez: hacer un control para poder ver que están ejecutando a ver para ver qué privilegios tienen asignados. Y por qué,
+
+10
+00:01:24.280 --> 00:01:29.339
+Leandro Ariel Suarez: para ver si eso es temporal o no? Bueno.
+
+11
+00:01:29.760 --> 00:01:41.959
+Leandro Ariel Suarez: es un poco el controlar a estas cuentas de superar 1 000 o privilegios elevados que tienen posibilidades amplias sobre sobre los sistemas.
+
+12
+00:01:43.180 --> 00:01:51.759
+Leandro Ariel Suarez: Y bueno, esta este tipo de de metodología para para tratar.
+
+13
+00:01:51.900 --> 00:01:56.700
+Leandro Ariel Suarez: para poder gestionar este tipo de de de ámbito.
+
+14
+00:01:58.530 --> 00:02:05.430
+Leandro Ariel Suarez: para gestionar todos estos usuarios. ¿qué es lo que necesitamos o inventariarlo? No ver
+
+15
+00:02:05.590 --> 00:02:08.519
+Leandro Ariel Suarez: cuáles son las cuentas que son privilegiadas.
+
+16
+00:02:08.940 --> 00:02:24.570
+Leandro Ariel Suarez: inventariarlas, tener un control, documentarlas y tener un control de que existen, que están por ahí que tienen que están asignadas a cierta persona o a ciertas personas. Y, bueno, naturalmente, de esa forma tenerlas registradas.
+
+17
+00:02:25.830 --> 00:02:32.230
+Leandro Ariel Suarez: Otra cosa que se suele hacer es asegurar el privilegio mínimo. Pero los principios que ya estuvimos viendo
+
+18
+00:02:32.500 --> 00:02:34.930
+Leandro Ariel Suarez: cómo se
+
+19
+00:02:35.110 --> 00:02:44.089
+Leandro Ariel Suarez: se logra se logra hacer esto, ¿Qué es lo que se suele hacer. Es listo. Si vos tenés una cuenta privilegiada, no va a ser tu cuenta
+
+20
+00:02:44.670 --> 00:02:54.310
+Leandro Ariel Suarez: que vos utilizas para trabajar. Entonces, generalmente esa cuenta es una cuenta de alguien separada de la de una persona que trabaja y que tiene su propia cuenta para trabajar.
+
+21
+00:02:55.050 --> 00:02:57.940
+Leandro Ariel Suarez: Esto permite que el día de mañana
+
+22
+00:02:58.510 --> 00:03:18.450
+Leandro Ariel Suarez: esa cuenta sea traspasada que pueda ser cuando la persona se va cuando la persona cambia de puesto o cambia de rol? Bueno, que se puede transferir, ¿no? Muchas veces no se crea una cuenta nueva, pero en general, como están inventariadas y hay visibilidad de control de las mismas. Se suelen reutilizar.
+
+23
+00:03:18.760 --> 00:03:21.310
+Leandro Ariel Suarez: Eso tiene una parte mala, también, no que ahora vamos a ver.
+
+24
+00:03:22.120 --> 00:03:37.300
+Leandro Ariel Suarez: Y después. Bueno, se exige que la autenticación sea lo más segura posible. Probablemente 2, 3 o más factores de autenticación. Eso se se ve, pero debe ser robusto la autenticación de la misma y asegurar el no repudio.
+
+25
+00:03:37.300 --> 00:03:42.720
+Leandro Ariel Suarez: porque nadie puede decir, no, no, no, yo no hice nada con esta cuenta. No vos lo hiciste. Vos Tenías tof
+
+26
+00:03:43.420 --> 00:03:51.880
+Leandro Ariel Suarez: avanzaste sobre estos factores. Solamente les podías avanzar. Vos Entonces fuiste vos el que hiciste esto.
+
+27
+00:03:53.180 --> 00:03:54.460
+Leandro Ariel Suarez: En
+
+28
+00:03:54.960 --> 00:04:12.340
+Leandro Ariel Suarez: después se suele registrar y monitorear todo lo que hacen estas cuentas sobre no, probablemente se se registre no en algún servidor externo, o sea externo, a donde se está ejecutando, se guarden logs, se guardan en algún tipo de
+
+29
+00:04:12.400 --> 00:04:17.999
+Leandro Ariel Suarez: de auditoría de lo que se está haciendo con esos usuarios para si pasara algo, reconstruir lo que pasó
+
+30
+00:04:18.640 --> 00:04:23.979
+Leandro Ariel Suarez: y se va a pedir que se roten las Passwords, en realidad, más que rotar.
+
+31
+00:04:24.220 --> 00:04:39.389
+Leandro Ariel Suarez: Obviamente cada tanto hay que cambiarlo, porque esa contraseña puede haber quedado expuesta, pero también se suelen hacer reválidas porque, como le decía, estos usuarios a veces se transfieren, se cambian de de dueño. Y si yo me voy a la empresa.
+
+32
+00:04:39.810 --> 00:04:52.869
+Leandro Ariel Suarez: puedo saber de que existía un usuario concepto de acontecimientos. Generalmente, cuando se transfieren, se suele hacer un cambio de contraseña y cada tanto se suelen revalidar de que esa persona deba tener esa cuenta de administración.
+
+33
+00:05:01.780 --> 00:05:08.509
+Leandro Ariel Suarez: Bueno, esto es un poco el ciclo de vida de pan, con lo que les venía contando
+
+34
+00:05:12.820 --> 00:05:14.000
+Leandro Ariel Suarez: y
+
+35
+00:05:14.130 --> 00:05:25.250
+Leandro Ariel Suarez: el descubrir, manejar, manager y proteger, monitorear, detectar usos anor a anormales, anomalías respuesta de incidentes revisar y evitar.
+
+36
+00:05:30.210 --> 00:05:35.360
+Leandro Ariel Suarez: Y ahora pasamos, acá vamos a tener distintas paradas sobre distintas
+
+37
+00:05:35.700 --> 00:05:45.620
+Leandro Ariel Suarez: cuestiones que que tienen que ver con la seguridad también de las empresas. Y ahora nos toca lo que es la prevención de vulnerabilidades.
+
+38
+00:05:45.800 --> 00:05:46.660
+Leandro Ariel Suarez: O sea.
+
+39
+00:05:47.490 --> 00:05:58.209
+Leandro Ariel Suarez: muchas empresas construyen software. Muchas organizaciones se viven de construir software. No estoy hablando particularmente de la software factory. Puede ser, pero digo.
+
+40
+00:05:58.300 --> 00:06:16.499
+Leandro Ariel Suarez: construye su software y y operan a través del software que construye. Entonces, a diferencia de los productos que 1 no contrata lo o lo se encarga el proveedor de de velar por esa vulnerabilidad por ver que el producto sea seguro, que no tenga el Ics y demás cuestiones.
+
+41
+00:06:16.530 --> 00:06:26.390
+Leandro Ariel Suarez: Acá Nosotros tenemos que gestionar y prevenir, en el mejor de los casos, vulnerabilidades de nuestro propio software. Nuestro software que construimos internamente
+
+42
+00:06:27.750 --> 00:06:31.959
+Leandro Ariel Suarez: en una de las
+
+43
+00:06:32.580 --> 00:06:46.990
+Leandro Ariel Suarez: de las metodologías que han surgido es la de Dev s. E. Cox. Antes de ir a Depse Cox. Estaría bueno pararnos y y ver qué es de Vox alguno sabe lo que es de Vox. No de Vox.
+
+44
+00:06:47.240 --> 00:06:48.430
+Leandro Ariel Suarez: Tiene.
+
+45
+00:06:48.430 --> 00:06:53.530
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Reactivando todos mis traumas del cuatrimestre pasado, cuando yo cursé de box.
+
+46
+00:06:54.250 --> 00:06:59.560
+Leandro Ariel Suarez: Okay. Bueno, entonces puedes responder perfectamente? La respuesta. No.
+
+47
+00:07:00.870 --> 00:07:05.270
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y qué es de box a ver? Es un tema amplio.
+
+48
+00:07:05.450 --> 00:07:06.390
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Se podría.
+
+49
+00:07:06.390 --> 00:07:10.040
+Leandro Ariel Suarez: Resumirlo en un en una oración.
+
+50
+00:07:10.040 --> 00:07:17.089
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: El conjunto de prácticas y estándares que hacen al proceso de desarrollo en una empresa.
+
+51
+00:07:18.700 --> 00:07:25.079
+Leandro Ariel Suarez: Okay. Y si lo que lo tenéis que decir más campechano, más entre nosotros, una charla de bar.
+
+52
+00:07:26.560 --> 00:07:28.690
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Todo lo
+
+53
+00:07:29.380 --> 00:07:38.469
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: referente a cómo pro programamos, más que qué programamos, cómo tenemos nuestro repositorio, nuestra infraestructura, las prácticas que tenemos.
+
+54
+00:07:40.770 --> 00:07:49.850
+Leandro Ariel Suarez: Bien, o sea, ¿está está bueno. Lo que decís es lo que hoy se termina a lo que se termina encargando de Vox. O sea, como el propósito
+
+55
+00:07:50.120 --> 00:07:56.690
+Leandro Ariel Suarez: de voz surge ahora cuento un poco. Yo todo les cuento de dónde surge
+
+56
+00:07:57.160 --> 00:08:00.929
+Leandro Ariel Suarez: surge porque había un Prob, un problema
+
+57
+00:08:01.490 --> 00:08:11.659
+Leandro Ariel Suarez: antes: los equipos de desarrollo, cuando digo antes es ahora también, no, pero sobre todo antes Estamos hablando de los 80, los 90, los 2 000,
+
+58
+00:08:11.770 --> 00:08:15.530
+Leandro Ariel Suarez: los equipos de desarrollo desarrollaban
+
+59
+00:08:15.820 --> 00:08:35.030
+Leandro Ariel Suarez: y vi un equipo de operaciones de de Ops que se encargaba de desplegar, de monitorear y de ver que eso funcione, lo que el desarrollador había hecho funcione. Nos podemos remontar a la época de la tarjeta perforada. Como no nos vamos tan lejos. Dos 1 009, 2 010
+
+60
+00:08:35.210 --> 00:08:39.819
+Leandro Ariel Suarez: equipo, y hoy me imagino que también hay equipos que desarrollan.
+
+61
+00:08:40.190 --> 00:08:53.220
+Leandro Ariel Suarez: y eso después se lo dan a un equipo de de operaciones de infraestructura que agarra lo despliega. Dice esto: no anduvo te lo devuelvo. O sí, está fallando. Esto hay que verlo con tal persona.
+
+62
+00:08:53.410 --> 00:08:57.660
+Leandro Ariel Suarez: Entonces eso antes era muy común. Y
+
+63
+00:08:58.170 --> 00:09:03.950
+Leandro Ariel Suarez: más allá de que parezca antigua o añejo es como funcionó la industria, muchísimos años.
+
+64
+00:09:04.250 --> 00:09:09.070
+Leandro Ariel Suarez: O sea, tuvo tuvo un una utilidad.
+
+65
+00:09:09.750 --> 00:09:14.700
+Leandro Ariel Suarez: ¿qué es lo que pasaba con con esta, con esta metodología, no
+
+66
+00:09:15.390 --> 00:09:20.799
+Leandro Ariel Suarez: el equipo de desarrollo elaborado aislado del equipo de infraestructura, operaciones. Entonces.
+
+67
+00:09:21.200 --> 00:09:38.840
+Leandro Ariel Suarez: y lo peor de todo trabajar con objetivos opuestos, o sea, en en contra, o sea, el equipo de desarrollo. Quería sacar cosas, una nueva fitchure, todo lo que pasa lo que sigue pasando hoy y qué hacía el equipo de operaciones? No, No, La mediación ahora está estable y no le metas nada
+
+68
+00:09:38.840 --> 00:09:41.370
+Leandro Ariel Suarez: se me va a caer. Le voy a bajar la performance, No, no.
+
+69
+00:09:41.720 --> 00:09:44.209
+Leandro Ariel Suarez: no. Aparte de esto, probar a lo mejor.
+
+70
+00:09:44.810 --> 00:09:51.009
+Leandro Ariel Suarez: Y entonces, qué pasaba? Se bloqueaba. Todo se había pelea. Había enfrentamientos.
+
+71
+00:09:51.430 --> 00:10:03.209
+Leandro Ariel Suarez: Entonces, bueno, ¿qué es lo que es lo que se decide? Y porque se termina porque termina surgiendo de vos porque alguien agarra y dice estos equipos ahora son 1 solo.
+
+72
+00:10:03.340 --> 00:10:11.819
+Leandro Ariel Suarez: Tienen el mismo objetivo. El equi El objetivo es ser responsables de todo lo que se despliega a producción y de
+
+73
+00:10:12.360 --> 00:10:17.230
+Leandro Ariel Suarez: hay que sacar un fiture, lo saca este equipo y se encarga de que
+
+74
+00:10:17.430 --> 00:10:23.960
+Leandro Ariel Suarez: de llevar una producción y que funcione. Si algo falla es el mismo equipo en el que tiene que
+
+75
+00:10:24.810 --> 00:10:28.049
+Leandro Ariel Suarez: velar por que eso se solucione, porque eso funcione bien.
+
+76
+00:10:29.170 --> 00:10:46.649
+Leandro Ariel Suarez: De ahí surge continues integration, continuse develome la infraestructura como código métricas, todo lo que hoy hay métrica por todos lados del de las aplicaciones. Hay empresas que viven de de de costear métrica.
+
+77
+00:10:46.720 --> 00:10:55.230
+Leandro Ariel Suarez: por decir, un ejemplo, New Relly y demás, Contratadog y demás cuestiones que viven de grafana vives de
+
+78
+00:10:55.420 --> 00:11:01.170
+Leandro Ariel Suarez: costear y proveer métricas a los equipos para su infraestructura y para sus aplicaciones.
+
+79
+00:11:02.160 --> 00:11:09.590
+Leandro Ariel Suarez: El famoso lema de lo que se llamaba como vos lo construí. Vos lo corres y humilde, Your. Naipe.
+
+80
+00:11:10.470 --> 00:11:19.700
+Leandro Ariel Suarez: Pero Bueno, esto para dar un un preámbulo a después, lo que termina siendo de ese Co. ¿qué pasó con de ese Cox?
+
+81
+00:11:20.180 --> 00:11:24.410
+Leandro Ariel Suarez: Se quiso aplicar el mismo principio, que es lo que pasa hoy, y hoy pasa. Hoy en día.
+
+82
+00:11:24.710 --> 00:11:30.570
+Leandro Ariel Suarez: el equipo de seguridad está, por un lado, y el equipo de desarrollo y de box está por otro.
+
+83
+00:11:30.800 --> 00:11:37.930
+Leandro Ariel Suarez: Entonces desarrollo quiere sacar cambio todo el tiempo rápido sin trabas y la
+
+84
+00:11:38.380 --> 00:11:50.290
+Leandro Ariel Suarez: digamos que a los desarrolladores no es la seguridad o la gran mayoría de los de los desarrolladores de la seguridad no es su principal preocupación. O sea, están preocupados en otro tipo de cuestiones. Después vemos si eso está bien o no.
+
+85
+00:11:50.290 --> 00:12:05.470
+Leandro Ariel Suarez: pero podemos generalizar y decir eso, y podemos decir que el equipo de seguridad está con ganas de frenar todo, porque si no vas a rom, vas a meter vulnerabilidades, no hay que chequear todo. Tenemos revisar todo eso atenta con
+
+86
+00:12:05.690 --> 00:12:14.669
+Leandro Ariel Suarez: y esta agilidad que le queremos dar a los desarrollos al despliegue de nuevos fiturs.
+
+87
+00:12:15.170 --> 00:12:25.390
+Leandro Ariel Suarez: Entonces, y lo que termina, lo que termina siendo es un poco esta metodología, no de y meter
+
+88
+00:12:25.420 --> 00:12:41.370
+Leandro Ariel Suarez: la seguridad en todo el en todo el en cada 1 de los pasos del proceso de llevar algo a producción desde la planificación. Mientras se comité código. Cuando se veía si te estima en ambiente no productivo, cuando se lleva a producción y cuando está en operación
+
+89
+00:12:43.890 --> 00:12:50.100
+Leandro Ariel Suarez: en sí me pasé entonces lo que plantea es
+
+90
+00:12:50.320 --> 00:12:59.170
+Leandro Ariel Suarez: hoy por hoy, o la gran mayoría de de empresas se aplica la seguridad en este en el último paso en la operación.
+
+91
+00:12:59.590 --> 00:13:14.650
+Leandro Ariel Suarez: Ahí se se está monitoreando. Se está haciendo trendirte, se está haciendo Pentexting: Lo vamos a ver en un rato. Bueno el tema de los pomortes. Si pasara algo bueno, lo que dice Epso y Cox es no, no
+
+92
+00:13:14.820 --> 00:13:18.839
+Leandro Ariel Suarez: como lo quiero meter cada vez más a la izquierda de todo el proceso.
+
+93
+00:13:18.980 --> 00:13:22.730
+Leandro Ariel Suarez: Yo quiero estar desde el momento en que se planifica y se desarrolla.
+
+94
+00:13:23.510 --> 00:13:27.130
+Leandro Ariel Suarez: Entonces esto
+
+95
+00:13:27.290 --> 00:13:43.059
+Leandro Ariel Suarez: hace que cuanto más temprano detectamos un problema menos difícil es resolverlo. Si yo lo detecte en el último paso, tengo que probablemente de volver a correr todo esto de nuevo, y todo eso tiene un costo asociado.
+
+96
+00:13:43.830 --> 00:13:53.070
+Leandro Ariel Suarez: entonces seguridad. Se se plantea que seguridad debe estar dentro de los todos los equipos, o sea, a veces hay iniciativas, como es el Critic Champions.
+
+97
+00:13:53.190 --> 00:14:12.450
+Leandro Ariel Suarez: donde el equipo de seguridad, como no se puede. Hay empresas, son muy grandes y el equipo de seguridad es así versus todo el tamaño de la empresa, Entonces dicen, bueno, yo necesito un programa tipo Sequirity Champions, donde yo delego a una persona en los equipos para que sea el Champions de Seguridad. Entonces a
+
+98
+00:14:12.560 --> 00:14:17.469
+Leandro Ariel Suarez: esa persona es la que está encargada de velar por la seguridad dentro de su equipo.
+
+99
+00:14:18.380 --> 00:14:34.989
+Leandro Ariel Suarez: Eso no es tan fácil como 1 lo plantea. No hay que capacitar gente. No es el mismo el expertise que tiene un Champions que tiene alguien que trabaja en seguridad, Hay distintas. Cos Hay distintas aproveches que se están tomando para poder llegar al depse Gox
+
+100
+00:14:35.730 --> 00:14:41.119
+Leandro Ariel Suarez: todavía no termina de canal de todas las organizaciones.
+
+101
+00:14:41.300 --> 00:14:52.700
+Leandro Ariel Suarez: Entonces muchas empresas dicen que tienen de ese Cops, y en realidad es que los equipos de seguridad hacen herramientas que después le piden a los desarrolladores que las usen. Entonces? No.
+
+102
+00:14:52.700 --> 00:15:01.530
+Leandro Ariel Suarez: no, no, no es así. Depp seco? Implica que haya gente de seguridad en cada 1 de los equipos desde el primer momento en que se toma un desarrollo y se planifica
+
+103
+00:15:03.610 --> 00:15:08.979
+Leandro Ariel Suarez: y es muy difícil. Eso no no es. No es algo fácil de de poder llegar.
+
+104
+00:15:09.360 --> 00:15:14.170
+Leandro Ariel Suarez: Pero bueno, el movimiento o la metodología plantea esto. No
+
+105
+00:15:14.790 --> 00:15:23.860
+Leandro Ariel Suarez: vamos a desglosarlo y ver paso por paso a ver cómo es bueno. Planificación y desarrollo.
+
+106
+00:15:24.540 --> 00:15:44.220
+Leandro Ariel Suarez: Acá Es todo lo que estaban viendo ahora: aplicar todos los principios, todos los conceptos que estuvimos viendo en clase a la hora de desarrollar Plugins, de líder tratar de utilizar herramientas que nos aseguren la seguridad en nuestro desarrollo. Los líderes tienen distintos
+
+107
+00:15:44.220 --> 00:15:51.409
+Leandro Ariel Suarez: planes que detectan de dependencias vulnerables, ancesteo, seguro de código. Bueno.
+
+108
+00:15:51.610 --> 00:16:00.250
+Leandro Ariel Suarez: muchas hay herramientas para tirar de hecho a nivel. I D ¿Tienes también hooks precomit
+
+109
+00:16:00.840 --> 00:16:18.599
+Leandro Ariel Suarez: que lo que hacen es cuando, antes de de comitear, ejecutan un un hook que evalúa corriendo localmente tu máquina. ¿qué yo que no estés exponiendo secretos a la hora de comitear algún tipo de configuración rara que tenga metidas si tienes algún tipo de vulnerabilidad? Bueno.
+
+110
+00:16:19.120 --> 00:16:23.070
+Leandro Ariel Suarez: hay muchas, un abanico de opciones.
+
+111
+00:16:23.490 --> 00:16:31.669
+Leandro Ariel Suarez: y el quizás 1 de los más que está surgiendo ahora, ya sea con la metodología o sin la metodología, es el tred modeling
+
+112
+00:16:31.770 --> 00:16:39.379
+Leandro Ariel Suarez: que es este tema de evaluar riesgos en base a una solución o un pitchup nuevo que se quiere desarrollar. Entonces a la hora de planificar. Es decir, bueno.
+
+113
+00:16:39.570 --> 00:16:41.709
+Leandro Ariel Suarez: ¿qué amenazas? Yo quiero
+
+114
+00:16:41.870 --> 00:16:52.190
+Leandro Ariel Suarez: disponibilizar un nuevo sitio o una nueva pantalla al cliente o a los a nuestros clientes? Bueno.
+
+115
+00:16:52.390 --> 00:16:55.249
+Leandro Ariel Suarez: ahora hay hay una nueva superficie de ataque.
+
+116
+00:16:55.580 --> 00:17:01.680
+Leandro Ariel Suarez: qué posibilidades. Hay de que eso plantea una amenaza para el sistema. Bueno, se empiezan a evaluar
+
+117
+00:17:02.480 --> 00:17:05.169
+Leandro Ariel Suarez: todos los riesgos que pueden haber asociado.
+
+118
+00:17:05.310 --> 00:17:07.459
+Leandro Ariel Suarez: y En base a eso se hace una
+
+119
+00:17:08.599 --> 00:17:19.119
+Leandro Ariel Suarez: un resumen. Y si yo quiero esto es muy, muy crítico, estamos exponiendo un montón de info de superficies de ataque del sistema. No.
+
+120
+00:17:19.119 --> 00:17:29.960
+Leandro Ariel Suarez: no se no lo hacemos o no? Bueno, lo hacemos, pero tenemos que tener en cuenta esto esto y esto y ahí vos ya estás metiendo seguridad antes de desarrollar cuando estás diseñando la solución.
+
+121
+00:17:32.230 --> 00:17:32.980
+Leandro Ariel Suarez: Claro.
+
+122
+00:17:33.680 --> 00:17:44.759
+Leandro Ariel Suarez: Bueno, pues tenemos en lo que es el el Comic o a la hora del Pr, que acá tenemos varias herramientas de estáticas para poder testear el código como Sast.
+
+123
+00:17:44.900 --> 00:17:59.419
+Leandro Ariel Suarez: que es lo más conocido, quizás sea zona Q, que te va tirando recomendaciones o te marca cosas malas, prácticas codesmaels, cuestiones de todo a nivel código también de seguridad.
+
+124
+00:17:59.580 --> 00:18:17.260
+Leandro Ariel Suarez: Bueno, tenés la posibilidad de po de correr tus unitarios automatizados y funcionales. Para para probar la existencia de inyecciones. Bueno, las vulnerabilidades, que ya es algo que vivieron en clases pasadas
+
+125
+00:18:17.670 --> 00:18:18.880
+Leandro Ariel Suarez: que.
+
+126
+00:18:19.730 --> 00:18:37.559
+Leandro Ariel Suarez: y bueno, de ahí surgen probablemente los pirelines seguros, donde, antes de de de comi de co después de comitear o durante el Pdr, se pueden ejecutar estos paneles y te definen como antes se hacía con la cobertura de Testing. Ahora te definen qué nivel de seguridad
+
+127
+00:18:37.560 --> 00:18:42.099
+Leandro Ariel Suarez: tiene el future nuevo que estás incluyendo y demás cuestiones
+
+128
+00:18:47.860 --> 00:18:59.119
+Leandro Ariel Suarez: a la hora de bildear o a la hora de testear en en Sanbox o en ambientes bajos? Bueno, ya ahí tenemos herramientas como Dash o análisis dinámico de de código.
+
+129
+00:18:59.320 --> 00:19:12.960
+Leandro Ariel Suarez: se ejecutan ya sobre ciertos ciertas partes de o todo el código, por ejemplo, la aplicación ejecutándose en un ambiente sanbox de de prueba.
+
+130
+00:19:12.960 --> 00:19:28.130
+Leandro Ariel Suarez: la funcionando claramente. Se pueden ser mini mini scripts o mini pel testings que ahora vamos a ver también para para validar cosas básicas
+
+131
+00:19:28.160 --> 00:19:34.750
+Leandro Ariel Suarez: de que no no estén, de que, de que no, no ten no estén presentes vulnerabilidades básicas.
+
+132
+00:19:34.800 --> 00:19:41.860
+Leandro Ariel Suarez: balear configuraciones también de que de infraestructura que sea todo seguro. Lo que lo que se esté ejecutando
+
+133
+00:19:42.090 --> 00:19:47.849
+Leandro Ariel Suarez: bueno a la hora de cuando estamos hablando de infraestructuras como código, No.
+
+134
+00:19:48.200 --> 00:20:05.359
+Leandro Ariel Suarez: Así que, bueno, nada es otra posibilidad de de poder ejecutarlo ya cuando se lea, y cuando algún país a la hora debiliario y probablemente de algunos smoketes posterior al al despliegue en ambientes Bajos
+
+135
+00:20:09.180 --> 00:20:23.879
+Leandro Ariel Suarez: y después ya el despliegue cuando vamos a producción. Bueno, ahí hay tenemos que hacer una evaluación, probablemente de la aplicación. Con todo, incluyendo la red distintas componentes de seguridad firewalls, what
+
+136
+00:20:24.100 --> 00:20:42.710
+Leandro Ariel Suarez: Ips, etcétera. Las configuraciones que se hacen producciones, haya configuraciones que no son las mismas que en ambientes bajos o el testing de sanbox. Entonces tenemos que probar y y validar todo eso. Bueno, ya sea ahí se empiezan a ejecutar los pentecting propiamente dichos externos
+
+137
+00:20:42.740 --> 00:20:46.380
+Leandro Ariel Suarez: y aparece la figura de los red y Blue Team.
+
+138
+00:20:46.680 --> 00:20:54.099
+Leandro Ariel Suarez: Y, bueno, esto es también. Cada vez nos estamos yendo más lejos del primer paso.
+
+139
+00:20:55.640 --> 00:20:56.990
+MARTÍN GALLARDO BERTUZZI: Profe, una consulta.
+
+140
+00:20:56.990 --> 00:20:58.500
+Leandro Ariel Suarez: Y.
+
+141
+00:20:58.500 --> 00:21:15.380
+MARTÍN GALLARDO BERTUZZI: Entonces en Dev se Cops la seguridad, o sea, lo el equipo de de seguridad. Básicamente lo en cada 1 de los pasos que que que estuvo nombrando, va a aplicar y va se va a fijar de en cada una de las de estas etapas la seguridad.
+
+142
+00:21:16.750 --> 00:21:28.790
+Leandro Ariel Suarez: Vas a tratar de velar en cada etapa con las herramientas que hay con las técnicas de poder de poder asegurar que ese desarrollo sea seguro de principio a fin. Ahora, a.
+
+143
+00:21:28.790 --> 00:21:29.160
+MARTÍN GALLARDO BERTUZZI: Facebook.
+
+144
+00:21:29.160 --> 00:21:33.850
+Leandro Ariel Suarez: El equipo de seguridad capaz el equipo de seguridad son 10 personas.
+
+145
+00:21:33.850 --> 00:21:34.260
+MARTÍN GALLARDO BERTUZZI: La.
+
+146
+00:21:34.260 --> 00:21:36.109
+Leandro Ariel Suarez: Dos 1 500.
+
+147
+00:21:36.110 --> 00:21:36.790
+MARTÍN GALLARDO BERTUZZI: Que no son.
+
+148
+00:21:36.790 --> 00:21:40.529
+Leandro Ariel Suarez: Desarrolladores, pero son 100, y es versos. 100.
+
+149
+00:21:40.530 --> 00:21:40.920
+MARTÍN GALLARDO BERTUZZI: Claro.
+
+150
+00:21:40.920 --> 00:21:51.259
+Leandro Ariel Suarez: Es complicado que puedan llevar en cuenta en cada 1 de los equipos. Entonces ahí es donde se propone verse con los borbones vos tenés que tener a alguien, o
+
+151
+00:21:51.260 --> 00:22:01.029
+Leandro Ariel Suarez: ya sea porque capacitarte a tu equipo, a todos los equipos, o tenéis un Sequirity Champions, que es lo que le comentaba antes o tenés. Un personal de de seguridad velando por eso
+
+152
+00:22:02.050 --> 00:22:04.850
+Leandro Ariel Suarez: asegurando que se cumpla esa metodología.
+
+153
+00:22:05.710 --> 00:22:10.550
+MARTÍN GALLARDO BERTUZZI: Bien en en to en todas las etapas o en las primeras.
+
+154
+00:22:10.930 --> 00:22:15.499
+Leandro Ariel Suarez: En todas en todas.
+
+155
+00:22:15.620 --> 00:22:32.790
+Leandro Ariel Suarez: Hoy, o la gran mayoría de las empresas tienen la seguridad que está atacando esta última etapa y estás muy se desarrolló. Ya. Se teó ya. Estoy leo tal y. Bueno, pues ah, no, Ahora, sí. Ahora quiero ver la seguridad, No, la idea.
+
+156
+00:22:32.790 --> 00:22:33.279
+MARTÍN GALLARDO BERTUZZI: Con el.
+
+157
+00:22:33.280 --> 00:22:34.239
+Leandro Ariel Suarez: Quien surja todo.
+
+158
+00:22:34.240 --> 00:22:34.690
+MARTÍN GALLARDO BERTUZZI: En 2.
+
+159
+00:22:34.690 --> 00:22:35.030
+Leandro Ariel Suarez: Juan Carlos.
+
+160
+00:22:35.030 --> 00:22:35.880
+MARTÍN GALLARDO BERTUZZI: Claro.
+
+161
+00:22:35.880 --> 00:22:51.629
+Leandro Ariel Suarez: Cuanto más el principio, mejor. Pero bueno, vas metiendo betestings automatizados. Smokest, acá vas generando Pay lines de Test.
+
+162
+00:22:51.680 --> 00:22:57.420
+Leandro Ariel Suarez: Los artefactos a la hora de.
+
+163
+00:22:57.420 --> 00:22:58.570
+MARTÍN GALLARDO BERTUZZI: Posible.
+
+164
+00:22:58.570 --> 00:23:00.219
+Leandro Ariel Suarez: Exactamente. Sí. Sí. Sí.
+
+165
+00:23:00.450 --> 00:23:03.099
+MARTÍN GALLARDO BERTUZZI: Perfecto. Profe: ya lo entendido. Muchas gracias.
+
+166
+00:23:03.510 --> 00:23:04.480
+Leandro Ariel Suarez: No nada
+
+167
+00:23:07.240 --> 00:23:23.760
+Leandro Ariel Suarez: bueno y acá distintas herramientas que ya las estuvimos nombrando, algunas que nos ayudan a a testear la seguridad, nuestro código, una S Dust, que es el análisis dinámico, el el testing dinámico de
+
+168
+00:23:23.960 --> 00:23:26.039
+Leandro Ariel Suarez: de la seguridad, nuestra aplicación.
+
+169
+00:23:26.270 --> 00:23:32.250
+Leandro Ariel Suarez: Esto ya evalúa la seguridad de la aplicación funcionando. A diferencia de los análisis estáticos.
+
+170
+00:23:32.420 --> 00:23:43.960
+Leandro Ariel Suarez: generalmente se suelen correr en ambientes bajos. Usamos, como les dije, y generalmente automatizan pruebas repetibles y útiles que no son.
+
+171
+00:23:44.310 --> 00:23:57.379
+Leandro Ariel Suarez: No tiene sentido que la salud humana, porque son siempre las mismas. Por ejemplo, escanean puertos valían inputs, generan, hacen ricos que generan errores, ya con que debieran ser controlados o manejados por la aplicación y que
+
+172
+00:23:57.460 --> 00:24:04.790
+Leandro Ariel Suarez: se trata de que no, no se exponga información, no el clásico Star 3 más cuestiones.
+
+173
+00:24:04.920 --> 00:24:08.289
+Leandro Ariel Suarez: Entonces eso es todo una. Hay herramientas que
+
+174
+00:24:08.590 --> 00:24:13.500
+Leandro Ariel Suarez: que se contratan o que se po opensource, que, pues se pueden utilizar para esto
+
+175
+00:24:16.080 --> 00:24:32.469
+Leandro Ariel Suarez: Después Tenemos lo que es ese crítico y composición análisis es Ssa es para el proceso de vil asunto de un análisis de las dependencias y las librerías que usamos y de esa forma tratan de identificar vulnerabilidades, que hay problema de licencia, También
+
+176
+00:24:32.470 --> 00:24:36.130
+Leandro Ariel Suarez: vulnerabilidades conocidas, dependencias
+
+177
+00:24:36.730 --> 00:24:42.619
+Leandro Ariel Suarez: transitivas que tengan vulnerabilidades. No sé si estuvieron viendo todo lo que está pasando últimamente con Npm.
+
+178
+00:24:42.910 --> 00:24:59.600
+Leandro Ariel Suarez: con las dependencia de de de javas Creed en el de del gestor de paquetes de N. P. M. Que Uti, tienes una dependencia instalada. Y como Npm te te baja encima toda la dependencia que usa esa esa dependencia ten ya sos vulnerable, porque
+
+179
+00:24:59.780 --> 00:25:02.539
+Leandro Ariel Suarez: nada lo estoy usando por transititividad? No.
+
+180
+00:25:02.820 --> 00:25:05.520
+Leandro Ariel Suarez: Bueno, todo eso también se chequea.
+
+181
+00:25:05.800 --> 00:25:12.309
+Leandro Ariel Suarez: como le dije, la licencia, si es un problema con alguna licencia de open surf y no tener algún problema.
+
+182
+00:25:12.820 --> 00:25:16.470
+Leandro Ariel Suarez: Bueno, un poco un poco de todo eso.
+
+183
+00:25:16.710 --> 00:25:19.739
+Leandro Ariel Suarez: o sea, también es un poco más más estático. Esto. No
+
+184
+00:25:23.080 --> 00:25:31.869
+Leandro Ariel Suarez: él es Bond o software, villa material. Es algo viejo que se usaba mucho antes. Era un inventario bastante formal, donde
+
+185
+00:25:32.040 --> 00:25:38.480
+Leandro Ariel Suarez: tenía todos los componentes de todas las cosas que utilizaba una aplicación se inventariado.
+
+186
+00:25:38.590 --> 00:25:47.019
+Leandro Ariel Suarez: Eso después fue evolucionando. Se dejó medio sano en un momento y ahora resurge por diversos incidentes que fueron pasando.
+
+187
+00:25:47.190 --> 00:25:48.450
+Leandro Ariel Suarez: Bueno.
+
+188
+00:25:48.770 --> 00:25:57.669
+Leandro Ariel Suarez: la se o sea, que lo que pasaba cuando se dejó de utilizar o se dejó de de mantener activamente el Svon, las distintas aplicaciones.
+
+189
+00:25:58.040 --> 00:26:11.410
+Leandro Ariel Suarez: Muchas, no. Muchas empresas terminaron no sabiendo qué qué componentes usaban sus aplicaciones o qué dependencias tenían, y después, cuando explotaban algún incidente de seguridad, 1 no sabía si estaba afectado o no
+
+190
+00:26:11.800 --> 00:26:23.600
+Leandro Ariel Suarez: a mí me pasó a vivir la de Law for Shel. No sé si alguno la conoce, una vulnerabilidad crítica que permitía ejecución remota del código a través de una
+
+191
+00:26:24.170 --> 00:26:36.290
+Leandro Ariel Suarez: una librería de Java muy conocida y muy usada. Prácticamente la usan. Casi cualquiera que yo Java tenía esto que es Low Forzale. No sé si la conocen. Bueno, que
+
+192
+00:26:36.550 --> 00:26:42.410
+Leandro Ariel Suarez: que que programa en Java es una librería para gestionar blogs, para
+
+193
+00:26:42.890 --> 00:26:53.480
+Leandro Ariel Suarez: para poder loguear en Java. Y y eso lo tenía casi toda la aplicación en el planeta que tuviera Java tenía Love for Jale o
+
+194
+00:26:53.780 --> 00:26:58.439
+Leandro Ariel Suarez: o simple, lo forgey que de fondo utilizaba el Oxford Shei. Entonces.
+
+195
+00:26:58.580 --> 00:27:08.310
+Leandro Ariel Suarez: cuando pasó esto, o sea, se descubrió una vulnerabilidad en esa dependencia. Y esa vulnerabilidad permitía ejecutar códigos remotos en el servidor en el que se estaba
+
+196
+00:27:08.690 --> 00:27:11.170
+Leandro Ariel Suarez: y ejecutarla.
+
+197
+00:27:11.550 --> 00:27:15.340
+Leandro Ariel Suarez: Y pasa habían pasado cosas loquísimas de
+
+198
+00:27:15.460 --> 00:27:20.759
+Leandro Ariel Suarez: los que estaban me acuerdo el el día que pasó fue. Creo que es más, fue un viernes a la tarde.
+
+199
+00:27:20.820 --> 00:27:25.640
+Leandro Ariel Suarez: salían todas las pock de no sé, estábamos jugando
+
+200
+00:27:25.690 --> 00:27:42.339
+Leandro Ariel Suarez: juegos y les cerraban cosas de la máquina. Había cosas impresionantes, y todos salieron a correr a ver qué era lo que tenía que que tenía que estaba usando su aplicación, que nadie sabía si realmente estaba usando el ojo y porque era una dependencia
+
+201
+00:27:42.850 --> 00:27:48.179
+Leandro Ariel Suarez: tan estándar y tan presente que, bueno, 1 se olvidaba que lo tenía y
+
+202
+00:27:48.740 --> 00:27:58.010
+Leandro Ariel Suarez: nada como que viste cuando es algo que que es tan que clave tenerlo que bueno, te olvidas, incluso que está ahí. No se actualizaba las demás cuestiones
+
+203
+00:27:58.880 --> 00:28:00.180
+Leandro Ariel Suarez: y
+
+204
+00:28:01.420 --> 00:28:12.889
+Leandro Ariel Suarez: que alguien lo vulneró o lo detectó y lo informó relativamente poco. No, Esto pasó ya hace un par de años. Si Buscanlof Forcel se llamaba así. Si quieren. Es muy interesante Esta.
+
+205
+00:28:13.170 --> 00:28:26.390
+Leandro Ariel Suarez: y me y también muy bueno, porque se resolvió, o sea, lo Forshair lo resolvió de toque, salvo. Pero claro, el tema que todas las apariciones de todo el mundo tienen que salir y obradear la versión y desplegar.
+
+206
+00:28:26.730 --> 00:28:30.170
+Leandro Ariel Suarez: Y eso explicaba que
+
+207
+00:28:30.360 --> 00:28:41.710
+Leandro Ariel Suarez: muchas veces es es sencillo. Agradece O empresas como Netflix o the streaming, un montón. No sé me acuerdo que New Relly, que había tenido un problema con eso. Es una empresa de monitoreo.
+
+208
+00:28:42.070 --> 00:28:49.389
+Leandro Ariel Suarez: Bueno, hay quebradear esto y tenemos que hacerlo con el problema de que vamos a afectar probablemente a a nuestros clientes
+
+209
+00:28:49.600 --> 00:28:53.449
+Leandro Ariel Suarez: 20 21 Sí, Sí, sí me suena 20 21,
+
+210
+00:28:53.510 --> 00:29:13.230
+Leandro Ariel Suarez: Entonces, bueno, eso con el S Bond. Ahora que se está empezando a usar de nuevo, una puede tener mejor control. Ya listo. Tengo esto muchas veces. Hay plugins en los cines también que que van detectando y te van avisando. ¿qué es lo que estás usando. Si ya quedó obsoleto, si tiene vulnerabilidades detectadas y demás.
+
+211
+00:29:16.480 --> 00:29:22.270
+Leandro Ariel Suarez: Bueno, vamos a meterlo un poco de de power que esperemos que va a haber un par de cosas más
+
+212
+00:29:22.690 --> 00:29:24.280
+Leandro Ariel Suarez: protección en la nube.
+
+213
+00:29:25.150 --> 00:29:30.230
+Leandro Ariel Suarez: Bueno, estuvimos hablando del modelo de seguridad en la nube.
+
+214
+00:29:30.800 --> 00:29:48.609
+Leandro Ariel Suarez: Esto que tenemos Acá es lo que existe. Son más análisis estáticos para lo que es infraestructura, como código, donde nada se chequean configuraciones que no sean que que sean eficientes o que haya configuraciones ineficientes, que haya configuraciones inseguras.
+
+215
+00:29:48.610 --> 00:30:02.110
+Leandro Ariel Suarez: estoy, estás exponiendo puertos que no se están usando o estás exponiendo demasiados puertos. No tiene sentido hay redes que quedaron expuestas a la nada a Internet y fíjate esto. Bueno.
+
+216
+00:30:02.180 --> 00:30:12.679
+Leandro Ariel Suarez: hay patrones a la infraestructura Como código tienen varios años y está madurando bastante. Entonces ya empiezan a aparecer
+
+217
+00:30:12.940 --> 00:30:19.640
+Leandro Ariel Suarez: este tipo de herramientas que van detectando patrones inseguros, y te lo van marcando.
+
+218
+00:30:20.890 --> 00:30:28.289
+Leandro Ariel Suarez: ¿en qué más no? ¿qué más le puedo decir de esto?
+
+219
+00:30:28.700 --> 00:30:38.219
+Leandro Ariel Suarez: Bueno, hoy por hoy, infraestructura como código es también bastante crítico, ya como tener código en aplicaciones corriendo hoy.
+
+220
+00:30:38.420 --> 00:30:48.959
+Leandro Ariel Suarez: Como le dije, muchas empresas corren en en Amazon en distintos proveedores de Cloud. Y, bueno, como configuras como como desplegadas. Todo eso es responsabilidad de cada 1.
+
+221
+00:30:49.210 --> 00:30:54.920
+Leandro Ariel Suarez: Entonces surgen estas soluciones que que nos ayudan a estar un poco más tranquilos.
+
+222
+00:30:55.940 --> 00:31:06.060
+Leandro Ariel Suarez: Si se ve Claudio seguir y postur management. Lo que hace básicamente es buscar problemas también en la configuración. Eso son soluciones ya más externa
+
+223
+00:31:06.060 --> 00:31:16.029
+Leandro Ariel Suarez: que se contrata, analiza el código titula a Scode y y lo valida y te va levantando y sus probables yusus.
+
+224
+00:31:17.260 --> 00:31:31.730
+Leandro Ariel Suarez: Esto lo voy pasando un poco más rápido, porque son herramientas para que lo tengan en cuenta. Claud World Flow Protection Blackford. También esto va un paso más allá, entiende que la infraestructura, como la infraestructura. Clow no
+
+225
+00:31:31.730 --> 00:31:38.150
+Leandro Ariel Suarez: tiene memes contenedores. Son a veces servidores físicos
+
+226
+00:31:38.150 --> 00:31:46.079
+Leandro Ariel Suarez: que corren aplicaciones adentro de esos contenedores o de esos servidores que hay
+
+227
+00:31:46.300 --> 00:32:02.170
+Leandro Ariel Suarez: corriendo cosas serverles, no como los lambda. Entonces todo eso también lo tiene en cuenta y hace lo mismo. Analiza, Te detecta patrones y seguros. Y bueno, es como una especie de complemento de lo que vimos anterior, el anterior.
+
+228
+00:32:03.850 --> 00:32:10.299
+Leandro Ariel Suarez: y después también tenemos lo que es 100 cloud infraestructure entertainment management.
+
+229
+00:32:10.570 --> 00:32:20.160
+Leandro Ariel Suarez: Generalmente, los proveedores de infra te ofrecen un control de acceso nativo no a ver si te ofreces un control, haces un nativo.
+
+230
+00:32:20.460 --> 00:32:28.679
+Leandro Ariel Suarez: pero es tan complejo y a veces es tan granular, tan tan difícil de de seguir que por eso hay cursos de darles para todo, porque
+
+231
+00:32:28.960 --> 00:32:33.530
+Leandro Ariel Suarez: maniobrar toda esa toda esa infra. A veces es
+
+232
+00:32:33.710 --> 00:32:42.959
+Leandro Ariel Suarez: es difícil. Entonces, bueno, surgen estas herramientas también extra para ayudar a a maniobrar, a gestionar todo esto y para chequear que esté bien configurado
+
+233
+00:32:43.100 --> 00:33:00.899
+Leandro Ariel Suarez: claramente que los proveedores deben tener sus soluciones nativas, pero te salen muy caras también. Y esto herramientas tampoco son baratas. Así que bueno, hay que evaluarlo. Generalmente, lo que hace algo como un Ciem es buscar huecos inconsistencias en los permisos
+
+234
+00:33:00.950 --> 00:33:16.680
+Leandro Ariel Suarez: que se otorgan a través del de control de acceso del del proveedor de Cloud. Y bueno, te te lo levanta. Ayuda también a visualizarlo mejor No te armas, diagramas para entender cómo remediarlo, Bueno.
+
+235
+00:33:16.940 --> 00:33:17.970
+Leandro Ariel Suarez: y
+
+236
+00:33:18.260 --> 00:33:25.180
+Leandro Ariel Suarez: sobre todo cuando incluso tenés múltiples cuentas. Entonces y que se que se ven entre ellas y demás cuestiones?
+
+237
+00:33:28.240 --> 00:33:38.740
+Leandro Ariel Suarez: Bueno, acá hay un grafito. Esto es el Clownetve Application Protection platform
+
+238
+00:33:38.970 --> 00:33:46.790
+Leandro Ariel Suarez: Bueno, nada. Esto es otra herramienta más para depse gops y
+
+239
+00:33:47.400 --> 00:34:04.560
+Leandro Ariel Suarez: todas estas herramientas surgen para empresas. Obviamente, esto nos lo va a agarrar una Pyme. No son productos muy caros. Están pensados para empresas con infraestructuras en el orden de los miles de servidores, miles y miles de servidores, Entonces.
+
+240
+00:34:05.820 --> 00:34:18.859
+Leandro Ariel Suarez: administrar todo toda esa cantidad de servicios es muy complejo. Uno necesita algo para poder a gestionarlo un poco mejor, un poco más cómodo y, sobre todo, ejecu evitar
+
+241
+00:34:19.590 --> 00:34:33.700
+Leandro Ariel Suarez: tener configuraciones genéricas que terminen generando huecos de seguridad, ¿no? Entonces, bueno, entonces surgen este tipo de herramientas que la realidad es que tampoco nos queremos atraer mucho, pero sí mostrarles que existen y que.
+
+242
+00:34:34.170 --> 00:34:37.119
+Leandro Ariel Suarez: que, bueno, que se utilizan en el contexto profesional.
+
+243
+00:34:40.389 --> 00:34:45.909
+Leandro Ariel Suarez: Y ahora pasamos a las evaluaciones de seguridad hasta acá alguna duda.
+
+244
+00:34:50.119 --> 00:34:53.539
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Estas herramientas de acá a 5 años decís que siguen existiendo.
+
+245
+00:34:55.139 --> 00:35:08.199
+Leandro Ariel Suarez: Yo creo que yo creo que sí, porque a ver tampoco es que soy. No tengo la la edad y la experiencia que tiene Pablo ramiro o gente más grande que yo. Pero
+
+246
+00:35:08.639 --> 00:35:13.769
+Leandro Ariel Suarez: la tecnología chicos no avanza tan rápido, O sea.
+
+247
+00:35:14.049 --> 00:35:18.179
+Leandro Ariel Suarez: avanza la tecnología, o sea, avanza en los desarrollos, avanzan.
+
+248
+00:35:18.369 --> 00:35:26.179
+Leandro Ariel Suarez: Pero después las empresas es otra cosa. Hay contratos con proveedores. Hay un montón de cuestiones.
+
+249
+00:35:26.429 --> 00:35:28.509
+Leandro Ariel Suarez: hay plata de por medio
+
+250
+00:35:28.629 --> 00:35:34.469
+Leandro Ariel Suarez: que a ver si ustedes me preguntaban cuando yo empecé a trabajar, que me acuerdo, que
+
+251
+00:35:34.669 --> 00:35:44.159
+Leandro Ariel Suarez: que ahí empezó Sal Linux, que viste que que 1 empieza a meterse en todo el mundillo y decis no. ¿cómo puede ser, y que las empresas Usen Windowserven, habiendo
+
+252
+00:35:44.339 --> 00:35:48.969
+Leandro Ariel Suarez: servidores Linux que son.
+
+253
+00:35:49.149 --> 00:36:04.209
+Leandro Ariel Suarez: No sale nada y y son. Y después bueno, aparece ubuntu con un esquema pago. Todo todo todo lo que tenga soporte a nivel organizacional a nivel corporativo Tiene un montón de
+
+254
+00:36:04.749 --> 00:36:11.949
+Leandro Ariel Suarez: de valor para estas empresas. Le saco un montón de problemas. Esto de delegar, transferir riesgos.
+
+255
+00:36:12.399 --> 00:36:32.169
+Leandro Ariel Suarez: soporte si pasa algo, autorización de seguridad, todas esas cosas que a veces las empresas dicen: Yo No quiero lidiar con esto. Entonces contrato a alguien y y listo y me olvido, O, bueno, hay que poner. No hay que poner en la billetera y y pagarlo. Pero Pero, bueno, no.
+
+256
+00:36:32.639 --> 00:36:43.129
+Leandro Ariel Suarez: yo me acuerdo que decía cómo puede ser el que uso. El segundo 0 era el usaban Windowserve, 2 003. Y Y hoy no tengo usando un 2 003, pero en el 2 010 o más
+
+257
+00:36:43.299 --> 00:36:51.009
+Leandro Ariel Suarez: y no por ahí salimos Microsoft. El Microsoft es últimamente.
+
+258
+00:36:51.119 --> 00:36:56.109
+Leandro Ariel Suarez: sobre todo con esto de que empezó a absorber algunas empresas. Se está trabajando mucho
+
+259
+00:36:56.249 --> 00:37:12.999
+Leandro Ariel Suarez: lástima que ahora nos nos atraviesa lo de la I A, porque está quitando la atención a muchas cosas que se están avanzando y desarrollando. Pero bueno, si están las empresas, están a Full y yo no creo que esto desaparezca de acá a 10 años.
+
+260
+00:37:13.249 --> 00:37:16.029
+Leandro Ariel Suarez: o sea, va va a mermar seguro.
+
+261
+00:37:16.329 --> 00:37:25.469
+Leandro Ariel Suarez: Pero Pero, bueno, hay mucha plata por donde hay plata, También hay intereses.
+
+262
+00:37:25.609 --> 00:37:28.649
+Leandro Ariel Suarez: y y la industria del software
+
+263
+00:37:28.809 --> 00:37:34.049
+Leandro Ariel Suarez: siempre fue muy predecible. A veces no no es tan frenética como parece.
+
+264
+00:37:36.099 --> 00:37:48.299
+Leandro Ariel Suarez: Sí, Windows: Sí, Windows, 12. Este win Windows, el el la hora. Creo que es el 11. Yo hace años que no. No uso Windows, ya pero habían metido. Creo que el el
+
+265
+00:37:48.469 --> 00:37:57.589
+Leandro Ariel Suarez: explorador de tareas o el explorador de archivos, y ya, y por si había habían pantaleado azul.
+
+266
+00:37:58.209 --> 00:38:05.479
+Leandro Ariel Suarez: o sea, cosas que no pasaron, no pasaba nunca. Creo que ni vista tuvo ese problema, que Window Vista fue un.
+
+267
+00:38:06.089 --> 00:38:08.779
+Leandro Ariel Suarez: No sé si lo lo llegaron a conocer, pero fue un
+
+268
+00:38:08.899 --> 00:38:17.499
+Leandro Ariel Suarez: un su, un sistema operativo que quiso sacar Windows X, P. Que fue un cañón y quiso sacar vista, y nada salió muy mal
+
+269
+00:38:17.689 --> 00:38:18.969
+Leandro Ariel Suarez: salió muy, muy mal.
+
+270
+00:38:24.699 --> 00:38:31.909
+Leandro Ariel Suarez: Bueno, vamos a meterle si vemos si, por lo menos quiero terminar esta clase y última la que viene, vemos vemos pen testing.
+
+271
+00:38:33.169 --> 00:38:35.909
+Leandro Ariel Suarez: evaluación de seguridad.
+
+272
+00:38:38.119 --> 00:38:40.729
+Leandro Ariel Suarez: ¿por qué 1 hace una evaluación de seguridad?
+
+273
+00:38:41.479 --> 00:38:44.639
+Leandro Ariel Suarez: Qué pregunta no 1
+
+274
+00:38:44.779 --> 00:38:53.599
+Leandro Ariel Suarez: nosotros, como seguridad como equipo de seguridad y y como equipo de desarrollo. Como todo como una empresa, construimos y tratamos nuestro sistema seguro.
+
+275
+00:38:54.079 --> 00:38:58.999
+Leandro Ariel Suarez: todo tomamos todos los recados, tomamos todas las precauciones, tomamos las mejores prácticas, todo
+
+276
+00:39:00.079 --> 00:39:09.359
+Leandro Ariel Suarez: y en algún momento ese sistema va a fallar. No, no pregunten cuando no pregunten cómo, pero va a fallar así? Hayamos tomado todos los recaudos y todas las medidas.
+
+277
+00:39:09.939 --> 00:39:18.659
+Leandro Ariel Suarez: ¿por qué? Pues así la seguridad no está asegurada, entonces no siempre
+
+278
+00:39:18.839 --> 00:39:27.039
+Leandro Ariel Suarez: que s que sea que que falle por por alguna inseguridad o por por algún otro motivo, por algún error o algo
+
+279
+00:39:27.099 --> 00:39:33.519
+Leandro Ariel Suarez: es es porque, bueno, estuvo mal diseñado muchas veces. Sí, Muchas veces no se contemplaron un montón de cosas seguro.
+
+280
+00:39:33.519 --> 00:39:47.599
+Leandro Ariel Suarez: pero a veces van surgiendo nuevos vectores de ataque y 1 no los contempla. Por esto era la importancia de estar controlando todo el tiempo, estar midiendo, de no quedarse con la seguridad, sino hacerla todo el tiempo.
+
+281
+00:39:47.759 --> 00:39:54.889
+Leandro Ariel Suarez: Es un proceso constante y y sin pausa, entonces hay que estar evaluando todo el tiempo. ¿cómo está nuestro sistema?
+
+282
+00:39:59.999 --> 00:40:17.659
+Leandro Ariel Suarez: Hay distintas evaluaciones de vulnerabilidades. Tenemos las evaluación de seguridad, perdón, tenemos la evaluación de vulnerabilidades que nada si generalmente se hace a través de herramientas automatizadas con escaneos, una especie de software que se se encarga de
+
+283
+00:40:17.729 --> 00:40:23.009
+Leandro Ariel Suarez: de escanear las aplicaciones que tenemos desplegadas y de darnos un un resumen.
+
+284
+00:40:23.959 --> 00:40:42.829
+Leandro Ariel Suarez: Después tenemos lo que son el pen testing que a ver si llegamos a ver un poquito hoy. Esto Esas superas más exhaustivas. Son realizadas por expertos de seguridad. Tratan de buscar puertas de entrada, de ataque de los que pueden utilizar los atacantes para acceder al sistema.
+
+285
+00:40:42.959 --> 00:40:52.539
+Leandro Ariel Suarez: Muchas veces se hacen se contrata para que haga un proveedor o alguien a un petesting y yo muchas veces se hacen internamente. Depende de
+
+286
+00:40:52.659 --> 00:40:55.199
+Leandro Ariel Suarez: de la magnitud de la empresa y de la especialización.
+
+287
+00:40:55.849 --> 00:41:04.929
+Leandro Ariel Suarez: Después también se hacen evaluaciones de riesgo son más generales, integrales, no de ver la seguridad. Lo que hablábamos al principio, ver la seguridad como otra amenaza más
+
+288
+00:41:06.889 --> 00:41:21.009
+Leandro Ariel Suarez: hay auditorías de seguridad, también pueden ser internas o externas. A veces se contratan para para hacerla de forma interna, para ver cómo está la empresa a nivel de seguridad. Muchas veces se se realizan de forma externa porque estamos cumpliendo con algún
+
+289
+00:41:21.009 --> 00:41:27.569
+Leandro Ariel Suarez: con alguna normativa, porque estamos ante una empresa que lo exige. Hay un grupo de de empresas que lo exige
+
+290
+00:41:28.099 --> 00:41:29.469
+Leandro Ariel Suarez: distintos motivos
+
+291
+00:41:30.049 --> 00:41:46.359
+Leandro Ariel Suarez: y bueno busca que la empresa cumpla con los estándares de la industria, que sea segura, que que cumpla con todo lo que lo que se espera. Eso generalmente lo baja, el ya sea el organismo que te viene a habitar o o la empresa que te viene a habitar
+
+292
+00:41:46.899 --> 00:41:52.829
+Leandro Ariel Suarez: evaluaciones de cumplimiento, donde ya son obligatorias para las regulaciones
+
+293
+00:41:52.969 --> 00:42:03.849
+Leandro Ariel Suarez: que se aplican a a la empresa P. S. I, protección de datos personales que Gd, pr protección de los archivos, médicos, etcétera.
+
+294
+00:42:04.079 --> 00:42:05.239
+Leandro Ariel Suarez: Y
+
+295
+00:42:09.399 --> 00:42:12.909
+Leandro Ariel Suarez: después tenemos seguridad física. Bueno, esto
+
+296
+00:42:13.039 --> 00:42:28.649
+Leandro Ariel Suarez: más está decir, la seguridad de los datos de la datación tienen también distintas clasificaciones según la seguridad que tienen las oficinas, no proteger las oficinas, hacer las oficinas seguras, monitoreales.
+
+297
+00:42:28.659 --> 00:42:33.989
+Leandro Ariel Suarez: control de acceso para la para las instalaciones, Cámara de Seguridad.
+
+298
+00:42:34.169 --> 00:42:37.909
+Leandro Ariel Suarez: la protección de los archivos físicos.
+
+299
+00:42:38.109 --> 00:42:43.349
+Leandro Ariel Suarez: no mantener las computadoras que hay ahí, que nadie se las robe nada por el estilo
+
+300
+00:42:43.729 --> 00:42:47.869
+Leandro Ariel Suarez: y evaluación de seguridad en aplicaciones que, bueno, es más.
+
+301
+00:42:48.359 --> 00:43:02.269
+Leandro Ariel Suarez: auditar el código. ¿no? Quizás también se puede hacer a través de una auditoría que viene y y ve tu código y Che, ¿Por qué estás haciendo esta cacha que hay una vactor? ¿qué qué onda esto? Porque acá si tú usando una variable o alguien acá está
+
+302
+00:43:02.419 --> 00:43:09.119
+Leandro Ariel Suarez: ese tipo de cuestiones, ya son más de ir al código y probarlo y ver por qué se están haciendo eso
+
+303
+00:43:09.339 --> 00:43:16.169
+Leandro Ariel Suarez: ciertas. Después se tomaron ciertas decisiones al código porque si tomaron ciertas decisiones de arquitectura de de los sistemas.
+
+304
+00:43:19.499 --> 00:43:24.909
+Leandro Ariel Suarez: Y vamos, no nos vamos a enfocar un poco en lo que es Penetration test o pet testing.
+
+305
+00:43:25.389 --> 00:43:34.889
+Leandro Ariel Suarez: El objetivo de de esta empresa, de de esta Tir de esta técnica
+
+306
+00:43:35.049 --> 00:43:41.069
+Leandro Ariel Suarez: es el de agarrar el sistema funcionando y probarlo integralmente, no
+
+307
+00:43:41.679 --> 00:43:57.859
+Leandro Ariel Suarez: como se indicio, no que el sistema funcione. Entonces, muchas veces el diseño que está hecho es bueno y seguro. Pero si le pasa ciertos inputs o a partir de cierto comportamiento, se pasa a un a un Estado no seguro, o sea, deja de ser seguro.
+
+308
+00:43:58.339 --> 00:44:01.299
+Leandro Ariel Suarez: Entonces, el pendextil, lo que busca es
+
+309
+00:44:02.049 --> 00:44:10.319
+Leandro Ariel Suarez: lograr identificar todas esas vulnerabilidades que permiten que el sistema pase de un de un Estado seguro a un inseguro.
+
+310
+00:44:10.919 --> 00:44:13.979
+Leandro Ariel Suarez: y para eso emplea una metodología
+
+311
+00:44:14.569 --> 00:44:27.339
+Leandro Ariel Suarez: que está dada, que la vamos. Ojalá que lleguemos a verla, se emplea una metodología y generalmente tienen un tiempo y un alcance, no porque no, no puedes probar eternamente, o sea, probás
+
+312
+00:44:27.629 --> 00:44:29.749
+Leandro Ariel Suarez: por un alcance y un tiempo determinado.
+
+313
+00:44:30.239 --> 00:44:37.299
+Leandro Ariel Suarez: y como siempre, lo puede hacer la misma empresa o lo puede hacer un pueden contratar un proveedor que lo haga, que esté especializado.
+
+314
+00:44:37.709 --> 00:44:42.779
+Leandro Ariel Suarez: Muchas veces hacen sistemas productivo, pero muchas veces no.
+
+315
+00:44:43.329 --> 00:44:48.889
+Leandro Ariel Suarez: Y bueno, esto asegura la calidad del software también. No, que es
+
+316
+00:44:49.119 --> 00:44:53.179
+Leandro Ariel Suarez: muy importante el que el software sea seguro para la calidad.
+
+317
+00:44:55.569 --> 00:44:59.529
+Leandro Ariel Suarez: Bueno, hay hay distintos tipos
+
+318
+00:45:00.529 --> 00:45:20.019
+Leandro Ariel Suarez: de según el el grado que vos le des la de visibilidad al atacante o el evaluador, digamos, para decirle: hay pentecting de black box o online ciegos que es yo no te doy nada de información. Quizás te doy el dominio o el Ip, No, mucho más que eso.
+
+319
+00:45:20.839 --> 00:45:22.639
+Leandro Ariel Suarez: Empezaba a machacarlo.
+
+320
+00:45:22.899 --> 00:45:38.899
+Leandro Ariel Suarez: Y de repente, estar ahí. Bueno, es un laburo bastante engorroso, porque tenés que empezar a descubrir utiliza un montón de herramientas para poder ir determinando y ganando cada vez más información es como te pones en la piel de un atacante real. No que quisiera vulnerar el sistema.
+
+321
+00:45:40.369 --> 00:45:43.679
+Leandro Ariel Suarez: Después están los de White boss o cajablanca.
+
+322
+00:45:44.169 --> 00:46:02.119
+Leandro Ariel Suarez: Ahí se le suele dar bastante información. Se le suele incluso a veces dar el código fuente. Se le dan diagramas, capaz se le proveen credenciales también. Bueno, Un montón de de infox que le ayuda al pentestera realizar
+
+323
+00:46:02.359 --> 00:46:12.699
+Leandro Ariel Suarez: Mhm, una realizar una, o sea, realizar depende de forma mucho más rica. Digamos ahora ustedes van a decir.
+
+324
+00:46:14.019 --> 00:46:24.419
+Leandro Ariel Suarez: porque se hacen de caja negra tipo, o sea, no conviene darle todo, o sea, toda la info que se pueda y el atacante. Con todo eso tipo ejecute ataques mucho más
+
+325
+00:46:24.579 --> 00:46:33.119
+Leandro Ariel Suarez: y complejos, o sea logre, vulnerar de forma mucho más rápida y fácil.
+
+326
+00:46:33.319 --> 00:46:48.189
+Leandro Ariel Suarez: Bueno, si es un buen punto, es un buen punto, ese, pero a veces el Black box. Lo que te da es descubrir vectores que vos estando sesgado con toda la información, no los vería. Entonces
+
+327
+00:46:48.369 --> 00:46:49.669
+Leandro Ariel Suarez: esta vez viste
+
+328
+00:46:49.919 --> 00:47:09.009
+Leandro Ariel Suarez: muchas veces el el el estar afuera y y tener la presión de Che. Tengo que lograr entrar en esto. ¿cómo te da un montón de creatividad que si vos ya tuvieras toda la información designado. Si, bueno, esto está acá y mismo, te estás metiendo en la piel del desarrollador tipo Te toma esta decisión por esto. Por esto, por esto.
+
+329
+00:47:09.039 --> 00:47:16.739
+Leandro Ariel Suarez: y te terminas encerrando vos en esa caja y no puedes salir. Entonces esto termina siendo que 1 piense fuera de la caja.
+
+330
+00:47:16.859 --> 00:47:18.169
+Leandro Ariel Suarez: Bueno.
+
+331
+00:47:18.709 --> 00:47:38.459
+Leandro Ariel Suarez: y lo lo a ver. La La razón más clara para que sea de Black Box es porque capaz no querés compartir toda esa información al proveedor. Toda la información de cómo está tu tu red, de cómo están las de credenciales del código fuente y todo eso no se lo querés compartir por diversos motivos, muchas veces legales. Entonces bueno.
+
+332
+00:47:38.539 --> 00:47:41.789
+Leandro Ariel Suarez: toma te paso el I, P y empieza a pegarle.
+
+333
+00:47:46.839 --> 00:47:49.939
+Leandro Ariel Suarez: claro: si le decís a un bebé, no va a buscar una.
+
+334
+00:47:50.079 --> 00:47:53.399
+Leandro Ariel Suarez: Bueno, ¿Existen ciertas vulnerabilidades también o no?
+
+335
+00:47:53.599 --> 00:48:00.759
+Leandro Ariel Suarez: Sí, no, O sea, la realidad es que generalmente se suelen dar. Se suelen hacer de los 2 tipos
+
+336
+00:48:00.819 --> 00:48:13.949
+Leandro Ariel Suarez: y se suelen hacer también de grey box, que es un enfoque intermedio donde ¿Vos le das cierto conocimiento al al sistema, al al evaluador? No todo no todo el acceso. Y bueno, ahí el
+
+337
+00:48:14.259 --> 00:48:19.959
+Leandro Ariel Suarez: puede hacer Blackbox, Widbox, Dry Box. Según él, considere no
+
+338
+00:48:20.919 --> 00:48:27.779
+Leandro Ariel Suarez: los los double. Double Line. O bueno que básicamente es
+
+339
+00:48:28.909 --> 00:48:44.909
+Leandro Ariel Suarez: vos, le das a un a un evaluador para que ataque y al equipo interno. A 1 le decís que va a ser petesteado. Entonces es medio similar a lo que es la metodología de Kauk Monkey. No sé si la conocen, pero Kava Monkey plantea que
+
+340
+00:48:45.089 --> 00:48:48.819
+Leandro Ariel Suarez: quizás ir bajando aplicaciones o ir
+
+341
+00:48:48.859 --> 00:49:03.249
+Leandro Ariel Suarez: rompiendo a propósito aplicaciones dentro de la infraestructura y ver cómo reaccionan los equipos, A ver, no decirles. Che. Eso es una prueba, sino que ir haciendo tipo interrupciones de servicio y demás cuestiones y ver cómo reacciona el equipo, y eso
+
+342
+00:49:03.249 --> 00:49:10.789
+Leandro Ariel Suarez: tiene un un valor después agregado. Si está controlado, obviamente no vas a bajar la operación de la compañía, Pero
+
+343
+00:49:10.809 --> 00:49:16.569
+Leandro Ariel Suarez: si está bien focalizado, bien ruso, genera valor el día de mañana, aprendizaje y un montón de cuestiones.
+
+344
+00:49:16.599 --> 00:49:26.549
+Leandro Ariel Suarez: Bueno, el doble online es lo mismo, pero con pestes que no te aviso que te van apetecear y vos de vos pensar cómo reacciona el equipo como reacciona un equipo de seguridad y demás cuestiones.
+
+345
+00:49:32.729 --> 00:49:47.829
+Leandro Ariel Suarez: Bueno, también es, según el el sistema que vas a evaluar. No no es lo mismo la red externa que la red interna, la externa, servicios que están expuestos de Internet, potencial ataque de de de de de de gente de de atacantes externos.
+
+346
+00:49:47.829 --> 00:50:00.929
+Leandro Ariel Suarez: La red interna ya es distinto. Generalmente, el atacante es interno no puede ser algún empleado descontento, o o alguien que está instalando que instala un malware sin darse cuenta. Bueno, es todo lo que sería el internet de la
+
+347
+00:50:00.989 --> 00:50:08.229
+Leandro Ariel Suarez: intranet de la de la compañía. Y después, bueno, testigo también de de reginal abios, n F. C Bluetooth, Wireless
+
+348
+00:50:08.319 --> 00:50:10.919
+Leandro Ariel Suarez: y y otras
+
+349
+00:50:11.949 --> 00:50:31.309
+Leandro Ariel Suarez: también. Bueno, testeo de aplicaciones web para lograr identificar vulnerabilidades, como puede ser las exhibiciones secuela de Scripteam. Serverside bueno todo lo que imagino que estuvieron viendo también por ahí
+
+350
+00:50:31.959 --> 00:50:49.659
+Leandro Ariel Suarez: y no menor el tema de ingeniería social. No, a veces se se prueba buscar engañar a los empleados, saber hasta qué punto están capacitados, hasta qué punto pueden llegar a a exponer información, campañas de Phishing Smicing: Bueno.
+
+351
+00:50:49.699 --> 00:50:58.079
+Leandro Ariel Suarez: campañas con supuestos regalos campañas de en su momento, me acuerdo que que
+
+352
+00:50:58.749 --> 00:51:08.179
+Leandro Ariel Suarez: alguna campaña de decían. Bueno, volvemos a la oficina y todo ay a ver qué pasó. Y no como que volvemos a la piscina y entran y meten las credenciales. Bueno, cuestiones así,
+
+353
+00:51:14.709 --> 00:51:20.009
+Leandro Ariel Suarez: bueno, etapas de un pentés.
+
+354
+00:51:20.389 --> 00:51:30.559
+Leandro Ariel Suarez: tenemos la parte de la esto no me voy a detener mucho acá porque está, la clase depende, y ahí está bien explicado. Pero básicamente tenemos la preparación. ¿dónde vamos a ver qué es lo que vamos a hacer.
+
+355
+00:51:30.599 --> 00:51:48.569
+Leandro Ariel Suarez: ¿Cuál es el alcance, con qué tiempo contamos? No es infinito de tiempo para hacer un Pentex nos puede durar eternamente. ¿qué propósito tenemos para para poder, qué propósito es el que con el que queremos hacer: entender que unas legalidades queremos. Primero ¿qué es lo que queremos? Pentestear
+
+356
+00:51:48.669 --> 00:51:54.119
+Leandro Ariel Suarez: básicamente. Por ejemplo, un ataque de fuerza bruta podría dejar cuenta bloqueada, efectuar sistemas.
+
+357
+00:51:55.399 --> 00:52:04.049
+Leandro Ariel Suarez: Después tenemos el el armado de plan, ya definir qué herramienta vamos a utilizar: la ubicación lógica y física que vamos a hacer el ataque.
+
+358
+00:52:04.469 --> 00:52:14.359
+Leandro Ariel Suarez: identificar el equipo de trabajo que se va a encargar del participar del ataque. Puede haber expertos, distintos equipos.
+
+359
+00:52:15.339 --> 00:52:18.449
+Leandro Ariel Suarez: Bueno, eso lo lo ensamblan. Se ensamblan antes
+
+360
+00:52:19.489 --> 00:52:33.399
+Leandro Ariel Suarez: acá. En definir realmente el objetivo, o sea, que que determina que tuvimos éxito o no con el Pentext. O sea, encontré esta vulnerabilidad y no las encontré. Yo asumo que voy a encontrar esto. Si lo encuentro tengo, éxito si no lo encuentro o no.
+
+361
+00:52:33.669 --> 00:52:38.799
+Leandro Ariel Suarez: Por supuesto que es mejor no tener éxito porque explica que no hay que hacer ningún cambio, Pero bueno.
+
+362
+00:52:39.429 --> 00:52:48.049
+Leandro Ariel Suarez: después ejecutar el ataque, llevarlo a cabo bajo el tiempo y el alcance que se determinó y ver si
+
+363
+00:52:48.159 --> 00:53:02.119
+Leandro Ariel Suarez: si se logra el el objetivo o si se termina el tiempo y no se logró. Por más que quizás esté esa vulnerabilidad que estamos buscando. Pero Bueno, en el tiempo que intentamos hacerlo, no no pudimos, por ejemplo.
+
+364
+00:53:04.259 --> 00:53:17.639
+Leandro Ariel Suarez: Y bueno, luego se integran. No todos los hallazgos se empieza a hacer un ciclo, no ciclo. Estamos viendo ahora de los de estos pasos y se empieza a consolidar toda esa info y y a integrar.
+
+365
+00:53:17.809 --> 00:53:22.309
+Leandro Ariel Suarez: Y bueno, y ahí empiezan distintos.
+
+366
+00:53:22.689 --> 00:53:42.069
+Leandro Ariel Suarez: Se empieza a pivotear con lo que sea, con lo que se encontró y y escalar. Trata de intercalar con otras cosas, otros ataques. Por ejemplo, se realiza una prueba de ingeniería social, se realiza un ataque. Eso se realiza un ataque de phishing con las credenciales que se obtuvieron. Se trata de acceder al repositorio de archivos y extraer el documento.
+
+367
+00:53:42.789 --> 00:53:49.129
+Leandro Ariel Suarez: Puede ser que con esos documentos. Después se disputa el tipo ataque. Y, bueno, ahí se empiezan a a ver alternativas.
+
+368
+00:53:52.519 --> 00:54:01.339
+Leandro Ariel Suarez: En el libro se hacen campañas de phishing. No sé, ustedes tienen más tiempo en idioma que yo, Así que me podrían decir ustedes a mí,
+
+369
+00:54:01.819 --> 00:54:05.829
+Leandro Ariel Suarez: si no saben, es porque quizás cayeron en alguna
+
+370
+00:54:06.509 --> 00:54:15.589
+Leandro Ariel Suarez: no. Pero si caen en algunas. Generalmente, cuando hay campañas, se se les suele dar aviso che caíste en una campaña besing y se da una capacitación a la gente que cayó
+
+371
+00:54:15.949 --> 00:54:22.009
+Leandro Ariel Suarez: que, Y bueno, no no estaría mal el tema después. Ver qué ¿Qué decisión toma
+
+372
+00:54:22.499 --> 00:54:24.279
+Leandro Ariel Suarez: el director de la Cardia?
+
+373
+00:54:26.279 --> 00:54:30.619
+Leandro Ariel Suarez: Bueno, red Blue y Purpble Dean.
+
+374
+00:54:30.999 --> 00:54:37.959
+Leandro Ariel Suarez: básicamente estos son algunas divisiones dentro de los equipos de de seguridad
+
+375
+00:54:38.529 --> 00:54:58.159
+Leandro Ariel Suarez: de una compañía. Generalmente, el red Team está más asociado con la parte ofensiva. No se encarga de ejecutar petesting de hacer ingeniería social, de hacer a sesmens de las vulnerabilidades, procesos, procesos y escaneos activos para identificar vulnerabilidades como que es la parte más activa
+
+376
+00:54:58.159 --> 00:55:02.339
+Leandro Ariel Suarez: de atacar la misma empresa de forma ética, no
+
+377
+00:55:02.609 --> 00:55:11.319
+Leandro Ariel Suarez: después. El bludin es más defensivo. No están implementando controles, están monitoreando están dando respuesta a incidentes.
+
+378
+00:55:12.269 --> 00:55:19.149
+Leandro Ariel Suarez: Y y después, bueno, surge el famoso Purple Team, que es una especie de
+
+379
+00:55:19.399 --> 00:55:25.739
+Leandro Ariel Suarez: híbrido que, bueno, muchas veces surge de la pelea entre ambos Teams. Bueno, terminan
+
+380
+00:55:25.909 --> 00:55:31.659
+Leandro Ariel Suarez: o se termina consolidando un papel deam aparte o bueno, o de alguna forma se convive
+
+381
+00:55:41.889 --> 00:55:47.399
+Leandro Ariel Suarez: bueno y Bridge ataximulation. También es una especie de pop
+
+382
+00:55:47.839 --> 00:55:59.719
+Leandro Ariel Suarez: juegos de guerra. A veces se puede llamar si si conoces el concepto que es Bueno, se se empiezan a simular esto. Tal tiene que ver con lo que comenté. Recién se simula el escenario desfavorables
+
+383
+00:55:59.809 --> 00:56:10.089
+Leandro Ariel Suarez: para alguno puntual, Por ejemplo, ¿qué pasa si un atacante obtiene una acceso a una ruta C o M de del
+
+384
+00:56:10.509 --> 00:56:19.219
+Leandro Ariel Suarez: del clavo, o sea, si yo ahora. Tenés la ruta, aunque podés hacer todo. Puedes borrar infraestructuras, puedes crear nueva, puedes hacer lo que vos quieras.
+
+385
+00:56:19.349 --> 00:56:20.939
+Leandro Ariel Suarez: Bueno, ese es el escenario.
+
+386
+00:56:21.369 --> 00:56:39.089
+Leandro Ariel Suarez: lo planteamos, ¿Qué ¿Qué pasaría? Se empieza a analizar qué tácticas, qué técnicas se pueden utilizar para defenderse, qué medidas podemos tomar para defendernos. En caso de que pase eso, que no, ¿Qué equipo están involucrados? Bueno, de ahí surge mucho aprendizaje.
+
+387
+00:56:39.229 --> 00:56:52.439
+Leandro Ariel Suarez: Y Y bueno, en sí, son baratos entre comillas solamente juntar a la gente involucrada y proponer el el escenario, y a veces se prueba incluso en un ambiente controlado. Entonces
+
+388
+00:56:52.669 --> 00:56:56.129
+Leandro Ariel Suarez: no no es tan crítico, quizás como otras metodologías, no
+
+389
+00:56:56.619 --> 00:57:00.679
+Leandro Ariel Suarez: como un pentéstin en producción o como un kauf monkey también en producción.
+
+390
+00:57:03.659 --> 00:57:07.829
+Leandro Ariel Suarez: Bueno, hasta acá la clase de
+
+391
+00:57:08.709 --> 00:57:19.269
+Leandro Ariel Suarez: de seguridad en la empresa. Esto les dije, está más enfocado en el N I S. En el estándar de Denis. Así que pueden ir a verlo 2 y 3
+
+392
+00:57:19.519 --> 00:57:25.999
+Leandro Ariel Suarez: de Bishop. No hay mucho de esto. Lo vimos hoy, así que nada
+
+393
+00:57:28.029 --> 00:57:30.649
+Leandro Ariel Suarez: puedan Pueden ir a a chequearlo ahí.
+
+394
+00:57:32.039 --> 00:57:38.749
+Leandro Ariel Suarez: No sé qué qué a ver, diga pausar un poco la grabación.
+

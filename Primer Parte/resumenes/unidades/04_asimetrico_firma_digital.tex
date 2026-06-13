@@ -1,0 +1,462 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+\section{Cifrado Asimétrico y Firma Digital}
+
+Las clases anteriores resolvían confidencialidad (criptosistemas) e integridad
+(MACs/hash) desde el modelo \textbf{simétrico}: emisor y receptor comparten una
+\emph{misma} clave. Esta unidad revisita los mismos problemas desde el modelo
+\textbf{asimétrico}, donde hay \emph{dos} claves distintas. Esto resuelve un
+problema que antes era imposible (el intercambio de claves) y da origen a tres
+construcciones nuevas: \textbf{intercambio de claves} (Diffie-Hellman),
+\textbf{criptosistemas asimétricos} (RSA, ElGamal) y \textbf{firmas digitales}.
+
+\prof{Hoy vamos a revisitar la criptografía, pero desde otro modelo mental que es el modelo asimétrico.}
+
+\subsection{El problema de distribución de claves}
+
+La seguridad de toda función criptográfica depende de que un atacante \textbf{no
+tenga acceso a la clave}. Consecuencia práctica: las claves \textbf{no} pueden
+transmitirse por un canal inseguro (la información cifrada sí, las claves no).
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Dos puntos:} se usa un canal alternativo seguro (encuentro
+  físico, correo caro, o seguridad por capas con un canal independiente).
+  \item \textbf{Múltiples puntos:} para $n$ entidades que se comunican de a pares
+  hace falta una clave por combinación, del orden de $\binom{n}{2}=O(n^2)$ claves;
+  cada parte administra $n-1$ claves. No escala (ej.: $100\,000$ empleados $\Rightarrow$
+  $100\,000^2$ claves, cada uno conoce $999\,999$).
+  \item \textbf{Punto único de confianza (TTP):} un tercero de confianza
+  \emph{Trusted Third Party}, también llamado \textbf{KDC} (Key Distribution
+  Center). Comparte una clave con cada entidad ($k_a,k_b,k_c,\dots$); si A quiere
+  hablar con C, el KDC genera una clave de sesión $k_s$ y se la manda a cada uno
+  cifrada con $k_a$ y $k_c$. Permite $n$ claves para $n$ entidades, pero es un
+  \textbf{único punto de falla}. Base de Kerberos y Active Directory.
+\end{itemize}
+
+\subsection{La idea de la criptografía asimétrica}
+
+Diffie y Hellman (1976, ``We stand today on the brink of a revolution in
+cryptography'') parten de una analogía: hay problemas con naturaleza
+\textbf{asimétrica}, fáciles en un sentido y difíciles en otro (cerrar un candado
+es fácil, abrirlo sin llave es difícil; el problema \textbf{SAT} es difícil de
+resolver pero fácil de verificar).
+
+La idea: usar \textbf{dos claves independientes} (conocer una no permite derivar la
+otra), una para cifrar y otra para descifrar. Si un atacante tiene la clave de
+cifrado, igual no puede recuperar el mensaje. Entonces esa clave de cifrado se
+puede \textbf{publicar a propósito} $\Rightarrow$ criptografía de \emph{clave
+pública}. Esto resuelve elegantemente la distribución de claves: B publica su
+clave de cifrado por un canal inseguro, A la usa para cifrar, y solo B (que tiene
+la clave de descifrado) puede recuperar el mensaje.
+
+\begin{destacado}
+Propiedades de las claves (memorizar):
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item La clave \textbf{privada/secreta} se mantiene \textbf{secreta}, fuera del
+  alcance de atacantes.
+  \item La clave \textbf{pública} se \textbf{distribuye} (incluso al atacante),
+  pero de forma \textbf{autenticada} (saber que es de quien dice ser).
+  \item El uso de las claves \textbf{no es intercambiable}. En un criptosistema se
+  cifra solo con la pública y se descifra solo con la privada. Usarlas al revés
+  rompe la confidencialidad.
+\end{itemize}
+\end{destacado}
+
+\paragraph{Problemas difíciles que la sustentan.} Toda esta criptografía se apoya
+en problemas matemáticos sin solución eficiente conocida:
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \textbf{Factorización} de $n=p\cdot q$ (sustenta RSA).
+  \item \textbf{Logaritmo discreto} (DLP) en grupos finitos (sustenta DH y ElGamal).
+\end{itemize}
+``No eficiente'' significa que las mejores soluciones son exponenciales o
+sub-exponenciales (equivalente a fuerza bruta).
+
+\begin{ojo}
+La computación cuántica afecta a \textbf{toda} esta parte asimétrica: el
+\textbf{algoritmo de Shor} resolvería factorización y log discreto eficientemente
+(pertenecen a la misma categoría de problemas). La criptografía simétrica clásica
+no se ve afectada de la misma forma. Existen algoritmos post-cuánticos de
+intercambio de claves para reemplazarlos.
+\end{ojo}
+
+\subsection{Repaso de álgebra y aritmética}
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Grupo} $(G,+)$: clausura, asociatividad, neutro, inverso.
+  \textbf{Abeliano} si además es conmutativo. \textbf{Anillo} $(G,+,*)$: $(G,+)$
+  abeliano $+$ clausura/asociatividad de $*$ $+$ distributividad. \textbf{Cuerpo/campo}:
+  anillo con $*$ conmutativa, neutro e inverso de $*$.
+  \item \textbf{Grupo cíclico} $G=(\{g^n\mid n\in\mathbb{Z}\},+)$. Grupo canónico
+  $\mathbb{Z}_n=(\{0,1,\dots,n-1\},+)$. Un \textbf{generador} $g$ es coprimo con
+  $n$; hay $\Phi(n)$ generadores. $g$ es \textbf{primitivo} si $\mathrm{ord}(g)=n$
+  (recorre todos los elementos).
+  \item \textbf{Aritmética modular:} $a \equiv b \bmod n \Leftrightarrow a-b=k\cdot n$.
+  Si $n$ es primo $\Rightarrow$ campo finito $\mathbb{Z}_p$; si no, anillo (y
+  $\mathbb{Z}_n^*$ con los coprimos a $n$ forma grupo multiplicativo).
+  \item \textbf{Euler / Fermat:} si $(k:n)=1$ entonces $\exists\, k^{-1}$ tal que
+  $k\cdot k^{-1}\equiv 1 \bmod n$, y
+  \[ a^{\Phi(n)} \equiv 1 \bmod n, \]
+  donde $\Phi(n)=\lvert\mathbb{Z}_n^*\rvert$. Caso primo (Fermat):
+  $a^{p-1}\equiv 1 \bmod p$.
+  \item \textbf{Cálculo de $\Phi$:} $\Phi(n\cdot m)=\Phi(n)\Phi(m)$ si $(n:m)=1$;
+  $\Phi(p^k)=p^{k-1}(p-1)$ con $p$ primo. En RSA: $\Phi(p\cdot q)=(p-1)(q-1)$.
+\end{itemize}
+
+\subsection{Intercambio de claves}
+
+\begin{definicion}{Protocolo de intercambio de claves}
+Protocolo $\Pi(n)$ ejecutado por dos partes, sin entrada salvo el parámetro de
+seguridad. Su salida es: una \textbf{transcripción} (mensajes intercambiados, vistos
+por el atacante), una clave $k_a$ que deriva una parte y una clave $k_b$ que deriva
+la otra, cada una con la información de su propio extremo. \textbf{Condición
+fundamental:} $k_a=k_b$.
+\end{definicion}
+
+Tiene que ser la misma clave porque son dos entidades que no comparten nada de
+antemano y luego necesitan una clave común para usar criptografía simétrica.
+
+\paragraph{Seguridad (ataques pasivos): Key-Exchange experiment $KE_{A,\Pi}$.}
+\begin{enumerate}[leftmargin=1.6em,nosep]
+  \item Se ejecuta $\Pi$, sea $k=k_a=k_b$.
+  \item Se genera $b\leftarrow\{0,1\}$.
+  \item Si $b=0 \Rightarrow k'\leftarrow\{0,1\}^n$ (aleatoria); si $b=1 \Rightarrow k'=k$.
+  \item $A$ recibe $Trans$ y $k'$, y emite $b'\in\{0,1\}$.
+\end{enumerate}
+$KE_{A,\Pi}=1$ si $b=b'$. Si $\Pr[KE_{A,\Pi}=1]<\tfrac12+\varepsilon$, $\Pi$ es
+seguro. No se le pide al atacante \emph{adivinar} la clave, sino distinguir la
+clave real de una aleatoria; así garantizamos que no obtiene \emph{ninguna}
+información parcial. Adivinar al azar o sesgar da siempre $\approx 0.5$; si llega
+a $\sim0.6$ es que encontró algo y el protocolo falla.
+
+\subsubsection{Protocolo Diffie-Hellman}
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item A define $(G,q,g)$: $G$ grupo, $q$ su tamaño, $g$ un generador. (Info
+  \textbf{pública}, parte del transcript; un atacante la conoce.)
+  \item A elige $x\leftarrow\mathbb{Z}_q$ y calcula $h_1=g^x$.
+  \item A envía a B: $(G,q,g,h_1)$.
+  \item B elige $y\leftarrow\mathbb{Z}_q$ y calcula $h_2=g^y$.
+  \item B envía a A: $(h_2)$.
+  \item A calcula $k_a=h_2^{\,x}=(g^y)^x$.
+  \item B calcula $k_b=h_1^{\,y}=(g^x)^y$.
+\end{enumerate}
+La clave común (de sesión) es
+\[ k_s=(g^x)^y \bmod p=(g^y)^x \bmod p=g^{xy}\bmod p, \]
+e $k_a=k_b$ porque la exponenciación sucesiva es conmutativa. Lo que viaja son
+$g^x$ y $g^y$; \textbf{$x$ nunca sale de A} y \textbf{$y$ nunca sale de B}.
+
+\begin{examen}
+RSA pregunta por DH casi siempre así:
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \textbf{Detallar el protocolo:} $g$, $q$, $x\to g^x$, $y\to g^y$, clave
+  común $g^{xy}$.
+  \item \textbf{V/F ``DH permite ENVIAR una clave a Bob'' $\to$ FALSO.} DH
+  \textbf{acuerda/deriva} una clave compartida \emph{en línea}; \textbf{no
+  transporta} una clave preexistente. (2018/2023.) No confundir acuerdo de clave
+  con transporte de clave.
+  \item \textbf{Seguridad = problema del logaritmo discreto (DLP).} Dado $g^x$ y
+  $g^y$ no se puede obtener $x$ ni $y$ (condición \emph{necesaria}). Formalmente
+  requiere además la \textbf{conjetura de decisión DH}: dados $g,g^x,g^y$, un
+  adversario no puede distinguir $g^{xy}$ de un valor aleatorio.
+  \item \textbf{Valores válidos de $q$:} se trabaja con grupos multiplicativos, y
+  para evitar líos con factores de primalidad se elige $q$ \textbf{primo}, así
+  todos los elementos son coprimos. (Recup 2025, 2025-1.)
+\end{itemize}
+\end{examen}
+
+\paragraph{Por qué es difícil.} Calcular logaritmos en campos \emph{infinitos} es
+eficiente (logaritmo natural, series de Taylor). En campos \emph{finitos} (módulo
+algo) el ``efecto de envolvente'' lo rompe: $3^2 \bmod 7 = 2$ (no 9), y recuperar
+$x$ de $g^x \bmod p$ es el \textbf{problema del logaritmo discreto}, sin solución
+eficiente (problema abierto de más de un siglo).
+
+\begin{ojo}
+\textbf{DH puro no tiene autenticación.} La versión original requiere un canal de
+transmisión \textbf{autenticado}. Solo es seguro frente a atacantes
+\textbf{pasivos}. Un atacante \textbf{activo} que modifica mensajes en tránsito
+hace un ataque \textbf{Man-in-the-Middle (MiTM)} y obtiene las claves. Por eso en
+la práctica DH se complementa con \textbf{MACs o firmas digitales}.
+\end{ojo}
+
+\subsection{Criptosistema asimétrico}
+
+\begin{definicion}{Criptosistema asimétrico}
+Terna de algoritmos:
+\begin{align*}
+\mathrm{Gen}&: ()\to PK\times SK &&\text{(genera \textbf{par} de claves pública/privada)}\\
+\mathrm{Enc}&: PK\times P\to C &&\text{(cifra con la pública)}\\
+\mathrm{Dec}&: SK\times C\to P &&\text{(descifra con la privada)}
+\end{align*}
+\textbf{Propiedad básica:} para todo $m$ y $(pk,sk)$ válidos, $d_{sk}(e_{pk}(m))=m$.
+\end{definicion}
+
+\paragraph{Prueba de indistinguibilidad ($Eav_{A,\Pi}$).} Igual que en el mundo
+simétrico, pero \textbf{se le da $pk$ al adversario}: (1) $(pk,sk)\leftarrow K$;
+(2) $A$ obtiene $pk$ y genera $(m_0,m_1)$; (3) $b\leftarrow\{0,1\}$; (4) $A$ recibe
+$c=e_{pk}(m_b)$; (5) $A$ emite $b'$. Gana si $b=b'$; es indistinguible si
+$\Pr[Eav_{A,\Pi}=1]<\tfrac12+\varepsilon$.
+
+\begin{destacado}
+Como $A$ conoce $pk$, puede cifrar cualquier mensaje (tiene acceso a la función de
+cifrado, que es justo el oráculo del test CPA). Por eso, en el mundo asimétrico:
+\[ \text{indistinguible (pasivo)} \;\Rightarrow\; \text{CPA-Secure} \]
+y son pruebas equivalentes. Y como CPA-Secure \textbf{requiere cifrado no
+determinístico}, \textbf{no existen criptosistemas asimétricos seguros que sean
+determinísticos}: hay que incluir no-determinismo desde el principio.
+\end{destacado}
+
+\subsubsection{RSA (Rivest, Shamir, Adleman)}
+
+Primer criptosistema asimétrico famoso. La parte compleja es la \textbf{generación
+de claves}; cifrar y descifrar son simples.
+
+\paragraph{``Textbook'' RSA (determinístico, solo conceptual).}
+\begin{align*}
+&\text{Elegir } p,q \text{ primos},\quad n=p\cdot q.\\
+&e\leftarrow(0,\Phi(n)) \;\big|\; \mathrm{mcd}(e,\Phi(n))=1.\\
+&\text{Calcular } d \;\big|\; e\cdot d\equiv 1 \bmod \Phi(n) \quad\text{(inverso multiplicativo, Euclides extendido)}.\\
+&pk=(n,e),\qquad sk=(n,d).\\
+&\mathrm{Enc}_{pk}(m)\equiv m^e \bmod n,\qquad \mathrm{Dec}_{sk}(c)\equiv c^d \bmod n.
+\end{align*}
+El cálculo $m^e \bmod n$ se hace con \textbf{exponenciación rápida}, reduciendo
+módulo $n$ en cada paso, para no manejar números gigantes.
+
+\begin{examen}
+\textbf{RSA es tema central de parcial.} Hay que saber de memoria:
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item Generación: $n=pq$, $\Phi(n)=(p-1)(q-1)$, elegir $e$ coprimo con $\Phi(n)$,
+  $d=e^{-1}\bmod\Phi(n)$.
+  \item Cifrado: $c=m^e \bmod n$. \qquad Descifrado: $m=c^d \bmod n$.
+\end{itemize}
+\end{examen}
+
+\paragraph{Por qué funciona (Dec inversa de Enc).}
+\begin{align*}
+\mathrm{Dec}(\mathrm{Enc}(m)) &= (m^e)^d \bmod n = m^{ed}\bmod n.\\
+\text{Como } e\cdot d\equiv 1 \bmod \Phi(n):\quad & e\cdot d = c\cdot\Phi(n)+1 \text{ (para alguna constante } c).\\
+m^{ed} &= m^{c\Phi(n)+1} = \big(m^{\Phi(n)}\big)^{c}\cdot m \bmod n.\\
+\text{Por Euler } m^{\Phi(n)}\equiv 1:\quad & = 1^c\cdot m = m \bmod n.
+\end{align*}
+
+\paragraph{Problemas del textbook RSA.}
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \textbf{Es determinístico} $\Rightarrow$ no pasa la prueba de
+  indistinguibilidad.
+  \item \textbf{$e$ y $m$ chicos:} si $m^e<n$ nunca se reduce, y el log discreto
+  coincide con el log natural (calculable). Históricamente se usaba $e=3$.
+  \item \textbf{Módulos repetidos:} si dos pares de claves comparten el mismo $n$,
+  se puede recuperar $n$ y luego la clave privada.
+  \item Los primos $p,q$ deben ser ``primos fuertes'', no cualesquiera.
+\end{itemize}
+
+\paragraph{Ejemplo numérico (parámetros chicos).}
+\begin{align*}
+&p=2357,\ q=2551,\ n=p\cdot q=6\,012\,707,\quad \Phi(n)=(p-1)(q-1)=6\,007\,800.\\
+&e=3\,674\,911 \text{ (al azar)},\quad d=422\,191 \text{ (Euclides ext.)}.\\
+&\mathrm{Enc}(m=5\,234\,673)=5\,234\,673^{\,3\,674\,911}\bmod 6\,012\,707=3\,650\,502.\\
+&\mathrm{Dec}(3\,650\,502)=3\,650\,502^{\,422\,191}\bmod 6\,012\,707=5\,234\,673.
+\end{align*}
+
+\paragraph{PKCS\,\#1 v1.5: RSA con padding aleatorio.} Estándar de RSA Labs que
+hace RSA \textbf{no determinístico}. Sea $k$ la longitud de $n$ en bytes; solo se
+cifran mensajes de hasta $k-11$ bytes (sea $D$ la longitud de $m$):
+\[ m' = \texttt{00000000}\ \|\ \texttt{00000010}\ \|\ r\ \|\ \texttt{00000000}\ \|\ m, \]
+donde $r$ son $k-D-3$ bytes \textbf{aleatorios distintos de 0} (para sacar el
+padding al descifrar buscando el byte 00). Esto da $\ge 8$ bytes aleatorios
+($\ge 2^{64}$ variantes) $\Rightarrow$ misma clave/mensaje produce salidas
+distintas. Al descifrar se recupera $m'$ y se quita el padding.
+
+\begin{examen}
+\textbf{RSA con padding aleatorio} (PKCS\,\#1 v1.5) se cree que es
+\textbf{CPA-Secure}, pero \textbf{no es CCA-Secure} (se encontraron ataques de
+texto cifrado elegido; es manipulable, no da integridad ni es cifrado
+autenticado). (2025-2.) Es decir: el padding aleatorio lo hace seguro frente a
+CPA, no frente a CCA.
+\end{examen}
+
+\paragraph{Tamaño de claves y uso práctico.} El nivel de seguridad es relativo al
+tamaño de los conjuntos (en RSA, $n=pq$). Como factorizar/log discreto son
+sub-exponenciales (más eficientes que fuerza bruta), hacen falta claves grandes:
+campos numéricos $n\ge 1024$ bits (hoy se recomiendan 1536 o 2048). RSA es 1-2
+órdenes de magnitud más lento que AES y solo cifra mensajes acotados, por eso se
+suele usar para \textbf{cifrar una clave simétrica} y con ella el mensaje largo
+(lo mejor de los dos mundos).
+
+\subsubsection{ElGamal (basado en DH)}
+
+ElGamal es como un Diffie-Hellman ``desacoplado en el tiempo'' convertido en
+criptosistema.
+\begin{align*}
+&\textbf{Gen: } \text{Seleccionar } G,q,g \text{ (campo $G$ de tamaño $q$); } x\leftarrow\mathbb{Z}_q,\ h=g^x.\\
+&pk=(G,q,g,h),\qquad sk=(G,q,g,x).\\
+&\mathrm{Enc}_{pk}(m): y\leftarrow\mathbb{Z}_q,\quad c=(c_1,c_2)=(g^y,\ h^y\cdot m).\\
+&\mathrm{Dec}_{sk}(c)=c_2/c_1^{\,x}.
+\end{align*}
+$c_1=g^y$ es ``la segunda parte de DH''; $h^y=(g^x)^y=g^{xy}$ es la clave de sesión
+que enmascara a $m$ (como un one-time pad). Al descifrar, $c_1^x=g^{yx}$ es esa
+misma clave, y dividir la cancela.
+
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \textbf{Resultado teórico:} si la prueba de decisión DH es difícil en $G$,
+  ElGamal es \textbf{CPA-Secure}.
+  \item \textbf{Diferencias con RSA:} ElGamal es \textbf{probabilístico} por
+  naturaleza (elige $y$ al azar al cifrar); permite reutilizar $(G,q,g)$; \textbf{no
+  está limitado a campos numéricos} (sirve con anillos de polinomios / campos de
+  Galois con $2^n$ elementos, y con \textbf{curvas elípticas}, donde el problema de
+  decisión DH es más complejo). En ElGamal el nivel de seguridad es relativo a
+  $n=q$.
+  \item \textbf{Curvas elípticas (ECC):} para seguridad equivalente a RSA-2048 ($\approx
+  128$ bits) bastan $\approx 320$ bits (vs.\ 2048). Claves más chicas, operaciones
+  más rápidas. Cuando un algoritmo de clave pública lleva ``EC'', suele ser ElGamal
+  sobre curva elíptica.
+\end{itemize}
+
+\subsection{Firmas digitales}
+
+Son el equivalente asimétrico de los MACs (su objetivo es la \textbf{integridad}),
+pero con ventajas que justifican el nombre.
+
+\begin{definicion}{Firma digital}
+Terna de algoritmos:
+\begin{align*}
+\mathrm{Gen}&: ()\to PK\times SK\\
+\mathrm{Sign}&: SK\times P\to S &&\text{(firma con la \textbf{privada})}\\
+\mathrm{Vrfy}&: PK\times P\times S\to\{0,1\} &&\text{(verifica con la \textbf{pública})}
+\end{align*}
+\textbf{Propiedad básica:} $\mathrm{Vrfy}_{pk}(m,\mathrm{Sign}_{sk}(m))=1$.
+\end{definicion}
+
+\begin{destacado}
+El rol de las claves está \textbf{al revés} que en el cifrado: se \textbf{firma con
+la privada} y se \textbf{verifica con la pública}. Si firmáramos con la pública,
+cualquiera podría firmar y se perdería la integridad.
+\end{destacado}
+
+\paragraph{Ventajas sobre los MACs.}
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \textbf{Públicamente verificables:} cualquiera con la clave pública verifica
+  (un MAC necesita la clave secreta para verificar).
+  \item \textbf{Transferibles:} se pueden reenviar a varios destinatarios o por una
+  cadena y siguen siendo verificables en cada eslabón.
+  \item \textbf{No repudio:} quien firma no puede negar haberlo hecho. Como la única
+  forma de generar la firma es con la clave privada (y se asume que nunca se
+  comparte), tiene valor legal análogo a la firma de puño y letra (en Argentina hay
+  ley de firma digital; un organismo del Estado valida que el dueño de la clave
+  privada es tal persona real).
+\end{itemize}
+
+\paragraph{Seguridad: $\mathrm{Sig\text{-}forge}_{A,\Pi}$ (falsificación).}
+Análoga a Mac-forge: (1) $(sk,pk)\leftarrow K$; (2) $A$ obtiene
+$f(x)=\mathrm{Sign}_{sk}(x)$ y \textbf{$pk$}; (3) $A$ hace las consultas de firma que
+quiera (conjunto $Q$); (4) $A$ emite $(m,s)$ con $m\notin Q$.
+$\mathrm{Sig\text{-}forge}_{A,\Pi}=1$ si $\mathrm{Vrfy}_{pk}(m,s)=1$ y $m\notin Q$.
+Si ningún $A$ gana, la firma es \textbf{infalsificable}.
+
+\subsubsection{RSA-Signature y por qué se firma el HASH}
+
+Idéntico a RSA-Encryption pero \textbf{invirtiendo los roles de las claves}:
+\[ \mathrm{Sign}_{sk}(m)\equiv m^d \bmod n, \qquad
+   \mathrm{Vrfy}_{pk}(m,s):\ \overset{?}{m=s^e \bmod n}. \]
+
+\begin{ojo}
+\textbf{RSA-Signature básico (sin hash) es INSEGURO.} Ataques de falsificación:
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item Elegir $s\leftarrow S$ al azar, calcular $m=s^e\bmod n$, emitir $(m,s)$:
+  \textbf{pasa la verificación}.
+  \item \textbf{Maleabilidad:} con $s_1=f(m_1)$, $s_2=f(m_2)$, el par
+  $(m_1\!\cdot m_2,\ s_1\!\cdot s_2)$ también verifica.
+\end{itemize}
+\end{ojo}
+
+\paragraph{Hashed RSA (la firma que se usa).} Solución elegante: en vez de firmar
+el mensaje, firmar su \textbf{hash} con una función de hash criptográfica (libre de
+colisiones):
+\[ \mathrm{Sign}_{sk}(m)\equiv H(m)^d \bmod n, \qquad
+   \mathrm{Vrfy}_{pk}(m,s):\ \overset{?}{H(m)=s^e \bmod n}. \]
+
+\begin{examen}
+\textbf{Firma RSA en el parcial (2015):}
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item Firmar: $\sigma=H(m)^d \bmod n$.
+  \item Verificar (Vrfy): recibir $m$ y $\sigma$, calcular $\sigma^e \bmod n$ y
+  \textbf{comparar con $H(m)$}.
+  \item \textbf{Por qué se firma el HASH y no el mensaje:} (1) la resistencia a
+  preimagen del hash evita el primer ataque (no se puede partir de $s$ y construir
+  un $m$ válido); (2) no poder predecir $H(m)$ evita el ataque de maleabilidad;
+  (3) bonus: el hash es de tamaño fijo, así la firma tiene tamaño fijo
+  independiente del mensaje (RSA básico solo firma mensajes chicos del tamaño del
+  bloque).
+\end{itemize}
+Hashed RSA no tiene prueba de seguridad salvo asumiendo un modelo ideal de $H$.
+\end{examen}
+
+\paragraph{DSS (Digital Signature Standard).} Algoritmo de firma basado en ElGamal
+(usa $H$ = SHA1/SHA2). Genera claves $(p,q,g,y)$ / $(p,q,g,x)$ con $q$ primo,
+$p$ primo tal que $q\mid p-1$, $g$ generador de orden $q$, $x\leftarrow\mathbb{Z}_q$,
+$y=g^x\bmod p$. Firma $(r,s)$ con $r=(g^k\bmod p)\bmod q$ y
+$s=[H(m)+x\cdot r]\cdot k^{-1}\bmod q$. Hereda las ventajas de ElGamal sobre RSA:
+existe sobre curvas elípticas (ECDSA) $\Rightarrow$ firmas más compactas con claves
+más chicas.
+
+\begin{examen}
+\textbf{Firma digital para distribución de software / binarios} (2017): el
+proveedor firma el binario con su clave privada; cualquiera verifica con la clave
+pública que el binario es auténtico y no fue modificado. Aprovecha que la firma es
+\emph{públicamente verificable} y da integridad/autenticación de origen sin
+compartir secretos.
+\end{examen}
+
+\begin{ojo}
+\textbf{Diferencia entre cifrar y firmar (no confundir):}
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \textbf{Cifrar} $\to$ confidencialidad. Se cifra con la \textbf{pública}
+  del destinatario, descifra con su privada.
+  \item \textbf{Firmar} $\to$ integridad / autenticación / no repudio
+  (\emph{no} da confidencialidad). Se firma con la \textbf{privada} del emisor,
+  verifica cualquiera con la pública.
+\end{itemize}
+\end{ojo}
+
+\subsection{PKI y certificados digitales}
+
+El intercambio asimétrico resuelve la confidencialidad pero traslada el problema:
+hay que distribuir la clave pública \textbf{de forma autenticada} (saber que la
+pública de Bob es realmente de Bob, si no, un MiTM publica la suya). Esto lo
+resuelve la \textbf{PKI} (Public Key Infrastructure) con \textbf{certificados} y
+\textbf{Autoridades de Certificación (CA)}.
+
+\begin{itemize}[leftmargin=1.4em]
+  \item Un \textbf{certificado digital} asocia una identidad (titular) con su
+  \textbf{clave pública}, y está \textbf{firmado por la CA} (con la clave privada
+  de la CA).
+  \item \textbf{Cadena de confianza:} se confía en la CA (cuya clave pública se
+  conoce de antemano); la CA firma el certificado del titular. Pueden encadenarse
+  (CA raíz $\to$ CA intermedia $\to$ titular).
+\end{itemize}
+
+\begin{examen}
+\textbf{Certificados en el parcial:}
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \textbf{Validar un certificado = verificar la FIRMA de la CA} (con la clave
+  pública de la CA). (2018, 2017.)
+  \item Un certificado contiene la clave \textbf{PÚBLICA del titular}, \textbf{NO}
+  la clave privada de la CA. \textbf{V/F ``el certificado contiene la clave privada
+  de la CA'' $\to$ FALSO.} (2025-1, 2025-2.)
+  \item Propiedades clave pública/privada: la privada se mantiene secreta, la
+  pública se distribuye de forma \textbf{autenticada} (justamente para eso sirve el
+  certificado). (2015, 2025-1.)
+\end{itemize}
+\end{examen}
+
+\begin{ojo}
+\textbf{Errores típicos de esta unidad:}
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item Pensar que el certificado contiene la clave \emph{privada} (contiene la
+  pública del titular, firmada por la CA).
+  \item Creer que \textbf{MD5 es asimétrico}: MD5 es una \textbf{función de hash},
+  no un esquema de clave pública.
+  \item Confundir \textbf{DH (acuerdo de clave)} con \textbf{transporte de clave}:
+  DH deriva una clave común, no envía una clave preexistente.
+\end{itemize}
+\end{ojo}
+
+\end{document}

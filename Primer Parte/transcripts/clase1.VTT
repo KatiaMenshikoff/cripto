@@ -1,0 +1,4634 @@
+WEBVTT
+
+1
+00:00:03.780 --> 00:00:14.849
+Pablo Eduardo Abad: Bien la semana pasada. Entonces vimos una introducción a que era la criptografía. Describimos distintos usos por arriba que
+
+2
+00:00:15.610 --> 00:00:20.730
+Pablo Eduardo Abad: que aprovechan las construcciones criptográficas para resolver problemas concretos.
+
+3
+00:00:21.180 --> 00:00:31.480
+Pablo Eduardo Abad: y recorrimos un poco muy, muy por arriba. La historia de la criptografía a través de algunos criptosistemas emblemáticos que nos permitieron un poco meternos en el tema.
+
+4
+00:00:32.830 --> 00:00:39.490
+Pablo Eduardo Abad: Cerca del final de la clase. Ya empezamos a introducir los primeros formalismos. En particular.
+
+5
+00:00:39.910 --> 00:00:48.259
+Pablo Eduardo Abad: introdujimos la definición de un criptosistema que, si se acuerdan, era una terna de algoritmos.
+
+6
+00:00:49.060 --> 00:00:52.470
+Pablo Eduardo Abad: un algoritmo para generar claves que
+
+7
+00:00:54.210 --> 00:01:01.469
+Pablo Eduardo Abad: en los criptosistemas más comunes suele ser simplemente una función no deterministica que toma una clave
+
+8
+00:01:01.850 --> 00:01:07.670
+Pablo Eduardo Abad: desde el espacio de claves con una distribución aleatoria uniforme, o sea, en creo yo.
+
+9
+00:01:07.960 --> 00:01:15.229
+Pablo Eduardo Abad: es un algoritmo que elige una clave al azar, porque nos da la idea de que la clave criptográfica es una clave totalmente aleatoria.
+
+10
+00:01:17.350 --> 00:01:19.150
+Pablo Eduardo Abad: una función de cifrado
+
+11
+00:01:20.600 --> 00:01:30.100
+Pablo Eduardo Abad: que trabaja sobre mensajes arbitrarios que llamamos textos planos y claves y los transforma en mensajes cifrados y una función de cifrado que
+
+12
+00:01:30.780 --> 00:01:34.619
+Pablo Eduardo Abad: actúa como inversa si utilizamos la misma clave.
+
+13
+00:01:36.560 --> 00:01:38.399
+Pablo Eduardo Abad: Habíamos dicho que esto es
+
+14
+00:01:39.200 --> 00:01:46.110
+Pablo Eduardo Abad: como las propiedades básicas que que nos dan la relación que hay entre las funciones.
+
+15
+00:01:47.340 --> 00:01:55.570
+Pablo Eduardo Abad: pero que no habla todavía de la seguridad, porque habíamos adelantado un poco este concepto de que no hay una única definición de seguridad.
+
+16
+00:01:55.740 --> 00:02:00.940
+Pablo Eduardo Abad: Sí, Entonces introdujimos una primera definición.
+
+17
+00:02:01.370 --> 00:02:11.660
+Pablo Eduardo Abad: Sí que era la de secreto perfecto. La definición de secreto perfecto es una definición matemática de seguridad. Si se define sobre
+
+18
+00:02:13.230 --> 00:02:25.770
+Pablo Eduardo Abad: una distribución o una muestra de mensajes pensadas como variables aleatorias, discretas estadísticas y y
+
+19
+00:02:27.310 --> 00:02:34.900
+Pablo Eduardo Abad: básicamente, establecen el conjunto de propiedades que tendrían que ocurrir entre las distribuciones de los mensajes
+
+20
+00:02:35.070 --> 00:02:43.670
+Pablo Eduardo Abad: planos y los mensajes cifrados para que se dé una condición que llamamos secreto perfecto que
+
+21
+00:02:44.280 --> 00:02:51.159
+Pablo Eduardo Abad: habíamos dicho, en pocas palabras, que implicaba que conocer el texto cifrado
+
+22
+00:02:52.160 --> 00:02:57.560
+Pablo Eduardo Abad: no nos da ningún tipo de información extra sobre el texto plano que no conocíamos antes.
+
+23
+00:02:57.770 --> 00:02:59.470
+Pablo Eduardo Abad: Esta ecuación.
+
+24
+00:03:00.170 --> 00:03:07.419
+Pablo Eduardo Abad: en términos de probabilidades. Dice eso. Si yo puedo conocer a priori una distribución de los posibles mensajes.
+
+25
+00:03:09.010 --> 00:03:10.010
+Pablo Eduardo Abad: tal vez
+
+26
+00:03:10.570 --> 00:03:27.329
+Pablo Eduardo Abad: haya 2 mensajes posibles, nada más que se están cifrando, sí o no. Es más. E incluso puedo saber. Creo que había dicho algo parecido, no seguro de los números, pero un 90 por 100 de chances de que el mensaje cifrado sea así. ¿sí? Y eso puede ser información que yo conozco a priori
+
+27
+00:03:28.120 --> 00:03:30.729
+Pablo Eduardo Abad: sin conocer el mensaje. Eso se recolecta en
+
+28
+00:03:31.050 --> 00:03:34.629
+Pablo Eduardo Abad: una tabla de probabilidades que 1 puede armar sobre el mensaje.
+
+29
+00:03:35.110 --> 00:03:43.280
+Pablo Eduardo Abad: Sí, la la probabilidad de la izquierda básicamente es otra tabla de probabilidades sobre los mensajes
+
+30
+00:03:44.740 --> 00:03:49.450
+Pablo Eduardo Abad: pero modificada por el hecho de conocer que el texto cifrado toma un valor en particular.
+
+31
+00:03:50.200 --> 00:04:01.659
+Pablo Eduardo Abad: Sí, Lo que lo que establece esta ecuación es eso es que, conociendo el valor particular que tomó en un caso, el texto cifrado, la tabla de probabilidades de como podían ser los mensajes, no cambia.
+
+32
+00:04:05.180 --> 00:04:11.180
+Pablo Eduardo Abad: ¿sí? Y habíamos hablado muy rápido de que si lo miramos desde un punto de vista probabilístico, nada más.
+
+33
+00:04:11.380 --> 00:04:18.449
+Pablo Eduardo Abad: Hay una cosa que es medio paradójica, que esta es la definición de 2 variables aleatorias que son estadísticamente independientes.
+
+34
+00:04:18.950 --> 00:04:20.529
+Pablo Eduardo Abad: Si en este caso serían
+
+35
+00:04:20.970 --> 00:04:28.070
+Pablo Eduardo Abad: la distribución de mensajes en texto, plano y texto cifrado, pero Nosotros sabemos, por definición que hay una función
+
+36
+00:04:28.850 --> 00:04:30.160
+Pablo Eduardo Abad: que las relaciona.
+
+37
+00:04:30.570 --> 00:04:34.569
+Pablo Eduardo Abad: Sí que sabemos que no no son independientes, una variable respecto a la otra.
+
+38
+00:04:35.470 --> 00:04:38.929
+Pablo Eduardo Abad: Sí, el el truco de por qué esto es posible es que estas
+
+39
+00:04:39.360 --> 00:04:46.830
+Pablo Eduardo Abad: ecuaciones no están tomando en cuenta las claves. Si las claves son las que introducen la capacidad de llegar a esto. A pesar de que hay una relación.
+
+40
+00:04:47.190 --> 00:04:52.630
+Pablo Eduardo Abad: una función de las relaciones en
+
+41
+00:04:55.160 --> 00:05:08.600
+Pablo Eduardo Abad: había terminado la la la clase anterior, un poco con una una encrucijada. Cuando 1 ve estas formulaciones matemáticas tan lindas y y las quiere llevar al mundo real. Unas veces se pregunta bueno, pero
+
+42
+00:05:09.820 --> 00:05:19.519
+Pablo Eduardo Abad: existe esta condición? No sea desde un punto de vista abstracto, matemático. Es genial, ¿Existe alguna transformación, alguna función que podamos definir
+
+43
+00:05:19.740 --> 00:05:21.559
+Pablo Eduardo Abad: que cumpla con esta propiedad.
+
+44
+00:05:23.110 --> 00:05:24.800
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Con las que vimos hasta ahora no.
+
+45
+00:05:25.670 --> 00:05:29.230
+Pablo Eduardo Abad: Las que vimos hasta ahora definitivamente no correcto.
+
+46
+00:05:30.580 --> 00:05:42.250
+Pablo Eduardo Abad: Pero la la pregunta vieron que muchas veces los ideales son ideales medio asintoticos. O sea, 1 se puede aproximar al ideal, pero nunca llega y y puede jugar a cuanto me
+
+47
+00:05:42.920 --> 00:05:49.569
+Pablo Eduardo Abad: me acerco. Entonces la pregunta es: ¿esto ¿Será un ideal de ese tipo, ¿O es
+
+48
+00:05:50.020 --> 00:05:53.549
+Pablo Eduardo Abad: una propiedad a la cual se puede llegar con criptosistemas reales.
+
+49
+00:05:55.060 --> 00:06:04.620
+Pablo Eduardo Abad: Shannon estuvo estudiando bastante ese problema y a la par de él, otro investigador, Bernan, y
+
+50
+00:06:05.250 --> 00:06:14.900
+Pablo Eduardo Abad: estudiaba con una teoría parecida porque no estaba todavía el cuerpo establecido de conocimiento, un problema muy similar, y ambos llegaron medio. Independientemente
+
+51
+00:06:15.390 --> 00:06:25.360
+Pablo Eduardo Abad: a una misma conclusión, y la conclusión es que si es posible construir una función que tenga estas características.
+
+52
+00:06:25.990 --> 00:06:31.410
+Pablo Eduardo Abad: Sí, esa función hoy día se conoce como Wandame Impad o criptosistema de Bergman.
+
+53
+00:06:33.130 --> 00:06:40.519
+Pablo Eduardo Abad: Y lo paradójico de esto es la transformación más simple y tonta que se les puede ocurrir.
+
+54
+00:06:42.160 --> 00:06:56.010
+Pablo Eduardo Abad: El one time. Pad básicamente aplica la o define la transformación de de cifrado de inscripción como un sorbithabit
+
+55
+00:06:56.240 --> 00:07:03.319
+Pablo Eduardo Abad: entre cada bit del mensaje y cada bit de la clave sí tienen un mensaje
+
+56
+00:07:04.670 --> 00:07:17.980
+Pablo Eduardo Abad: no importa en que esté, lo convierte en una representación binaria, esto se podría formular en otra base, pero en binaria es el caso más simple y más fácil, o sea, lo lo expanden en su forma binaria. Supongamos que este mensaje lo expandimos
+
+57
+00:07:18.150 --> 00:07:23.140
+Pablo Eduardo Abad: Si pones la clave y cifrar es hacer un short Vita Vit
+
+58
+00:07:24.110 --> 00:07:25.919
+Pablo Eduardo Abad: de cada 1 de los bits del mensaje.
+
+59
+00:07:26.070 --> 00:07:27.450
+Pablo Eduardo Abad: Y ahí se acabó. La magia.
+
+60
+00:07:32.530 --> 00:07:37.760
+Pablo Eduardo Abad: Descifrar es igual de fácil. Es con la misma clave, se hace un sórbithabit. Por esto ¿de qué,
+
+61
+00:07:38.330 --> 00:07:46.260
+Pablo Eduardo Abad: si yo pienso en en en base 2. La la operación de sol es lineal. Entonces,
+
+62
+00:07:46.590 --> 00:07:52.699
+Pablo Eduardo Abad: es súper invertible. Y y como tengo 2 elementos, la inversión tiene que ser la misma operación. Entonces
+
+63
+00:07:54.850 --> 00:07:57.270
+Pablo Eduardo Abad: descifrar es sorbida.
+
+64
+00:07:59.780 --> 00:08:00.780
+Pablo Eduardo Abad: Entonces.
+
+65
+00:08:02.170 --> 00:08:11.209
+Pablo Eduardo Abad: Ay Joaquín: es correcto lo que decis te adelantaste un cachito. Pero pero la observación es muy buena. No le voy a repetir en voz alta léanla si quieren. Pero al ahora le siro el
+
+66
+00:08:11.650 --> 00:08:12.580
+Pablo Eduardo Abad: el el llegar ahí.
+
+67
+00:08:12.580 --> 00:08:16.610
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Entonces, esto lo que hace es un oro a nivel de bit entre el mensaje y la clave.
+
+68
+00:08:16.610 --> 00:08:23.060
+Pablo Eduardo Abad: Un short, un horario Sí, correcto. ¿es eso nada más.
+
+69
+00:08:24.770 --> 00:08:30.299
+Pablo Eduardo Abad: Ahora, a ahora. Ahora, creo que tengo una demostración simple para mostrarles por qué esto tiene el Wandame Pad. Pero
+
+70
+00:08:30.460 --> 00:08:35.220
+Pablo Eduardo Abad: paremos un segundo a ver las implicancias de esto. Primero, tenemos un algoritmo concreto.
+
+71
+00:08:35.440 --> 00:08:41.409
+Pablo Eduardo Abad: súper implementable, ¿no? O sea, porque para hacer un programa que haga esto es trivial y
+
+72
+00:08:42.169 --> 00:08:47.539
+Pablo Eduardo Abad: que, créanme, por un segundo, podemos demostrar que cumple con la condición de secreto. Perfecto.
+
+73
+00:08:47.900 --> 00:08:57.870
+Pablo Eduardo Abad: ¿sí? Y la condición de secreto perfecto nos garantiza matemáticamente que no hay ninguna forma de que se filtre información
+
+74
+00:08:59.010 --> 00:09:00.599
+Pablo Eduardo Abad: a partir del texto cifrado.
+
+75
+00:09:03.450 --> 00:09:09.190
+Pablo Eduardo Abad: Se acabó la criptografía. Chicos. Resolvimos el problema completo, nos ahorramos media materia
+
+76
+00:09:11.650 --> 00:09:18.699
+Pablo Eduardo Abad: alguna, trampa, Tiene que haber. Y Joaquín empezó empezó a a esbozar.
+
+77
+00:09:20.120 --> 00:09:29.309
+Pablo Eduardo Abad: Wanting Bad es el nombre con el que se lo conoce ahora. El criptosistema porque recoge una de las complejidades o o limitaciones a la hora de utilizarlo
+
+78
+00:09:32.660 --> 00:09:39.300
+Pablo Eduardo Abad: para que esto funcione. Para que esto tenga secreto perfecto. La clave que se utiliza para cifrar un mensaje
+
+79
+00:09:39.550 --> 00:09:42.770
+Pablo Eduardo Abad: no se puede utilizar para cifrar otro mensaje.
+
+80
+00:09:44.290 --> 00:09:49.750
+Pablo Eduardo Abad: Si yo cifro 2 mensajes con la misma clave. Esto deja de tener secreto perfecto.
+
+81
+00:09:53.310 --> 00:09:56.880
+Pablo Eduardo Abad: Vamos a ver que esa no es la única debilidad que tiene. O sea, es
+
+82
+00:09:57.920 --> 00:10:04.789
+Pablo Eduardo Abad: un escenario perfecto, pero, a diferencia de muchas otras disciplinas, tenemos una implementación real
+
+83
+00:10:04.930 --> 00:10:10.960
+Pablo Eduardo Abad: que llega al máximo teórico matemático definido de lo que podría ser la seguridad de un criptosistema.
+
+84
+00:10:12.840 --> 00:10:19.479
+Pablo Eduardo Abad: Y esto es súper importante porque en escenarios donde podamos satisfacer todas las condiciones del Wandame Impad.
+
+85
+00:10:21.500 --> 00:10:23.739
+Pablo Eduardo Abad: tenemos garantías absolutas de seguridad.
+
+86
+00:10:26.560 --> 00:10:36.300
+Pablo Eduardo Abad: Entonces, como les decía el Wandame Patina, el secreto perfecto, la la verdad, que no es tan difícil de de demostrar. Sí.
+
+87
+00:10:37.210 --> 00:10:46.710
+Pablo Eduardo Abad: Bueno, Fíjense que nosotros, que queremos demostrar que para cualquier par de de mensajes
+
+88
+00:10:47.410 --> 00:11:01.439
+Pablo Eduardo Abad: plan y cifrado se cumple la propiedad de la definición, no que la probabilidad de que el mensaje toma un valor, sabiendo que el texto cifrado toma un valor C es igual a la probabilidad a priori de que ese mensaje haya tomado ese mismo valor.
+
+89
+00:11:02.300 --> 00:11:03.150
+Pablo Eduardo Abad: ¿sí?
+
+90
+00:11:03.460 --> 00:11:04.870
+Pablo Eduardo Abad: Uf.
+
+91
+00:11:05.940 --> 00:11:15.380
+Pablo Eduardo Abad: Para poder demostrar esto, necesitamos o en la demostración, vamos a utilizar la probabilidad de que se toma un valor en particular. Así que la podemos pensar y calcular
+
+92
+00:11:15.810 --> 00:11:21.980
+Pablo Eduardo Abad: si yo quiero pensar en abstracto, la probabilidad de que el texto cifrado toma un valor, Sí.
+
+93
+00:11:22.150 --> 00:11:24.670
+Pablo Eduardo Abad: ¿cómo ¿Cómo la puedo pensar?
+
+94
+00:11:25.670 --> 00:11:26.550
+Pablo Eduardo Abad: Bueno.
+
+95
+00:11:27.550 --> 00:11:37.049
+Pablo Eduardo Abad: el texto cifrado tuvo un valor, en particular cuando se da la conjunción de que ocurre un texto plano y una clave que, cuando los paso por la función me dan ese valor, entonces
+
+96
+00:11:37.200 --> 00:11:43.390
+Pablo Eduardo Abad: puede haber múltiples combinaciones de texto, plano y claves distintas que den el mismo texto cifrado.
+
+97
+00:11:45.360 --> 00:11:46.670
+Pablo Eduardo Abad: Me siguen hasta ahí.
+
+98
+00:11:50.640 --> 00:11:57.189
+Pablo Eduardo Abad: Perfecto. Apliquemos esa idea al Wandame. Padre, ¿no? Por suerte nue nuestro algoritmo es simple. ¿no? Entonces cuando yo
+
+99
+00:11:58.220 --> 00:12:02.719
+Pablo Eduardo Abad: me paró en en un texto cifrado.
+
+100
+00:12:03.610 --> 00:12:10.609
+Pablo Eduardo Abad: Pensemos en un segundo con mensajes chiquititos de un bit, ¿no? Si yo digo ¿qué posibilidades hay de que el texto cifrado sea 1
+
+101
+00:12:11.680 --> 00:12:16.050
+Pablo Eduardo Abad: bueno. El texto cifrado es 1. Si el plano era 0, y la clave era 1
+
+102
+00:12:16.440 --> 00:12:20.400
+Pablo Eduardo Abad: o el plano era 1, Y la clave era 0, ¿sí?
+
+103
+00:12:20.600 --> 00:12:25.439
+Pablo Eduardo Abad: Y si lo pensamos para mensajes de 2 bits, por ejemplo, ¿cómo va a ser eso?
+
+104
+00:12:25.860 --> 00:12:26.640
+Pablo Eduardo Abad: Bueno.
+
+105
+00:12:28.310 --> 00:12:37.760
+Pablo Eduardo Abad: si queremos la probabilidad, por ejemplo, de que el texto disperso sea 0 0. Eso va a poder ser, porque el mensaje original era 0 0. Y la clave era 0, 0,
+
+106
+00:12:38.110 --> 00:12:43.040
+Pablo Eduardo Abad: porque el mensaje original era 0: 1. Y la clave era 0, 1 o 1 0
+
+107
+00:12:43.410 --> 00:12:46.890
+Pablo Eduardo Abad: y 1 0 o 1 1 y 1 1 sí,
+
+108
+00:12:51.090 --> 00:12:58.660
+Pablo Eduardo Abad: entonces podemos formular que para que el para que el mensaje
+
+109
+00:12:59.150 --> 00:13:04.789
+Pablo Eduardo Abad: cifrado, todo un valor, lo que podemos recolectar es la sumatoria para todas las diferentes claves
+
+110
+00:13:05.140 --> 00:13:09.500
+Pablo Eduardo Abad: en las que se da que el mensaje de cifrado tome un valor
+
+111
+00:13:09.770 --> 00:13:11.780
+Pablo Eduardo Abad: Tome ese valor que queremos. Y
+
+112
+00:13:12.350 --> 00:13:14.200
+Pablo Eduardo Abad: la clave tome ese mismo valor.
+
+113
+00:13:14.400 --> 00:13:16.690
+Pablo Eduardo Abad: Muchas de estas probabilidades pueden ser 0,
+
+114
+00:13:17.230 --> 00:13:21.569
+Pablo Eduardo Abad: Sí, o sea, puede ser que con una clave en particular, no haya chance de generar este valor.
+
+115
+00:13:22.180 --> 00:13:27.429
+Pablo Eduardo Abad: Pero si barremos todas las posibles claves y nos quedamos con
+
+116
+00:13:28.280 --> 00:13:31.709
+Pablo Eduardo Abad: todas las claves que llegan a al valor C.
+
+117
+00:13:33.300 --> 00:13:39.899
+Pablo Eduardo Abad: Como estos eventos son dijuntos, o sea, la clave, no puede tomar 2 valores distintos. Entonces estos estos eventos no pueden ser
+
+118
+00:13:40.740 --> 00:13:42.920
+Pablo Eduardo Abad: la suma de todo esto.
+
+119
+00:13:44.990 --> 00:13:51.649
+Pablo Eduardo Abad: perdón, la la la la conjunción de todos estos elementos va a ser la suma. Por eso lo consideramos como una sumatoria.
+
+120
+00:13:52.860 --> 00:13:53.820
+Pablo Eduardo Abad: Ahora.
+
+121
+00:13:57.000 --> 00:14:07.029
+Pablo Eduardo Abad: esta expresión la podemos expandir en particular esta primera parte, porque nosotros tenemos una función que nos relaciona C
+
+122
+00:14:07.670 --> 00:14:08.909
+Pablo Eduardo Abad: y el texto plano.
+
+123
+00:14:09.010 --> 00:14:15.470
+Pablo Eduardo Abad: Sí, a través de la función de cifrado o descifrado, podemos decir que
+
+124
+00:14:16.380 --> 00:14:26.070
+Pablo Eduardo Abad: C es igual a C en términos de variables de letras discretas. Es lo mismo que decir que el mensaje plano se iguala C Sor: la clave.
+
+125
+00:14:29.420 --> 00:14:38.550
+Pablo Eduardo Abad: sí. Y de acá tenemos que usar conceptos un poco básicos de de estadística, de probabilidades que por ahí se acuerdan, sí. Pero
+
+126
+00:14:40.420 --> 00:14:44.859
+Pablo Eduardo Abad: si la clave y el mensaje se eligen de forma independiente, cosa que
+
+127
+00:14:44.970 --> 00:14:59.510
+Pablo Eduardo Abad: se debería pasar, porque ahí, si lo generan funciones independientes. La conjunción de estos eventos, la probabilidad de que estos 2 eventos ocurran al mismo tiempo es el producto de las probabilidades, así que podemos separar esta conjunción en 2 probabilidades.
+
+128
+00:15:00.140 --> 00:15:01.100
+Pablo Eduardo Abad: Sí.
+
+129
+00:15:01.360 --> 00:15:03.069
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Te te puedo preguntar algo? Profe.
+
+130
+00:15:03.410 --> 00:15:04.450
+Pablo Eduardo Abad: Sí, claro.
+
+131
+00:15:04.870 --> 00:15:10.719
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Que no me queda claro. Esa intersección cae igual. Acá. ¿qué es ese kay waka.
+
+132
+00:15:12.660 --> 00:15:21.420
+Pablo Eduardo Abad: K mayúscula es la variable aleatoria, discreta. K minúscula. Es un valor particular. Es como cuando decimos Acá que la variable aleatoria, C tome un valor en particular.
+
+133
+00:15:22.490 --> 00:15:23.170
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Okay.
+
+134
+00:15:24.930 --> 00:15:32.790
+Pablo Eduardo Abad: Sí, acá lo estamos haciendo. Genérico. Fíjate que después, cuando lo metemos, acá. Es como que vamos a evaluar eso para todos los k posibles en una sumatoria.
+
+135
+00:15:33.490 --> 00:15:38.060
+Pablo Eduardo Abad: Entonces acá. Pensa pensar que la las mayúsculas son variables, aleatorias discretas.
+
+136
+00:15:39.090 --> 00:15:46.210
+Pablo Eduardo Abad: Las minúsculas son valores constantes, un valor constante en particular, que no especificamos que puede tomar esa variable
+
+137
+00:15:47.720 --> 00:15:53.730
+Pablo Eduardo Abad: perdón, que no lo aclare. Es lo mismo que veníamos diciendo acá en todas las otras. O sea, esto es.
+
+138
+00:15:53.990 --> 00:16:01.960
+Pablo Eduardo Abad: hay una variable al La teoría discreta que modela la probabilidad estadística de los mensajes, esto es, la probabilidad de que tome un valor en particular
+
+139
+00:16:02.620 --> 00:16:08.829
+Pablo Eduardo Abad: esto en algún momento. Ahora lo vamos a hacer después. Le podemos dar valores concretos a una distribución real. Después lo vamos a hacer con números
+
+140
+00:16:09.040 --> 00:16:13.900
+Pablo Eduardo Abad: este también para para entender algunas algunos es 2.
+
+141
+00:16:16.170 --> 00:16:19.730
+Pablo Eduardo Abad: No sé si me expliqué o confundí más.
+
+142
+00:16:19.730 --> 00:16:26.099
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí como que no me queda claro si q si la probabilidad de que la variable M tome el valor M. Chiquita.
+
+143
+00:16:26.400 --> 00:16:30.610
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Pero ¿cómo pasamos de ahí al mensaje, O sea que.
+
+144
+00:16:30.610 --> 00:16:31.360
+Pablo Eduardo Abad: No.
+
+145
+00:16:31.360 --> 00:16:32.199
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: El mensaje sea.
+
+146
+00:16:33.200 --> 00:16:36.750
+Pablo Eduardo Abad: Esta es la Ok. Esta parte de arriba es la definición que veníamos.
+
+147
+00:16:36.750 --> 00:16:37.139
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí, Sí.
+
+148
+00:16:37.140 --> 00:16:47.030
+Pablo Eduardo Abad: Acá estamos probando un lema. Es la demostración. Va a requerir en algún momento la probabilidad de que se tome un valor en particular.
+
+149
+00:16:47.750 --> 00:16:54.670
+Pablo Eduardo Abad: Así que estamos calculando eso. Entonces esta parte del lema está un poco. Si quieres dice asociada a esto porque Ahora lo vamos a retomar y usar.
+
+150
+00:16:54.670 --> 00:16:58.730
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Qué esta es la probabilidad de que la clave de que el cifrado.
+
+151
+00:16:59.550 --> 00:17:04.210
+Pablo Eduardo Abad: En el Wandame Bat. No todo esto en el contexto.
+
+152
+00:17:04.359 --> 00:17:09.849
+Pablo Eduardo Abad: el contexto del Wanda, ¿Dónde lo metemos En este cambio de variable aleatoria.
+
+153
+00:17:10.380 --> 00:17:15.420
+Pablo Eduardo Abad: Nosotros estamos diciendo que el Wandame, par que el texto
+
+154
+00:17:15.990 --> 00:17:20.000
+Pablo Eduardo Abad: cifrado toma un valor en particular, tiene que tener la misma probabilidad
+
+155
+00:17:21.329 --> 00:17:24.729
+Pablo Eduardo Abad: que el mensaje plano haya tomado.
+
+156
+00:17:25.829 --> 00:17:28.630
+Pablo Eduardo Abad: El resultado va a ser un short entre eso.
+
+157
+00:17:28.980 --> 00:17:31.520
+Pablo Eduardo Abad: Y la clave que se está usando
+
+158
+00:17:34.210 --> 00:17:40.180
+Pablo Eduardo Abad: sí, porque esta esta es la acá. Acá. Estamos aplicando la función de descifrado.
+
+159
+00:17:41.660 --> 00:17:46.369
+Pablo Eduardo Abad: Sí a acá estamos metiendo el hecho de que esta demostración aplica en el contexto del one Time. Par.
+
+160
+00:17:52.170 --> 00:17:53.000
+Pablo Eduardo Abad: Si seguimos.
+
+161
+00:17:53.000 --> 00:17:57.139
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Entonces la probabilidad de que el cifrado de algo en particular es la probabilidad de que
+
+162
+00:17:57.710 --> 00:18:02.340
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: el short de algo en particular, multiplicado por y la Ca.
+
+163
+00:18:02.490 --> 00:18:06.129
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: que, multiplicado por la probabilidad, que era clave, todo un valor, en particular.
+
+164
+00:18:07.550 --> 00:18:10.100
+Pablo Eduardo Abad: No es Ok, es
+
+165
+00:18:10.300 --> 00:18:21.610
+Pablo Eduardo Abad: no, No, No, No sé cómo lo lo lo están dando ahora en probabilidades, pero vieron que la la idea de las tablas de probabilidad es que yo repito un experimento muchas veces. Entonces, en un experimento en particular, estas variables toman un valor concreto
+
+166
+00:18:21.760 --> 00:18:25.239
+Pablo Eduardo Abad: y probabilísticamente, lo que cal lo que calculas. ¿qué pasa si, repito.
+
+167
+00:18:25.820 --> 00:18:28.600
+Pablo Eduardo Abad: ha hasta el límite el el experimento? No.
+
+168
+00:18:28.700 --> 00:18:33.360
+Pablo Eduardo Abad: Entonces, cuando hablamos así de forma genérica, estamos apuntando a esa sinton
+
+169
+00:18:34.780 --> 00:18:46.769
+Pablo Eduardo Abad: en el contexto de 1 de los experimentos en particular. Entonces acá es. Fíjate que, como estamos con una condición dobles en en un experimento que que hacemos de estos, la clave va a tomar un valor en particular que llamamos K.
+
+170
+00:18:47.320 --> 00:18:50.960
+Pablo Eduardo Abad: En ese experimento, el texto cifrado va a tomar un valor? C:
+
+171
+00:18:51.290 --> 00:18:53.839
+Pablo Eduardo Abad: Sí, porque es como le estamos fijando.
+
+172
+00:18:54.390 --> 00:19:01.859
+Pablo Eduardo Abad: Lo que estamos diciendo acá? Es si si vos en ese experimento tenés un valor concreto para el texto cifrado y un valor concreto para la clave.
+
+173
+00:19:02.380 --> 00:19:06.270
+Pablo Eduardo Abad: El mensaje plano queda definido es el short entre esas 2 cosas.
+
+174
+00:19:06.710 --> 00:19:13.040
+Pablo Eduardo Abad: Sí, porque el Short, un texto de cifrado de la clave es el mensaje plano original. ¿sí?
+
+175
+00:19:14.340 --> 00:19:21.989
+Pablo Eduardo Abad: Entonces lo que decimos es sí, en un experimento se está dando simultáneamente que hay un valor concreto, se minúscula
+
+176
+00:19:22.250 --> 00:19:25.919
+Pablo Eduardo Abad: para el texto cifrado y un valor concreto para la prueba.
+
+177
+00:19:26.520 --> 00:19:28.949
+Pablo Eduardo Abad: La probabilidad de que esto ocurra
+
+178
+00:19:29.090 --> 00:19:36.570
+Pablo Eduardo Abad: en principio tiene que ser igual a la probabilidad de que el mensaje plano haya sido el m quedaría este C,
+
+179
+00:19:36.830 --> 00:19:38.229
+Pablo Eduardo Abad: cuando tenemos esta clave?
+
+180
+00:19:40.840 --> 00:19:51.039
+Pablo Eduardo Abad: Qué es lo que hacemos, acá o sea, mantenemos de la clave para decir la clave constante. Y este lo cambiamos por algo que es equivalente.
+
+181
+00:19:51.350 --> 00:19:55.699
+Pablo Eduardo Abad: O sea, si había un 80 por 100 de de que se tome este valor
+
+182
+00:19:55.930 --> 00:20:02.409
+Pablo Eduardo Abad: en esta clave es porque hay un 80 por 100 de que el mensaje plano haya sido. Se. Ca: Cuando ocurre esa clave.
+
+183
+00:20:08.310 --> 00:20:09.260
+Pablo Eduardo Abad: Sí,
+
+184
+00:20:12.980 --> 00:20:17.779
+Pablo Eduardo Abad: esto en probabilidad se llama cambio de base por ahí. Lo lo vieron con ese nombre.
+
+185
+00:20:17.780 --> 00:20:20.599
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí es que todo el 22 profe.
+
+186
+00:20:21.110 --> 00:20:22.850
+Pablo Eduardo Abad: Okay?
+
+187
+00:20:23.740 --> 00:20:24.490
+Pablo Eduardo Abad: Bueno.
+
+188
+00:20:24.870 --> 00:20:32.949
+Pablo Eduardo Abad: más o menos lo entendieron. Entonces, si no, créanme, y después cualquier cosa repasen si si les interesa, Pero
+
+189
+00:20:33.200 --> 00:20:38.159
+Pablo Eduardo Abad: o sea, lo que estamos haciendo es respetar un evento que va a tener las mismas probabilidades
+
+190
+00:20:38.770 --> 00:20:40.770
+Pablo Eduardo Abad: para poder trabajarlo. ¿por qué?
+
+191
+00:20:41.490 --> 00:20:49.109
+Pablo Eduardo Abad: Porque ahora podemos usar por ahí las propiedades más básicas de probabilidad que como la clave se elige de forma independiente al texto
+
+192
+00:20:49.690 --> 00:20:53.669
+Pablo Eduardo Abad: el texto plano. Nosotros podemos separar estas probabilidades en el producto.
+
+193
+00:20:54.150 --> 00:20:57.569
+Pablo Eduardo Abad: la probabilidad de que la clave tome un valor
+
+194
+00:20:58.130 --> 00:21:03.549
+Pablo Eduardo Abad: cualquiera. Si en el Wandame Path, ¿Cuál sería? Bueno, la clave se elige al azar
+
+195
+00:21:03.980 --> 00:21:08.139
+Pablo Eduardo Abad: entre una clave binaria del tamaño del mensaje.
+
+196
+00:21:08.890 --> 00:21:09.830
+Pablo Eduardo Abad: Entonces.
+
+197
+00:21:11.380 --> 00:21:19.190
+Pablo Eduardo Abad: si al tamaño del espacio de claves. La cantidad claves que hay en el One Time Path va a ser 2 a la N para mensajes, y eso lo llamamos N,
+
+198
+00:21:19.820 --> 00:21:22.060
+Pablo Eduardo Abad: la probabilidad de la clave va a ser 1 sobre N,
+
+199
+00:21:22.740 --> 00:21:26.370
+Pablo Eduardo Abad: o sea, una sobre la cantidad de posibles claves distintas que hay.
+
+200
+00:21:28.180 --> 00:21:32.139
+Pablo Eduardo Abad: Sí. Esto es por cómo se genera el clave para el Wandame Pau.
+
+201
+00:21:32.870 --> 00:21:38.180
+Pablo Eduardo Abad: una clave al azar en una distribución uniforme, entonces son todas las claves aquí probables.
+
+202
+00:21:45.320 --> 00:21:46.690
+Pablo Eduardo Abad: y tenemos esto.
+
+203
+00:21:47.130 --> 00:21:47.960
+Pablo Eduardo Abad: No
+
+204
+00:21:48.120 --> 00:21:55.079
+Pablo Eduardo Abad: volvemos ahora a lo que queríamos probar en el lema. La probabilidad de que se tome un valor concreto es
+
+205
+00:21:57.800 --> 00:22:03.769
+Pablo Eduardo Abad: la sumatoria para todas las claves de la probabilidad
+
+206
+00:22:04.530 --> 00:22:08.919
+Pablo Eduardo Abad: de que seas igual C. Lo que hicimos acá que vimos, que era igual a esto.
+
+207
+00:22:09.720 --> 00:22:10.680
+Pablo Eduardo Abad: ¿sí?
+
+208
+00:22:12.200 --> 00:22:18.250
+Pablo Eduardo Abad: Entonces, como yo estoy sumando cada vez esto.
+
+209
+00:22:18.500 --> 00:22:26.520
+Pablo Eduardo Abad: Si esta parte es constante, multiplicada, la puedo sacar afuera de la sumatoria. Esto me queda 1 sobre nepor la sumatoria para todas las claves de
+
+210
+00:22:28.190 --> 00:22:32.719
+Pablo Eduardo Abad: la probabilidad de que el mensaje sea un valor en particular.
+
+211
+00:22:33.620 --> 00:22:40.599
+Pablo Eduardo Abad: Sí, Ahora, Fíjense que lo que estamos haciendo acá de alguna manera es
+
+212
+00:22:41.070 --> 00:22:43.889
+Pablo Eduardo Abad: en este contexto. C: Es una constante.
+
+213
+00:22:45.010 --> 00:22:48.340
+Pablo Eduardo Abad: Sí, voy a estar pasando por todos los karts.
+
+214
+00:22:48.970 --> 00:22:53.229
+Pablo Eduardo Abad: Si haciendo un sol entre el mismo mensaje y cada 1 de los Kads.
+
+215
+00:22:54.410 --> 00:23:01.229
+Pablo Eduardo Abad: entonces lo que estoy haciendo acá. Es calculando una suerte de m prima. Llamémoslo, pero que va a ser siempre distinto, ¿no?
+
+216
+00:23:01.520 --> 00:23:03.540
+Pablo Eduardo Abad: Porque si todos los casos son distintos
+
+217
+00:23:03.960 --> 00:23:05.899
+Pablo Eduardo Abad: y este C es siempre igual.
+
+218
+00:23:06.550 --> 00:23:08.959
+Pablo Eduardo Abad: El Short va a dar distintos valores
+
+219
+00:23:09.180 --> 00:23:11.580
+Pablo Eduardo Abad: entre sí, pero que no se van a repetir.
+
+220
+00:23:12.630 --> 00:23:15.830
+Pablo Eduardo Abad: Y si hay tantos kas como posibles mensajes.
+
+221
+00:23:16.360 --> 00:23:27.019
+Pablo Eduardo Abad: esto va a pasar por todos los valores posibles de N en algún orden en algún orden que no importa. Voy a estar sumando la probabilidad de que el mensaje tome
+
+222
+00:23:27.400 --> 00:23:30.240
+Pablo Eduardo Abad: cada 1 de sus valores, o sea, si hay
+
+223
+00:23:31.440 --> 00:23:38.910
+Pablo Eduardo Abad: un 1 000 000 000 000 de posibles ganadores de Me voy a estar sumando la probabilidad de que me tome el valor 0, el 1, el 2, el 3 hasta el 1 000 000 000 000,
+
+224
+00:23:39.490 --> 00:23:41.300
+Pablo Eduardo Abad: y cuánto da la suma
+
+225
+00:23:41.950 --> 00:23:48.330
+Pablo Eduardo Abad: de todo lo de la probabilidad de que de las probabilidades de que una variable aleatoria, tome cada 1 de los valores posibles.
+
+226
+00:23:49.610 --> 00:23:50.470
+Pablo Eduardo Abad: Una.
+
+227
+00:23:51.180 --> 00:23:53.290
+Pablo Eduardo Abad: ¡ay, Bueno, Nicolás, Muy bien, 1.
+
+228
+00:23:54.380 --> 00:24:02.199
+Pablo Eduardo Abad: Ergo se simplifica y tenemos que la probabilidad de que el texto cifrado tome un valor en particular. Es 1 sobre él.
+
+229
+00:24:02.790 --> 00:24:10.619
+Pablo Eduardo Abad: ¿sí? Antes de pasar ahora a la al final de la demostración. Fíjense qué implica esto, ya o sea, acá estamos diciendo en el Wandame Val
+
+230
+00:24:11.530 --> 00:24:13.129
+Pablo Eduardo Abad: en el one Time. Par
+
+231
+00:24:13.290 --> 00:24:25.590
+Pablo Eduardo Abad: queremos calcular la probabilidad de que el texto cifrado toma un valor en particular, ¿sí? Y lo que sale acá como resultado es que eso no depende, no depende del tipo de mensaje que estábamos cifrando.
+
+232
+00:24:27.400 --> 00:24:31.750
+Pablo Eduardo Abad: La probabilidad de que, por ejemplo, un mensaje de un bit
+
+233
+00:24:32.620 --> 00:24:35.490
+Pablo Eduardo Abad: que yo cifro, termine en el valor. Uno
+
+234
+00:24:35.610 --> 00:24:41.840
+Pablo Eduardo Abad: es independiente de que yo sepa, a priori que el 90 por 100 de las veces el mensaje original era un 0,
+
+235
+00:24:42.970 --> 00:24:45.160
+Pablo Eduardo Abad: porque el 50 por 100 de las veces.
+
+236
+00:24:45.630 --> 00:24:51.349
+Pablo Eduardo Abad: o que el 100 por 100 de las veces, incluso sabiendo el mensaje plano.
+
+237
+00:24:51.760 --> 00:24:56.089
+Pablo Eduardo Abad: incluso sabiendo, por ejemplo, que el mensaje plano que voy a cifrar siempre es 0.
+
+238
+00:24:57.640 --> 00:25:03.030
+Pablo Eduardo Abad: La probabilidad de cada 1 de los posibles valores de C es una sobrena.
+
+239
+00:25:06.770 --> 00:25:10.710
+Pablo Eduardo Abad: Si esto ya es como una pista de que esto va a tener secreto perfecto.
+
+240
+00:25:12.870 --> 00:25:18.849
+Pablo Eduardo Abad: porque la probabilidad, viendo el texto cifrado solo ya no depende del de nada el texto plano.
+
+241
+00:25:20.700 --> 00:25:29.649
+Pablo Eduardo Abad: Con esa propiedad en mente podemos volver a podemos resolver el problema que queríamos.
+
+242
+00:25:30.630 --> 00:25:34.650
+Pablo Eduardo Abad: La definición de secreto perfecto tiene una probabilidad condicional
+
+243
+00:25:35.090 --> 00:25:47.450
+Pablo Eduardo Abad: si las probabilidades condicionales estadísticamente se pueden relacionar con la probabilidad conjunta, ¿sí? Y básicamente, si una variable aleatoria tiene un valor dado el valor de otra.
+
+244
+00:25:47.750 --> 00:25:53.290
+Pablo Eduardo Abad: Si yo multiplico, esa probabilidad por la probabilidad de que
+
+245
+00:25:54.550 --> 00:25:57.590
+Pablo Eduardo Abad: el el antecedente toma ese valor.
+
+246
+00:25:57.760 --> 00:26:00.680
+Pablo Eduardo Abad: Sí, eso es igual a la probabilidad conjunta.
+
+247
+00:26:01.190 --> 00:26:09.510
+Pablo Eduardo Abad: o sea, esta parte de acá es propiedad de las de las probabilidades condicionales.
+
+248
+00:26:10.100 --> 00:26:17.460
+Pablo Eduardo Abad: Sí, ahora esta parte de acá tiene una pinta
+
+249
+00:26:19.170 --> 00:26:21.289
+Pablo Eduardo Abad: parecida a lo que vimos acá
+
+250
+00:26:22.310 --> 00:26:31.240
+Pablo Eduardo Abad: si yo podría aplicar algún cambio de variables. Acá Voy a hacer otro tipo de cambio de variables. Voy a abusarme de que M. C. I K. Están relacionadas.
+
+251
+00:26:31.800 --> 00:26:38.240
+Pablo Eduardo Abad: Sí, Y voy a decir que se toma un valor en particular a nivel probabilidades cuando K
+
+252
+00:26:39.500 --> 00:26:41.440
+Pablo Eduardo Abad: toma ese valor soreme.
+
+253
+00:26:43.420 --> 00:26:46.599
+Pablo Eduardo Abad: Sí, si me voy a la definición del One, Time. Pad Sí.
+
+254
+00:26:47.180 --> 00:26:51.809
+Pablo Eduardo Abad: C: Es igual A, M. X. R, K, Si yo hago un short entre C y M,
+
+255
+00:26:52.780 --> 00:26:56.889
+Pablo Eduardo Abad: Si quieren acá. Un sol entre M y C. Lo que tengo son los bits de la clave.
+
+256
+00:26:58.240 --> 00:26:59.860
+Pablo Eduardo Abad: Entonces con esa idea.
+
+257
+00:27:02.500 --> 00:27:15.320
+Pablo Eduardo Abad: Yo puedo hacer este cambio de variable, y acá puedo separar de vuelta las probabilidades, y en particular.
+
+258
+00:27:15.770 --> 00:27:20.850
+Pablo Eduardo Abad: C. Y M, acá son valores constantes. Así que esto es X, una variable constante.
+
+259
+00:27:21.420 --> 00:27:24.949
+Pablo Eduardo Abad: La probabilidad de que la clave tobe un valor en particular.
+
+260
+00:27:27.040 --> 00:27:34.140
+Pablo Eduardo Abad: es 1 sobre n siempre 1 sobre las posibles claves de vuelta, porque la distribución de las claves es uniforme en el One Pack.
+
+261
+00:27:34.400 --> 00:27:36.080
+Pablo Eduardo Abad: Así que esto es 1 sobre él.
+
+262
+00:27:37.160 --> 00:27:55.349
+Pablo Eduardo Abad: Y esto es la probabilidad del mensaje. No, No hay mucho que hacerle, pero ¿qué pasa? La habíamos calculado que la probabilidad de que se toma un valor era una sobrena. Entonces, ahora, si yo cancelo estos 2 lados de la ecuación, nos queda que la probabilidad de que el mensaje toma un valor, M, dado que el texto cifrado tomo un valor C, Es igual a
+
+263
+00:27:56.010 --> 00:28:00.929
+Pablo Eduardo Abad: la probabilidad de que el mensaje tome un valor. M: ¿Qué es la definición de One Time back
+
+264
+00:28:01.360 --> 00:28:03.079
+Pablo Eduardo Abad: de secreto Perfecto.
+
+265
+00:28:03.540 --> 00:28:04.330
+Pablo Eduardo Abad: Perdón.
+
+266
+00:28:09.680 --> 00:28:17.500
+Pablo Eduardo Abad: Sé cómo bien me recordaron que vieron probabilidad hace mucho. Sé que por ahí les costó seguir algunos de los pasos de la demostración. No hay problema.
+
+267
+00:28:18.080 --> 00:28:22.990
+Pablo Eduardo Abad: Hacemos esta demostración en particular porque es fácil. Muchas de las otras demostraciones
+
+268
+00:28:23.140 --> 00:28:27.309
+Pablo Eduardo Abad: las van a tener en el libro, pero las vamos a saltear a pasar más rápido.
+
+269
+00:28:27.690 --> 00:28:28.920
+Pablo Eduardo Abad: En
+
+270
+00:28:30.890 --> 00:28:36.840
+Pablo Eduardo Abad: Quiero dejarles una idea de que hay hay una base matemática real que no, no es una prueba de fe. Lo que estamos haciendo.
+
+271
+00:28:37.820 --> 00:28:38.770
+Pablo Eduardo Abad: Sí.
+
+272
+00:28:39.740 --> 00:28:42.499
+MARTÍN GALLARDO BERTUZZI: Profe mi esposo, no consultora.
+
+273
+00:28:42.500 --> 00:28:42.920
+Pablo Eduardo Abad: Claro.
+
+274
+00:28:42.940 --> 00:28:52.139
+MARTÍN GALLARDO BERTUZZI: Hay una una cosa que hacemos el producto. Cuando tenemos la intersección de las
+
+275
+00:28:52.250 --> 00:29:03.790
+MARTÍN GALLARDO BERTUZZI: de de las variables aleatorias, hacemos el producto de ambas probabilidades, porque las variables aleatorias son independientes. No usamos esa propiedad.
+
+276
+00:29:03.790 --> 00:29:15.299
+Pablo Eduardo Abad: Muy buena. Muy buena pregunta. Si me estoy saliendo un paso, en realidad porque acabés. M: Y eso te llamó la atención, no. Si además me aparece el otro lado, como los 2 terminan y.
+
+277
+00:29:15.300 --> 00:29:17.870
+MARTÍN GALLARDO BERTUZZI: Claro, sí.
+
+278
+00:29:18.210 --> 00:29:24.220
+Pablo Eduardo Abad: Está bueno, está bueno, en realidad me me estoy saltando un paso vos a hace. Y a M: Sin importar. M
+
+279
+00:29:24.400 --> 00:29:27.769
+Pablo Eduardo Abad: le podés. Le le podés asignar un valor, caprima.
+
+280
+00:29:27.890 --> 00:29:33.730
+Pablo Eduardo Abad: ¿sí? Y en realidad puedes hacer esto porque la probabilidad de que cátome un valor constante
+
+281
+00:29:33.890 --> 00:29:37.309
+Pablo Eduardo Abad: va a ser independientemente de ese valor. Va a ser constante. Una sobrena.
+
+282
+00:29:38.650 --> 00:29:41.070
+MARTÍN GALLARDO BERTUZZI: Okay. Perfecto. Entonces.
+
+283
+00:29:41.070 --> 00:29:42.650
+Pablo Eduardo Abad: Entonces.
+
+284
+00:29:42.760 --> 00:29:43.720
+MARTÍN GALLARDO BERTUZZI: Pues vaya lo mejor.
+
+285
+00:29:43.720 --> 00:29:52.379
+Pablo Eduardo Abad: Muy bien visto. Me salté un paso acá para no aturdirlos. Pero podés anular este me acá si no, no serían independientes y no podrías.
+
+286
+00:29:52.380 --> 00:29:56.040
+MARTÍN GALLARDO BERTUZZI: Me fui al baño perfecto. Por fin. Gracias.
+
+287
+00:29:56.920 --> 00:29:59.560
+Pablo Eduardo Abad: Súper Bien.
+
+288
+00:30:00.480 --> 00:30:09.910
+Pablo Eduardo Abad: Buenas noticias. Hay una demostración. No es trivial, pero digamos que no es complicada. Vamos a las malas noticias del One time padre. Sí, habíamos hablado ya de
+
+289
+00:30:11.050 --> 00:30:25.650
+Pablo Eduardo Abad: si una clase se utiliza 2 veces. Tenemos un problema si en particular. Si Yo cifro 2 mensajes distintos con la misma clave, Yo voy a tener 2 textos cifrados, pero fíjense que si hacemos un shor término a término entre estas operaciones. ¿qué va a pasar?
+
+290
+00:30:25.990 --> 00:30:32.139
+Pablo Eduardo Abad: C: 1? Shor C, 2 del otro lado? M Uno. Short: K. Sol. M. Dos son K,
+
+291
+00:30:33.820 --> 00:30:36.550
+Pablo Eduardo Abad: Un valor sobre sí mismo. Es 0
+
+292
+00:30:36.980 --> 00:30:41.009
+Pablo Eduardo Abad: y 0. Es el elemento neutro del short. Entonces se cancelan básicamente las casas.
+
+293
+00:30:41.320 --> 00:30:46.959
+Pablo Eduardo Abad: ¿qué nos queda el sol entre los 2 textos cifrados es igual al sol entre los 2 textos planos. Sí,
+
+294
+00:30:47.200 --> 00:30:53.939
+Pablo Eduardo Abad: como este es un operador lineal, las propiedades estadísticas que tenga los mensajes se mantienen.
+
+295
+00:30:54.330 --> 00:31:02.749
+Pablo Eduardo Abad: Entonces, es un caso, un cachito más difícil que lo que vimos de las sustituciones. Mono alfabéticas
+
+296
+00:31:02.890 --> 00:31:04.810
+Pablo Eduardo Abad: de las sustituciones simples.
+
+297
+00:31:04.920 --> 00:31:11.719
+Pablo Eduardo Abad: Pero es casi lo mismo, o sea, reutilizar La clave en el Wandame Impad lo vuelve un criptosistema en sustitución.
+
+298
+00:31:14.080 --> 00:31:19.589
+Pablo Eduardo Abad: así que no tienen el nombre de tan importante que es el nombre va popular.
+
+299
+00:31:20.430 --> 00:31:25.159
+Pablo Eduardo Abad: Primera mala noticia es todo bien. La clave se usa una sola vez, ¿sí?
+
+300
+00:31:25.440 --> 00:31:29.210
+Pablo Eduardo Abad: Pero hay algo peor todavía que pasamos muy por arriba y que ahora lo traigo
+
+301
+00:31:29.630 --> 00:31:43.099
+Pablo Eduardo Abad: cuando nosotros dijimos y mostramos esto, Hacemos un sórbitabit entre cada bit de la clave y el mensaje. Si hay una consecuencia práctica de eso, que complica bastante, que es el tamaño de la clave. Tiene que ser igual
+
+302
+00:31:43.760 --> 00:31:45.440
+Pablo Eduardo Abad: o mayor al del mensaje.
+
+303
+00:31:46.310 --> 00:31:53.319
+Pablo Eduardo Abad: o sea, si yo tengo un mensaje formado por un trillón de bits. Necesito una clave que tenga un trillón de bits para cifrarlo
+
+304
+00:31:54.740 --> 00:32:03.149
+Pablo Eduardo Abad: y se acuerdan que yo les había dicho. La idea de esto es achicar. El problema es proteger un mensaje de tamaño arbitrario con un mensaje chico, acá no se estaría cumpliendo eso.
+
+305
+00:32:03.710 --> 00:32:14.500
+Pablo Eduardo Abad: Si yo tengo que proteger una clave, de alguna manera, para que un atacante no la consiga, que es el mismo tamaño del mensaje, porque no gasto esa fuerza en proteger el mensaje directamente.
+
+306
+00:32:15.270 --> 00:32:23.099
+Pablo Eduardo Abad: Así que muy lindo, cumple con el concepto teórico, empieza a ser engorroso en la práctica para utilizarlo.
+
+307
+00:32:24.110 --> 00:32:33.819
+Pablo Eduardo Abad: Pero por si fuera poco, sí, y por ahí producto de que esta es una demostración matemática perfecta. La demostración requiere especialmente en este paso que
+
+308
+00:32:33.920 --> 00:32:37.139
+Pablo Eduardo Abad: de hecho me había salteado un poco, requiere que se.
+
+309
+00:32:37.140 --> 00:32:37.510
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Que sí.
+
+310
+00:32:37.510 --> 00:32:38.680
+Pablo Eduardo Abad: Una propiedad.
+
+311
+00:32:38.680 --> 00:32:45.080
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Una. Si yo quiero enviar una novela por one time, necesito una novela de bits para.
+
+312
+00:32:45.080 --> 00:32:49.620
+Pablo Eduardo Abad: para para de clave para cifrarlo. Sí, sí tal cual
+
+313
+00:32:51.300 --> 00:32:57.080
+Pablo Eduardo Abad: este. Pero además, esa esa novela de Beats tiene que ser realmente aleatoria
+
+314
+00:32:57.510 --> 00:33:02.249
+Pablo Eduardo Abad: si no se cumple, que sea realmente aleatoria. La secuencia
+
+315
+00:33:03.440 --> 00:33:12.359
+Pablo Eduardo Abad: no se cumple. La demostración que vimos este paso en particular de la demostración requiere que la clave sea verdaderamente aleatoria, matemáticamente aleatoria.
+
+316
+00:33:14.340 --> 00:33:15.790
+Pablo Eduardo Abad: ¿
+
+317
+00:33:15.990 --> 00:33:20.170
+Pablo Eduardo Abad: ¿cómo generan en un programa números aleatorios cuando los necesitan
+
+318
+00:33:27.250 --> 00:33:29.829
+Pablo Eduardo Abad: alguna vez alguna vez usaron secuencias aleatorias.
+
+319
+00:33:30.950 --> 00:33:43.020
+Pablo Eduardo Abad: Ahí Ahí te te adelantaste, te vas a a mi repregunta Este no es 100 por 100 aleatorio. En general usan funciones de librerías si randoms más random en Java.
+
+320
+00:33:43.410 --> 00:33:45.649
+Pablo Eduardo Abad: Hola, que toque. Creo que Random Python
+
+321
+00:33:46.070 --> 00:33:55.990
+Pablo Eduardo Abad: realmente usamos alguna función hoy, creo que nadie se hace su propia función generadora. El tema es que esas funciones son algorítmicas, Sí, en
+
+322
+00:33:56.590 --> 00:34:01.170
+Pablo Eduardo Abad: así, si queremos ser técnicamente correctos. Esos son generadores pseudo aleatorios
+
+323
+00:34:04.250 --> 00:34:05.760
+Pablo Eduardo Abad: en
+
+324
+00:34:07.920 --> 00:34:20.049
+Pablo Eduardo Abad: ahí. Joaquín pone una está buena. Esa variante hace hace hace bastante que no me tira este. Confío en un tercero de alguna manera. Si supone que sos el tercero como garantizas aleatoriedad, Si hay
+
+325
+00:34:20.699 --> 00:34:21.560
+Pablo Eduardo Abad: en
+
+326
+00:34:22.170 --> 00:34:32.899
+Pablo Eduardo Abad: en el ramo de seguridad. Eso lo llamamos este seguridad. Por fe, tengo fe que el que el tercero hace bien las cosas y cumple con lo que me promete en general, No, no es aconsejable.
+
+327
+00:34:33.380 --> 00:34:42.019
+Pablo Eduardo Abad: En hay muchas variantes de esto. Hay algoritmos pseudo determinísticos, hay
+
+328
+00:34:42.330 --> 00:34:55.560
+Pablo Eduardo Abad: hay chips, o sea, las computadoras de ellas suelen tener un módulo de seguridad que tiene un generador aleatorio. Sí, la gran realidad es que son aproximaciones. Si quieren asintomáticamente a una buena secuencia aleatoria.
+
+329
+00:34:56.739 --> 00:35:00.870
+Pablo Eduardo Abad: No es una secuencia de la teoría matemáticamente y es una discusión
+
+330
+00:35:02.800 --> 00:35:18.569
+Pablo Eduardo Abad: muy compleja y no resuelta si nos vamos y nos aproximamos al mundo aleatorio cuando del Wanda se cumple o no sea matemáticamente. Nos fuimos de la hipótesis del de la demostración de una de las hipótesis. Así que, técnicamente.
+
+331
+00:35:18.790 --> 00:35:25.430
+Pablo Eduardo Abad: si no tenemos un un generador mágico de números realmente aleatorios, no podríamos implementar el One Tipa.
+
+332
+00:35:27.420 --> 00:35:33.509
+Pablo Eduardo Abad: Lo que se busca generalmente es aproximarlo lo máximo posible. Pero de vuelta, ya no fuimos de esos ahí
+
+333
+00:35:34.010 --> 00:35:47.330
+Pablo Eduardo Abad: montón de aproximaciones. Ahí están están poniendo bastantes en el chat. En general, se busca algo que sea difícil de reproducir. Sí, este típi como loco tu cadencia de teclas, este
+
+334
+00:35:47.540 --> 00:35:51.649
+Pablo Eduardo Abad: abrí, el micrófono y captar ruido ambiente
+
+335
+00:35:52.690 --> 00:36:07.109
+Pablo Eduardo Abad: cuando eran más populares. Los discos magnéticos que tienen vieron distintos tipos de distintos tiempos para llegar a distintos sectores. Bueno, empecé a leer a la al azar y y medir los tiempos que tardamos en hacer Sic entre sectores.
+
+336
+00:36:07.410 --> 00:36:17.710
+Pablo Eduardo Abad: Mezcla todo eso. El El barran barra Random de Linux hacía eso, o sea, mezclaba varias fuentes en genera
+
+337
+00:36:18.200 --> 00:36:25.169
+Pablo Eduardo Abad: ruido eléctrico en un capacitor, haciéndolo oscilar entre carga y descarga muy rápido. Y medí ese ruido eléctrico.
+
+338
+00:36:25.850 --> 00:36:33.350
+Pablo Eduardo Abad: Hay un montón de de mecanismos. La realidad es que no son aleatorios. Sí,
+
+339
+00:36:33.560 --> 00:36:46.349
+Pablo Eduardo Abad: son muy difíciles de predecir algunos, pero de muchos hay papers que que predicen ese tipo de cosas. O sea, que predicen parte de la secuencia, reconstruyen la secuencia de fuentes de ruido.
+
+340
+00:36:47.040 --> 00:36:53.860
+Pablo Eduardo Abad: Así que, bueno, punto complicado para hacer esto, Estas 3 cosas
+
+341
+00:36:54.040 --> 00:37:01.240
+Pablo Eduardo Abad: son las que hacen que en el fondo del Wandame padre, lo miremos como algo lindo, pero tengo un uso muy, muy, muy acotado.
+
+342
+00:37:02.730 --> 00:37:11.340
+Pablo Eduardo Abad: Sí, Históricamente, hay casos documentados de uso de One Time Padle: sí.
+
+343
+00:37:11.830 --> 00:37:16.649
+Pablo Eduardo Abad: Durante la Segunda guerra, se sabe que se usó una variante de Wanda en papel.
+
+344
+00:37:18.000 --> 00:37:28.339
+Pablo Eduardo Abad: En base veintis 26 27 sería este para poder cifrar letra a letra mensajes contra un cuaderno. O sea, se alguien escribía
+
+345
+00:37:28.350 --> 00:37:39.070
+Pablo Eduardo Abad: letras al azar. De hecho, de la la modalidad documental es algo parecido a lo que dijeron. Pusieron a 100 personas distintas con 100 máquinas de escribir, le dijeron toca lo loco o lo que sea
+
+346
+00:37:39.380 --> 00:37:51.759
+Pablo Eduardo Abad: este. Y empezaron a tomar la primera letra de una, la segunda de otra, la tercera, y que sigue generaron una secuencia. La escribieron a mano en 2 cuadernos y le dijeron a 1. Pues, quédate con este cuaderno? Vos Quédate con este otro.
+
+347
+00:37:51.980 --> 00:37:56.220
+Pablo Eduardo Abad: Y eso habilitó a que puedan mandar mensajes aplicando esto.
+
+348
+00:37:57.570 --> 00:38:00.189
+Pablo Eduardo Abad: No era perfecto, pero bueno, los
+
+349
+00:38:00.850 --> 00:38:06.440
+Pablo Eduardo Abad: los los retos a tratar de reproducir una secuencia generada en ese tipo funcionó en la práctica muy bien.
+
+350
+00:38:06.860 --> 00:38:21.130
+Pablo Eduardo Abad: El Otro caso famoso documentado es, no sé si alguno vio alguna película de la Guerra Fría. Este ambientada en algún escenario así de de guerra termonuclear o o algo de eso
+
+351
+00:38:21.330 --> 00:38:39.170
+Pablo Eduardo Abad: por ahí vieron en o en la Casa Blanca o en el Kremlin. Según la película, un teléfono rojo, o sea, el el presidente o el premiar en el despacho con lo que sea que tenga y un teléfono rojo. Esos teléfonos rojos existieron. Era una línea cifrada que habían construido entre Rusia y Estados Unidos
+
+352
+00:38:39.830 --> 00:38:52.810
+Pablo Eduardo Abad: como última vía de comunicación diplomática ante un escenario de potencial destrucción asegurada, o sea, se había establecido un nivel armamentístico donde ambos países tenían la capacidad de volar
+
+353
+00:38:53.290 --> 00:38:55.989
+Pablo Eduardo Abad: de la faz de la Tierra a todo el mundo. Básicamente.
+
+354
+00:38:58.540 --> 00:39:09.150
+Pablo Eduardo Abad: la teoría de equilibrio que se había construido como para la pastancia de la de la famosa Guerra Fría era ninguno de los 2 va a atacar porque sabe que si atacas o ataca el otro lo tira y y no queda nada.
+
+355
+00:39:10.600 --> 00:39:19.310
+Pablo Eduardo Abad: Pero como última forma de desescalar eso, lo que se construyó fue una línea segura para que puedan hablar los que estén al mando. En ese momento.
+
+356
+00:39:19.910 --> 00:39:25.290
+Pablo Eduardo Abad: Esa línea estaba protegida con un Time Path se generó una secuencia aleatoria
+
+357
+00:39:25.850 --> 00:39:29.199
+Pablo Eduardo Abad: midiendo la tasa de decaimiento radiactivo de
+
+358
+00:39:29.890 --> 00:39:33.110
+Pablo Eduardo Abad: dentro de los los átomos de un reactor
+
+359
+00:39:33.750 --> 00:39:46.130
+Pablo Eduardo Abad: y al mejor estilo película de espionaje. Esas secuencias se imprimió, se puso en 2 maletas, se esposaron las maletas a distintos agentes. Cada 1 se fue para su lado, la instalaron los teléfonos, y ahí quedaron.
+
+360
+00:39:46.580 --> 00:39:54.139
+Pablo Eduardo Abad: Yo habilitaba más o menos media hora de de comunicación hablada totalmente a prueba de manipulaciones.
+
+361
+00:39:54.920 --> 00:40:02.459
+Pablo Eduardo Abad: Probablemente haya habido otros usos. Estos son 2 2 usos documentados que que que ya documentados, que se conocen
+
+362
+00:40:02.770 --> 00:40:10.150
+Pablo Eduardo Abad: salvo que estén en un escenario así. Imagínense querer usar esto para comprar algo en en un E commerce
+
+363
+00:40:10.610 --> 00:40:19.530
+Pablo Eduardo Abad: Este, no por cada request hay que generar una clave del tamaño del request. Hay que hacérsela llegar por afuera. No sé si la mandamos por por carta.
+
+364
+00:40:21.720 --> 00:40:30.210
+Pablo Eduardo Abad: No, N: No, se no se puede usar en el mundo comercial normal. Tiene usos muy acotados. Donde se puede usar es genial.
+
+365
+00:40:30.550 --> 00:40:33.410
+Pablo Eduardo Abad: En la práctica vamos a tener que buscar otras cosas.
+
+366
+00:40:36.450 --> 00:40:43.270
+Pablo Eduardo Abad: porque la clave tiene que ser aleatoria sí que es que es por ahí 1 de los
+
+367
+00:40:43.830 --> 00:40:45.510
+Pablo Eduardo Abad: de de los puntos.
+
+368
+00:40:45.870 --> 00:41:02.289
+Pablo Eduardo Abad: Fíjense, este es un escenario numérico que vamos a pasar súper rápido. Pero para que vean esto, que ¿qué significa una clave no se aleatoria que hay algún sesgo. ¿hay alguna clave en este ejemplo, la 1 0. Si estamos cifrando mensajes de de 2 dígitos binarios que es más probable que las otras
+
+369
+00:41:03.170 --> 00:41:04.090
+Pablo Eduardo Abad: sí.
+
+370
+00:41:04.370 --> 00:41:10.170
+Pablo Eduardo Abad: Si esto fuese una clave aleatoria, la probabilidad de cualquiera de los 4 valores sería 0. 25,
+
+371
+00:41:10.960 --> 00:41:16.260
+Pablo Eduardo Abad: Sí, nos inventamos una distribución cualquiera de texto Plano: Sí,
+
+372
+00:41:18.800 --> 00:41:22.700
+Pablo Eduardo Abad: supongamos, supongamos, por un segundo que obtenemos.
+
+373
+00:41:23.230 --> 00:41:30.169
+Pablo Eduardo Abad: Se cifró algún mensaje, ¿no? Que no sabemos cuál es, salvo que hay más chances de que haya sido el 0 0 que el resto.
+
+374
+00:41:31.680 --> 00:41:34.949
+Pablo Eduardo Abad: El resultado de haberlo cifrado de a 0, Uno.
+
+375
+00:41:35.290 --> 00:41:46.159
+Pablo Eduardo Abad: Sí, en un escenario del one time pan. Si yo le digo ¿qué probabilidades hay sabiendo que interceptamos un 0, 1 en la transmisión que el mensaje cifrado haya sido 0 0.
+
+376
+00:41:46.790 --> 00:41:50.780
+Pablo Eduardo Abad: Supongamos por un segundo que hay one time par que se cumple el secreto perfecto.
+
+377
+00:41:52.000 --> 00:41:57.429
+Pablo Eduardo Abad: ¿qué probabilidades hay habiendo interceptado un 0, 1 de que el mensaje original haya sido 0. Cero.
+
+378
+00:42:00.590 --> 00:42:02.720
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Dame un momen un momentito, y lo hago.
+
+379
+00:42:11.050 --> 00:42:17.359
+Pablo Eduardo Abad: Secreto perfecto, si quieren ignorar en la parte de arriba. No porque casualmente, el ejercicio es mostrar qué pasa cuando no hay, Pero
+
+380
+00:42:17.950 --> 00:42:23.370
+Pablo Eduardo Abad: imagínense por un segundo que tenemos secreto perfecto. Sabemos esta distribución de textos planos.
+
+381
+00:42:23.810 --> 00:42:31.130
+Pablo Eduardo Abad: Sí, interceptamos el mensaje protegido, somos somos los atacantes. Y es 0 1.
+
+382
+00:42:31.920 --> 00:42:34.839
+Pablo Eduardo Abad: Nuestro interés, obviamente, es recuperar el mensaje original
+
+383
+00:42:39.700 --> 00:42:46.600
+Pablo Eduardo Abad: a ver, a ver a ver. Ahí empiezan a aparecer Uy, 3 valores. Tomás dice un cuarto Santiago, dice.
+
+384
+00:42:47.210 --> 00:42:57.510
+Pablo Eduardo Abad: 15 por 100, y, ah, para Tiraste, varios Santiago de las vos okay Okay. Santiago dice 0, Seis.
+
+385
+00:43:01.120 --> 00:43:05.859
+Pablo Eduardo Abad: no. Tomas ojo para esta pregunta que les hice un teórico, ignora las probabilidades de arriba.
+
+386
+00:43:08.850 --> 00:43:17.870
+Pablo Eduardo Abad: Okay Entonces, a ver Santiago, vos. Decís Cero, 6. Este
+
+387
+00:43:18.270 --> 00:43:21.330
+Pablo Eduardo Abad: Tomás dice: ignoramos, o sea, retiraste un cuarto. Ok.
+
+388
+00:43:21.650 --> 00:43:26.850
+Pablo Eduardo Abad: la respuesta sería 0. Seis. ¿por qué? Porque si esto tuviese secreto perfecto.
+
+389
+00:43:28.430 --> 00:43:38.689
+Pablo Eduardo Abad: Conocer un valor en concreto. No me dice nada que no supiese del texto plano, y yo, a priori sabía que había un 60 por 100 de chances de que el mensaje sea 0 0.
+
+390
+00:43:40.150 --> 00:43:46.079
+Pablo Eduardo Abad: Si esto si tuviese secreto perfecto, ¿qué pasa si
+
+391
+00:43:46.590 --> 00:43:54.249
+Pablo Eduardo Abad: la clave no es realmente aleatoria. Tiene una distribución sesgada, por ejemplo, esta vamos a calcular este valor si la expectativa, ¿cuál es a ver
+
+392
+00:43:54.420 --> 00:44:00.320
+Pablo Eduardo Abad: más allá de lo numérico que no nos va a dar 0. 60 sí, si lo calculan rápido.
+
+393
+00:44:02.850 --> 00:44:06.669
+Pablo Eduardo Abad: se convierte en un ejercicio numérico, no vamos a tener que calcular
+
+394
+00:44:09.010 --> 00:44:14.179
+Pablo Eduardo Abad: la pro en el fondo, queremos calcular qué cosa, la probabilidad que el mensaje sea 0, 0, sabiendo qué
+
+395
+00:44:16.040 --> 00:44:19.630
+Pablo Eduardo Abad: c 0 1 si si aplicamos
+
+396
+00:44:21.250 --> 00:44:25.090
+Pablo Eduardo Abad: la igualdad de probabilidades condicionales para tener ambos lados?
+
+397
+00:44:25.230 --> 00:44:26.150
+Pablo Eduardo Abad: Sí,
+
+398
+00:44:27.170 --> 00:44:35.049
+Pablo Eduardo Abad: esto es lo que queremos calcular si Esto es un valor que es dato. Nos quedan estas cosas en negrita para poder despejar el valor. Sí
+
+399
+00:44:35.160 --> 00:44:40.360
+Pablo Eduardo Abad: que se pueden calcular la probabilidad de que el texto cifrado sea 0, 1 va a ser que cosa
+
+400
+00:44:41.120 --> 00:44:45.179
+Pablo Eduardo Abad: va a ser la suma de las probabilidades de todos los casos
+
+401
+00:44:46.550 --> 00:44:51.010
+Pablo Eduardo Abad: donde la combinación de un texto plano y una clave nos detecta cifrado 0, 1
+
+402
+00:44:51.260 --> 00:44:57.849
+Pablo Eduardo Abad: sí que cuándo va a ocurrir que el texto cifrado se da 0, 1 cuando el mensaje era 0, 1. Y la clave era 0
+
+403
+00:44:58.140 --> 00:45:05.810
+Pablo Eduardo Abad: cuando el mensaje era 0, y la clave era 0. Uno Cuando el mensaje era 1 1, y la clave era 1 0. Cuando el mensaje era 1 0, la clave era 1 1.
+
+404
+00:45:07.140 --> 00:45:12.810
+Pablo Eduardo Abad: Sí, Todos estos elementos son independientes, porque la clave nunca va a tomar 2 valores
+
+405
+00:45:13.590 --> 00:45:15.739
+Pablo Eduardo Abad: distintos al mismo tiempo, así que
+
+406
+00:45:16.650 --> 00:45:28.479
+Pablo Eduardo Abad: vamos sumando las probabilidades para entender la probabilidad total, ¿sí? Y estos son números que tenemos, no porque tenemos la distribución de los mensajes y las claves. Así que es para números sacar la cuenta. ¿nos da esto.
+
+407
+00:45:30.860 --> 00:45:38.879
+Pablo Eduardo Abad: Pensemos en este otro valor. ¿cuál es la probabilidad de que el texto cifrado sea 0, 1 sabiendo que el texto plano era 0.
+
+408
+00:45:40.520 --> 00:45:43.210
+Pablo Eduardo Abad: Si yo sé que el texto plano era 0, 0.
+
+409
+00:45:44.180 --> 00:45:45.160
+Pablo Eduardo Abad: Sí.
+
+410
+00:45:45.270 --> 00:45:49.210
+Pablo Eduardo Abad: ¿en qué escenario el texto cifrado se convierte en 0 1?
+
+411
+00:45:49.350 --> 00:45:56.139
+Pablo Eduardo Abad: Bueno, cuando la clave que yo elijo hace que el texto cifrado, tome ese valor.
+
+412
+00:45:56.270 --> 00:46:00.079
+Pablo Eduardo Abad: ¿sí? Y hay una única clave en la que ocurre esto.
+
+413
+00:46:01.450 --> 00:46:05.780
+Pablo Eduardo Abad: que es 0 1, o sea, si el mensaje era 0 0, y la clave era 0, 1
+
+414
+00:46:05.920 --> 00:46:08.549
+Pablo Eduardo Abad: Sabemos que el mensaje cifrado va a ser 0 1.
+
+415
+00:46:08.840 --> 00:46:16.120
+Pablo Eduardo Abad: Y para este mensaje en particular, no hay otra clave que me dé 0 1 como mensaje cifrado.
+
+416
+00:46:16.240 --> 00:46:22.879
+Pablo Eduardo Abad: entonces la probabilidad que esto ocurra es igual a la probabilidad de que la clave tome ese único valor y esto es dato, también es 0 1.
+
+417
+00:46:23.780 --> 00:46:29.310
+Pablo Eduardo Abad: Así que si juntamos estas 2 cosas, las 2 que queríamos averiguar, despejamos
+
+418
+00:46:29.810 --> 00:46:35.390
+Pablo Eduardo Abad: la probabilidad y nos da 0. Coma 32, sí que primero
+
+419
+00:46:35.520 --> 00:46:43.020
+Pablo Eduardo Abad: es distinto a 0. Seis. Así que no se cumple la condición de secreto perfecto. Pero si esto fuese un ejercicio más en abstracto, ¿qué quiere decir esto?
+
+420
+00:46:43.680 --> 00:46:50.939
+Pablo Eduardo Abad: Esto quiere decir que aprendimos algo del texto plano a partir del texto cifrado. Y es que si el texto cifrado era 0, 1
+
+421
+00:46:51.490 --> 00:46:53.180
+Pablo Eduardo Abad: en este escenario.
+
+422
+00:46:53.530 --> 00:46:58.290
+Pablo Eduardo Abad: Sí, es menos probable de lo que sabíamos a priori que se haya cifrado el mensaje 0: 0:
+
+423
+00:47:01.100 --> 00:47:06.519
+Pablo Eduardo Abad: Si nosotros a priori sabíamos que 60 por 100 de los mensajes eran 0 0.
+
+424
+00:47:06.980 --> 00:47:15.150
+Pablo Eduardo Abad: Sabiendo Habiendo interceptado un 0 1, podemos saber que es menos probable de lo que creíamos que el mensaje que interceptamos sea 0. Cero.
+
+425
+00:47:16.980 --> 00:47:19.010
+Pablo Eduardo Abad: Descubrimos el mensaje, ¿no?
+
+426
+00:47:20.170 --> 00:47:22.860
+Pablo Eduardo Abad: Pero aprendimos algo extrajimos información
+
+427
+00:47:24.110 --> 00:47:30.840
+Pablo Eduardo Abad: si yo con esta con esta información tal vez pueda arbitrar o conseguir alguna ventaja dependiendo tipo de mensaje.
+
+428
+00:47:31.760 --> 00:47:33.650
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Podrías volver a la diapo anterior.
+
+429
+00:47:34.740 --> 00:47:35.410
+Pablo Eduardo Abad: Sí.
+
+430
+00:47:35.580 --> 00:47:40.660
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Ahí, cómo pasas de suma de
+
+431
+00:47:40.880 --> 00:47:44.579
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: M Cero, 1? Shor K. A lo que viene después.
+
+432
+00:47:46.520 --> 00:47:49.140
+Pablo Eduardo Abad: Suma de está.
+
+433
+00:47:49.140 --> 00:47:55.830
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Es así, o sea, de irse al siguiente. Si el el segundo al tercero, ¿cómo pasas.
+
+434
+00:47:56.570 --> 00:48:02.659
+Pablo Eduardo Abad: Hago el mismo cambio de variable que hicimos en la demostración, salvo que acá en vez de ser ser un valor
+
+435
+00:48:03.300 --> 00:48:06.729
+Pablo Eduardo Abad: no definidos en una se minúscula. Es un valor concreto.
+
+436
+00:48:07.070 --> 00:48:07.730
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Es de.
+
+437
+00:48:07.730 --> 00:48:08.760
+Pablo Eduardo Abad: El mismo cambio de hablar.
+
+438
+00:48:08.760 --> 00:48:13.390
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Abajo y del segundo igual al tercero.
+
+439
+00:48:14.060 --> 00:48:15.740
+Pablo Eduardo Abad: Del segundo, al tercero.
+
+440
+00:48:16.210 --> 00:48:17.609
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí, ¿Cómo pasas ahí.
+
+441
+00:48:17.610 --> 00:48:18.999
+Pablo Eduardo Abad: Esto es la suma de.
+
+442
+00:48:19.000 --> 00:48:19.590
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Hombre, todo.
+
+443
+00:48:19.590 --> 00:48:21.240
+Pablo Eduardo Abad: Más o menos de acá
+
+444
+00:48:21.770 --> 00:48:32.459
+Pablo Eduardo Abad: de esto. Y entonces todos los valores posibles que van a ser 0 0, 0, 1, 2, 1, 0, 1, 1, si van a ser 4 términos, que son los 4 términos que saca
+
+445
+00:48:33.130 --> 00:48:40.159
+Pablo Eduardo Abad: en el primer término que Digo, cabales, 0, 0, entonces esta parte de Sky. Igual Cero, Cero.
+
+446
+00:48:40.420 --> 00:48:46.839
+Pablo Eduardo Abad: Esta parte es M: Igual Cero, 1. Off shore Cero 0 son 2 constantes, pongo el valor que queda
+
+447
+00:48:47.800 --> 00:48:52.549
+Pablo Eduardo Abad: el segundo término de la sumatoria, cuando cabalga 0 1.
+
+448
+00:48:52.930 --> 00:48:56.129
+Pablo Eduardo Abad: Entonces esta parte Cavali, 0, 1
+
+449
+00:48:56.390 --> 00:48:59.310
+Pablo Eduardo Abad: y esta parte de acá qué dice el mensaje va? Es
+
+450
+00:48:59.520 --> 00:49:01.960
+Pablo Eduardo Abad: 0. Uno off shore 0, 1
+
+451
+00:49:02.330 --> 00:49:04.230
+Pablo Eduardo Abad: lo reemplazo por la constante 0 0.
+
+452
+00:49:06.630 --> 00:49:08.700
+Pablo Eduardo Abad: Repito lo mismo con los otros 2 términos.
+
+453
+00:49:09.110 --> 00:49:15.309
+Pablo Eduardo Abad: Sí, estoy expandiendo la sumatoria para los en este caso, 4 valores posibles de acá en los 4 términos
+
+454
+00:49:15.700 --> 00:49:19.359
+Pablo Eduardo Abad: en cada término. Esta variable ya tiene un valor concreto.
+
+455
+00:49:20.270 --> 00:49:22.650
+Pablo Eduardo Abad: Así que lo estoy haciendo, es propagando esas constantes.
+
+456
+00:49:23.610 --> 00:49:27.479
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: O sea, un sueño, está está haciendo todo lo pos haciendo, todas las
+
+457
+00:49:27.920 --> 00:49:31.320
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: combinaciones posibles que vean que el short de 0, 1.
+
+458
+00:49:37.450 --> 00:49:42.379
+Pablo Eduardo Abad: No quedé 0, 1 en a a abar que el
+
+459
+00:49:42.490 --> 00:49:46.229
+Pablo Eduardo Abad: que el texto cifrado es 0, 1 Si querés para llegar a esto? Acá Sí,
+
+460
+00:49:47.760 --> 00:49:53.780
+Pablo Eduardo Abad: o sea lo que estoy expandiendo. Acá. En el fondo son todos los escenarios posibles en los cuales el texto cifrado haría 0. Uno.
+
+461
+00:49:54.070 --> 00:49:55.749
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Lo que estoy diciendo es.
+
+462
+00:49:56.300 --> 00:50:00.349
+Pablo Eduardo Abad: Hay 4 escenarios posibles. Hay 4 combinaciones de valores. Nada más
+
+463
+00:50:00.510 --> 00:50:02.820
+Pablo Eduardo Abad: que me darían. El texto estrado sea 0, 1.
+
+464
+00:50:03.480 --> 00:50:05.390
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Okay.
+
+465
+00:50:05.390 --> 00:50:08.279
+Pablo Eduardo Abad: Nacido 0, 1 y la clave 0 0,
+
+466
+00:50:09.440 --> 00:50:11.940
+Pablo Eduardo Abad: o así para cada 1 de los valores posibles de la clave.
+
+467
+00:50:13.470 --> 00:50:14.730
+Pablo Eduardo Abad: Sí. Esto
+
+468
+00:50:16.110 --> 00:50:21.479
+Pablo Eduardo Abad: toma un mensaje chico. Si es un mensaje más grande, se abre en tantos términos como posibles claves.
+
+469
+00:50:22.970 --> 00:50:30.900
+Pablo Eduardo Abad: Lo resolverías igual analíticamente, porque tiene una estructura muy regular. Se puede resolver en términos de variables, no concretas.
+
+470
+00:50:31.690 --> 00:50:39.699
+Pablo Eduardo Abad: Pero acá quería mostrarles el número para para que vean esto de si lo hago con números y rompí la idea del del one time. Pa l.
+
+471
+00:50:40.330 --> 00:50:41.990
+Pablo Eduardo Abad: Me da números distintos.
+
+472
+00:50:51.950 --> 00:50:56.080
+Pablo Eduardo Abad: Tomás este ataque vos partís sabiendo.
+
+473
+00:50:56.380 --> 00:51:02.260
+Pablo Eduardo Abad: es exacto lo que decís, o sea, este ataque, lo que simula es un atacante que logró
+
+474
+00:51:02.730 --> 00:51:07.180
+Pablo Eduardo Abad: hacer ingeniería en versa. Y eso que creíamos que era una secuencia aleatoria.
+
+475
+00:51:07.710 --> 00:51:15.120
+Pablo Eduardo Abad: la puede convertir en una secuencia no aleatoria. O sea, no logró predecir la secuencia completa, logró sesgar las probabilidades.
+
+476
+00:51:15.740 --> 00:51:23.139
+Pablo Eduardo Abad: No se sabe que el generador, ese que hicimos parece aleatorio, pero genera más veces la clave 0, 1 que el resto por decir algo.
+
+477
+00:51:23.640 --> 00:51:28.690
+Pablo Eduardo Abad: Si esto es lo que pasa cuando alguien logra generar esa diferencia.
+
+478
+00:51:29.230 --> 00:51:37.960
+Pablo Eduardo Abad: Pero fíjense que es todo probabilístico. Nunca adivinamos la clave. Entonces estamos sacando como partecitas. No necesitamos reproducir la secuencia aleatoria.
+
+479
+00:51:38.140 --> 00:51:41.239
+Pablo Eduardo Abad: Necesitamos entender y predecir que hay un sesgo
+
+480
+00:51:41.580 --> 00:51:54.419
+Pablo Eduardo Abad: sí. Ahora, Ahora, en breve, vamos a hablar cuando se formalizan ataques contra esto. Se habla de un distinguir fanction, o sea, para para demostrar que existe el ataque, que es mucho más fácil que explotar el ataque.
+
+481
+00:51:54.580 --> 00:51:58.810
+Pablo Eduardo Abad: 1 lo único que tiene que demostrar es que existe una función que puede distinguir
+
+482
+00:51:59.490 --> 00:52:03.270
+Pablo Eduardo Abad: a a un generador a la salida de una secuencia realmente aleatoria.
+
+483
+00:52:04.040 --> 00:52:09.510
+Pablo Eduardo Abad: Sí que exista. Eso implica que hay un problema potencial. De ahí explotar. El problema es otro saldo.
+
+484
+00:52:13.630 --> 00:52:16.030
+Pablo Eduardo Abad: Me estoy adelantando un poco. Pero
+
+485
+00:52:16.670 --> 00:52:19.799
+Pablo Eduardo Abad: Pero bueno, entonces fíjense, tenemos el Otp.
+
+486
+00:52:20.090 --> 00:52:25.100
+Pablo Eduardo Abad: Sí que es perfecto. Vimos que hay condiciones muy de contorno. Hay
+
+487
+00:52:25.670 --> 00:52:34.540
+Pablo Eduardo Abad: 2 demostraciones súper importantes. Conceptualmente acá. Les voy a dar las conclusiones. Si les interesa estar en el libro de cats
+
+488
+00:52:35.060 --> 00:52:41.399
+Pablo Eduardo Abad: que que se que ocurren sobre lo quepe 2 resultados teóricos súper interesantes. El primero es.
+
+489
+00:52:43.010 --> 00:52:52.730
+Pablo Eduardo Abad: Existe un isomorfismo entre cualquier criptosistema que tenga secreto perfecto, y el One time, par o sea.
+
+490
+00:52:53.030 --> 00:53:00.620
+Pablo Eduardo Abad: si yo tengo un criptosistema al cual le pruebo, que es, que tiene secreto perfecto. Hay una transformación que me lo reduce al Wandame, Par
+
+491
+00:53:04.130 --> 00:53:15.829
+Pablo Eduardo Abad: o sea, cualquier criptosistema que tenga secreto. Perfecto. Es otra forma de representar un poco más entrevesada, más complicada al Wanda. No hay 2 algoritmos distintos que tengan secreto perfecto
+
+492
+00:53:19.330 --> 00:53:24.000
+Pablo Eduardo Abad: y se pudo demostrar la la contra variante de esa que es
+
+493
+00:53:24.130 --> 00:53:29.619
+Pablo Eduardo Abad: cualquier sistema que no se pueda reducir. El One Time Path no puede tener un secreto perfecto.
+
+494
+00:53:31.780 --> 00:53:36.790
+Pablo Eduardo Abad: Si yo tengo un sistema que no es equivalente al Wanda Imbath, no tiene secreto. Perfecto.
+
+495
+00:53:40.110 --> 00:53:49.950
+Pablo Eduardo Abad: ¿sí? Entonces el secreto perfecto requiere todas las condiciones que vimos. Es bastante impráctico
+
+496
+00:53:51.700 --> 00:53:56.249
+Pablo Eduardo Abad: y cualquier cosa que no sea equivalente a eso que vimos.
+
+497
+00:53:56.390 --> 00:54:01.520
+Pablo Eduardo Abad: No puede tener secreto perfecto, entonces
+
+498
+00:54:02.760 --> 00:54:10.970
+Pablo Eduardo Abad: necesitamos otro tipo de construcciones. La definición de secreto perfecto se nos queda corta, y esta es la razón por la cual no hay una única definición de seguridad.
+
+499
+00:54:11.440 --> 00:54:18.090
+Pablo Eduardo Abad: Sí, porque es ese único escenario. Si lo puedes usar genial. Si no necesitas otra cosa.
+
+500
+00:54:20.670 --> 00:54:27.969
+Pablo Eduardo Abad: Vamos a hacer una pausa así. Así. Respiramos y a la vuelta. Vamos a ver
+
+501
+00:54:28.190 --> 00:54:30.060
+Pablo Eduardo Abad: que pueden ser ese tipo de cosas.
+
+502
+00:54:30.060 --> 00:54:30.940
+MARTÍN GALLARDO BERTUZZI: La verdad.
+
+503
+00:54:35.490 --> 00:54:45.700
+Pablo Eduardo Abad: Bien. Entonces, si el secreto perfecto es tan inconveniente como para tener tantas
+
+504
+00:54:46.590 --> 00:54:52.709
+Pablo Eduardo Abad: condiciones de uso que que nos lo vuelven impráctico. Pero además, sabemos que cualquier cosa
+
+505
+00:54:53.790 --> 00:54:58.949
+Pablo Eduardo Abad: que tenga secreto perfecto va a ser equivalente al Al Wanda Impad
+
+506
+00:54:59.980 --> 00:55:04.320
+Pablo Eduardo Abad: como que el marco de referencia del secreto perfecto. Se nos va a quedar corto para buscar
+
+507
+00:55:04.820 --> 00:55:06.420
+Pablo Eduardo Abad: cosas que escalen mejor.
+
+508
+00:55:07.820 --> 00:55:14.900
+Pablo Eduardo Abad: Sí, cuando hablamos de secreto perfecto, nosotros estamos teniendo una condición matemática
+
+509
+00:55:15.040 --> 00:55:22.309
+Pablo Eduardo Abad: de de seguridad, sí que que no tiene ninguna otra condición. Se habla de seguridad incondicional
+
+510
+00:55:23.770 --> 00:55:28.040
+Pablo Eduardo Abad: para poder introducir otras cosas, vamos a tener que.
+
+511
+00:55:28.770 --> 00:55:38.619
+Pablo Eduardo Abad: de alguna manera, limitar esto y salir de este escenario de seguridad absoluta sin condiciones. Vamos a crear 2 condiciones en particular.
+
+512
+00:55:38.840 --> 00:55:46.360
+Pablo Eduardo Abad: Sí, vamos a limitar los escenarios ¿En qué sentido? Cuando cuando nosotros
+
+513
+00:55:46.660 --> 00:55:50.669
+Pablo Eduardo Abad: pensamos en secreto? Perfecto desde un punto de vista matemático.
+
+514
+00:55:50.800 --> 00:55:51.750
+Pablo Eduardo Abad: Sí,
+
+515
+00:55:53.540 --> 00:56:04.639
+Pablo Eduardo Abad: estamos entendiendo, o estamos asumiendo que eso nos da la propiedad de que un adversario, alguien que quiera romper el sistema no va a poder extraer información.
+
+516
+00:56:04.750 --> 00:56:11.870
+Pablo Eduardo Abad: ni siquiera teniendo capacidad de cómputo infinita si es otra abstracción la capacidad cómputo infinita. Pero
+
+517
+00:56:12.740 --> 00:56:24.509
+Pablo Eduardo Abad: Pero para pasar escenarios un poco distintos. Vamos a relajar eso. Vamos a aceptar que que el atacante que quiera vulnerar la la seguridad de de un criptosistema
+
+518
+00:56:24.890 --> 00:56:29.569
+Pablo Eduardo Abad: tenga un poder de cómputo muy avanzado, muy grande, pero no definido.
+
+519
+00:56:30.390 --> 00:56:33.409
+Pablo Eduardo Abad: Entonces vamos a limitar los escenarios
+
+520
+00:56:34.880 --> 00:56:39.939
+Pablo Eduardo Abad: y vamos a limitar las garantías. También porque cuando nos vayamos del secreto perfecto.
+
+521
+00:56:41.310 --> 00:56:44.930
+Pablo Eduardo Abad: una de las consecuencias que tiene el secreto perfecto es
+
+522
+00:56:45.330 --> 00:56:57.179
+Pablo Eduardo Abad: esta forma de convertir al texto cifrado en una suerte de secuencia aleatoria. Vieron que cuando calculamos la probabilidad de que el texto cifrado toma un valor en particular era 1 sobre N
+
+523
+00:56:57.680 --> 00:57:01.689
+Pablo Eduardo Abad: Era como que podía tomar cualquier valor posible con igual probabilidad.
+
+524
+00:57:02.130 --> 00:57:08.599
+Pablo Eduardo Abad: Cuando nos salgamos de eso, va a haber un sesgo entre los textos cifrados, y ese sesgo se traduce en que
+
+525
+00:57:08.890 --> 00:57:11.829
+Pablo Eduardo Abad: el ataque por fuerza bruta va a ser siempre posible
+
+526
+00:57:13.520 --> 00:57:19.850
+Pablo Eduardo Abad: y, si yo pienso del ataque de fuerza bruta es ir probando secuencias, y
+
+527
+00:57:19.990 --> 00:57:25.350
+Pablo Eduardo Abad: a mí me gusta hacer la analogía con con la lotería. O sea, hay un montón de posibilidades. Sí,
+
+528
+00:57:25.860 --> 00:57:35.160
+Pablo Eduardo Abad: alguien podría comprarse todos los números de la lotería y y se garantiza que la gana. Si alguien puede recorrer todas las claves por fuerza bruta, va a romper el criptosistema.
+
+529
+00:57:36.290 --> 00:57:42.599
+Pablo Eduardo Abad: pero también está el el que tiene toda la suerte del mundo y compró un número y ganó. Entonces.
+
+530
+00:57:42.750 --> 00:57:49.090
+Pablo Eduardo Abad: si nosotros nos volvemos en un escenario donde se puede explorar por fuerza bruta de las claves
+
+531
+00:57:49.700 --> 00:57:54.550
+Pablo Eduardo Abad: da la posibilidad que nos topemos con alguien que tenga tanta tanta suerte
+
+532
+00:57:54.720 --> 00:57:57.760
+Pablo Eduardo Abad: que le pega de una a la primera clave que prueba.
+
+533
+00:57:58.800 --> 00:57:59.910
+Pablo Eduardo Abad: Así que
+
+534
+00:58:00.580 --> 00:58:08.040
+Pablo Eduardo Abad: vamos a tener que ver como darle un contexto a esto, pero de alguna manera vamos a limitar las garantías. Vamos a aceptar
+
+535
+00:58:09.860 --> 00:58:14.040
+Pablo Eduardo Abad: que hay una probabilidad de que el atacante
+
+536
+00:58:15.120 --> 00:58:18.900
+Pablo Eduardo Abad: de suerte. Llamémoslo rompa, Un criptosistema
+
+537
+00:58:19.610 --> 00:58:24.520
+Pablo Eduardo Abad: no es un quiebre general va a ser de un caso particular, pero tenemos que aceptar que eso puede pasar.
+
+538
+00:58:24.760 --> 00:58:32.279
+Pablo Eduardo Abad: Sí, cuando relajamos estos 2, estas 2 condiciones.
+
+539
+00:58:32.790 --> 00:58:37.529
+Pablo Eduardo Abad: empezamos a hablar de lo que en la literatura van a escuchar como seguridad computacional.
+
+540
+00:58:38.220 --> 00:58:45.289
+Pablo Eduardo Abad: Y vamos a empezar a decir que algo deja de ser imposible para ser computacionalmente imposible.
+
+541
+00:58:47.730 --> 00:58:51.850
+Pablo Eduardo Abad: Sí, sobre esta noción de seguridad.
+
+542
+00:58:52.240 --> 00:58:59.860
+Pablo Eduardo Abad: Con estas 2 condiciones nuevas que ponemos, vamos a empezar a construir distintos escenarios de seguridad.
+
+543
+00:58:59.980 --> 00:59:01.000
+Pablo Eduardo Abad: Sí,
+
+544
+00:59:01.470 --> 00:59:10.860
+Pablo Eduardo Abad: ¿cómo vamos a modelar estas 2 restricciones? Como les dije, la primera es garantizando la seguridad solo contra adversarios limitados.
+
+545
+00:59:11.250 --> 00:59:13.660
+Pablo Eduardo Abad: Sí vamos a ver que.
+
+546
+00:59:14.300 --> 00:59:19.979
+Pablo Eduardo Abad: en en en términos en términos de formulación, es lo que vamos a limitar. En el fondo es
+
+547
+00:59:20.240 --> 00:59:25.360
+Pablo Eduardo Abad: el tiempo que tiene un atacante para atacar un sistema
+
+548
+00:59:25.590 --> 00:59:31.500
+Pablo Eduardo Abad: en el sentido de que vamos a limitar una de las 2 dimensiones típicas de poder de cómputo tiempo.
+
+549
+00:59:32.070 --> 00:59:33.580
+Pablo Eduardo Abad: En
+
+550
+00:59:37.310 --> 00:59:46.450
+Pablo Eduardo Abad: vamos a poner un límite. Vamos a, me estoy adelantando un poco, pero vamos a modelar a los adversarios como algoritmos que van a tener una cuota temporal de ejecución.
+
+551
+00:59:48.750 --> 01:00:03.319
+Pablo Eduardo Abad: Obviamente, no nos vamos a mentir. Esos adversarios van a ser potencialmente superiores a todo lo que hay hoy día, pero no, no van a tener poder de cómputo infinito. Vamos a aceptar que si alguien logra materializar el concepto de poder de cómputo infinito.
+
+552
+01:00:03.460 --> 01:00:05.219
+Pablo Eduardo Abad: game over para todo esto
+
+553
+01:00:06.530 --> 01:00:13.560
+Pablo Eduardo Abad: y, y, por el otro lado, las garantías las vamos a materializar aceptando una pequeña probabilidad de éxito.
+
+554
+01:00:13.810 --> 01:00:22.040
+Pablo Eduardo Abad: ¿sí? Y vamos a ver que vamos a jugar a hacer esa probabilidad de éxito tan chica que podamos dormir tranquilos de
+
+555
+01:00:22.870 --> 01:00:27.829
+Pablo Eduardo Abad: desde que no creemos que se que se materializa.
+
+556
+01:00:31.620 --> 01:00:39.180
+Pablo Eduardo Abad: La primera construcción que vamos a ver el primer tipo de criptosistema que vamos a ver en este mundo ya condicional.
+
+557
+01:00:41.680 --> 01:00:49.789
+Pablo Eduardo Abad: busca hacer lo que hacemos. Siempre vamos a tirar todo lo que aprendimos y empezar desde 0. No tenemos el One. Time par parecía bueno, estaba buenísimo.
+
+558
+01:00:50.080 --> 01:00:59.080
+Pablo Eduardo Abad: Tampoco nos vayamos algo totalmente distinto. Si los criptosistemas de flujo. Toman la idea del One Time, Pad sí,
+
+559
+01:01:00.340 --> 01:01:05.840
+Pablo Eduardo Abad: pero relajan las condiciones más complicadas de uso del hundime par.
+
+560
+01:01:05.980 --> 01:01:14.929
+Pablo Eduardo Abad: Lo que hacen es reemplazar a la clave de longitud arbitrariamente larga del mensaje.
+
+561
+01:01:15.420 --> 01:01:21.810
+Pablo Eduardo Abad: Sí, por una clave mucho, mucho más pequeña.
+
+562
+01:01:22.140 --> 01:01:31.340
+Pablo Eduardo Abad: Sí, en escenarios típicos, para que se den una idea. Los mensajes, la las claves suelen ser secuencias de 100, 28 bits.
+
+563
+01:01:31.770 --> 01:01:36.590
+Pablo Eduardo Abad: contra mensajes que pueden ser 2 a la a ese número o ese número a la
+
+564
+01:01:37.730 --> 01:01:44.520
+Pablo Eduardo Abad: a 100, 28, o sea, mensajes arbitrariamente grandes y claves que generalmente son de tamaño fijo, podrían no serlo, pero
+
+565
+01:01:44.970 --> 01:01:50.600
+Pablo Eduardo Abad: la gran mayoría son de tamaño fijo y
+
+566
+01:01:50.960 --> 01:01:53.190
+Pablo Eduardo Abad: y un tamaño acotado entre todos.
+
+567
+01:01:53.790 --> 01:01:55.260
+Pablo Eduardo Abad: Un segundo.
+
+568
+01:02:01.190 --> 01:02:03.919
+Pablo Eduardo Abad: Entonces fíjense la estructura es
+
+569
+01:02:04.200 --> 01:02:10.370
+Pablo Eduardo Abad: muy parecida al One tameada. Vamos a hacer una clave aleatoria, Sí, diferencia no menor.
+
+570
+01:02:10.890 --> 01:02:16.799
+Pablo Eduardo Abad: La clave ya no es una clave que tiene que tener el mismo tamaño que el mensaje. Son independientes, los tamaños
+
+571
+01:02:17.240 --> 01:02:21.949
+Pablo Eduardo Abad: y le definimos un tamaño típicamente acotado y mucho más chico.
+
+572
+01:02:22.800 --> 01:02:27.960
+Pablo Eduardo Abad: Entonces, Ahora, si queremos mandar una novela.
+
+573
+01:02:28.400 --> 01:02:32.550
+Pablo Eduardo Abad: la podemos cifrar utilizando una clave de 8 letras
+
+574
+01:02:32.850 --> 01:02:36.739
+Pablo Eduardo Abad: para hacer la analogía que habíamos hecho de la de la novela.
+
+575
+01:02:37.110 --> 01:02:42.210
+Pablo Eduardo Abad: Y cómo hacemos para hacer algo parecido al one time par porque el one time, pade requería un sorbit a Bit.
+
+576
+01:02:42.660 --> 01:02:43.580
+Pablo Eduardo Abad: Bueno.
+
+577
+01:02:43.770 --> 01:02:53.570
+Pablo Eduardo Abad: nos que nos inventamos una función que expanda esta clave chica en una cantidad arbitraria de bits. Si resulta que esas funciones existen
+
+578
+01:02:55.610 --> 01:03:01.119
+Pablo Eduardo Abad: y las usamos hace mucho. Sí, normalmente las llamamos generadores pseudo aleatorios.
+
+579
+01:03:01.770 --> 01:03:10.029
+Pablo Eduardo Abad: Los generadores que habíamos comentado y que ustedes usan en realidad lo que hacen es expandir una secuencia. Usan un parámetro que suele llamarse semilla.
+
+580
+01:03:10.460 --> 01:03:15.670
+Pablo Eduardo Abad: vieron que generalmente 1 necesita darle una semilla a la misma semilla.
+
+581
+01:03:16.260 --> 01:03:22.760
+Pablo Eduardo Abad: Ahí vito más que lo habías escrito. Genial. No, no lo había leído antes. Si ustedes usan la misma semilla, se genera la misma secuencia.
+
+582
+01:03:23.420 --> 01:03:32.610
+Pablo Eduardo Abad: Pero hay semillas distintas. Las secuencias son distintas, entonces el concepto de los criptosistemas de flujo es usar un generador pseudo aleatorio
+
+583
+01:03:32.990 --> 01:03:35.960
+Pablo Eduardo Abad: usar una clave como semilla
+
+584
+01:03:36.420 --> 01:03:41.449
+Pablo Eduardo Abad: y generar tantos bits como tenga el mensaje que queremos cifrar a partir de esa misma función
+
+585
+01:03:42.510 --> 01:03:50.840
+Pablo Eduardo Abad: para cifrar y descifrar con esta idea genial, las funciones siguen siendo invertibles. Esto funciona
+
+586
+01:03:52.060 --> 01:03:56.900
+Pablo Eduardo Abad: ahora. No podemos usar todo el marco teórico del secreto perfecto.
+
+587
+01:03:57.050 --> 01:04:04.760
+Pablo Eduardo Abad: Necesitamos alguna otra definición? Sí, a
+
+588
+01:04:08.820 --> 01:04:16.489
+Pablo Eduardo Abad: antes de entrar en la definición de seguridad del criptosistema. Vamos a caracterizar este tipo de funciones por este tipo de funciones
+
+589
+01:04:17.110 --> 01:04:23.019
+Pablo Eduardo Abad: tampoco va va a poder ser cualquier cosa. No necesitamos un generador pseudo aleatorio.
+
+590
+01:04:24.290 --> 01:04:30.920
+Pablo Eduardo Abad: En general, son los generales, son funciones deterministicas, ¿sí? Y la salida parece aleatoria.
+
+591
+01:04:33.130 --> 01:04:36.229
+Pablo Eduardo Abad: ¿cómo formalizamos la salida? Parece aleatoria?
+
+592
+01:04:38.100 --> 01:04:42.320
+Pablo Eduardo Abad: Bueno, lo
+
+593
+01:04:42.520 --> 01:04:52.610
+Pablo Eduardo Abad: lo formalizamos de alguna manera utilizando algo parecido a una, a un camino inductivo sobre una familia de funciones. Entonces.
+
+594
+01:04:53.900 --> 01:05:03.410
+Pablo Eduardo Abad: ¿cuál es la idea? La idea es que existe en una familia. Sí, El catch que ahora vamos a ver muy rápido. Es una familia potencialmente infinita de funciones.
+
+595
+01:05:03.940 --> 01:05:09.190
+Pablo Eduardo Abad: Sí que dada una secuencia de bits sí
+
+596
+01:05:13.090 --> 01:05:15.190
+Pablo Eduardo Abad: las clasifican en 2 grupos.
+
+597
+01:05:15.500 --> 01:05:20.500
+Pablo Eduardo Abad: Sí, O sea, le doy una secuencia de bits y me dice esto es el primer grupo o el segundo grupo.
+
+598
+01:05:20.910 --> 01:05:23.340
+Pablo Eduardo Abad: no importa, o sea, aplican un criterio.
+
+599
+01:05:24.210 --> 01:05:33.729
+Pablo Eduardo Abad: Se les llama distinguirs a esas funciones o clasificadores en alguna literatura si se le da una secuencia arbitraria y la clasifica en 2 grupos: 0, 1.
+
+600
+01:05:34.580 --> 01:05:36.700
+Pablo Eduardo Abad: Entonces, ¿cuál es la idea?
+
+601
+01:05:37.750 --> 01:05:50.739
+Pablo Eduardo Abad: Conceptualmente yo necesito que un generador pseudo aleatorio sea una función que, por más que yo sé que es de terministica, me dé una salida que parezca ser aleatoria, Entonces el planteo es
+
+602
+01:05:51.640 --> 01:05:59.470
+Pablo Eduardo Abad: si yo, junto todas estas funciones claras, todas las funciones clasificadoras que existan, si puedo decir que una función.
+
+603
+01:06:00.780 --> 01:06:05.660
+Pablo Eduardo Abad: un generador es pseudo aleatorio si sí
+
+604
+01:06:08.790 --> 01:06:17.109
+Pablo Eduardo Abad: para toda semilla del generador. Sí, la probabilidad de que
+
+605
+01:06:18.560 --> 01:06:23.850
+Pablo Eduardo Abad: aplicar esta función, que distingue a una salida del generador
+
+606
+01:06:25.010 --> 01:06:27.810
+Pablo Eduardo Abad: me clasifique en un lugar distinto a
+
+607
+01:06:30.790 --> 01:06:36.939
+Pablo Eduardo Abad: aplicarle a esta función de clasificación una salida realmente aleatoria matemáticamente aleatoria.
+
+608
+01:06:37.520 --> 01:06:41.629
+Pablo Eduardo Abad: Si la probabilidad de que estos 2 resultados difieran es despreciable.
+
+609
+01:06:43.470 --> 01:06:44.550
+Pablo Eduardo Abad: O sea.
+
+610
+01:06:44.740 --> 01:06:50.559
+Pablo Eduardo Abad: imagínense que yo tengo una función de estas de clasificación. Vamos a hacer una muy simple, una función que
+
+611
+01:06:52.350 --> 01:06:59.110
+Pablo Eduardo Abad: cuenta la cantidad de dígitos que de dígitos binarios 0, la cantidad de dígitos binario, 1
+
+612
+01:06:59.860 --> 01:07:11.779
+Pablo Eduardo Abad: sí. Y si la diferencia entre dígitos binarios, 0 y 1 es mayor a 1. O sea, hay un sesgo, hay más ceros que unos de alguna manera este lo clasifico como 1. Y si no lo clasifico como 0,
+
+613
+01:07:12.340 --> 01:07:21.840
+Pablo Eduardo Abad: sí es una función que intenta decir: si la secuencia es larga y aleatoria. Uno espera que los unos y los ceros estén distribuidos de forma rara pero que misma cantidad.
+
+614
+01:07:22.720 --> 01:07:24.440
+Pablo Eduardo Abad: Cuando yo repito muchas veces.
+
+615
+01:07:25.230 --> 01:07:29.399
+Pablo Eduardo Abad: Sí. Entonces, si yo aplico esa función a un generador
+
+616
+01:07:30.530 --> 01:07:34.430
+Pablo Eduardo Abad: y la aplico a funciones aleatorias, yo esperaría
+
+617
+01:07:34.700 --> 01:07:54.000
+Pablo Eduardo Abad: que esa función me dé más o menos lo mismo y a veces, por por suerte, van a dar distinto, pero pero esperaría que, en general, me clasifique de la misma manera. Sí, ¿Qué quiere decir eso? Que la función no está pudiendo diferenciar, no está pudiendo clasificar distinto. La salida de la función de una secuencia realmente aleatoria?
+
+618
+01:07:56.630 --> 01:07:57.560
+Pablo Eduardo Abad: Sí,
+
+619
+01:07:58.610 --> 01:08:06.880
+Pablo Eduardo Abad: Si yo puedo demostrar de alguna manera que esto ocurre para todas las funciones de clasificación existentes, lo que tengo es una función que
+
+620
+01:08:07.800 --> 01:08:16.330
+Pablo Eduardo Abad: no es por definición, aleatoria, porque sabemos que tiene algoritmo, pero que tampoco puedo diferenciar de ninguna manera de una secuencia aleatoria.
+
+621
+01:08:19.540 --> 01:08:22.040
+Pablo Eduardo Abad: Si yo tengo eso, tengo una función
+
+622
+01:08:22.279 --> 01:08:26.990
+Pablo Eduardo Abad: que llamamos pseudo aleatoria y sobre la cual puedo empezar a construir seguridad.
+
+623
+01:08:28.050 --> 01:08:29.080
+Pablo Eduardo Abad: ¿sí?
+
+624
+01:08:29.180 --> 01:08:30.439
+Pablo Eduardo Abad: Y
+
+625
+01:08:33.870 --> 01:08:38.560
+Pablo Eduardo Abad: bueno, la funciones generadas obligatorias. Hay un montón. Hay un montón de modelos.
+
+626
+01:08:38.960 --> 01:08:48.019
+Pablo Eduardo Abad: Sí, desde un punto de vista matemático, lo que estoy contando acá es súper interesante. No está demostrado. No está demostrado que existan estas funciones.
+
+627
+01:08:49.890 --> 01:08:56.039
+Pablo Eduardo Abad: pero ¿para qué nos sirve Esto nos sirve para encontrar los contra ejemplos, O sea, si yo tengo una función
+
+628
+01:08:58.569 --> 01:09:12.969
+Pablo Eduardo Abad: pseudogeneradora que yo creo que que que puede funcionar como un generador pseudo aleatorio. Si se supone que no tengo que poder encontrar ni siquiera una función que me distinga su salida de algo aleatorio. Si
+
+629
+01:09:13.370 --> 01:09:20.859
+Pablo Eduardo Abad: si yo encuentro una función y logre romper esta propiedad, encontré el contraejemplo
+
+630
+01:09:21.830 --> 01:09:28.769
+Pablo Eduardo Abad: y básicamente no debería usar esa función como un generador pseudo aleatorio porque no va a tener las propiedades que le voy a pedir
+
+631
+01:09:29.410 --> 01:09:31.330
+Pablo Eduardo Abad: sí. Esto ya
+
+632
+01:09:32.040 --> 01:09:45.990
+Pablo Eduardo Abad: cuando se construye, o sea, hay hay muchos criptosistemas de flujo. Si la única diferencia que tienen los distintos criptosistemas es la función g que usamos si en un criptosistema de flujo que ya se use en la actualidad
+
+633
+01:09:47.500 --> 01:09:53.530
+Pablo Eduardo Abad: se considera a nivel a nivel criptografía, un ataque válido.
+
+634
+01:09:54.500 --> 01:09:59.580
+Pablo Eduardo Abad: el encontrar una función que distinga esa función de de una secuencia aleatoria.
+
+635
+01:09:59.690 --> 01:10:04.059
+Pablo Eduardo Abad: Sí, A ese tipo de a esa familia de ataques se les llama distingo y Sher Attacks.
+
+636
+01:10:04.230 --> 01:10:09.919
+Pablo Eduardo Abad: Sí es, como nos pasó con el otro, indican una debilidad, No es
+
+637
+01:10:10.060 --> 01:10:18.100
+Pablo Eduardo Abad: tan directo que pueda ser explotable y para recuperar mensajes en plan y demás. Pero en general, cuando se encuentra una debilidad.
+
+638
+01:10:18.560 --> 01:10:24.359
+Pablo Eduardo Abad: imagínense eso como la la primera grieta en una, cómo estás
+
+639
+01:10:24.480 --> 01:10:32.349
+Pablo Eduardo Abad: en un embalse es el indicador de que esa grieta se va a agrandar y y va a aparecer otra, y en algún momento implosión a todo.
+
+640
+01:10:33.160 --> 01:10:35.160
+Pablo Eduardo Abad: Entonces.
+
+641
+01:10:36.490 --> 01:10:48.550
+Pablo Eduardo Abad: la definición matemática de función sivulatoria no es cerrada. No está demostrado que exista, pero sí habilita todo un camino de análisis por el contraejemplo. A lo largo de los últimos 60 años
+
+642
+01:10:48.950 --> 01:10:55.859
+Pablo Eduardo Abad: se han definido cientos de funciones F que permiten distinguir secuencias aleatorias.
+
+643
+01:10:56.030 --> 01:11:08.700
+Pablo Eduardo Abad: Entonces, hoy día, lo que tenemos es un cuerpo de conocimiento muy grande de funciones. F: Y cualquiera que quiera diseñar una función pseudora, teoría nueva tiene que, como mínimo, demostrar que ante todas esas tipos de funciones.
+
+644
+01:11:09.910 --> 01:11:12.670
+Pablo Eduardo Abad: la secuen no no hay posibilidad de distinguirla
+
+645
+01:11:13.290 --> 01:11:17.299
+Pablo Eduardo Abad: si esto no garantiza que mañana aparezca un genio que
+
+646
+01:11:17.440 --> 01:11:22.610
+Pablo Eduardo Abad: saque de la galera una función nueva. De hecho, hay avances de vez en cuando de ese tipo.
+
+647
+01:11:22.890 --> 01:11:28.300
+Pablo Eduardo Abad: Lo que ocurre es que las funciones más generales ya se cree que están todas descubiertas.
+
+648
+01:11:29.500 --> 01:11:37.919
+Pablo Eduardo Abad: Lo que ocurre ahora es que empiezan a aparecer funciones efe muy sofisticadas que logran distinguir una función gen particular y no sirven para nada más.
+
+649
+01:11:39.340 --> 01:11:48.529
+Pablo Eduardo Abad: Pero bueno, si aparece alguna de esas se incorpora, el cuerpo de conocimiento se utiliza y se utiliza como idea para que los próximos diseños
+
+650
+01:11:49.370 --> 01:12:02.089
+Pablo Eduardo Abad: no no caigan entre esa función o ese tipo de funciones. Si los avances en criptografía de los últimos 20 años les dirías, son este tipo de cosas de gato y ratón, Alguien encuentra algo que rompe una primitiva
+
+651
+01:12:02.940 --> 01:12:06.710
+Pablo Eduardo Abad: y se van construyendo primitivas nuevas incorporando ese conocimiento.
+
+652
+01:12:06.910 --> 01:12:14.399
+Pablo Eduardo Abad: Estamos, por suerte, tocó madera en un momento relativamente estable de la criptografía, donde
+
+653
+01:12:15.380 --> 01:12:23.140
+Pablo Eduardo Abad: los avances que han habido son avances muy particulares contra alguna función, En particular, hace mucho que no ocurre.
+
+654
+01:12:23.800 --> 01:12:27.820
+Pablo Eduardo Abad: Dos 1 004 fue el último año, un ataque genérico
+
+655
+01:12:28.190 --> 01:12:35.319
+Pablo Eduardo Abad: que son los más peligrosos a nivel trabajo, nuestro, porque un ataque genérico típicamente puede romper toda una familia de funciones
+
+656
+01:12:35.570 --> 01:12:41.160
+Pablo Eduardo Abad: y dejarnos tecleando con que no hay alternativa a lo que tenemos, Y ahí es como que hay que salir corriendo a hacer
+
+657
+01:12:41.570 --> 01:12:43.220
+Pablo Eduardo Abad: cosas más grandes.
+
+658
+01:12:44.140 --> 01:12:48.569
+Pablo Eduardo Abad: toco madera. Hace mucho que no pasa, o sea, esto se ha ido sofisticando cada vez más.
+
+659
+01:12:49.150 --> 01:12:52.129
+Pablo Eduardo Abad: Ya les voy a contar cuando lleguemos al final de la clase.
+
+660
+01:12:52.310 --> 01:12:56.920
+Pablo Eduardo Abad: las cosas que usamos nosotros por los siglos de validaciones que pasaron.
+
+661
+01:12:57.130 --> 01:13:02.280
+Pablo Eduardo Abad: Es como que es cada vez más riguroso y más grande. Eso, entonces, es cada vez más difícil.
+
+662
+01:13:02.390 --> 01:13:12.660
+Pablo Eduardo Abad: pero no es absoluto. Es parte de esto de que la fiabilidad quedó en la puerta con el secreto perfecto. Acá hay una posibilidad siempre. Por eso tenemos que estar atentos a las noticias.
+
+663
+01:13:13.620 --> 01:13:15.539
+MARTÍN GALLARDO BERTUZZI: Y profe una consulta.
+
+664
+01:13:15.540 --> 01:13:16.280
+Pablo Eduardo Abad: Sí.
+
+665
+01:13:16.640 --> 01:13:27.580
+MARTÍN GALLARDO BERTUZZI: Más de curiosidad que otra cosa. Se sabe si, si, por ejemplo, todo todo el tema de la de la computación cuántica va a traer algún problema para lo que sea: criptografía.
+
+666
+01:13:27.920 --> 01:13:39.789
+Pablo Eduardo Abad: Está estudiado si hay ciertas funciones criptográficas que se sabe que si logramos materializar una computadora cuántica de cierto tamaño y coherencia está muy lejos. Todavía
+
+667
+01:13:39.980 --> 01:13:44.540
+Pablo Eduardo Abad: se podrían quebrar, Pero
+
+668
+01:13:44.830 --> 01:13:54.450
+Pablo Eduardo Abad: hay primero, hay un montón de de criptosistemas que no se ven afectados por la criptografía cuántica y para los que sí existen ya las alternativas post cuánticas
+
+669
+01:13:55.480 --> 01:14:03.040
+Pablo Eduardo Abad: que la única razón por la cual no las estamos implementando masivamente. Pero si quieren a ver muy, muy así de sopetón
+
+670
+01:14:03.310 --> 01:14:09.520
+Pablo Eduardo Abad: opensl que es la librería criptográfica en c más importante de criptografía y
+
+671
+01:14:09.960 --> 01:14:15.909
+Pablo Eduardo Abad: Java en su librería de seguridad. Ya metieron implementaciones de criptosistemas post cuánticos
+
+672
+01:14:16.110 --> 01:14:21.969
+Pablo Eduardo Abad: en general no se los usa todavía y estamos a la espera de que haya un breaktreo importante
+
+673
+01:14:22.580 --> 01:14:30.179
+Pablo Eduardo Abad: son porque son mucho más caros en procesamiento, o sea, ejecutar esos criptosistemas en una computadora no cuántica es
+
+674
+01:14:30.980 --> 01:14:35.440
+Pablo Eduardo Abad: de 100 a 1 000 veces más lento que los criptosistemas actuales. Entonces
+
+675
+01:14:35.740 --> 01:14:46.330
+Pablo Eduardo Abad: ya está estudiada. La alternativa está estudiada contramedida. La realidad es que las computadoras cuánticas del tamaño y la coherencia que se necesitan todavía están lejos.
+
+676
+01:14:48.020 --> 01:14:55.789
+Pablo Eduardo Abad: O sea, no, no es no es la la computadora cuántica de de milkubits. Y y una buena.
+
+677
+01:14:56.040 --> 01:15:00.500
+Pablo Eduardo Abad: estamos como a 2. Break Thrus no son las las que empiezan a.
+
+678
+01:15:00.500 --> 01:15:03.000
+MARTÍN GALLARDO BERTUZZI: Claro, como falta falta.
+
+679
+01:15:03.270 --> 01:15:19.679
+Pablo Eduardo Abad: Pero dicho eso, a diferencia de otras veces, es un problema que no quiero decir, está superado, pero está estudiado y hay alternativas demostradas que que son cuando un resista no se llama. Hay toda una parte de criptografía que no vamos a ver porque es muy compleja y avanzada, que es cuando un racista, un criptography
+
+680
+01:15:19.930 --> 01:15:24.359
+Pablo Eduardo Abad: que se dedicó desde hace 20 años a estar trabajando en eso.
+
+681
+01:15:25.910 --> 01:15:28.129
+MARTÍN GALLARDO BERTUZZI: No estoy Bueno.
+
+682
+01:15:28.130 --> 01:15:30.950
+Pablo Eduardo Abad: El mensaje que por ahí les daría es
+
+683
+01:15:34.040 --> 01:15:42.459
+Pablo Eduardo Abad: no es que no hay que preocuparse, porque si me adelanto un poco y les espoileo. Los criptosistemas de clave pública que en particular.
+
+684
+01:15:42.680 --> 01:15:47.660
+Pablo Eduardo Abad: están atrás. Por ejemplo, en la red Bitcoin, sí son
+
+685
+01:15:49.100 --> 01:15:58.500
+Pablo Eduardo Abad: pasibles de ser derrotados por una computadora cuántica. Eso es. No es que es un escenario para tranquilizarse. Existen alternativas.
+
+686
+01:16:01.250 --> 01:16:09.160
+Pablo Eduardo Abad: pero bueno, si llega a pasar y materializa una computadora cuántica que logre resolver a escala los problemas
+
+687
+01:16:09.440 --> 01:16:12.010
+Pablo Eduardo Abad: que protegen a esos algoritmos.
+
+688
+01:16:12.500 --> 01:16:18.470
+Pablo Eduardo Abad: Va a ser una corrida muy interesante de todo el mundo de ingeneril para ver cómo actualizamos cosas.
+
+689
+01:16:20.610 --> 01:16:27.849
+Pablo Eduardo Abad: Si lo si lo miro más desde un punto de vista teórico, hoy tenemos la capacidad de desarrollar cosas que sobrevivan, y hay muchas cosas que no se rompen
+
+690
+01:16:30.100 --> 01:16:39.819
+Pablo Eduardo Abad: después, cuando cuando veamos. Le les voy a ir contando rápido que sí que no, pero en general está bastante acotado las cosas que hoy día se pueden romper con una computadora cuántica.
+
+691
+01:16:45.880 --> 01:16:49.040
+Pablo Eduardo Abad: Bien, entonces, volviendo a esto.
+
+692
+01:16:49.410 --> 01:16:56.889
+Pablo Eduardo Abad: vamos a tener una serie de funciones que pasaron por todas estas pruebas, Suponemos que alguna sobrevive. Sí, La realidad es que hay varias.
+
+693
+01:16:57.040 --> 01:17:01.659
+Pablo Eduardo Abad: y tenemos esta construcción de criptosistemas de flujo. ¿cómo medimos la seguridad de esto?
+
+694
+01:17:03.330 --> 01:17:10.820
+Pablo Eduardo Abad: Para medir la seguridad, vamos a introducir algo que nos va a acompañar a lo largo de la materia, que son las pruebas estadísticas de seguridad.
+
+695
+01:17:12.040 --> 01:17:18.140
+Pablo Eduardo Abad: Si las pruebas estadísticas de seguridad difieren de lo que vimos en que van a ser
+
+696
+01:17:18.640 --> 01:17:21.239
+Pablo Eduardo Abad: más que una demostración matemática.
+
+697
+01:17:22.500 --> 01:17:24.699
+Pablo Eduardo Abad: Van a ser un juego
+
+698
+01:17:26.320 --> 01:17:33.460
+Pablo Eduardo Abad: entre 2 actores. Típicamente, el criptosistema y el atacante que va a tener un resultado y que vamos a analizar probabilísticamente
+
+699
+01:17:35.020 --> 01:17:44.949
+Pablo Eduardo Abad: son una serie las pruebas de seguridad, entonces son una serie de pasos que van a dictaminar cómo interactúan un algoritmo que estamos poniendo a prueba y un atacante que puede ser cualquier algoritmo
+
+700
+01:17:45.620 --> 01:17:49.040
+Pablo Eduardo Abad: que quiere romper la seguridad de eso.
+
+701
+01:17:49.740 --> 01:18:04.899
+Pablo Eduardo Abad: En general se establecen como como pruebas, como dice ahí, que el atacante gana o pierde. Sí. Y la idea es, si yo repito muchas veces esta prueba, voy a poder establecer probabilidades de éxito del atacante. Y a partir de ahí podemos construir una noción
+
+702
+01:18:05.640 --> 01:18:08.540
+Pablo Eduardo Abad: condicional probabilística de seguridad.
+
+703
+01:18:09.500 --> 01:18:10.440
+Pablo Eduardo Abad: Sí,
+
+704
+01:18:10.680 --> 01:18:19.229
+Pablo Eduardo Abad: la primera prueba que vamos a ver se conoce como prueba de indistinguibilidad en inglés, trapping indisting, wishbility test
+
+705
+01:18:19.480 --> 01:18:20.660
+Pablo Eduardo Abad: o ir a ver.
+
+706
+01:18:21.680 --> 01:18:22.670
+Pablo Eduardo Abad: Y ahí ve
+
+707
+01:18:23.880 --> 01:18:41.770
+Pablo Eduardo Abad: la prueba es así o sea. Piénsenlo como la receta de un juego de guerra, donde, por un lado, tenemos un adversario que es un programa. Imagínense cómo un programa es un algoritmo, ¿sí? Y un criptosistema que no deja de ser otro algoritmo o una eterna de algoritmos. Sí, las reglas de juego de la prueba de indistinidad son estas. No
+
+708
+01:18:41.920 --> 01:18:52.309
+Pablo Eduardo Abad: empieza la prueba. Si el adversario, el algoritmo adversario genera arbitrariamente, o sea, a su antojo, Dos mensajes: Ms: Cero y M Uno.
+
+709
+01:18:52.890 --> 01:19:02.350
+Pablo Eduardo Abad: sí fuera del área de de la visibilidad del adversario se genera una clave
+
+710
+01:19:02.630 --> 01:19:04.499
+Pablo Eduardo Abad: de la escasez del grito sistema?
+
+711
+01:19:04.610 --> 01:19:11.960
+Pablo Eduardo Abad: ¿sí? Y se genera un número aleatorio que puede tomar 2 valores. Cero. Uno: sí.
+
+712
+01:19:13.020 --> 01:19:19.139
+Pablo Eduardo Abad: El atacante que se había quedado en el paso Uno y generó 2 mensajes, va a recibir un mensaje cifrado.
+
+713
+01:19:20.200 --> 01:19:30.769
+Pablo Eduardo Abad: Si ese mensaje cifrado va a ser el resultado haber cifrado o el mensaje? Cero o el mensaje 1 según lo que haya habido en el paso 3, pero el atacante no sabe la
+
+714
+01:19:31.510 --> 01:19:35.409
+Pablo Eduardo Abad: cuál fue el atacante? ¿va a recibir un mensaje que sabe que.
+
+715
+01:19:35.560 --> 01:19:39.170
+Pablo Eduardo Abad: o es el primer mensaje cifrado, o es el segundo mensaje cifrado
+
+716
+01:19:39.700 --> 01:19:43.179
+Pablo Eduardo Abad: y el atacante tiene que básicamente
+
+717
+01:19:43.520 --> 01:19:47.749
+Pablo Eduardo Abad: determinar eso. Si fue el primero o el segundo mensaje.
+
+718
+01:19:48.560 --> 01:19:57.090
+Pablo Eduardo Abad: Si el atacante le pega, si el atacante dice que fue el primero y había sido el primero o que fue el segundo, y ha sido el segundo, se dice que gana la prueba.
+
+719
+01:19:57.710 --> 01:20:03.929
+Pablo Eduardo Abad: Sí, Si el atacante no logra terminarlo, se lo dice al revés, pierde la prueba.
+
+720
+01:20:06.090 --> 01:20:07.200
+Pablo Eduardo Abad: ¿sí?
+
+721
+01:20:10.500 --> 01:20:12.860
+Pablo Eduardo Abad: ¿y qué pasa? Imagínense que que
+
+722
+01:20:12.910 --> 01:20:32.780
+Pablo Eduardo Abad: que que yo, como atacante, no tengo la menor idea de como romper el criptosistema. Si entonces genera mensajes genera mensajes de cualquier manera genera siempre lo mismo. No importa. No lo importante es Acá si yo no logro, no logro resolver nada sobre el criptosistema. No logro extraer información, pero me obligan a a emitir un un resultado. ¿qué puedo hacer.
+
+723
+01:20:37.720 --> 01:20:40.649
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Siempre he sido siempre 1 y.
+
+724
+01:20:41.000 --> 01:20:49.360
+Pablo Eduardo Abad: O sea, puede ser siempre 0, puedes ir siempre 1. Puedo tirar al azar un resultado no es otra opción. Te puedo secarlo como quiera. No importa
+
+725
+01:20:50.030 --> 01:20:51.800
+Pablo Eduardo Abad: qué va a pasar en la práctica.
+
+726
+01:20:52.720 --> 01:20:54.480
+Pablo Eduardo Abad: Si yo tiro un número al azar.
+
+727
+01:20:57.710 --> 01:20:59.880
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y más o menos el 50, vas a llegar.
+
+728
+01:21:00.490 --> 01:21:03.000
+Pablo Eduardo Abad: La mitad de las veces le voy a pegar.
+
+729
+01:21:03.510 --> 01:21:08.129
+Pablo Eduardo Abad: No importa si yo tiro siempre ceros o siempre unos o al azar
+
+730
+01:21:08.440 --> 01:21:21.439
+Pablo Eduardo Abad: la mitad de las veces, en promedio. Le voy a pegar en eso. Sí, Entonces, ¿qué es lo que está modelando esto? Y esto es algo de que ocurre en todas las pruebas de de seguridad. Lo que estamos haciendo es tomando un problema que es.
+
+731
+01:21:22.290 --> 01:21:27.740
+Pablo Eduardo Abad: ¿Cómo entendemos si un adversario puede extraer algún tipo de información del mensaje.
+
+732
+01:21:28.000 --> 01:21:31.269
+Pablo Eduardo Abad: Y lo que hacemos es lo reducimos a la mínima expresión
+
+733
+01:21:31.510 --> 01:21:35.500
+Pablo Eduardo Abad: en el cual el atacante tenga la mayor chance. De tener éxito.
+
+734
+01:21:38.440 --> 01:21:46.429
+Pablo Eduardo Abad: no va a haber un trillón de mensajes, va a haber 2 mensajes posibles. Es más, el atacante determina cuáles son los 2 mensajes posibles.
+
+735
+01:21:46.550 --> 01:21:50.920
+Pablo Eduardo Abad: O sea, no hay escenario más favorable para el atacante si tiene que extraer información.
+
+736
+01:21:54.810 --> 01:21:58.729
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Te digo, ¿cómo lo entendí a ver si lo entendí bien.
+
+737
+01:21:59.040 --> 01:22:03.390
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: empieza con que a genera 2 mensajes en texto plano.
+
+738
+01:22:04.000 --> 01:22:09.930
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Después, el criptosistema, lo cifra y le.
+
+739
+01:22:09.930 --> 01:22:26.240
+Pablo Eduardo Abad: Tenía ganas. Siempre digo, y me olvido, No me llega el tiempo. Imagínatelo como que hay como que es un juego, ¿sí? ¿y vos vos programas el atacante. Si el resto es el juego, ¿Vos a alguien ya lo programó, controla la partida y no ves que hace. Entonces
+
+740
+01:22:26.400 --> 01:22:30.139
+Pablo Eduardo Abad: vos como atacante, generas los mensajes y se los mandás.
+
+741
+01:22:31.000 --> 01:22:33.469
+Pablo Eduardo Abad: lo que ocurre en el paso, 2
+
+742
+01:22:34.200 --> 01:22:37.940
+Pablo Eduardo Abad: y 3, Y si quieres esta parte de calcular el 4
+
+743
+01:22:38.850 --> 01:22:40.659
+Pablo Eduardo Abad: vos como atacante, no lo ves.
+
+744
+01:22:40.800 --> 01:22:46.180
+Pablo Eduardo Abad: O sea, si me paro desde el punto de vista del atacante, Yo genero 2 mensajes y recibo una comunicación cifrada.
+
+745
+01:22:48.030 --> 01:22:54.569
+Pablo Eduardo Abad: Sí, no sé si apuntabas a eso a la pregunta. Por ahí te contesté lo que querías preguntar.
+
+746
+01:22:54.570 --> 01:23:01.169
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Más o menos cuando vuelve Yo tengo que decidir
+
+747
+01:23:01.330 --> 01:23:03.899
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: cuál de los 2 mensajes está cifrado.
+
+748
+01:23:04.510 --> 01:23:05.390
+Pablo Eduardo Abad: Exacto.
+
+749
+01:23:08.250 --> 01:23:09.369
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Dime ¿cuál es.
+
+750
+01:23:09.970 --> 01:23:13.880
+Pablo Eduardo Abad: Exacto ahora.
+
+751
+01:23:14.380 --> 01:23:25.499
+Pablo Eduardo Abad: Fíjense que esto es es el problema en el fondo de extraer información de un mensaje, pero llevada a la a la expresión más más compacta de vuelta en el mejor escenario para el atacante.
+
+752
+01:23:26.310 --> 01:23:28.810
+Pablo Eduardo Abad: Sí, hay solo 2 mensajes.
+
+753
+01:23:29.010 --> 01:23:33.930
+Pablo Eduardo Abad: Es más, el atacante elige cuáles son esos 2 mensajes, puede ponerle los de la forma que quiera
+
+754
+01:23:38.130 --> 01:23:39.390
+Pablo Eduardo Abad: y tiene que
+
+755
+01:23:39.990 --> 01:23:48.080
+Pablo Eduardo Abad: tratar de determinar simplemente cuál de los 2 es, Pero digo, no hay 1 000 mensajes y tiene que ver cuál es más probable entre esos 1 000. Hay 2 nada más
+
+756
+01:23:50.090 --> 01:23:59.439
+Pablo Eduardo Abad: si el atacante puede sesgar esto. Y fíjense eso que decía a veces 1 no descifra el mensaje, pero puede cambiar las probabilidades del mensaje.
+
+757
+01:23:59.840 --> 01:24:06.749
+Pablo Eduardo Abad: Si el atacante puede determinar, por ejemplo, que no sé el 60 por 100 de las veces, es el mensaje de 0
+
+758
+01:24:08.250 --> 01:24:14.739
+Pablo Eduardo Abad: Si el atacante lo más inteligente que puede hacer es responder 0. Siempre va a ganar el 60 por 100 de las veces
+
+759
+01:24:16.820 --> 01:24:26.339
+Pablo Eduardo Abad: sí, Y esto es importante porque si el atacante puede hacer algo mejor que adivinar, que lo va a llevar a pegarle la mitad de las veces es que logró extraer información del mensaje
+
+760
+01:24:28.280 --> 01:24:41.180
+Pablo Eduardo Abad: si lo que me esta prueba es casualmente eso. Por eso es yves dropping indistiability es ante un adversario que captura y troping. Es espiar que espía captura un mensaje cifrado.
+
+761
+01:24:42.940 --> 01:24:49.649
+Pablo Eduardo Abad: Si estamos probando si puede, con eso distinguir sobre posibles mensajes planos.
+
+762
+01:24:51.240 --> 01:24:53.320
+Pablo Eduardo Abad: Sí, es una propiedad que
+
+763
+01:24:53.960 --> 01:25:01.880
+Pablo Eduardo Abad: está garantizada por secreto perfecto. Acá Lo lo estamos llevando a un escenario que no depende de las hipótesis matemáticas. Es una prueba
+
+764
+01:25:02.310 --> 01:25:04.700
+Pablo Eduardo Abad: que estadísticamente nos va a llevar a eso
+
+765
+01:25:05.830 --> 01:25:18.919
+Pablo Eduardo Abad: sí, porque vamos a decir que un criptosistema tiene la propiedad indistinguibilidad si la probabilidad de que un adversario gane esta prueba está en el orden de 0 coma 5
+
+766
+01:25:19.340 --> 01:25:25.280
+Pablo Eduardo Abad: como este problevístico nunca va a ser exactamente 0. Cinco. Si por eso aparece un exilón ahí dando vueltas
+
+767
+01:25:25.530 --> 01:25:31.299
+Pablo Eduardo Abad: es si la probabilidad está a a una cantidad despreciable de un medio.
+
+768
+01:25:37.910 --> 01:25:40.789
+Pablo Eduardo Abad: Preguntas hasta acá entienden la idea.
+
+769
+01:25:46.110 --> 01:25:55.470
+Pablo Eduardo Abad: Lo interesante de este tipo de pruebas reducidas así a su línea de expresión es que a partir de esto sí podemos empezar a construir nociones de seguridad.
+
+770
+01:25:55.610 --> 01:26:09.990
+Pablo Eduardo Abad: Sí, vamos a ver que esta no es la única prueba, en línea con esto de que no hay una única definición de seguridad. Pero fíjense que un criptosistema que pase la prueba de indistinidad ya nos da una propiedad de seguridad
+
+771
+01:26:10.180 --> 01:26:22.919
+Pablo Eduardo Abad: con la cual después podemos construir otras cosas. O sea, nos garantiza que si nosotros ciframos algo con esa criptosistema, lo mandamos y alguien intercepta o consigue el texto cifrado, no puede averiguar nada útil de los mensajes
+
+772
+01:26:25.300 --> 01:26:37.020
+Pablo Eduardo Abad: porque si no puedes siquiera diferenciar entre 2 posibles mensajes, menos va a poder hacer cuando esto sea un único mensaje, arbitrariamente largo entre trillones de mensajes.
+
+773
+01:26:38.420 --> 01:26:43.270
+Pablo Eduardo Abad: ¿Sí? O sea, sin el mejor escenario para el atacante, no puede resolver esto.
+
+774
+01:26:43.690 --> 01:26:46.109
+Pablo Eduardo Abad: De ahí es todo cuesta abajo para el atacante.
+
+775
+01:26:47.360 --> 01:26:54.560
+Pablo Eduardo Abad: Y esto es importante y las pruebas de seguridad van a que son todas así, son todas buscando un escenario favorable para el atacante.
+
+776
+01:26:55.010 --> 01:27:01.780
+Pablo Eduardo Abad: porque lo que no queremos tener son funciones criptográficas de uso hiper específico.
+
+777
+01:27:02.020 --> 01:27:10.439
+Pablo Eduardo Abad: Ah, mira, tienes esta función que es buenísima, pero ojo. Si tus mensajes son numéricos, es una porquería, así que asegurate de que tus mensajes no tengan números
+
+778
+01:27:10.740 --> 01:27:18.859
+Pablo Eduardo Abad: en la práctica. Sabemos que eso se rompe. Los sistemas van mutando. Yo creo el sistema hoy para algo y la funcionalidad muta
+
+779
+01:27:19.170 --> 01:27:27.909
+Pablo Eduardo Abad: y los supuestos sobre los que lo construimos, cambian, y ahí es donde empiezan a aparecer los problemas. Entonces, en general.
+
+780
+01:27:29.420 --> 01:27:38.880
+Pablo Eduardo Abad: las pruebas de seguridad buscan buscan marcar conceptos fuertes que nos den soluciones generales donde esta propiedad se mantiene para todo tipo de mensajes.
+
+781
+01:27:39.720 --> 01:27:50.069
+Pablo Eduardo Abad: O sea, se mantiene. Si los mensajes son un sí y un no para transmitir una orden. Si es un archivo de vídeo, si es una, si es un email, si sé lo que sea.
+
+782
+01:27:53.480 --> 01:27:54.560
+Pablo Eduardo Abad: Hay un Gatch.
+
+783
+01:27:56.920 --> 01:28:03.189
+Pablo Eduardo Abad: Esta prea de seguridad no es absoluta
+
+784
+01:28:03.340 --> 01:28:10.680
+Pablo Eduardo Abad: si da un resultado probabilístico, pero tampoco es absoluta en otra dimensión. Si está fuera de seguridad, pone a prueba a un criptosistema
+
+785
+01:28:11.440 --> 01:28:14.289
+Pablo Eduardo Abad: con un algoritmo adversario concreto.
+
+786
+01:28:15.750 --> 01:28:19.480
+Pablo Eduardo Abad: Sí, esta prueba es la formalización
+
+787
+01:28:19.900 --> 01:28:24.930
+Pablo Eduardo Abad: que usamos para criptosistemas de lo que vimos hace hace unos minutos para
+
+788
+01:28:25.250 --> 01:28:34.669
+Pablo Eduardo Abad: matemáticamente, para generadores, pseudo aleatorios, ¿sí? Y tienen la mis el mismo tema que yo no conozca
+
+789
+01:28:34.870 --> 01:28:37.940
+Pablo Eduardo Abad: un adversario que gane. La prueba no quiere decir que no exista.
+
+790
+01:28:38.730 --> 01:28:46.070
+Pablo Eduardo Abad: sí, pero pasa algo parecido a lo que les conté. Con el tiempo, se han inventado familias de funciones adversariales.
+
+791
+01:28:48.030 --> 01:28:54.530
+Pablo Eduardo Abad: se han roto criptosistemas, y esto es un ciclo donde cuando alguien encuentra algo, se incorpora
+
+792
+01:28:54.900 --> 01:29:00.990
+Pablo Eduardo Abad: y y y salen criptosistemas mejores inmunes a eso, y todos los criptosistemas que usamos hoy en la práctica
+
+793
+01:29:01.120 --> 01:29:08.200
+Pablo Eduardo Abad: son inmunes a todos los adversarios que conocemos hasta ahora en el cuerpo de conocimiento criptográfico.
+
+794
+01:29:08.430 --> 01:29:09.290
+Pablo Eduardo Abad: Entonces.
+
+795
+01:29:09.850 --> 01:29:19.560
+Pablo Eduardo Abad: hoy, cuando decimos que un criptosistema de la vida real es indistinguible ante escenarios de destroping. Lo que estamos diciendo es
+
+796
+01:29:19.990 --> 01:29:26.510
+Pablo Eduardo Abad: si tomamos el conocimiento colectivo de todas las funciones adversariales que se inventaron hasta ahora. No hay ninguna que gane esta prueba.
+
+797
+01:29:29.580 --> 01:29:35.509
+Pablo Eduardo Abad: Sí, algo parecido a lo que dije: cada vez es más difícil que aparezcan funciones adversariales.
+
+798
+01:29:36.010 --> 01:29:38.840
+Pablo Eduardo Abad: No quiere decir que no aparezcan. Pero
+
+799
+01:29:39.470 --> 01:29:44.149
+Pablo Eduardo Abad: venimos con un buen track record en los últimos años de no de que no haya aparecido ninguna sorpresa.
+
+800
+01:29:47.580 --> 01:29:51.010
+Pablo Eduardo Abad: Mhm: Si
+
+801
+01:29:51.550 --> 01:30:03.800
+Pablo Eduardo Abad: Si llegan a encontrarse con pruebas de seguridad en Papers, medios más teóricos o en en alguna literatura un poco más avanzada, solo para que sepan, van a escuchar hablar de
+
+802
+01:30:04.120 --> 01:30:07.830
+Pablo Eduardo Abad: un coeficiente. N que se suele llamar nivel de seguridad.
+
+803
+01:30:08.290 --> 01:30:09.350
+Pablo Eduardo Abad: Sí
+
+804
+01:30:09.540 --> 01:30:25.080
+Pablo Eduardo Abad: es una variable que en las pruebas formales le pone cota a muchas cosas que aparecen acá si yo para no complicárselos, no me interesa tanto el formulario. Pero si se meten en papers más más teóricos o en libros más avanzados, van a encontrar eso
+
+805
+01:30:25.400 --> 01:30:28.949
+Pablo Eduardo Abad: el nivel de seguridad. En la práctica suele ser un número
+
+806
+01:30:29.210 --> 01:30:36.519
+Pablo Eduardo Abad: sí y, desde un punto de vista práctico, les va a servir para si ustedes tienen 2 criptosistemas que cumplen con la propiedad.
+
+807
+01:30:36.700 --> 01:30:42.189
+Pablo Eduardo Abad: Y, por alguna razón, necesitan el mejor o el más paranoico. Va a ser que tenga el nivel de seguridad más alto.
+
+808
+01:30:43.240 --> 01:30:49.309
+Pablo Eduardo Abad: En general, en las pruebas formales, el nivel de seguridad es una cota que funciona
+
+809
+01:30:50.150 --> 01:30:56.639
+Pablo Eduardo Abad: para el orden de magnitud de la complejidad de ejecución del adversario. El adversario es un programa.
+
+810
+01:30:56.790 --> 01:30:59.869
+Pablo Eduardo Abad: Si se acuerdan que habíamos dicho, vamos a poner una cuota a
+
+811
+01:30:59.980 --> 01:31:02.460
+Pablo Eduardo Abad: a la capacidad de cómputo de los adversarios.
+
+812
+01:31:02.690 --> 01:31:19.880
+Pablo Eduardo Abad: La forma de ponerles una cota en esto, es decir, que los adversarios no pueden ser cualquier programa. No puede ser un programa que se tome tiempo infinito si se limita la categoría de de de algoritmos en particular, se limita a que el
+
+813
+01:31:20.180 --> 01:31:25.110
+Pablo Eduardo Abad: el algoritmo atacante en función de este de este nivel de seguridad
+
+814
+01:31:25.540 --> 01:31:28.720
+Pablo Eduardo Abad: tenga complejidad polinómica en tiempo de ejecución.
+
+815
+01:31:29.650 --> 01:31:34.460
+Pablo Eduardo Abad: si puede ser en el cuadrado, puede ser en el a 40, no importa, pero que sea polinómica.
+
+816
+01:31:34.580 --> 01:31:44.720
+Pablo Eduardo Abad: Sí, en particular porque se toma eso porque queremos descartar que el atacante que tal vez pueda ganar siempre acá que es el atacante que
+
+817
+01:31:45.330 --> 01:31:47.290
+Pablo Eduardo Abad: busco un ataque por fuerza bruta.
+
+818
+01:31:48.220 --> 01:31:56.829
+Pablo Eduardo Abad: Sí, el nivel n de seguridad en estos criptosistemas está basado al a la cantidad de bits que tendría la clave.
+
+819
+01:31:57.170 --> 01:32:05.200
+Pablo Eduardo Abad: O sea, si tenemos 2 salas. 128 posibles claves, el nivel de seguridad en este tipo de criptosistemas en los de flujo sería 100. 28.
+
+820
+01:32:06.760 --> 01:32:11.180
+Pablo Eduardo Abad: ¿qué quiere decir eso Que si yo le pongo una cota polinómica a eso.
+
+821
+01:32:11.490 --> 01:32:17.550
+Pablo Eduardo Abad: estoy impidiendo que un atacante valioso sea un adversario que pueda explorar las 2 a las 100. 28 claves.
+
+822
+01:32:17.790 --> 01:32:25.620
+Pablo Eduardo Abad: Si estoy explícitamente diciendo: no me interesan los adversarios que pueden atacar esto por fuerza bruta de forma sistemática.
+
+823
+01:32:28.000 --> 01:32:29.150
+Pablo Eduardo Abad: ¿por qué?
+
+824
+01:32:30.360 --> 01:32:37.079
+Pablo Eduardo Abad: Porque el ataque por fuerza bruta, hablando mal y pronto es un ataque fácil de volver impráctico?
+
+825
+01:32:37.830 --> 01:32:42.820
+Pablo Eduardo Abad: ¿sí? Hoy día se estima que si juntamos todas las computadoras del planeta.
+
+826
+01:32:43.240 --> 01:32:46.139
+Pablo Eduardo Abad: estoy corriendo la estimación porque esto cambia año a año.
+
+827
+01:32:46.250 --> 01:33:03.300
+Pablo Eduardo Abad: nosotros podríamos. En un año juntamos todas las computadoras del planeta y las vamos a resolver el mismo problema Si supóngase a a calcular el cifrado con una clave de de un mensaje en particular, nosotros podríamos hacer algo en el orden de 2 a las 76 operaciones
+
+828
+01:33:04.150 --> 01:33:08.880
+Pablo Eduardo Abad: es un montón. Es un número gigantes, sí,
+
+829
+01:33:09.000 --> 01:33:21.289
+Pablo Eduardo Abad: pero sabiendo eso, yo puedo decir, Ok, saben que mis criptosistemas van a tener 2 h, 100, 28 claves. O sea que si juntamos todo el poder de cómputo del planeta y lo ponemos a atacar esto por fuerza bruta.
+
+830
+01:33:21.480 --> 01:33:31.449
+Pablo Eduardo Abad: necesitaríamos toda la vida del universo para llegar a explorar todo ese espacio. Entonces, entre comillas, el ataque por fuerza bruta sistemático es fácil de resolver.
+
+831
+01:33:32.620 --> 01:33:38.400
+Pablo Eduardo Abad: Por eso la limitación que ponemos es esa. No aceptamos algoritmos de tipo exponencial.
+
+832
+01:33:39.540 --> 01:33:46.360
+Pablo Eduardo Abad: Esta es la cuña de las computadoras cuánticas. By, the way, no. Las computadoras cuánticas se descubrieron algunos algoritmos
+
+833
+01:33:46.480 --> 01:33:50.410
+Pablo Eduardo Abad: que son exponenciales. Pero una computadora cuántica tienen complejidad polinómica
+
+834
+01:33:51.800 --> 01:33:55.980
+Pablo Eduardo Abad: y Y ese cambio de categoría es lo que hace tambalear a algunos criptosistemas.
+
+835
+01:33:56.930 --> 01:34:06.280
+Pablo Eduardo Abad: Bueno, pero bueno, limita eso y después limita si quieren, lo que es la tasa de éxito. Cuando decimos
+
+836
+01:34:07.760 --> 01:34:15.860
+Pablo Eduardo Abad: por ahí no hay 0. Cinco. El El cuánto acepto que se desvía de 0 5 para que lo consiga prueba. Tiene que ver también con con esto
+
+837
+01:34:16.350 --> 01:34:28.079
+Pablo Eduardo Abad: se van a encontrar con esta disquisición en demostraciones más formales. No es algo que ni siquiera espero que se encuentre en la vida cotidiana más que hablar de que el nivel de seguridad, esta función es mayor que esta otra.
+
+838
+01:34:28.630 --> 01:34:36.950
+Pablo Eduardo Abad: Así que en términos más prácticos ingenieriles, el nivel de seguridad nos deja comparar 2 funciones cuando en las partes básicas están bien.
+
+839
+01:34:43.650 --> 01:34:44.540
+Pablo Eduardo Abad: Mhm.
+
+840
+01:34:45.810 --> 01:34:50.930
+Pablo Eduardo Abad: Con esta prueba de seguridad, 1 de los primeros teoremas importantes que aparecen es
+
+841
+01:34:51.160 --> 01:34:56.520
+Pablo Eduardo Abad: si G. Si la función g de un criptosistema de flujo es un generador pseudo aleatorio.
+
+842
+01:34:56.900 --> 01:35:00.260
+Pablo Eduardo Abad: entonces el criptosistema es indistinguible de anteobservadores.
+
+843
+01:35:06.620 --> 01:35:07.700
+Pablo Eduardo Abad: ¿cómo
+
+844
+01:35:09.520 --> 01:35:24.919
+Pablo Eduardo Abad: ¿Cómo podemos demostrar esto por falta de tiempo, le movimos para la práctica este. Si alguien le interesa tratar de hacerlo, si no, y le interesa verlo, está en El libro de Cats es una demostración relativamente fácil, pero
+
+845
+01:35:25.640 --> 01:35:34.550
+Pablo Eduardo Abad: algo algo interesante de estas pruebas perdón. Yo les dije, está el tema de de adversarios, pero hay muchas demostraciones que se hacen por reducción, que están muy buenas.
+
+846
+01:35:35.200 --> 01:35:42.889
+Pablo Eduardo Abad: Las demostraciones por reducción siguen esta idea. La demostración de esta en particular es si este camino es
+
+847
+01:35:43.220 --> 01:35:51.409
+Pablo Eduardo Abad: si yo tengo una función y no es un generador pseudo aleatorio, quiere decir que puedo distinguirla. Puedo encontrar una de esas funciones que distinguen? ¿sí?
+
+848
+01:35:52.020 --> 01:35:59.599
+Pablo Eduardo Abad: Si yo tengo una de esas funciones, puedo inventarme un adversario
+
+849
+01:36:00.800 --> 01:36:04.820
+Pablo Eduardo Abad: a que utilice esa función para ganar esta prueba.
+
+850
+01:36:11.570 --> 01:36:21.040
+Pablo Eduardo Abad: Esa es la idea un poco la premisa, Esta se las cuento muy por arriba, si no, si no la entienden, no importa, pero para no dejárselas, es
+
+851
+01:36:21.790 --> 01:36:24.100
+Pablo Eduardo Abad: si la función G
+
+852
+01:36:24.260 --> 01:36:29.530
+Pablo Eduardo Abad: Ahora vamos a volver a la definición de que si esta función no fuese un generador subrayatorio, yo tengo una función F,
+
+853
+01:36:30.340 --> 01:36:36.980
+Pablo Eduardo Abad: que si se le aplico a la salida de G, me va a dar 1. Y si se le aplico una secuencia aleatoria, me va a dar 0
+
+854
+01:36:37.990 --> 01:36:39.270
+Pablo Eduardo Abad: conceptualmente.
+
+855
+01:36:40.210 --> 01:36:45.400
+Pablo Eduardo Abad: Entonces, yo, como atacante, si eso existe si la función no fuese pseudo aleatoria.
+
+856
+01:36:47.850 --> 01:36:53.459
+Pablo Eduardo Abad: Yo, ¿qué puedo hacer como atacante género, un mensaje que son todos ceros y genera un mensaje que sea aleatorio.
+
+857
+01:36:57.650 --> 01:37:03.840
+Pablo Eduardo Abad: Sí, ¿Qué pasa? Se genera una clave? Acá Esa clave se usa para generar
+
+858
+01:37:04.650 --> 01:37:17.060
+Pablo Eduardo Abad: la secuencia que se mezcla con el mensaje así, pero el mensaje se mezcla con la secuencia que se genera. Si mi primer mensaje era todo 0. Si se eligió el primer mensaje. Lo que yo voy a recibir va a ser la secuencia de qué directamente.
+
+859
+01:37:17.960 --> 01:37:23.170
+Pablo Eduardo Abad: Mi segundo mensaje en una secuencia aleatoria, si la mezclo con G el resultado va a ser una secuencia aleatoria.
+
+860
+01:37:23.910 --> 01:37:30.710
+Pablo Eduardo Abad: entonces, en ese caso, yo el sé que voy a recibir va a ser o la salida de G o una secuencia aleatoria.
+
+861
+01:37:31.920 --> 01:37:33.650
+Pablo Eduardo Abad: y literalmente.
+
+862
+01:37:34.200 --> 01:37:40.879
+Pablo Eduardo Abad: si la función no es un generador aleatorio, Yo puedo diferenciar esas 2 cosas las podría ganar siempre. La prueba.
+
+863
+01:37:43.980 --> 01:37:49.229
+Pablo Eduardo Abad: Sobre esa base se construye un teorema que básicamente nos dice: si este generador es eva aleatorio.
+
+864
+01:37:49.660 --> 01:37:55.629
+Pablo Eduardo Abad: Vos tenés un criptosistema indistinguible ante el dropping.
+
+865
+01:37:56.670 --> 01:38:08.360
+Pablo Eduardo Abad: sí. Sobre esta base, Sobre esta teoría se construyen criptosistemas que Hoy utilizamos en la vida práctica que son criptosistemas de flujo. ¿sí? Ahora, un rato vamos a ver algunos nombres
+
+866
+01:38:08.640 --> 01:38:19.010
+Pablo Eduardo Abad: de criptosistemas, y por ahí algunos hasta les les suenan. Pero esto ya es una variante de criptosistemas. Obviamente, el secreto está en qué cosa G no cualquier que va.
+
+867
+01:38:19.400 --> 01:38:23.719
+Pablo Eduardo Abad: Pero esto es una red de criptosistemas que ya nos la empezamos a encontrar en sistemas reales.
+
+868
+01:38:29.420 --> 01:38:30.969
+Pablo Eduardo Abad: ¿hay alguna pregunta?
+
+869
+01:38:38.630 --> 01:38:40.780
+Pablo Eduardo Abad: Bueno, bien.
+
+870
+01:38:43.250 --> 01:38:50.060
+Pablo Eduardo Abad: el primer problema que habíamos visto del One Time val si se acuerdan, no importa si se acuerda del orden, pero tenía que ver con esto de
+
+871
+01:38:50.280 --> 01:38:56.469
+Pablo Eduardo Abad: la clave era demasiado grande. Tenía que ser tan grande con el mensaje, acá lo resolvimos de alguna manera.
+
+872
+01:38:58.060 --> 01:39:07.189
+Pablo Eduardo Abad: Otro de los problemas que había tenía que ser Bueno, esta clave tiene que ser realmente aleatoria por Acá lo resolvimos de alguna manera. Estamos metiendo ya un generador
+
+873
+01:39:07.740 --> 01:39:09.689
+Pablo Eduardo Abad: que parece, pero no es aleatorio.
+
+874
+01:39:10.790 --> 01:39:14.929
+Pablo Eduardo Abad: ¿cuál era el tercer problema? ¿se acuerdan? ¿cuál era el tercer problema del one pa
+
+875
+01:39:19.700 --> 01:39:22.479
+Pablo Eduardo Abad: Les puedo dar una pista, Les acabo de dar una pista igual.
+
+876
+01:39:22.860 --> 01:39:24.860
+NICOLÁS CANZONIERI: Cuales mencionaste. Profe, perdón.
+
+877
+01:39:25.560 --> 01:39:31.079
+Pablo Eduardo Abad: Un problema era la clave. Era demasiado larga y parece ser que estos cripto sistemas de flujos lo resuelven.
+
+878
+01:39:31.520 --> 01:39:40.050
+Pablo Eduardo Abad: El Otro problema era la clave. Tenía que ser aleatoria. Parece que estos cripto sistemas sobreviven con
+
+879
+01:39:40.950 --> 01:39:44.420
+Pablo Eduardo Abad: claves no aleatorias en el Pádel, cuál.
+
+880
+01:39:44.420 --> 01:39:45.859
+NICOLÁS CANZONIERI: Lo que dijo el del chat.
+
+881
+01:39:45.860 --> 01:39:50.479
+Pablo Eduardo Abad: No reutilizar la clave perfecto. Muy bien.
+
+882
+01:39:50.600 --> 01:39:57.060
+Pablo Eduardo Abad: ese era el tercer problema. La verdad, que esta prueba de seguridad no nos dice nada de eso, porque fíjense que genera mensajes
+
+883
+01:39:57.580 --> 01:40:03.160
+Pablo Eduardo Abad: clave, cifra un único mensaje, cifra una única vez, cuando se repite la prueba es con otra clave.
+
+884
+01:40:04.290 --> 01:40:08.940
+Pablo Eduardo Abad: Sí, no nos dice nada de esa tercera. Entonces, es válido preguntarnos
+
+885
+01:40:11.190 --> 01:40:16.479
+Pablo Eduardo Abad: ¿el One Time? Pad pasa esta prueba? La la respuesta va a ser sí. El one Pack pasa esta.
+
+886
+01:40:16.610 --> 01:40:21.280
+Pablo Eduardo Abad: pero sabemos que el Wandame Back no pasa a la otra. ¿por qué no modelamos ese otro escenario. Bueno.
+
+887
+01:40:21.460 --> 01:40:26.100
+Pablo Eduardo Abad: como no queremos utilizar la misma clave en múltiples mensajes para tener algo práctico.
+
+888
+01:40:26.450 --> 01:40:31.350
+Pablo Eduardo Abad: porque, por más que la clave sea chica. No está bien la que cada mensaje tengamos que tener una clave distinta.
+
+889
+01:40:31.820 --> 01:40:39.790
+Pablo Eduardo Abad: Bueno, a ver qué cómo lo vamos a hacer con lo que vimos generando otra prueba de seguridad.
+
+890
+01:40:40.880 --> 01:40:47.109
+Pablo Eduardo Abad: La segunda prueba o escenario de seguridad que vamos a ver, no nos ponemos muy creativos con los nombres. Es
+
+891
+01:40:47.870 --> 01:40:50.790
+Pablo Eduardo Abad: múltiples draving test.
+
+892
+01:40:51.020 --> 01:40:59.399
+Pablo Eduardo Abad: La frase suele llamar mul y básicamente mide la seguridad en un escenario donde reutilizamos la clave.
+
+893
+01:41:01.810 --> 01:41:11.900
+Pablo Eduardo Abad: Si la mía ahora no, no se acuerdan la otra o por ahí, se acuerdan la forma, pero les va a parecer medio parecida, es muy rápido. Esta es la prueba de indistinidad con un mensaje.
+
+894
+01:41:12.390 --> 01:41:16.350
+Pablo Eduardo Abad: Esa es la prueba con muchos conseguir y volver varias veces.
+
+895
+01:41:17.280 --> 01:41:20.300
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Es la.
+
+896
+01:41:20.660 --> 01:41:26.080
+Pablo Eduardo Abad: Exacto es la la idea es la misma. Si lo único que acá. Qué vamos a hacer?
+
+897
+01:41:26.320 --> 01:41:27.230
+Pablo Eduardo Abad: Bueno.
+
+898
+01:41:27.490 --> 01:41:33.380
+Pablo Eduardo Abad: vamos a obligar al framework de la prueba a que se cifren muchos mensajes con la misma clave. Entonces.
+
+899
+01:41:34.070 --> 01:41:42.099
+Pablo Eduardo Abad: ¿cómo funciona esto? Le vamos a pedir al atacante que, en vez de generar 2 mensajes, genere 2 listas de mensajes con la misma cantidad de mensajes.
+
+900
+01:41:42.980 --> 01:41:47.319
+Pablo Eduardo Abad: los que el atacante quiera 10 mensajes y 10 mensajes, 2 y 2,
+
+901
+01:41:47.540 --> 01:41:49.489
+Pablo Eduardo Abad: este un 1 000 000 y un 1 000 000
+
+902
+01:41:50.940 --> 01:42:01.139
+Pablo Eduardo Abad: va a generar 2 listas. Lo que vamos a hacer ahora es lo mismo que antes se va a elegir. Una clave: se va a elegir, o la primera o la segunda lista, y el atacante va a recibir
+
+903
+01:42:01.860 --> 01:42:07.069
+Pablo Eduardo Abad: todos los elementos de esa lista o la primera o la segunda cifrados con la misma clave
+
+904
+01:42:10.880 --> 01:42:16.449
+Pablo Eduardo Abad: y que le vamos a pedir al atacante Lo mismo decime si fue tu primera lista de mensajes o la segunda.
+
+905
+01:42:16.810 --> 01:42:21.950
+Pablo Eduardo Abad: La prueba es muy parecida con su bebé en en la estructuración que tiene.
+
+906
+01:42:22.250 --> 01:42:24.510
+Pablo Eduardo Abad: Lo que está poniendo a prueba es distinto
+
+907
+01:42:25.150 --> 01:42:32.980
+Pablo Eduardo Abad: porque acá si está poniendo a prueba Si el criptosistema realmente logra ocultar información.
+
+908
+01:42:33.720 --> 01:42:36.080
+Pablo Eduardo Abad: Cuando utilizo la clave múltiples veces
+
+909
+01:42:43.640 --> 01:42:51.220
+Pablo Eduardo Abad: vamos a hacer un un ejercicio como para este.
+
+910
+01:42:52.440 --> 01:42:55.519
+Pablo Eduardo Abad: movernos un poco o que se muevan ustedes un poco.
+
+911
+01:42:58.700 --> 01:43:03.930
+Pablo Eduardo Abad: Los criptosistemas de flujo que vivimos, esta construcción
+
+912
+01:43:06.750 --> 01:43:09.330
+Pablo Eduardo Abad: no son seguros bajo múltiples cifrados.
+
+913
+01:43:10.550 --> 01:43:17.500
+Pablo Eduardo Abad: Sí, tienen un problema muy parecido al del Wanda Pa. L. Se acuerdan que si tomábamos 2 mensajes cifrados
+
+914
+01:43:18.430 --> 01:43:23.870
+Pablo Eduardo Abad: con la misma clave, sí como los generadores van a generar la misma secuencia o la misma semilla.
+
+915
+01:43:24.650 --> 01:43:26.130
+Pablo Eduardo Abad: Nos va a pasar esto
+
+916
+01:43:26.260 --> 01:43:40.130
+Pablo Eduardo Abad: Si antes les dije, bueno, esto es parecido informalmente a cómo atacamos a los criptosistemas de la primera clase de sustitución? Sí, porque no teníamos las pruebas formales, sí, ahora que tenemos una de estas pruebas formales.
+
+917
+01:43:40.330 --> 01:43:45.100
+Pablo Eduardo Abad: Lo podemos plantear un poco más concretamente y podemos plantear que
+
+918
+01:43:45.930 --> 01:43:49.070
+Pablo Eduardo Abad: los criptosistemas de flujo no pasan esta prueba.
+
+919
+01:43:54.560 --> 01:43:59.600
+Pablo Eduardo Abad: Si les pido que lo hagan, a alguien se le ocurre, ¿Cómo ¿Cómo empezar? Siquiera?
+
+920
+01:44:11.040 --> 01:44:16.190
+Pablo Eduardo Abad: Bueno, ahí Joaquín: Ahí Joaquín tiró tiró algo en.
+
+921
+01:44:17.280 --> 01:44:21.350
+Pablo Eduardo Abad: Voy a dar un paso antes de Joaquín Joaquín. Está haciendo lo correcto. O sea, como
+
+922
+01:44:21.490 --> 01:44:26.869
+Pablo Eduardo Abad: cómo atacamos un criptosistema, una prueba de seguridad. Tenemos que inventarnos un atacante.
+
+923
+01:44:27.500 --> 01:44:33.590
+Pablo Eduardo Abad: Y si seguimos la prueba, un algoritmo atacante, lo primero que tiene que hacer es inventarse 2 secuencias de mensajes.
+
+924
+01:44:33.790 --> 01:44:40.020
+Pablo Eduardo Abad: Entonces ahí Joaquín plantea, por ejemplo, dice: voy a generar 2 secuencias de mensajes: una que tiene
+
+925
+01:44:40.520 --> 01:44:47.710
+Pablo Eduardo Abad: mensajes de tamaño este in creyentes. Ok, en
+
+926
+01:44:49.690 --> 01:44:55.220
+Pablo Eduardo Abad: el primero, la primera secuencia, todos los bits en 1, en la segunda, todos los bits en 0, sí.
+
+927
+01:44:55.410 --> 01:45:05.079
+Pablo Eduardo Abad: Para poder terminar de definir un atacante. En este escenario que estamos viendo, necesitamos definir el proceso de razonamiento entre el paso 4 y el 5.
+
+928
+01:45:05.200 --> 01:45:12.470
+Pablo Eduardo Abad: O sea, como el atacante a partir de el vector de texto cifrados que recibe, dice que prima vale 0 o vale 1.
+
+929
+01:45:13.720 --> 01:45:21.020
+Pablo Eduardo Abad: Si logramos inventarnos un atacante que gane la prueba, estamos demostrando que no cumple con esa propiedad el criptosistema.
+
+930
+01:45:25.120 --> 01:45:39.389
+Pablo Eduardo Abad: Así que Joaquín a ver bien encaminado en pensar esto: Acá no hay. No hay. No hay una única solución, Así que no me animo a decir ni que va a funcionar ni que no va a funcionar la tuya, pero tenemos que completarlo. Ese es el primer paso del atacante. Ahora necesitamos establecer
+
+931
+01:45:40.290 --> 01:45:43.659
+Pablo Eduardo Abad: con qué criterio elige que me prima vale 0 o vale 1.
+
+932
+01:45:48.520 --> 01:45:56.089
+Pablo Eduardo Abad: O sea, en ese escenario, el atacante va a recibir según hace 2 o 3. Bueno, espera que lo cortamos 11, 4, pues las las listas no pueden ser infinitas
+
+933
+01:45:57.740 --> 01:46:06.120
+Pablo Eduardo Abad: por ahí, que mandas, 4 mensajes y y 4 mensajes vas a recibir un vector de 4 mensajes, 1 hace 2 o 13 4.
+
+934
+01:46:06.800 --> 01:46:14.489
+Pablo Eduardo Abad: Entonces la pregunta a abierta a todos, no solo Joaquín, es que qué podríamos pensar hacer sobre esas que se les ocurre para poder
+
+935
+01:46:14.700 --> 01:46:17.169
+Pablo Eduardo Abad: decidir. Fue 1 o fue el otro.
+
+936
+01:46:24.500 --> 01:46:28.909
+Pablo Eduardo Abad: Ese es el quid de la cuestión. O sea, inventar el el algoritmo atacante. Son las 2 cosas. No.
+
+937
+01:46:30.260 --> 01:46:33.449
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Hago equis horas entre todos los que me devuelva.
+
+938
+01:46:37.880 --> 01:46:43.409
+Pablo Eduardo Abad: Y a ver vos vas a tener 4 valores. Vos Decís: Haces X Sol entre esos 4 valores.
+
+939
+01:46:44.830 --> 01:46:50.979
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: No. ¿qué es parecido a lo que hicimos antes del la clave no aleatoria, Pero
+
+940
+01:46:52.190 --> 01:46:54.269
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: no sé cómo pasar eso hasta acá.
+
+941
+01:46:59.800 --> 01:47:06.939
+Pablo Eduardo Abad: Estoy tratando de ver si con esos datos se me ocurre un ataque. O sea, creo que va a ser inconclusivo. Justo con eso? Con ese par de mensajes.
+
+942
+01:47:07.160 --> 01:47:09.100
+Pablo Eduardo Abad: Sí,
+
+943
+01:47:09.720 --> 01:47:16.709
+Pablo Eduardo Abad: no, no, No se me ocurre que lleguemos a buen puerto con con eso. La idea es esa y que generar los vectores. Justo con esos 2
+
+944
+01:47:17.090 --> 01:47:20.980
+Pablo Eduardo Abad: ahora rápido, no se me ocurre por lo menos una forma de ganar la prueba.
+
+945
+01:47:24.290 --> 01:47:27.330
+Pablo Eduardo Abad: Porque a ver, porque si se elige el primer vector.
+
+946
+01:47:27.710 --> 01:47:37.930
+Pablo Eduardo Abad: nosotros lo que vamos a tener son distintos mensajes que van a representar los primeros bits
+
+947
+01:47:38.580 --> 01:47:44.509
+Pablo Eduardo Abad: de, o sea, el primero va a ser el primer bit de la secuencia invertido. El segundo mensaje va a ser
+
+948
+01:47:45.010 --> 01:47:56.990
+Pablo Eduardo Abad: el primer y segundo bit de la secuencia invertido, y así sucesivamente. Y si se elige el segundo vector, vamos a tener el primer bit de la secuencia segundatoria, o los primeros 2 bits en el segundo mensaje, los primeros 3 bits en el tercero.
+
+949
+01:47:57.840 --> 01:48:00.509
+Pablo Eduardo Abad: Si lo miro desde el sé que recibe.
+
+950
+01:48:00.670 --> 01:48:04.330
+Pablo Eduardo Abad: Digo, cada mensaje va a ser prefijo del anterior en ambos casos.
+
+951
+01:48:06.880 --> 01:48:16.279
+Pablo Eduardo Abad: y lo que voy a recibir en el fondo, va a ser un vector o el vector invertido de eso. Pero como no puedo decir nada sobre la secuencia G porque es aleatoria.
+
+952
+01:48:17.740 --> 01:48:20.180
+Pablo Eduardo Abad: No logro encontrar algo para discernir.
+
+953
+01:48:20.350 --> 01:48:26.829
+Pablo Eduardo Abad: o sea, la la la idea de buscar mensajes así está bien, pero Bueno, es justo sobre eso. Me parece que no.
+
+954
+01:48:27.040 --> 01:48:28.439
+Pablo Eduardo Abad: No se me ocurre nada.
+
+955
+01:48:28.750 --> 01:48:39.979
+Pablo Eduardo Abad: No los voy a torturar en la práctica. Vamos a hacer algunos para que ganen, pero digo, la no hicieron nunca un atacante. Así que de hecho, me sorprendió bastante el el que te hayas animado a tirar algo Joaquín
+
+956
+01:48:40.080 --> 01:48:43.370
+Pablo Eduardo Abad: buenísimo. No, no hay, no hay malas respuestas.
+
+957
+01:48:43.560 --> 01:48:49.780
+Pablo Eduardo Abad: A veces crear un atacante empieza así. O sea, 1 tiene que explorar tantear, frustrarse, probar por otro camino.
+
+958
+01:48:50.290 --> 01:48:56.700
+Pablo Eduardo Abad: Una solución fácil para esto sería ésta, vamos a generar 2 victorias.
+
+959
+01:48:57.380 --> 01:49:02.299
+Pablo Eduardo Abad: Sí, con 2 mensajes, cada 1, nada más. El primero va a tener los 2 mensajes iguales.
+
+960
+01:49:02.490 --> 01:49:05.609
+Pablo Eduardo Abad: El segundo va a tener los 2 mensajes distintos. Solo eso.
+
+961
+01:49:07.760 --> 01:49:15.660
+Pablo Eduardo Abad: Porque miren, esta es la segunda parte la que les decía. A después de emitir estos 2, va a emitir, va a recibir 2 mensajes cifrados.
+
+962
+01:49:16.370 --> 01:49:20.240
+Pablo Eduardo Abad: ¿qué van a ser o estos 2 cifrados o estos 2 cifrados?
+
+963
+01:49:21.210 --> 01:49:22.160
+Pablo Eduardo Abad: Sí.
+
+964
+01:49:23.890 --> 01:49:28.830
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí, si te llega 1 que seamos, Sí.
+
+965
+01:49:28.830 --> 01:49:29.610
+Pablo Eduardo Abad: Cómo.
+
+966
+01:49:29.980 --> 01:49:31.270
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Si te llegan
+
+967
+01:49:31.380 --> 01:49:35.139
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: 2 mensajes iguales, va a ser el 0. Y si te llegan 2 mensajes distintos del 1.
+
+968
+01:49:35.140 --> 01:49:42.179
+Pablo Eduardo Abad: Exacto. Fíjense, yo nunca voy a saber la clave. Estos mensajes van a aparecer una secuencia aleatoria para mí,
+
+969
+01:49:42.320 --> 01:49:47.040
+Pablo Eduardo Abad: pero si se eligió el primer vector, vamos a estar cifrando el mismo mensaje con la misma clave.
+
+970
+01:49:47.790 --> 01:49:52.879
+Pablo Eduardo Abad: o sea, va a ser un sor Dey. Este mensaje con una clave rara
+
+971
+01:49:53.530 --> 01:49:59.659
+Pablo Eduardo Abad: y el otro va a ser un sor del mismo mensaje con la misma clave, va a dar el mismo resultado. Si C, 1 y C 2 son iguales.
+
+972
+01:50:00.530 --> 01:50:02.060
+Pablo Eduardo Abad: es porque era este vector.
+
+973
+01:50:02.420 --> 01:50:10.480
+Pablo Eduardo Abad: En cambio, si se eligió este vector, el primer valor va a ser igual, pero cuando se cifre, este va a ser otra cosa.
+
+974
+01:50:11.450 --> 01:50:17.519
+Pablo Eduardo Abad: Entonces, fíjense yo ahora punto de vista del algoritmo recibo según 1 del C, 2, Tengo una forma de discriminarlo.
+
+975
+01:50:17.860 --> 01:50:22.099
+Pablo Eduardo Abad: porque digo, si pasa esto si, según dice 2,
+
+976
+01:50:23.260 --> 01:50:30.110
+Pablo Eduardo Abad: lo que hacíamos con lo Exhort, no va a ser el sorbe entre los mensajes. Si los 2 mensajes eran iguales, este sor vale 0,
+
+977
+01:50:30.430 --> 01:50:32.779
+Pablo Eduardo Abad: si eran distintos, va a valer cualquier otra cosa.
+
+978
+01:50:33.170 --> 01:50:34.170
+Pablo Eduardo Abad: Entonces.
+
+979
+01:50:34.380 --> 01:50:39.870
+Pablo Eduardo Abad: si hago el sol entre los 2 textos y frases, y me da 0, Digo, era mi primera lista. Si no era la segunda.
+
+980
+01:50:41.830 --> 01:50:45.720
+Pablo Eduardo Abad: Con este algoritmo, estamos en un caso súper borde. Gana siempre el atacante.
+
+981
+01:50:46.560 --> 01:50:48.130
+Pablo Eduardo Abad: Ganamos siempre la prueba.
+
+982
+01:50:48.770 --> 01:50:50.329
+TOMÁS PINAUSIG CASTILLO: Una pregunta. Paulo.
+
+983
+01:50:50.650 --> 01:50:51.380
+Pablo Eduardo Abad: Sí.
+
+984
+01:50:53.080 --> 01:51:05.330
+TOMÁS PINAUSIG CASTILLO: Con este algoritmo, o sea, ganaste la prueba. Pero si sos realmente el atacante, extraes alguna información más allá de darte cuenta que están usando la misma clave para todos los mensajes.
+
+985
+01:51:07.990 --> 01:51:18.530
+Pablo Eduardo Abad: A ver el extraer la la información depende mucho del contexto, no porque acá estamos en el mejor escenario donde el atacante genera los mensajes ya conoce los mensajes a priori.
+
+986
+01:51:18.790 --> 01:51:29.589
+Pablo Eduardo Abad: Sí, pero esto es, Te voy a dar el caso más básico en un escenario donde ponerle. Esto es una transmisión donde hay muchos mensajes y se van cifrando. No sé 1 atrás del otro, pero siempre con la misma clave
+
+987
+01:51:30.160 --> 01:51:34.279
+Pablo Eduardo Abad: mínimo. Lo que te está diciendo es que el atacante puede saber si 2 mensajes se repiten.
+
+988
+01:51:37.400 --> 01:51:46.750
+Pablo Eduardo Abad: Imagínate, por ejemplo, no sé, un un sistema que trata está transmitiendo, No sé la temperatura y por alguna razón, la temperatura, algo que es súper sensible y hay que proteger, ¿no?
+
+989
+01:51:46.870 --> 01:52:02.169
+Pablo Eduardo Abad: Este. No sé en grados Celsius con un dígito de cosas, el atacante tal vez no pueda recuperar la temperatura. Tal vez sí, pero así le va a ser trivial. Si intercepta varios mensajes, entender que la temperatura de ahora es la misma que había, No sé, hace 15 min.
+
+990
+01:52:04.620 --> 01:52:09.379
+Pablo Eduardo Abad: Sí, ahí ya pudo extraer información, depende mucho del contexto. Si eso le sirve o no al atacante.
+
+991
+01:52:10.740 --> 01:52:15.790
+Pablo Eduardo Abad: pero pero acá es donde es muy difícil cuando estás desarrollando un sistema, entender
+
+992
+01:52:16.060 --> 01:52:26.510
+Pablo Eduardo Abad: cuando a un atacante le sirve o no la información, entonces nosotros queremos criptosistemas que nos den como una garantía muy sólida de que no va a haber filtrado de información de ningún tipo.
+
+993
+01:52:28.260 --> 01:52:33.020
+Pablo Eduardo Abad: Entonces lo lo que preguntas es muy pertinente, porque una cosa es que haya
+
+994
+01:52:33.470 --> 01:52:38.700
+Pablo Eduardo Abad: una debilidad teórica, o sea, que en el marco teórica, podemos decir esto no cumple la propiedad.
+
+995
+01:52:39.420 --> 01:52:45.500
+Pablo Eduardo Abad: no es trivial explotarla después, y es más artesanal todavía explotarlo. El problema es que si esto existe.
+
+996
+01:52:46.330 --> 01:52:52.140
+Pablo Eduardo Abad: El ataque es muy plausible y si es muy plausible, es un tema de intereses
+
+997
+01:52:52.430 --> 01:52:58.779
+Pablo Eduardo Abad: Viste si estás protegiendo este la tarea para alguna de las materias de la facu, debe estar re seguro
+
+998
+01:52:59.300 --> 01:53:05.100
+Pablo Eduardo Abad: si estás protegiendo la cuenta bancaria de una corporación que tiene billones de dólares, y yo no la usaría.
+
+999
+01:53:06.430 --> 01:53:11.619
+Pablo Eduardo Abad: En general, siempre es un tema de intereses, viste porque cuanto más
+
+1000
+01:53:12.330 --> 01:53:16.449
+Pablo Eduardo Abad: este sensible sea un filtrar información
+
+1001
+01:53:16.630 --> 01:53:26.319
+Pablo Eduardo Abad: más tenés que que ir. Entonces, como es muy difícil. Si vos construís un sistema terminas no sabiendo para qué se va a usar, o empieza para algo trivial. Y después alguien te lo usa para algo
+
+1002
+01:53:26.560 --> 01:53:34.430
+Pablo Eduardo Abad: este más más sensible. Las funciones que usamos en el desarrollo real de sistemas
+
+1003
+01:53:34.580 --> 01:53:41.099
+Pablo Eduardo Abad: tienen que pasar estas pruebas para que no tenga que ser un uy, no para este sistema. Lo tengo que clasificar en usarlo para cosas tontas.
+
+1004
+01:53:41.370 --> 01:53:46.930
+Pablo Eduardo Abad: Este y por favor, no la uses para cosas complicadas porque por ahí alguien lo rompe. Si le dedica mucho tiempo.
+
+1005
+01:53:47.870 --> 01:53:56.499
+Pablo Eduardo Abad: entonces queremos funciones que sean todo terreno para no tener que hacer un Ph, un doctorado para entender si la puedo usar o no injusta en el sistema que estoy haciendo
+
+1006
+01:54:00.530 --> 01:54:06.480
+Pablo Eduardo Abad: algo súper interesante de esta prueba. Sí, Acuérdense que esto no es un único cripto sistema ahí,
+
+1007
+01:54:07.590 --> 01:54:18.350
+Pablo Eduardo Abad: tanto escrito. Sistemas como funciones que se nos ocurran no es toda familia de criptosistemas que se llaman de flujo, y este atacante en ningún lugar hace ninguna asunción
+
+1008
+01:54:19.200 --> 01:54:20.909
+Pablo Eduardo Abad: sobre la función G.
+
+1009
+01:54:21.090 --> 01:54:29.279
+Pablo Eduardo Abad: Este ataque en particular es genérico. Lo que nos está diciendo no es el criptosistema de flujo pepito.
+
+1010
+01:54:29.580 --> 01:54:33.429
+Pablo Eduardo Abad: No pasa la prueba de Moore. Lo que se está diciendo es
+
+1011
+01:54:33.720 --> 01:54:40.640
+Pablo Eduardo Abad: ningún cripto sistema de flujo que tenga esta estructura, pasa la prueba mool.
+
+1012
+01:54:44.350 --> 01:54:53.330
+Pablo Eduardo Abad: Y eso es un problema, porque sacamos 2 de las limitaciones del one time. Par genial, pero
+
+1013
+01:54:54.290 --> 01:54:56.019
+Pablo Eduardo Abad: no resolvimos el problema.
+
+1014
+01:54:56.380 --> 01:54:57.340
+Pablo Eduardo Abad: ¿cómo
+
+1015
+01:54:58.870 --> 01:55:05.279
+Pablo Eduardo Abad: sigue siendo muy, muy impractico decir ya si te voy a mandar 10 mensajes, tenemos que llenar 10 claves distintas.
+
+1016
+01:55:05.670 --> 01:55:09.619
+Pablo Eduardo Abad: Y si te quiero mandar el 11, no puedo. Ya no es seguro, porque si gastamos en.
+
+1017
+01:55:09.620 --> 01:55:10.760
+NICOLÁS CANZONIERI: Profe alguna pregunta.
+
+1018
+01:55:12.000 --> 01:55:12.530
+Pablo Eduardo Abad: Sí.
+
+1019
+01:55:12.530 --> 01:55:21.180
+NICOLÁS CANZONIERI: Una pregunta. Esto tiene algo que ver con que haya una relación inyectativa entre mensaje y encriptación o
+
+1020
+01:55:21.790 --> 01:55:22.800
+NICOLÁS CANZONIERI: esta debilidad en los.
+
+1021
+01:55:22.800 --> 01:55:33.380
+Pablo Eduardo Abad: Ah, hay una relación indirecta, Sí,
+
+1022
+01:55:35.280 --> 01:55:40.460
+Pablo Eduardo Abad: tiene Tiene que ver con esto. Es Es mucho más fuerte que inyectiva. Es si
+
+1023
+01:55:41.150 --> 01:55:46.640
+Pablo Eduardo Abad: si tus conjuntos de texto, plano y cifrado son equivalentes en cantidad de números.
+
+1024
+01:55:46.970 --> 01:55:49.349
+Pablo Eduardo Abad: Sí, la función
+
+1025
+01:55:49.510 --> 01:55:54.879
+Pablo Eduardo Abad: por consecuencia de cantidad de elementos de cada conjunto no sólo va a ser inyectativa, va a ser directiva.
+
+1026
+01:55:55.810 --> 01:55:56.330
+NICOLÁS CANZONIERI: Claro.
+
+1027
+01:55:56.330 --> 01:55:59.710
+Pablo Eduardo Abad: Vos? ¿te acuerdas que tenés que volver de forma no ambigua.
+
+1028
+01:56:01.520 --> 01:56:04.350
+NICOLÁS CANZONIERI: Sí, sí, O sea, existe una función inversa de por sí.
+
+1029
+01:56:04.920 --> 01:56:13.299
+Pablo Eduardo Abad: Entonces la la inyectividad es la parte del problema. En concreto, te estás adelantando un segundo, pero sí
+
+1030
+01:56:14.210 --> 01:56:22.900
+Pablo Eduardo Abad: la La conclusión más importante de que esta prueba aplica a todos. Cuando la analizamos bien, por ese lado, si el problema grande es.
+
+1031
+01:56:25.090 --> 01:56:31.679
+Pablo Eduardo Abad: estas funciones son determinísticas, o sea, mapean si quieren un texto cifrado con una clave, siempre al mismo lugar.
+
+1032
+01:56:32.460 --> 01:56:35.080
+Pablo Eduardo Abad: Y como lo mapean siempre al mismo lugar
+
+1033
+01:56:35.620 --> 01:56:39.399
+Pablo Eduardo Abad: ocurren estas cosas. Nosotros podemos entender si el mismo mensaje
+
+1034
+01:56:39.890 --> 01:56:43.900
+Pablo Eduardo Abad: aparece 2 veces porque donde aparcados veces se va a cifrar a lo mismo.
+
+1035
+01:56:44.380 --> 01:56:48.719
+Pablo Eduardo Abad: La única forma de saltar eso es pensar en
+
+1036
+01:56:48.880 --> 01:56:51.770
+Pablo Eduardo Abad: funciones de cifrado que no sean determinísticas.
+
+1037
+01:56:55.090 --> 01:57:04.280
+Pablo Eduardo Abad: que se diría que la función de cifrado no sea determinística que si yo cifro el mismo mensaje con la misma clave, varias veces, obtenga distintos valores.
+
+1038
+01:57:05.840 --> 01:57:08.000
+Pablo Eduardo Abad: mientras yo cifré
+
+1039
+01:57:08.760 --> 01:57:16.139
+Pablo Eduardo Abad: mismo mensaje con la misma clave y obtenga el mismo valor. Esta prueba se puede generalizar para cualquier criptosistema, incluso los que no son de flujo?
+
+1040
+01:57:18.650 --> 01:57:20.510
+Pablo Eduardo Abad: ¿sí? Y esta es
+
+1041
+01:57:21.050 --> 01:57:27.390
+Pablo Eduardo Abad: siempre digo: si se tienen que llevar pocos conceptos teóricos de la materia. Este es 1 de los súper importantes
+
+1042
+01:57:27.840 --> 01:57:35.690
+Pablo Eduardo Abad: en un sistema real. No pueden construir seguridad en serio a nivel criptográfico si están usando funciones determinadas.
+
+1043
+01:57:37.170 --> 01:57:47.139
+Pablo Eduardo Abad: Sí, y vamos a ver que hay hay bloques más básicos que los criptosistemas que pueden actuar como criptosistemas, pero son determinísticos, y es un error de seguridad
+
+1044
+01:57:47.340 --> 01:57:49.809
+Pablo Eduardo Abad: que ha costado, me diría
+
+1045
+01:57:50.300 --> 01:57:55.320
+Pablo Eduardo Abad: miles de 1 000 000 de dólares en la historia, en problemas de seguridad y y robos.
+
+1046
+01:57:55.480 --> 01:57:58.210
+Pablo Eduardo Abad: Este casualmente por por caer en esto
+
+1047
+01:57:58.850 --> 01:58:04.820
+Pablo Eduardo Abad: no hay forma de construir seguridad ya en el mundo de esta el mundo real.
+
+1048
+01:58:04.970 --> 01:58:17.729
+Pablo Eduardo Abad: Si las funciones de si si necesitamos criptosistemas y las funciones de esos criptosistemas son determinísticos donde vean una función deterministica, falta algo, o sea, si esa es la seguridad, tenemos un problemón.
+
+1049
+01:58:19.140 --> 01:58:20.829
+Pablo Eduardo Abad: Así que acuérdense eso
+
+1050
+01:58:21.140 --> 01:58:26.599
+Pablo Eduardo Abad: sí. ¿y qué significa? Bueno, a partir de ahora, todo lo que veamos va a ser no determinístico
+
+1051
+01:58:31.330 --> 01:58:40.340
+Pablo Eduardo Abad: ¿Qué significa esto? Porque todo lo que vimos hasta ahora es determístico. O sea, es como una y otra vez todo lo que vimos nos sirve. Tiramos toda la basura. Y empezamos de vuelta.
+
+1052
+01:58:40.910 --> 01:58:44.030
+Pablo Eduardo Abad: no vamos a embarcar lo que tenemos.
+
+1053
+01:58:45.990 --> 01:59:01.239
+Pablo Eduardo Abad: Sí, y acostumbrémonos porque esta es la forma en la que se va construyendo, encontramos un problema nuevo. Si en este problema tiene como 50 años, bueno, empachamos lo que tenemos de la mejor forma posible para ver si podemos reutilizar lo que lo que sabemos.
+
+1054
+01:59:02.080 --> 01:59:08.900
+Pablo Eduardo Abad: este evitando ese problema en particular. Entonces, si tenemos criptosistemas de flujo que parecen ser muy buenos
+
+1055
+01:59:09.870 --> 01:59:13.310
+Pablo Eduardo Abad: salvo que reutilicemos la clave. ¿cómo la podemos en marchar?
+
+1056
+01:59:13.810 --> 01:59:22.559
+Pablo Eduardo Abad: Bueno, vamos a introducir un recurso que nos va a acompañar por el resto de de de la materia y criptografía, que son los vectores de inicialización.
+
+1057
+01:59:23.030 --> 01:59:31.719
+Pablo Eduardo Abad: Sí, vamos a empe. Vamos a escuchar hablar de y vez después vamos a escuchar hablar de nonce, que es un concepto parecido. Pero cuando escuchen ver esto. Piensen en
+
+1058
+01:59:32.020 --> 01:59:36.990
+Pablo Eduardo Abad: una secuencia arbitraria de bits seleccionado de forma aleatoria.
+
+1059
+01:59:40.180 --> 01:59:43.080
+Pablo Eduardo Abad: Es eso cuando veamos un vector de inicialización.
+
+1060
+01:59:43.760 --> 01:59:48.100
+Pablo Eduardo Abad: Según lo que estemos hablando, nos dirán, es de tal tamaño. Es una secuencia de bits aleatoria.
+
+1061
+01:59:49.940 --> 02:00:00.449
+Pablo Eduardo Abad: ¿cuál es la diferencia entre un I B y una clave, por ejemplo, que el Ibe es información pública, o sea, un atacante. Cuando lo analicemos. Si hay un nivel involucrado, tiene acceso al Ibex.
+
+1062
+02:00:03.270 --> 02:00:05.799
+Pablo Eduardo Abad: Sí, esa es la única diferencia conceptual.
+
+1063
+02:00:06.450 --> 02:00:20.830
+Pablo Eduardo Abad: Pero para que usamos los Ibes casualmente para introducir el no determinismo que nos va a dejar reutilizar la clave, ¿sí? Y con lo general pseudo aleatorios, la forma es súper ingenua, súper simple y súper efectiva
+
+1064
+02:00:21.200 --> 02:00:30.230
+Pablo Eduardo Abad: que es yo voy a usar siempre la misma clave. Y yo sé que tengo una función G, que si le doy la misma semilla, me genera la misma secuencia como evito eso?
+
+1065
+02:00:31.020 --> 02:00:36.979
+Pablo Eduardo Abad: Bueno, en vez de usar la clave como semilla, lo que hago es antes de cifrar cada mensaje.
+
+1066
+02:00:37.190 --> 02:00:42.290
+Pablo Eduardo Abad: Vayamos a un segundo abajo a lo que es modelo sincronizado. Si yo voy a cifrar un mensaje
+
+1067
+02:00:42.680 --> 02:00:46.989
+Pablo Eduardo Abad: en vez de usar K como semilla, qué hago? Me genera una secuencia aleatoria?
+
+1068
+02:00:47.380 --> 02:00:48.270
+Pablo Eduardo Abad: Sí,
+
+1069
+02:00:49.410 --> 02:00:57.219
+Pablo Eduardo Abad: este vive 0, la mezclo con la clave a un sórbita vida entre esa secuencia y la clave. Pónganle. Y eso como semilla.
+
+1070
+02:00:59.500 --> 02:01:03.039
+Pablo Eduardo Abad: Entonces ¿eso qué hace genera una secuencia? Y con eso cifra un mensaje
+
+1071
+02:01:03.300 --> 02:01:10.379
+Pablo Eduardo Abad: Supóngase que quiero cifrar con la misma clave. Y esto que acabamos en una es el mismo mensaje. Tiene la lo mismo que me 1.
+
+1072
+02:01:10.500 --> 02:01:11.590
+Pablo Eduardo Abad: ¿qué ocurre?
+
+1073
+02:01:12.470 --> 02:01:20.169
+Pablo Eduardo Abad: Voy a generar otro vector de inicialización va a ser una secuencia aleatoria distinta, porque elijo cada vez aleatoriamente.
+
+1074
+02:01:21.110 --> 02:01:22.250
+Pablo Eduardo Abad: Entonces.
+
+1075
+02:01:22.580 --> 02:01:30.520
+Pablo Eduardo Abad: usa la misma clave, pero como ahora la voy a mezclar Vita Vit con otra secuencia aleatoria. La semilla del generador es distinta.
+
+1076
+02:01:30.860 --> 02:01:34.350
+Pablo Eduardo Abad: Por lo tanto, la secuencia que generamos es distinta
+
+1077
+02:01:34.610 --> 02:01:38.359
+Pablo Eduardo Abad: y, por lo tanto, el texto cifrado va a ser distinto.
+
+1078
+02:01:38.890 --> 02:01:43.620
+Pablo Eduardo Abad: Entonces, fíjense que logro, el misma clave
+
+1079
+02:01:44.200 --> 02:01:48.570
+Pablo Eduardo Abad: mismo mensaje: supóngase que mesero y m 1 son iguales. Son.
+
+1080
+02:01:48.750 --> 02:01:51.389
+Pablo Eduardo Abad: o sea, tienen son vita vit iguales.
+
+1081
+02:01:51.880 --> 02:01:56.470
+Pablo Eduardo Abad: se va a mezclar con un con una secuencia generada distinta.
+
+1082
+02:01:56.590 --> 02:01:58.340
+Pablo Eduardo Abad: entonces la salida va a ser distinta.
+
+1083
+02:01:58.450 --> 02:02:05.800
+Pablo Eduardo Abad: Yo podría tomar 1 000 veces el mismo mensaje, cifrarlo con la misma clave, y voy a tener 1 000 textos cifrados distintos.
+
+1084
+02:02:10.240 --> 02:02:16.240
+Pablo Eduardo Abad: Magia, lo arreglamos gratis. Prácticamente, bueno, no gratis. Hay un catch
+
+1085
+02:02:17.490 --> 02:02:23.419
+Pablo Eduardo Abad: si cifro información, es porque en algún momento la voy a querer recuperar. La voy a querer descifrar. No
+
+1086
+02:02:23.750 --> 02:02:28.860
+Pablo Eduardo Abad: supóngase que yo tengo el resultado de haber cifrado este bloque msero.
+
+1087
+02:02:30.020 --> 02:02:38.060
+Pablo Eduardo Abad: cómo ¿Cómo harían en el futuro para poder recuperar este bloque? Yo tengo un C 0 que salió del M 0?
+
+1088
+02:02:38.630 --> 02:02:41.680
+Pablo Eduardo Abad: ¿qué tendría que hacer para recuperar, para descifrar ese bloque.
+
+1089
+02:02:42.430 --> 02:02:43.090
+TOMÁS PINAUSIG CASTILLO: O sea.
+
+1090
+02:02:43.090 --> 02:02:43.610
+Pablo Eduardo Abad: No, no.
+
+1091
+02:02:43.610 --> 02:02:44.500
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Vale, se acabó.
+
+1092
+02:02:44.500 --> 02:02:45.270
+TOMÁS PINAUSIG CASTILLO: Bien.
+
+1093
+02:02:45.970 --> 02:02:46.750
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Son un enfermero.
+
+1094
+02:02:46.750 --> 02:02:51.179
+Pablo Eduardo Abad: Claro a ver para hablar juntos. No, no entendí.
+
+1095
+02:02:52.750 --> 02:02:53.770
+TOMÁS PINAUSIG CASTILLO: Dijimos, 10 000.
+
+1096
+02:02:54.220 --> 02:02:54.770
+TOMÁS PINAUSIG CASTILLO: Mhm.
+
+1097
+02:02:55.300 --> 02:02:56.629
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Todavía hay que sacar el Ibex.
+
+1098
+02:02:59.040 --> 02:03:03.360
+Pablo Eduardo Abad: Hay que sacar el Ibe que sería sacar el ibe adivinarlo.
+
+1099
+02:03:03.890 --> 02:03:05.989
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Desaplicarlo de de la.
+
+1100
+02:03:05.990 --> 02:03:08.919
+Pablo Eduardo Abad: Des aplicar lo que dice es aplicar. Bueno, bien, es
+
+1101
+02:03:09.300 --> 02:03:13.069
+Pablo Eduardo Abad: es algo así. Miren, si lo miramos para atrás, yo que necesito para recuperar
+
+1102
+02:03:13.200 --> 02:03:15.980
+Pablo Eduardo Abad: el texto, necesito reconstruir esta misma secuencia.
+
+1103
+02:03:17.880 --> 02:03:22.620
+Pablo Eduardo Abad: Si voy a tener el texto cifrado, si yo le hago un short con la misma secuencia recupero el mensaje
+
+1104
+02:03:23.040 --> 02:03:26.679
+Pablo Eduardo Abad: para recuperar esta misma secuencia. Yo necesito la misma semilla en G.
+
+1105
+02:03:27.210 --> 02:03:36.310
+Pablo Eduardo Abad: Y para dar la misma semilla. ¿qué necesito? La clave que la tendría? Necesito el nivel que se usó para ese mensaje en particular no es generar un nivel nuevo al azar.
+
+1106
+02:03:36.540 --> 02:03:40.490
+Pablo Eduardo Abad: Entonces, ¿qué consecuencia tiene este no determinismo en particular
+
+1107
+02:03:41.760 --> 02:03:55.769
+Pablo Eduardo Abad: que, como yo, necesito el Iben para recuperar el mensaje. Si lo que llamamos el texto cifrado. La salida de la función no va a ser solamente el bloque correspondiente al mensaje. Tenemos que meter el Ibe también
+
+1108
+02:03:56.140 --> 02:03:57.930
+Pablo Eduardo Abad: como parte del texto cifrado.
+
+1109
+02:04:00.890 --> 02:04:07.839
+Pablo Eduardo Abad: Entonces, ¿qué está ocurriendo? Que es necesario para romper esta simetría de tamaño de conjuntos de entradas salidas
+
+1110
+02:04:07.980 --> 02:04:11.059
+Pablo Eduardo Abad: yo por ahí, voy a estar trabajando en un espacio
+
+1111
+02:04:11.380 --> 02:04:15.249
+Pablo Eduardo Abad: de posibles textos cifrados, que es mucho más grande que el de mensajes.
+
+1112
+02:04:15.760 --> 02:04:23.370
+Pablo Eduardo Abad: porque cuando cifro un mensaje de no sé de de 100 Byte, le voy a agregar 16 Byte que van a ser el I B a la salida.
+
+1113
+02:04:24.520 --> 02:04:30.260
+Pablo Eduardo Abad: ¿para qué? Para el que quiera descifrarlo? Tengo una forma de recuperar el nivel que se usó en ese momento.
+
+1114
+02:04:31.770 --> 02:04:36.190
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Esto se está pareciendo sospechosamente cada vez más a clave pública, a clave privada.
+
+1115
+02:04:38.010 --> 02:04:44.869
+Pablo Eduardo Abad: Todavía no lo vamos a ver en 2 clases: el concepto de clave pública y privada, pero todavía no, porque
+
+1116
+02:04:45.140 --> 02:04:54.430
+Pablo Eduardo Abad: clave pública y privada. Me adelanto. Van a Van a ser criptosistemas que usan 2 claves distintas, y las claves son información sensible privada, siempre acá en y B
+
+1117
+02:04:55.100 --> 02:04:59.019
+Pablo Eduardo Abad: es parte del mensaje cifrado. Lo publicamos en Internet, se lo damos a todo el mundo.
+
+1118
+02:05:01.290 --> 02:05:09.419
+Pablo Eduardo Abad: Entonces no importa si no saben qué es clave pública privada. Después le vamos a dar conceptualmente. Es distinto
+
+1119
+02:05:10.210 --> 02:05:15.240
+Pablo Eduardo Abad: E en ese sentido, solo para
+
+1120
+02:05:15.420 --> 02:05:24.809
+Pablo Eduardo Abad: porque cuando encaremos el tema. Vamos a encararlo desde otro lado, pero entendieron la idea. Ahora, esto
+
+1121
+02:05:27.550 --> 02:05:33.900
+Pablo Eduardo Abad: hay varias formas de aplicar. Esto no es que haya una única receta, y los protocolos que usan estos suelen decir, o las funciones.
+
+1122
+02:05:34.310 --> 02:05:41.630
+Pablo Eduardo Abad: La especificación del criptosistema de flujo específico suele decir cómo entra el ebay y donde se pone y demás.
+
+1123
+02:05:42.000 --> 02:05:47.119
+Pablo Eduardo Abad: Pero en general, hay como 2 grandes escenarios.
+
+1124
+02:05:47.440 --> 02:05:53.129
+Pablo Eduardo Abad: Una es que estemos cifrando mensajes muy grandes. ¿sí? Donde
+
+1125
+02:05:54.180 --> 02:06:08.980
+Pablo Eduardo Abad: meter 16 Byte extras a cada mensaje es 0 problema. Si entonces podemos usar lo que se llama módulo sincronizado para cada mensaje, Nos creamos un I B nuevo y listo, pero hay algunas aplicaciones
+
+1126
+02:06:10.690 --> 02:06:13.680
+Pablo Eduardo Abad: que, no sé, están mandando señales. No sé cada
+
+1127
+02:06:14.060 --> 02:06:17.619
+Pablo Eduardo Abad: entonces cada décima de segundo. Pero la señal son 5 Byte.
+
+1128
+02:06:17.930 --> 02:06:23.500
+Pablo Eduardo Abad: Si esa señal cada 5 veces por cada 2 décimas de segundo.
+
+1129
+02:06:23.690 --> 02:06:34.410
+Pablo Eduardo Abad: serían 5 Byte, pero le tenemos que agregar 16. Es como que es más, ocupa más espacio. La data auxiliar, que no tiene nada que ver con la data que queremos transmitir de alguna manera
+
+1130
+02:06:35.230 --> 02:06:37.740
+Pablo Eduardo Abad: en esos casos.
+
+1131
+02:06:38.380 --> 02:06:43.850
+Pablo Eduardo Abad: La otra forma. Pero esto ya es un aspecto de ingenieril, no no afecta la seguridad de trabajar. Esto es
+
+1132
+02:06:44.470 --> 02:06:47.899
+Pablo Eduardo Abad: crear un nivel si emitir el Ibe.
+
+1133
+02:06:49.180 --> 02:06:56.180
+Pablo Eduardo Abad: pero pensar en los distintos mensajes que vamos a ver como parte de un continuo, como si fuese una secuencia.
+
+1134
+02:06:56.390 --> 02:06:57.400
+Pablo Eduardo Abad: Sí.
+
+1135
+02:06:58.070 --> 02:07:01.149
+Pablo Eduardo Abad: Y si el receptor y el emisor
+
+1136
+02:07:02.640 --> 02:07:15.659
+Pablo Eduardo Abad: recibe emiten y reciben los mensajes en un orden previsible, verlos como una secuencia. Entonces el nivel se mezcla con la clave, Como siempre generamos una secuencia, la usamos para el mensaje
+
+1137
+02:07:16.710 --> 02:07:22.079
+Pablo Eduardo Abad: el próximo mensaje. En vez de lugar de empezar de vuelta o de generar la misma secuencia, ¿Qué hacemos?
+
+1138
+02:07:22.600 --> 02:07:30.069
+Pablo Eduardo Abad: Seguimos usando el generador, pero en el lugar donde nos habíamos quedado parado. O sea, si para el primer mensaje generamos 50 000 bits
+
+1139
+02:07:30.490 --> 02:07:34.470
+Pablo Eduardo Abad: para el segundo mensaje: utilizamos los bits, 50, 0, 1 a
+
+1140
+02:07:34.610 --> 02:07:40.120
+Pablo Eduardo Abad: 100 000 y para el tercero, los bits, 100 001 a
+
+1141
+02:07:40.410 --> 02:07:43.549
+Pablo Eduardo Abad: no sé a 300 000. Ni siquiera tienen por qué ser parejos.
+
+1142
+02:07:43.720 --> 02:07:50.129
+Pablo Eduardo Abad: O sea, pensamos en la secuencia como una secuencia única que vamos generando bajo demanda.
+
+1143
+02:07:51.210 --> 02:07:56.069
+Pablo Eduardo Abad: Entonces, si yo mando un mensaje m 0 en este modo
+
+1144
+02:07:57.450 --> 02:08:08.210
+Pablo Eduardo Abad: y después mandó un mensaje en 1 que es exactamente igual si se va a mezclar con bits distintos porque no vamos a estar usando exactamente el principio de la secuencia. Vamos a estar usando lo que sigue
+
+1145
+02:08:08.430 --> 02:08:10.360
+Pablo Eduardo Abad: se consigue ese mismo no determinismo.
+
+1146
+02:08:11.820 --> 02:08:15.430
+Pablo Eduardo Abad: El usar 1 u otro tiene que ver más con la aplicación en sí.
+
+1147
+02:08:15.550 --> 02:08:18.460
+Pablo Eduardo Abad: Si la comunicación es punto a punto o es broadcast.
+
+1148
+02:08:18.840 --> 02:08:22.880
+Pablo Eduardo Abad: Si el pelo la data que estamos mandando
+
+1149
+02:08:23.240 --> 02:08:31.729
+Pablo Eduardo Abad: es de un tamaño lo suficientemente grande como para que sea despreciable agregar la la sobrecarga del Ibe en cada mensaje o no.
+
+1150
+02:08:31.900 --> 02:08:35.569
+Pablo Eduardo Abad: Los 2 modos funcionan. Los 2 modos logran el no determinismo.
+
+1151
+02:08:37.490 --> 02:08:48.790
+Pablo Eduardo Abad: Sí, bien, un criptosistema de flujo que sea
+
+1152
+02:08:50.130 --> 02:08:53.949
+Pablo Eduardo Abad: que pase la prueba de indistinguibilidad. La primera que vimos
+
+1153
+02:08:54.380 --> 02:09:04.260
+Pablo Eduardo Abad: usado de esta manera se puede demostrar que pasa la prueba mool, la prueba de reutilizar la clave, ¿sí?
+
+1154
+02:09:04.440 --> 02:09:15.219
+Pablo Eduardo Abad: Y vamos a parar Acá Hoy la clase que viene. Vamos a seguir un poco avanzando en pruebas más sofisticadas. Pero un criptosistema de este tipo con una de estas 2 construcciones
+
+1155
+02:09:15.450 --> 02:09:17.450
+Pablo Eduardo Abad: es algo que hoy ya se usa en la
+
+1156
+02:09:17.610 --> 02:09:20.530
+Pablo Eduardo Abad: en aplicaciones que que estamos usando todo el tiempo.
+
+1157
+02:09:22.480 --> 02:09:26.549
+Pablo Eduardo Abad: Sí, cuando cuando escuchen hablar de criptosistemas de flujo.
+
+1158
+02:09:26.860 --> 02:09:37.819
+Pablo Eduardo Abad: Si lo están usando en alguna librería, asegúrense que en algún lugar se habla del iber para asegurarse que sea un determinado, pero ya estamos usando algo que se puede utilizar.
+

@@ -1,0 +1,3374 @@
+WEBVTT
+
+1
+00:00:05.560 --> 00:00:13.469
+Pablo Eduardo Abad: Bien la vamos a dedicar la primera clase de hoy a
+
+2
+00:00:14.250 --> 00:00:20.299
+Pablo Eduardo Abad: hacer una primera introducción a lo que va a ser el temario de la mitad de la materia que es criptografía.
+
+3
+00:00:20.930 --> 00:00:38.690
+Pablo Eduardo Abad: Sí, hoy vamos a ver fundamentos. Vamos a ver ideas. No, no vamos a entrar en el campo formal y no vamos a entrar por ahí en cosas que que se usan en la actualidad. Vamos a aprovechar la historia de la criptografía como para ir entendiendo los conceptos básicos como una primera introducción al tema.
+
+4
+00:00:42.020 --> 00:00:51.870
+Pablo Eduardo Abad: La palabra criptografía viene del griego y significa escritura secreta, porque los orígenes de la criptografía fueron básicamente
+
+5
+00:00:53.280 --> 00:00:56.310
+Pablo Eduardo Abad: resultado de la necesidad de ocultar información.
+
+6
+00:00:56.580 --> 00:01:01.979
+Pablo Eduardo Abad: Sí, Hoy día decimos que la criptografía es un conjunto de funciones matemáticas y técnicas
+
+7
+00:01:02.590 --> 00:01:13.000
+Pablo Eduardo Abad: que nos permiten asegurar distintas propiedades sobre la información. Si en el concepto moderno de la criptografía trascendió solamente
+
+8
+00:01:13.150 --> 00:01:18.469
+Pablo Eduardo Abad: la confidencialidad. Esto de esconder información y abarca otras cosas.
+
+9
+00:01:19.210 --> 00:01:29.659
+Pablo Eduardo Abad: Pero originalmente la la idea nace con el hecho de que, desde que el hombre es hombre y se agrupa, existe la necesidad de mantener alguna cosa en secreto.
+
+10
+00:01:33.120 --> 00:01:38.540
+Pablo Eduardo Abad: Hoy la criptografía es algo que
+
+11
+00:01:39.770 --> 00:01:47.380
+Pablo Eduardo Abad: está en todos lados y a la vez está oculto en todos lados. Pero, por ejemplo, cuando hablamos de
+
+12
+00:01:47.990 --> 00:01:55.069
+Pablo Eduardo Abad: tráfico inalámbrico, como puede ser la conexión que tienen algunas computadoras ustedes con el Wi Fi o las transmisiones.
+
+13
+00:01:55.340 --> 00:02:01.260
+Pablo Eduardo Abad: desde satélites o el tráfico mismo cableado o no cableado por Internet.
+
+14
+00:02:02.170 --> 00:02:06.410
+Pablo Eduardo Abad: Hay criptografía y garantizando la seguridad de esas comunicaciones.
+
+15
+00:02:06.960 --> 00:02:22.099
+Pablo Eduardo Abad: Cuando una empresa le da una computadora, un empleado y necesita asegurarse que si la pierde o si la roban, los datos confidenciales de la empresa estén protegidos y no puedan recuperarse, Hay criptografía
+
+16
+00:02:23.750 --> 00:02:31.600
+Pablo Eduardo Abad: cuando, por ejemplo, en el Banco o en algún sistema este
+
+17
+00:02:33.220 --> 00:02:50.179
+Pablo Eduardo Abad: que requiere bastante seguridad, nos piden un segundo factor de autenticación. Probablemente esto ya no sea. No es un concepto raro y nos dan un generador de claves, o nos dicen que usamos Google auténticadito, algunas de sus aplicaciones. Hay criptografía detrás
+
+18
+00:02:51.280 --> 00:02:56.869
+Pablo Eduardo Abad: cuando nos venden un libro en formato totalmente digital
+
+19
+00:02:58.550 --> 00:03:07.089
+Pablo Eduardo Abad: en alguno de los de los dispositivos o cambiar la foto. Veo vieja en alguno de los dispositivos de los Sea readers. Por ejemplo.
+
+20
+00:03:07.320 --> 00:03:23.740
+Pablo Eduardo Abad: este o nos alquilan una película en formato totalmente digital, la protección para evitar que 1 copie esa película indiscriminadamente, porque no deja de ser algo que no es tangible, entonces es mucho más fácil de copiar. Tiene criptografía atrás
+
+21
+00:03:25.580 --> 00:03:33.209
+Pablo Eduardo Abad: cuando hablamos de contratos que se celebran de forma totalmente digital, donde ya ni siquiera hay papel.
+
+22
+00:03:33.400 --> 00:03:39.390
+Pablo Eduardo Abad: y empezamos a hablar de algo que se escucha además, que son las firmas digitales. Hay criptografía por detrás.
+
+23
+00:03:39.960 --> 00:03:46.440
+Pablo Eduardo Abad: Cuando entramos en estas polémicas de cambiar el sistema de votación y pasar al voto electrónico o voto.
+
+24
+00:03:48.160 --> 00:03:52.199
+Pablo Eduardo Abad: Con más o menos sofisticación hay criptografía detrás
+
+25
+00:03:53.470 --> 00:04:04.809
+Pablo Eduardo Abad: cuando hablamos de esta idea de dinero electrónico, como, bueno, empezó con Bitcoin, pero hoy día, en todo el ecosistema de de monedas criptográficas hay criptografía. Detrás
+
+26
+00:04:05.760 --> 00:04:09.530
+Pablo Eduardo Abad: no los quiero aburrir con muchos más temas, pero la idea de esto es
+
+27
+00:04:10.910 --> 00:04:20.600
+Pablo Eduardo Abad: fuera del mundo técnico. Casi no se habla de criptografía, pero los conceptos y las construcciones criptográficas están prácticamente todo lo que usamos todo el tiempo.
+
+28
+00:04:25.130 --> 00:04:30.820
+Pablo Eduardo Abad: Habíamos dicho que la criptografía es un conjunto de construcciones y técnicas y
+
+29
+00:04:30.930 --> 00:04:36.729
+Pablo Eduardo Abad: funciones, entonces debe haber una lista bastante grande. De hecho, la hay de distintas funciones.
+
+30
+00:04:37.080 --> 00:04:44.720
+Pablo Eduardo Abad: pero hay una en particular, que es, es la más básica y la más común, y está muy asociada también al origen.
+
+31
+00:04:45.170 --> 00:04:50.700
+Pablo Eduardo Abad: que es la construcción que llamamos criptosistema, Sí,
+
+32
+00:04:51.640 --> 00:05:00.919
+Pablo Eduardo Abad: más adelante vamos a formalizar un criptosistema, pero la la idea ahora es empezar a entender un poco de de una forma más informal e intuitiva.
+
+33
+00:05:01.500 --> 00:05:08.940
+Pablo Eduardo Abad: cómo son este tipo de construcciones y por qué nos interesa estudiarlas para que un criptosistema es.
+
+34
+00:05:09.510 --> 00:05:19.019
+Pablo Eduardo Abad: en principio, un conjunto de 2 funciones, una función que llamamos descifrado, que nos permite cifrar o encriptar
+
+35
+00:05:20.200 --> 00:05:21.750
+Pablo Eduardo Abad: un mensaje
+
+36
+00:05:22.230 --> 00:05:29.180
+Pablo Eduardo Abad: arbitrario. Un mensaje puede ser literalmente un mensaje de texto podría ser un archivo, o sea, cualquier cosa.
+
+37
+00:05:30.830 --> 00:05:37.109
+Pablo Eduardo Abad: y que no importa cómo toma un mensaje que por ahí tiene algún sentido para nosotros
+
+38
+00:05:37.580 --> 00:05:44.590
+Pablo Eduardo Abad: y lo transforma en algo que parece una cosa: mono
+
+39
+00:05:44.700 --> 00:05:49.750
+Pablo Eduardo Abad: tipeando, tocando teclas sin saber qué es lo que está escribiendo. Sí,
+
+40
+00:05:51.100 --> 00:05:59.980
+Pablo Eduardo Abad: Esa es la primera parte de un criptosistema, la primera función. Pero también hay una segunda función: la función de descifrado que nos permite tomar
+
+41
+00:06:00.970 --> 00:06:05.440
+Pablo Eduardo Abad: esa suerte de mensajes sin sentido que llamamos mensaje cifrado
+
+42
+00:06:06.920 --> 00:06:11.779
+Pablo Eduardo Abad: y pasarlo por esta función o descifrarlo y volver a recuperar el mensaje original.
+
+43
+00:06:18.320 --> 00:06:28.319
+Pablo Eduardo Abad: La función de cifrado conceptualmente, es una función de 2 parámetros. Si tiene el mensaje que queremos transformar, pero tiene también una parte
+
+44
+00:06:28.600 --> 00:06:36.740
+Pablo Eduardo Abad: que llamamos clave, Sí, en términos de conjunto, se dice que transforma un mensaje plano
+
+45
+00:06:37.070 --> 00:06:39.670
+Pablo Eduardo Abad: a través de una clave en un mensaje cifrado.
+
+46
+00:06:40.450 --> 00:06:47.510
+Pablo Eduardo Abad: ¿sí? Y en la distinta literatura que vamos a usar o en distintos papers o documentos que vean. Hay
+
+47
+00:06:47.780 --> 00:06:50.119
+Pablo Eduardo Abad: varias maneras de representar lo mismo.
+
+48
+00:06:50.850 --> 00:06:52.120
+Pablo Eduardo Abad: Donde vean
+
+49
+00:06:53.270 --> 00:07:02.360
+Pablo Eduardo Abad: que se habla de cifrado, a veces van a tener la función con la clave como subíndice y el mensaje aplicado este como parámetro.
+
+50
+00:07:04.020 --> 00:07:14.779
+Pablo Eduardo Abad: a veces van a tener un desarrollo en 2 parámetros. A veces van a usar esta anotación, que se usa más en protocolos que ins que significa que lo que está entre llaves está cifrado con la clave que se pone
+
+51
+00:07:15.200 --> 00:07:19.240
+Pablo Eduardo Abad: son todas distintas representaciones de lo mismo, pero
+
+52
+00:07:19.420 --> 00:07:27.020
+Pablo Eduardo Abad: pero ténganlo en cuenta, porque a medida que saltemos entre distintas fuentes, van a usar distintas representaciones para indicar lo mismo.
+
+53
+00:07:28.090 --> 00:07:42.600
+Pablo Eduardo Abad: ¿qué es la clave? Porque el mensaje plano es un mensaje arbitrario. El mensaje cifrado parece ser una construcción que no tiene sentido. ¿qué es la clave? Bueno, la clave, en principio, es un bloque arbitrario de información también.
+
+54
+00:07:44.200 --> 00:07:48.850
+Pablo Eduardo Abad: ¿por qué los separamos del mensaje y ¿Por qué le queremos dar un nombre especial?
+
+55
+00:07:49.410 --> 00:07:55.340
+Pablo Eduardo Abad: Porque cuando empecemos a probar especialmente aprobar más formalmente la seguridad de un sistema.
+
+56
+00:07:56.230 --> 00:08:02.150
+Pablo Eduardo Abad: siempre vamos a presuponer que lo que llamamos clave es información que está protegida.
+
+57
+00:08:02.800 --> 00:08:10.789
+Pablo Eduardo Abad: Sí, vamos a ver que en seguridad un ejercicio mental muy común para probar la seguridad de algo es
+
+58
+00:08:10.970 --> 00:08:12.989
+Pablo Eduardo Abad: ponerse en el lugar del atacante
+
+59
+00:08:13.510 --> 00:08:24.259
+Pablo Eduardo Abad: y tratar de pensar, bueno, si yo quiero romper esto, si quiero romper la propiedad que tiene. Si quiero atacar la seguridad que esto me da, que tendría que hacer, que tendría que pasar
+
+60
+00:08:24.580 --> 00:08:33.330
+Pablo Eduardo Abad: en todos esos escenarios, la única constante que va a haber es que donde aparezca algo que llamemos clave, vamos a presuponer que el atacante no la tiene
+
+61
+00:08:33.590 --> 00:08:38.869
+Pablo Eduardo Abad: y que si la cata, el atacante la consigue básicamente que mover es, se acabó la seguridad.
+
+62
+00:08:41.679 --> 00:08:50.510
+Pablo Eduardo Abad: De hecho, hay un principio que se recoge en la literatura dictada por un criptógrafo bastante famoso, Kárkov.
+
+63
+00:08:50.770 --> 00:08:58.799
+Pablo Eduardo Abad: que se conoce como el principio de quercos y dice que un criptosistema debería ser seguro, incluso si todo el sistema.
+
+64
+00:08:58.980 --> 00:09:01.679
+Pablo Eduardo Abad: o sea, todo el algoritmo, todas las funciones.
+
+65
+00:09:01.780 --> 00:09:04.830
+Pablo Eduardo Abad: todo excepto la clave, son de conocimiento público.
+
+66
+00:09:05.080 --> 00:09:15.379
+Pablo Eduardo Abad: Y esa es la forma con la que vamos a atacar esto. Y esto después a ver que en seguridad también se replica, o sea, la seguridad de un sistema cuando la pensemos.
+
+67
+00:09:15.770 --> 00:09:19.780
+Pablo Eduardo Abad: no puede depender, por ejemplo, de que el atacante no conozca el código fuente del sistema.
+
+68
+00:09:20.050 --> 00:09:24.289
+Pablo Eduardo Abad: Tenemos que asumir que el atacante eventualmente lo conoce
+
+69
+00:09:24.530 --> 00:09:27.730
+Pablo Eduardo Abad: y eso no debería poner en clave la seguridad.
+
+70
+00:09:29.930 --> 00:09:38.940
+Pablo Eduardo Abad: A esta altura por ahí. Alguno se está preguntando qué significa seguridad, qué significa que una función sea segura?
+
+71
+00:09:41.050 --> 00:09:43.329
+Pablo Eduardo Abad: ¿alguien se anima a darle una respuesta a eso.
+
+72
+00:09:43.910 --> 00:09:48.710
+Pablo Eduardo Abad: ¿qué les parece que significa? Por ejemplo, un criptosistema sea segura.
+
+73
+00:09:53.030 --> 00:09:58.979
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Que alguien que no tiene la clave no pueda descifrar el mensaje en una cantidad de tiempo razonable.
+
+74
+00:09:59.960 --> 00:10:04.220
+Pablo Eduardo Abad: Bueno, es una definición bastante elaborada que
+
+75
+00:10:04.750 --> 00:10:15.720
+Pablo Eduardo Abad: que que ataca la idea de el uso de un criptosistema. Sí, en general. Vamos a ver que este tipo de construcciones, el criptosistema en este caso y otras que vamos a ver.
+
+76
+00:10:16.190 --> 00:10:22.649
+Pablo Eduardo Abad: siempre tienen una una idea de uso. Y, en general, la seguridad es cuando no se cumple la hipótesis de esa idea.
+
+77
+00:10:23.150 --> 00:10:26.459
+Pablo Eduardo Abad: ¿cuál es la la idea de uso básico de un criptosistema.
+
+78
+00:10:26.610 --> 00:10:30.310
+Pablo Eduardo Abad: La idea de uso básico es esa. Nosotros hacemos una transformación
+
+79
+00:10:31.910 --> 00:10:36.069
+Pablo Eduardo Abad: a un texto cifrado. Y la idea es que alguien que no tenga la clave.
+
+80
+00:10:36.430 --> 00:10:39.449
+Pablo Eduardo Abad: básicamente no le pueda no pueda recuperar el mensaje
+
+81
+00:10:41.420 --> 00:10:44.270
+Pablo Eduardo Abad: y al que dé la clave sí pueda.
+
+82
+00:10:44.860 --> 00:10:48.290
+Pablo Eduardo Abad: Sí. ¿por qué? ¿cuál es la idea de atrás de un criptosistema?
+
+83
+00:10:51.890 --> 00:10:55.910
+Pablo Eduardo Abad: En el fondo resuelve el problema de controlar
+
+84
+00:10:56.400 --> 00:11:01.280
+Pablo Eduardo Abad: acceso y diseminación de información. Si Si yo tengo.
+
+85
+00:11:01.680 --> 00:11:08.319
+Pablo Eduardo Abad: sepúense que tenemos un video súper importante o un informe súper importante.
+
+86
+00:11:08.640 --> 00:11:16.229
+Pablo Eduardo Abad: Este que definitivamente solo lo pueden leer 2 o 3 personas, porque es muy comprometedor.
+
+87
+00:11:19.850 --> 00:11:28.360
+Pablo Eduardo Abad: Yo podría protegerlo. No sé. Podría borrarlo de todos lados, salvo de un pendrive y tener el pendrive metido en una caja fuerte
+
+88
+00:11:29.240 --> 00:11:31.860
+Pablo Eduardo Abad: y protegerlos físicamente.
+
+89
+00:11:31.990 --> 00:11:39.390
+Pablo Eduardo Abad: Ahora, mientras el el documento en si sea un archivo en algún lugar.
+
+90
+00:11:39.510 --> 00:11:46.819
+Pablo Eduardo Abad: o sea esté digitalizado, cualquiera que pueda leer ese archivo puede leerlo. Yo podría confiar. No sé,
+
+91
+00:11:47.350 --> 00:11:52.760
+Pablo Eduardo Abad: lo pongo en mi máquina, y solo si alguien puede acceder a mi máquina.
+
+92
+00:11:53.060 --> 00:12:12.799
+Pablo Eduardo Abad: Este podría hacerlo. Ok, es una posibilidad, pero supóngase que eventualmente tengo que compartirlo con alguien si yo lo mando por Mail. Y ya es como que empieza a perder control de quien tiene acceso, ¿no? Y la realidad después lo vamos a ver en la segunda mitad de la materia. Vamos a depender ahí de
+
+93
+00:12:13.590 --> 00:12:16.729
+Pablo Eduardo Abad: de una indirección muy grande, que es un sistema que funcione bien.
+
+94
+00:12:16.930 --> 00:12:19.799
+Pablo Eduardo Abad: que no es nada trivial de garantizar.
+
+95
+00:12:20.040 --> 00:12:25.149
+Pablo Eduardo Abad: Acá Estamos yendo a la médula del problema al bloque más chico que trata de solucionar eso.
+
+96
+00:12:27.570 --> 00:12:28.650
+Pablo Eduardo Abad: Entonces.
+
+97
+00:12:29.020 --> 00:12:35.199
+Pablo Eduardo Abad: ¿cuál es la idea? Si yo tengo un mensaje de tamaño arbitrario, puede ser muy complicado. Una solución general para protegerlo.
+
+98
+00:12:36.040 --> 00:12:45.169
+Pablo Eduardo Abad: Entonces lo que yo hago con un criptosistema es de alguna manera, patear el problema. Yo puedo proteger a ese mismo sistema cifrándolo con una clave.
+
+99
+00:12:46.060 --> 00:12:52.420
+Pablo Eduardo Abad: ¿sí? Y este mensaje cifrado. Si se cumpliese esta idea de que quien no tiene la clave
+
+100
+00:12:52.960 --> 00:12:57.489
+Pablo Eduardo Abad: no lo puede descifrar, no puede extraer el mensaje original.
+
+101
+00:12:58.570 --> 00:13:03.309
+Pablo Eduardo Abad: Yo, este mensaje cifrado lo podría poner en cualquier lado. Lo dejo en una página pública en Internet.
+
+102
+00:13:03.530 --> 00:13:05.660
+Pablo Eduardo Abad: lo mando por todos lados da lo mismo.
+
+103
+00:13:06.360 --> 00:13:07.250
+Pablo Eduardo Abad: ¿sí?
+
+104
+00:13:08.450 --> 00:13:14.510
+Pablo Eduardo Abad: Mientras esta clave esté protegida, sí.
+
+105
+00:13:16.010 --> 00:13:17.089
+Pablo Eduardo Abad: ¿qué pasa
+
+106
+00:13:17.660 --> 00:13:23.869
+Pablo Eduardo Abad: ese mismo recaudo que yo había dicho antes? Con todo el mensaje, hay que tenerlo con la clave. Yo, la clave, no la puedo mandar. No la puedo publicar.
+
+107
+00:13:24.060 --> 00:13:32.209
+Pablo Eduardo Abad: Entonces no resolvemos completo el problema. ¿pero ¿qué hacemos? Lo achicamos a un tamaño mucho más manejable?
+
+108
+00:13:32.350 --> 00:13:37.249
+Pablo Eduardo Abad: Sí, porque en el fondo yo puedo tomar mensajes de cualquier tamaño.
+
+109
+00:13:37.440 --> 00:13:40.960
+Pablo Eduardo Abad: Sí, pero vamos a ver cuando entremos en
+
+110
+00:13:41.610 --> 00:13:47.799
+Pablo Eduardo Abad: criptosistemas y especialmente en los modernos. Las claves que voy a utilizar no tienen nada que ver con el tamaño del mensaje.
+
+111
+00:13:48.550 --> 00:13:55.540
+Pablo Eduardo Abad: Yo puedo estar cifrando terabytes de información con una clave que ocupa 128 bits
+
+112
+00:13:57.900 --> 00:14:04.809
+Pablo Eduardo Abad: y proteger 128 bits suena un poco más fácil que proteger varios terabytes de información.
+
+113
+00:14:05.340 --> 00:14:09.769
+Pablo Eduardo Abad: Sí, esa es la idea de por qué, y De ahí sale también
+
+114
+00:14:11.630 --> 00:14:15.750
+Pablo Eduardo Abad: el concepto de cuál es la seguridad que esperamos de un criptosistema
+
+115
+00:14:18.780 --> 00:14:20.790
+Pablo Eduardo Abad: alguna duda alguna pregunta Hasta Acá.
+
+116
+00:14:24.910 --> 00:14:26.140
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Por ahora. Todo Bien.
+
+117
+00:14:26.720 --> 00:14:28.110
+MARTÍN GALLARDO BERTUZZI: Programado. Por favor.
+
+118
+00:14:29.340 --> 00:14:30.410
+Pablo Eduardo Abad: Gracias.
+
+119
+00:14:31.050 --> 00:14:31.870
+Pablo Eduardo Abad: Bien.
+
+120
+00:14:36.630 --> 00:14:45.280
+Pablo Eduardo Abad: la la noción. Después vamos a formalizar la noción de seguridad porque porque tenemos que ver otras cosas que.
+
+121
+00:14:45.530 --> 00:14:53.439
+Pablo Eduardo Abad: pero quiero que se lleven 2 cosas. No el es normal. Lo que dijeron. En general, 1 piensa inmediatamente. Bueno.
+
+122
+00:14:53.890 --> 00:15:09.990
+Pablo Eduardo Abad: esto es seguro si no se puede recuperar el mensaje sin la clave. En realidad, cuando nos acerquemos más a los formalismos, a un criptosistema, le pedimos un poco más, le pedimos que no sea posible extraer ningún tipo de información a partir del texto cifrado si no se tiene la clave.
+
+123
+00:15:10.610 --> 00:15:11.620
+Pablo Eduardo Abad: ¿por qué?
+
+124
+00:15:12.190 --> 00:15:13.700
+Pablo Eduardo Abad: Y porque a veces
+
+125
+00:15:14.770 --> 00:15:29.940
+Pablo Eduardo Abad: yo tengo un documento gigante. Imagínense que el documento tiene un resumen en la primera página, tal vez a un adversario para hacer daño o conseguir una ventaja. No, no necesita todo el documento si puedes recuperar la primera página y ya está. Eso es parte del mensaje.
+
+126
+00:15:30.550 --> 00:15:43.289
+Pablo Eduardo Abad: No queremos que pueda recuperar eso. Imagínense un mensaje en el cual 2 empresas están acordando, por ejemplo, una fusión de esas multimillonarias súper secretas que van a mover acciones en la bolsa
+
+127
+00:15:43.590 --> 00:15:44.880
+Pablo Eduardo Abad: y necesitan.
+
+128
+00:15:45.380 --> 00:15:52.489
+Pablo Eduardo Abad: están están básicamente en el hanjing final donde 1 va a terminar diciendo sí, compramos o si no funcionamos, No, no nos funcionamos.
+
+129
+00:15:52.660 --> 00:15:56.269
+Pablo Eduardo Abad: Imagínense que esa comunicación alguien la está mirando
+
+130
+00:15:57.030 --> 00:16:01.219
+Pablo Eduardo Abad: para hacer algo que sería ilegal, que es invertir en función de ese resultado.
+
+131
+00:16:01.340 --> 00:16:03.860
+Pablo Eduardo Abad: Presupongamos que hay una persona
+
+132
+00:16:04.350 --> 00:16:13.370
+Pablo Eduardo Abad: por esa persona, no necesita decodificar el mensaje o parte, necesita entender si ese mensaje va a ser asertivo como positivo o negativo.
+
+133
+00:16:14.950 --> 00:16:20.960
+Pablo Eduardo Abad: Sí, Entonces, cuando cuando pensemos en un criptosistema. La idea es
+
+134
+00:16:21.070 --> 00:16:25.520
+Pablo Eduardo Abad: que la seguridad va a estar asociada, que no se puede extraer ningún tipo de información del mundo
+
+135
+00:16:25.960 --> 00:16:27.040
+Pablo Eduardo Abad: del mensaje.
+
+136
+00:16:28.450 --> 00:16:38.610
+Pablo Eduardo Abad: Sí, cuando cuando estuvimos lo la definición más formal, vamos a ver que hay
+
+137
+00:16:38.710 --> 00:16:43.319
+Pablo Eduardo Abad: con tom framework de pruebas de ataque en general. Atacar un
+
+138
+00:16:44.610 --> 00:16:48.710
+Pablo Eduardo Abad: un criptosistema o una función criptográfica
+
+139
+00:16:48.840 --> 00:17:01.120
+Pablo Eduardo Abad: tiene todo un cuerpo de conocimiento que se conoce como criptoanálisis. Hay Hay especializaciones donde criptografía se separa en criptografía, que es como el estudio de las funciones y criptoanálisis, que es el estudio de los ataques.
+
+140
+00:17:01.660 --> 00:17:10.490
+Pablo Eduardo Abad: acá Vamos a ver muy, muy, muy por arriba criptoanálisis, así como para que sepan que existe, pero es es una especialización que
+
+141
+00:17:11.150 --> 00:17:22.959
+Pablo Eduardo Abad: que qué tiene que ver más con los que trabajen hiper especializados en un entorno de muy alta seguridad, donde parte del desarrollo de esto es implica también atacarlo.
+
+142
+00:17:25.450 --> 00:17:28.120
+Pablo Eduardo Abad: Algo que que sueles decir Acá es
+
+143
+00:17:28.500 --> 00:17:38.290
+Pablo Eduardo Abad: un objetivo secundario que tenemos en la materia es que entiendan la complejidad que termina habiendo atrás de las funciones criptográficas que nosotros, como ingeniero, vamos a usar.
+
+144
+00:17:39.060 --> 00:17:50.939
+Pablo Eduardo Abad: pero que entiendan la complejidad que implican para que no se les ponga en la cabeza El voy a crear una primitiva nueva si necesita una función nueva y y entiendan de ir a buscar las que hay.
+
+145
+00:17:52.410 --> 00:17:59.710
+Pablo Eduardo Abad: El desarrollo de funciones criptográficas era un pasatiempo de prácticamente todos los ingenieros que nos recibíamos en los 80,
+
+146
+00:18:00.060 --> 00:18:07.170
+Pablo Eduardo Abad: a medida que se fue sofisticando y y fue avanzando el estado del arte de lo que es el cripto análisis. Hoy día les diría que
+
+147
+00:18:07.900 --> 00:18:11.809
+Pablo Eduardo Abad: debe haber en el planeta unas 30 o 40 personas nada más que están
+
+148
+00:18:12.340 --> 00:18:17.449
+Pablo Eduardo Abad: capacitadas para construir funciones criptográficas que sobrevivan a escrutinio público
+
+149
+00:18:18.800 --> 00:18:24.609
+Pablo Eduardo Abad: y están capacitadas por ya más de 20 años haciéndolo. Tienen cada una tiene su colección de fracasos. También
+
+150
+00:18:24.850 --> 00:18:29.070
+Pablo Eduardo Abad: es es un tema bastante complicado. Por suerte, por suerte.
+
+151
+00:18:29.320 --> 00:18:33.680
+Pablo Eduardo Abad: nosotros, como ingenieros, vamos a poder utilizar las que ya existen.
+
+152
+00:18:40.780 --> 00:18:47.550
+Pablo Eduardo Abad: Si la criptografía es de alguna manera un mecanismo para ocultar información. La realidad es que
+
+153
+00:18:48.390 --> 00:18:57.100
+Pablo Eduardo Abad: la necesidad de ocultar información existe desde siempre. Sí, aquí hay una línea de tiempo básica, Pero incluso
+
+154
+00:18:57.100 --> 00:19:08.430
+Pablo Eduardo Abad: empieza en Egipto 2 500 antes de Cristo. Pero hay algunos registros religiosos que se encontraron en algunos templos hebreos
+
+155
+00:19:08.760 --> 00:19:14.690
+Pablo Eduardo Abad: que datan casi de 5 000 antes de Cristo que se presupone eran
+
+156
+00:19:16.120 --> 00:19:32.739
+Pablo Eduardo Abad: una suerte de protocriptografía. Sí, en Egipto hay mucho más indicios de criptosistemas que se llaman de sustitución. Los vamos a dar después. Pero básicamente se basaban en escribir dándole un significado distinto a los jeroglíficos.
+
+157
+00:19:33.140 --> 00:19:40.610
+Pablo Eduardo Abad: Qué usaban ya? Acercándonos a a la época grecorromana.
+
+158
+00:19:40.850 --> 00:19:50.160
+Pablo Eduardo Abad: empiezan a aparecer usos afuera del ámbito religioso más en el ámbito civil, sí, y militar cita. La es
+
+159
+00:19:51.060 --> 00:19:55.070
+Pablo Eduardo Abad: un criptosistema de trasposición. Se basaba en
+
+160
+00:19:55.990 --> 00:20:01.190
+Pablo Eduardo Abad: tener un palo, un báculo de cierto tamaño y cierta topología
+
+161
+00:20:03.390 --> 00:20:15.180
+Pablo Eduardo Abad: enrollarlo una tira de cuero y escribir mensajes transversalmente para después desenrollar la tira. La idea era que para poder descifrarlo, se necesitaba usar el mismo báculo o 1 exactamente igual
+
+162
+00:20:15.330 --> 00:20:28.440
+Pablo Eduardo Abad: para poder enrollar la tira de la misma manera. Y era algo que se usaba básicamente para enviar información sensible entre las personas que gobernaban distintas polis griegas
+
+163
+00:20:29.290 --> 00:20:31.080
+Pablo Eduardo Abad: y
+
+164
+00:20:31.610 --> 00:20:45.639
+Pablo Eduardo Abad: Julio César tiene usos documentados de criptografía en campañas militares para coordinar ataques entre distintas unidades. Sí, hay un hay un criptosistema que de hecho se llama criptosistema de César en en su honor.
+
+165
+00:20:46.800 --> 00:20:56.000
+Pablo Eduardo Abad: Bueno, si pasamos a tiempos un poco más cercanos a los nuestros fines de.
+
+166
+00:20:58.040 --> 00:21:07.520
+Pablo Eduardo Abad: o les diría a ver a mitad de la Edad Media, empieza a aparecer algo fascinante, que es los primeros intentos documentados de romper criptosistemas
+
+167
+00:21:08.420 --> 00:21:09.570
+Pablo Eduardo Abad: y
+
+168
+00:21:10.260 --> 00:21:16.490
+Pablo Eduardo Abad: el primer el manuscrito más viejo que se conoce de ese tipo data del del 800 más o menos.
+
+169
+00:21:16.920 --> 00:21:24.819
+Pablo Eduardo Abad: Pero la realidad es que terminando la Edad Media, cuando empieza el el el renacentismo y y empiezan a proliferar
+
+170
+00:21:25.340 --> 00:21:35.439
+Pablo Eduardo Abad: época contemporánea de los newtons de los galileos, empieza a explotar. El conocimiento empieza a aparecer mucho más interés intelectual en el tema
+
+171
+00:21:35.580 --> 00:21:44.330
+Pablo Eduardo Abad: y, en particular, se crea una familia nueva de criptosistemas que sería como una generación distinta a ver si los anteriores que son los criptosistemas polialfabéticos
+
+172
+00:21:45.140 --> 00:21:52.540
+Pablo Eduardo Abad: que fueron que dominaron durante casi 400 años el el marco de la criptografía.
+
+173
+00:21:53.010 --> 00:21:55.890
+Pablo Eduardo Abad: Esa fue como la primera gran revolución
+
+174
+00:21:56.140 --> 00:22:00.800
+Pablo Eduardo Abad: sí superantigua todavía la segunda gran revolución ocurre
+
+175
+00:22:00.960 --> 00:22:03.529
+Pablo Eduardo Abad: contemporánea a la Segunda Guerra Mundial.
+
+176
+00:22:04.360 --> 00:22:06.349
+Pablo Eduardo Abad: En la Segunda Guerra Mundial
+
+177
+00:22:06.650 --> 00:22:15.730
+Pablo Eduardo Abad: se utilizó mucho la criptografía con uso bélico. Pero también es la primera guerra de gran alcance en la que tenemos evidencia de que
+
+178
+00:22:15.840 --> 00:22:20.380
+Pablo Eduardo Abad: un esfuerzo deliberado muy grande y mucha inversión
+
+179
+00:22:20.740 --> 00:22:26.329
+Pablo Eduardo Abad: en tratar de quebrar, de romper, de atacar la criptografía de los adversarios en todos los frentes
+
+180
+00:22:26.640 --> 00:22:37.319
+Pablo Eduardo Abad: y, en particular, El resultado de más importante de la guerra es la fundación de lo que hoy día llamamos la criptografía moderna, que empieza de la mano de un criptógrafo
+
+181
+00:22:37.650 --> 00:22:43.910
+Pablo Eduardo Abad: muy conocido que es Shannon por ahí alguno ha habido, vio, hay una película que salió hace poco
+
+182
+00:22:44.080 --> 00:22:47.299
+Pablo Eduardo Abad: sobre la historia de Shannon, pero ya no
+
+183
+00:22:47.430 --> 00:22:52.000
+Pablo Eduardo Abad: más allá de hacer un montón de cosas y de prácticamente desarrollar
+
+184
+00:22:52.840 --> 00:23:00.450
+Pablo Eduardo Abad: este, lo que es la la computadora y la la computación moderna
+
+185
+00:23:01.350 --> 00:23:05.890
+Pablo Eduardo Abad: funda lo que hoy conocemos como la teoría de la información, que es todo un campo
+
+186
+00:23:06.030 --> 00:23:11.509
+Pablo Eduardo Abad: de estudio matemático de la información que da origen a la criptografía moderna.
+
+187
+00:23:12.800 --> 00:23:14.850
+Pablo Eduardo Abad: Si hoy día ya
+
+188
+00:23:15.270 --> 00:23:21.820
+Pablo Eduardo Abad: 80 años después de eso, más o menos se siguen usando los fundamentos teóricos que desarrolló Shannon
+
+189
+00:23:22.330 --> 00:23:25.110
+Pablo Eduardo Abad: llevados al poder de cómputo actual. Obviamente.
+
+190
+00:23:26.390 --> 00:23:44.849
+Pablo Eduardo Abad: esa es la la historia muy rápido de la criptografía y se las cuento porque vamos a recorrer algunos sitios de la historia desde el punto de vista de cómo era la criptografía, para aprender algunos fundamentos y empezar a entender y poner el más concreto. ¿qué ¿Qué es esto de un criptograma y salir de la definición, este más
+
+191
+00:23:45.020 --> 00:23:46.210
+Pablo Eduardo Abad: más básica.
+
+192
+00:23:47.410 --> 00:23:50.269
+Pablo Eduardo Abad: El criptosistema más básico que se conoce.
+
+193
+00:23:51.640 --> 00:23:55.510
+Pablo Eduardo Abad: Se se llama criptosistema por rotación o de rotación.
+
+194
+00:23:57.530 --> 00:23:59.399
+Pablo Eduardo Abad: Es muy simple. Es.
+
+195
+00:24:00.420 --> 00:24:07.240
+Pablo Eduardo Abad: Imagínense que ustedes tienen un mensaje en cualquier lenguaje, puede ser lenguaje natural.
+
+196
+00:24:07.410 --> 00:24:12.359
+Pablo Eduardo Abad: Puede ser una secuencia de bytes, lo que sea.
+
+197
+00:24:13.500 --> 00:24:24.449
+Pablo Eduardo Abad: Vamos a hacer lenguaje natural. Porque cuando se desarrolló esto, no existían las computadoras. Así que mucha de de de la evidencia de este tipo de cosas. Era sobre mensajes en lenguaje natural, pero aplica igual.
+
+198
+00:24:24.600 --> 00:24:32.429
+Pablo Eduardo Abad: cuál es la idea? Bueno, asignémosle un orden a los símbolos a las letras que pueden comprar un mensaje.
+
+199
+00:24:33.200 --> 00:24:35.709
+Pablo Eduardo Abad: Supóngase el orden alfabético normal.
+
+200
+00:24:37.080 --> 00:24:43.499
+Pablo Eduardo Abad: un criptosistema o un cifrado por rotación, lo que hace es reemplazar cada símbolo, cada letra
+
+201
+00:24:44.720 --> 00:24:51.490
+Pablo Eduardo Abad: por la letra que está que a veces después, en ese orden.
+
+202
+00:24:51.820 --> 00:24:59.229
+Pablo Eduardo Abad: sin pensar tanto eso como un orden cíclico. No, Si pensamos en alfabeto, si nos pasamos de la Z, volveríamos al a, por ejemplo.
+
+203
+00:25:00.740 --> 00:25:09.820
+Pablo Eduardo Abad: Entonces, si lo pensamos con un criptosistema mensajes arbitrarios, La clave sería este número de desplazamientos o de rotaciones que se harían
+
+204
+00:25:10.490 --> 00:25:18.990
+Pablo Eduardo Abad: y cifrar qué es reemplazar cada letra por la que ocupa tiene posiciones después. Por ejemplo, si nuestro mensaje fuese prueba.
+
+205
+00:25:19.530 --> 00:25:22.499
+Pablo Eduardo Abad: y nuestra clave fue ese cuadro.
+
+206
+00:25:22.900 --> 00:25:27.800
+Pablo Eduardo Abad: El cifrado es reemplazar cada letra por la que está
+
+207
+00:25:28.030 --> 00:25:30.590
+Pablo Eduardo Abad: 4 posiciones después. Entonces la P.
+
+208
+00:25:30.710 --> 00:25:37.089
+Pablo Eduardo Abad: Urst se reemplaza por una T, la R U. S.
+
+209
+00:25:37.390 --> 00:25:42.269
+Pablo Eduardo Abad: De R. S. T. V Por mi corta
+
+210
+00:25:42.820 --> 00:25:46.369
+Pablo Eduardo Abad: la U con una y griega, y así, por cada una. Y tenemos
+
+211
+00:25:47.120 --> 00:25:53.719
+Pablo Eduardo Abad: este mensaje que es medio, impronunciable Tv corta y y efe que sería el texto cifrado.
+
+212
+00:25:53.850 --> 00:25:59.329
+Pablo Eduardo Abad: Entonces, fíjense en en el criptosistema.
+
+213
+00:25:59.480 --> 00:26:02.950
+Pablo Eduardo Abad: Acá Tenemos el texto plano. Prueba
+
+214
+00:26:03.240 --> 00:26:05.850
+Pablo Eduardo Abad: la clave 4 y el texto cifrado.
+
+215
+00:26:08.620 --> 00:26:15.379
+Pablo Eduardo Abad: Pregunta: yo sé que todavía no definimos formalmente seguridad este. Sé que
+
+216
+00:26:16.920 --> 00:26:20.330
+Pablo Eduardo Abad: es la primera vez por ahí que ver alguno de estos cripto sistemas.
+
+217
+00:26:21.050 --> 00:26:27.189
+Pablo Eduardo Abad: Pero si yo les pregunto a ustedes creen que este cripto sistema es seguro o inseguro, ¿qué responderían.
+
+218
+00:26:27.530 --> 00:26:28.330
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: No.
+
+219
+00:26:28.430 --> 00:26:29.440
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: O sea.
+
+220
+00:26:29.710 --> 00:26:36.589
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: si yo veo una secuencia de letras Así, rara, empiezo a estar rotado. Uno o rotado, 2, rotado 3 rotado 4.
+
+221
+00:26:36.890 --> 00:26:42.170
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Si el mensaje es muy corto en media hora, lo saco con mu como mucho.
+
+222
+00:26:42.390 --> 00:26:48.879
+MARTÍN GALLARDO BERTUZZI: Encima encima, siento que en algún momento se se van a dar cuenta del patrón.
+
+223
+00:26:50.920 --> 00:26:52.460
+Pablo Eduardo Abad: Bien. Ok.
+
+224
+00:26:53.410 --> 00:27:01.099
+Pablo Eduardo Abad: es correcto, o sea intuitivamente. Ustedes no saben nada de teoría, de criptoanálisis. Ninguna cripto analista ha certificado, me imagino.
+
+225
+00:27:01.670 --> 00:27:07.530
+Pablo Eduardo Abad: pero no necesitamos ser expertos para tener una idea intuitiva de que esto
+
+226
+00:27:08.230 --> 00:27:12.290
+Pablo Eduardo Abad: no sé. Yo no pondría mi mi cuenta bancaria protegida. Con esto
+
+227
+00:27:12.910 --> 00:27:22.940
+Pablo Eduardo Abad: algunos ya se adelantaron incluso y plantearon. Chelsea, a mí me dan ese mensaje. Yo lo rompería. Y una una primera cosa súper importante en seguridad.
+
+228
+00:27:23.120 --> 00:27:28.580
+Pablo Eduardo Abad: Uno podría decir, bueno, pero hay que darse cuenta sin el mensaje que esto es un criptosistema por rotación.
+
+229
+00:27:29.180 --> 00:27:37.550
+Pablo Eduardo Abad: Esa no sería la forma correcta de pensar en seguridad. Nosotros tenemos que asumir que un atacante que va a tratar de romper esto. Sabe.
+
+230
+00:27:37.750 --> 00:27:39.469
+Pablo Eduardo Abad: el criptosistema que se está usando
+
+231
+00:27:40.920 --> 00:27:46.580
+Pablo Eduardo Abad: sí, porque, en la práctica, la seguridad. El principio de cargos que mencioné no puede depender
+
+232
+00:27:46.880 --> 00:27:55.009
+Pablo Eduardo Abad: de que el atacante desconozca información. Salvo la clave, entonces el atacante sabría esto.
+
+233
+00:27:56.720 --> 00:28:05.769
+Pablo Eduardo Abad: Y como muy bien dijeron, tiene muchas debilidades, sí, pero quiero rescatar. La primera que salió, que es
+
+234
+00:28:08.610 --> 00:28:12.369
+Pablo Eduardo Abad: si acá. Indica la rotación. Y tengo n símbolos.
+
+235
+00:28:12.480 --> 00:28:15.430
+Pablo Eduardo Abad: acá puede variar entre 1 y N
+
+236
+00:28:15.710 --> 00:28:20.659
+Pablo Eduardo Abad: tiene menos una, si quieren, Porque si si rotamos completamente, tenemos la función, identidad y
+
+237
+00:28:21.150 --> 00:28:33.820
+Pablo Eduardo Abad: medio como en ese sentido, y si hay pocas posibles claves. Podemos probar por prueba y error. Si esa búsqueda por prueba y error es algo súper básico, pero es súper importante, porque
+
+238
+00:28:34.830 --> 00:28:46.999
+Pablo Eduardo Abad: fíjense que si yo les doy un texto cifrado y ustedes conocen el algoritmo para descifrar y desconocen la clave. Yo no tengo forma de impedir que ustedes hagan un ataque por prueba y error, empiecen a probar todas las claves.
+
+239
+00:28:47.580 --> 00:28:54.690
+Pablo Eduardo Abad: Entonces no importa si estamos en este simple o estamos en el más complejo de los criptosistemas que se usan hoy día en
+
+240
+00:28:54.980 --> 00:28:57.440
+Pablo Eduardo Abad: para proteger las comunicaciones por Internet.
+
+241
+00:28:59.330 --> 00:29:02.960
+Pablo Eduardo Abad: Siempre un atacante va a poder hacer un ataque por fuerza bruta.
+
+242
+00:29:04.310 --> 00:29:09.250
+Pablo Eduardo Abad: Sí, el problema no es que pueda la debilidad grande, acá que es que son pocas las claves.
+
+243
+00:29:10.460 --> 00:29:11.650
+Pablo Eduardo Abad: Entonces
+
+244
+00:29:13.930 --> 00:29:23.890
+Pablo Eduardo Abad: yo puedo empezar a probar a ver descifremos si la clave es una medio raro, 2, tampoco 3, 4 o súpersentido.
+
+245
+00:29:24.470 --> 00:29:31.960
+Pablo Eduardo Abad: La clave era 4, pero el mensaje era además lo recupera. Y la prueba, y
+
+246
+00:29:37.990 --> 00:29:45.230
+Pablo Eduardo Abad: acá alguien se puede estar preguntando? Bueno, ¿y ¿Qué pasa si no sé probar con la 18,
+
+247
+00:29:45.650 --> 00:29:51.370
+Pablo Eduardo Abad: termina en otra palabra también de 5 letras que tenga sentido. Es una muy buena pregunta
+
+248
+00:29:51.980 --> 00:29:58.460
+Pablo Eduardo Abad: y fue una de las razones por las cuales Shannon desarrolló lo que se esto que les mencioné anterior información
+
+249
+00:29:58.880 --> 00:30:06.429
+Pablo Eduardo Abad: y más adelante vamos a entrar en temas, pero básicamente ya no desarrolló un método matemático para poder
+
+250
+00:30:06.820 --> 00:30:12.359
+Pablo Eduardo Abad: cuantificar ponerle un número a la cantidad de información que hay en un mensaje, sí
+
+251
+00:30:13.380 --> 00:30:17.809
+Pablo Eduardo Abad: Y en particular, a partir de eso, logró desarrollar 2 conceptos que
+
+252
+00:30:18.080 --> 00:30:24.459
+Pablo Eduardo Abad: acá los vamos a ver intuitivamente los más adelante los vamos a retomar, pero 1 es la redundancia, que es
+
+253
+00:30:25.000 --> 00:30:28.940
+Pablo Eduardo Abad: la la diferencia que hay entre el tamaño que tiene un mensaje
+
+254
+00:30:30.050 --> 00:30:32.940
+Pablo Eduardo Abad: en absoluto y la información que lleva el mensaje.
+
+255
+00:30:33.450 --> 00:30:42.689
+Pablo Eduardo Abad: No sé si alguno de ustedes seguro algunas vio algunos de esos mensajes donde nos pasan una oración completa y le sacaron todas las vocales, por ejemplo, o le sacaron letras del medio
+
+256
+00:30:42.970 --> 00:30:48.600
+Pablo Eduardo Abad: que 1 la mira y dice qué y a los la vuelve ganar más tranquilo y y entiende el mensaje.
+
+257
+00:30:49.450 --> 00:30:53.110
+Pablo Eduardo Abad: Eso es porque los lenguajes naturales tienen mucha redundancia.
+
+258
+00:30:53.240 --> 00:30:56.219
+Pablo Eduardo Abad: La redundancia está pensada
+
+259
+00:30:57.630 --> 00:31:13.639
+Pablo Eduardo Abad: para ahí. Escribió, de hecho algo así. Joaquín: Muy bien apuntado a eso. La redundancia es un mecanismo de control de errores. En el fondo, 1 puede en un mensaje, cometer algún error, perder una letra. Como el lenguaje. Es redundante. La información que quería transmitir se mantiene.
+
+260
+00:31:14.370 --> 00:31:18.220
+Pablo Eduardo Abad: Sí, de hecho, cuando nosotros comprimimos un mensaje.
+
+261
+00:31:18.570 --> 00:31:22.650
+Pablo Eduardo Abad: lo que estamos haciendo es recodificarlo en
+
+262
+00:31:24.530 --> 00:31:30.579
+Pablo Eduardo Abad: un alfabeto donde eliminamos toda la redundancia y el tamaño del mensaje es igual al tamaño de la información.
+
+263
+00:31:31.880 --> 00:31:38.569
+Pablo Eduardo Abad: Por ahí, vieron en alguna materia, compresión y el algoritmo de Hoffmann.
+
+264
+00:31:39.690 --> 00:31:44.989
+Pablo Eduardo Abad: El algoritmo de Hoffman es una aplicación directa de esto que les digo a partir de la teoría que desarrolló shannon
+
+265
+00:31:45.860 --> 00:31:55.519
+Pablo Eduardo Abad: después hay otras formas, pero justo. Hoffmann, que es simplemente un recodificar las cosas, es literalmente la aplicación de eso. Pero bueno, no importa. Estoy yendo por las ramas.
+
+266
+00:31:55.750 --> 00:32:03.320
+Pablo Eduardo Abad: y sobre eso, sobre sobre la tasa de
+
+267
+00:32:03.560 --> 00:32:09.890
+Pablo Eduardo Abad: de redundancia que hay de un lenguaje, se puede distinguir. Se puede calcular estadísticamente algo que es una distancia de unicidad.
+
+268
+00:32:10.950 --> 00:32:22.490
+Pablo Eduardo Abad: que sería algo así como la longitud mínima que tiene que tener un mensaje para que las chances de que haya más de un descifrado consentido sean despreciables.
+
+269
+00:32:23.300 --> 00:32:28.289
+Pablo Eduardo Abad: Resulta que la distancia unicidad para los lenguajes naturales, tipo el español, El inglés
+
+270
+00:32:29.280 --> 00:32:38.680
+Pablo Eduardo Abad: está en el orden de los 4 caracteres, o sea, cualquier mensaje de más de 4 letras, Ya tiene una chance despreciable de que tenga 2 descifrados con sentido
+
+271
+00:32:39.740 --> 00:32:41.579
+Pablo Eduardo Abad: sobre este tipo de algoritmos.
+
+272
+00:32:41.740 --> 00:32:49.939
+Pablo Eduardo Abad: Así que es un problema que, en la práctica, una ignorancia, una prueba por fuerza bruta y encuentra algo que le parece sentido era el resultado correcto
+
+273
+00:32:52.940 --> 00:32:56.769
+Pablo Eduardo Abad: antes de pasar a otro, sí los voy a dejar reflexionando con algo
+
+274
+00:32:57.930 --> 00:33:03.229
+Pablo Eduardo Abad: Rotex, que es el nombre que se le suele dar a los criptosistemas de rotación, es inseguro
+
+275
+00:33:04.380 --> 00:33:06.450
+Pablo Eduardo Abad: informalmente. Podemos decir que sí.
+
+276
+00:33:06.930 --> 00:33:08.990
+Pablo Eduardo Abad: Creo que hasta acá me siguen todos.
+
+277
+00:33:10.870 --> 00:33:15.570
+Pablo Eduardo Abad: porque podemos hacer un ataque por fuerza bruta, pero algo que 1
+
+278
+00:33:17.210 --> 00:33:23.129
+Pablo Eduardo Abad: tiende a olvidarse, porque es casi como un caso límite, es que un ataque por fuerza bruta tiene límites.
+
+279
+00:33:24.240 --> 00:33:30.290
+Pablo Eduardo Abad: Si yo les digo que cifré un mensaje original, P, que era una sola letra.
+
+280
+00:33:32.230 --> 00:33:37.190
+Pablo Eduardo Abad: ¿sí? Y el resultado de cifrar ese mensaje que no les estoy diciendo: ¿Cuál es
+
+281
+00:33:37.520 --> 00:33:42.900
+Pablo Eduardo Abad: el texto cifrado era a sí y utilice un grito sistema de rotación.
+
+282
+00:33:43.820 --> 00:33:53.969
+Pablo Eduardo Abad: Vamos de vuelta. Yo tengo un mensaje plano que no quiero que ustedes conozcan. Lo cifré con una clave que no les digo, pero con Roth X que dijimos que es súper inseguro
+
+283
+00:33:54.210 --> 00:33:57.539
+Pablo Eduardo Abad: El resultado de eso. El mensaje cifrado es la letra A.
+
+284
+00:33:59.240 --> 00:34:03.180
+Pablo Eduardo Abad: Y ahora les pregunto: ¿cuál era el mensaje original.
+
+285
+00:34:05.170 --> 00:34:07.730
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y tiene que haber sido una palabra de una letra
+
+286
+00:34:07.910 --> 00:34:10.990
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: asumiendo que sea dramáticamente correcto. El mensaje.
+
+287
+00:34:11.699 --> 00:34:16.739
+Pablo Eduardo Abad: Cuál acabamos de decir que es trivial, que es súper inseguro romper los equis.
+
+288
+00:34:17.550 --> 00:34:26.460
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí, o sea, si es una sola letra, no voy a saber. O sea, no puedes saber cuál letra es, puedo tal vez tener opciones, pero no es saber a ciencia cierta cual le traerá.
+
+289
+00:34:27.940 --> 00:34:36.130
+Pablo Eduardo Abad: Exacto La a ver. Les hice toda esta introducción. Así que lo fui guiando al tema, y y la respuesta es correcta la que decís.
+
+290
+00:34:36.239 --> 00:34:45.389
+Pablo Eduardo Abad: Pero hay una suerte de prerrequisito para que un ataque por fuerza bruta pueda ser exitoso, que es
+
+291
+00:34:47.239 --> 00:34:55.320
+Pablo Eduardo Abad: que nosotros tenemos que poder, dado un descifrado particular establecer si ese cifrado tiene sentido o no.
+
+292
+00:34:55.770 --> 00:34:59.950
+Pablo Eduardo Abad: O sea, tenemos que podar ante un descifrar, decir, si es la respuesta correcta o no.
+
+293
+00:35:00.990 --> 00:35:14.920
+Pablo Eduardo Abad: y abajo de ciertos umbrales, La distancia de unicidad es un umbral para este tipo de mensajes. Pero además, la forma fácil es ir a una letra directamente abajo de ciertos umbrales, 1 pierde esa capacidad.
+
+294
+00:35:15.320 --> 00:35:21.039
+Pablo Eduardo Abad: Acá ¿Qué pasa en este caso. Ustedes saben que el mensaje es de una letra, pero todas las letras son improbables.
+
+295
+00:35:21.480 --> 00:35:25.780
+Pablo Eduardo Abad: Yo les digo que elegí una letra al azar de una distribución uniforme.
+
+296
+00:35:28.050 --> 00:35:30.900
+Pablo Eduardo Abad: el cifrado podría ser cualquier letra.
+
+297
+00:35:32.140 --> 00:35:39.219
+Pablo Eduardo Abad: ¿sí? Entonces la fuerza bruta es un recurso que siempre está disponible para el atacante, pero tiene ciertos límites.
+
+298
+00:35:42.090 --> 00:35:47.170
+Pablo Eduardo Abad: Entonces hipótesis para fuerza bruta. Se puede discriminar un descifrado válido de un inválido.
+
+299
+00:35:48.230 --> 00:35:58.950
+Pablo Eduardo Abad: Si esto lo vamos a volver a ver más cerca del final de esta misma clase, Este porque es la base de de 1 de los desarrollos teóricos seminales de
+
+300
+00:35:59.370 --> 00:36:01.109
+Pablo Eduardo Abad: de la criptografía moderna.
+
+301
+00:36:02.860 --> 00:36:06.459
+Pablo Eduardo Abad: Okay, rotación no sirve claramente.
+
+302
+00:36:07.450 --> 00:36:12.910
+Pablo Eduardo Abad: Vamos a otro tipo de criptosistema, un cachito más elaborado que
+
+303
+00:36:13.030 --> 00:36:16.630
+Pablo Eduardo Abad: que se usó. Ah, perdón. El criptosistema de rotación
+
+304
+00:36:17.590 --> 00:36:28.310
+Pablo Eduardo Abad: es inseguro. Visto en retrospectiva, sí, pero le valió a julio. César un montón de guerras. El criptosistema de Julio César, el que usó y que está documentado para coordinar campañas bélicas
+
+305
+00:36:28.650 --> 00:36:39.330
+Pablo Eduardo Abad: No solo era rotación, era rotación, fija, era derrotar 3 letras en el alfabeto romano, los mensajes.
+
+306
+00:36:39.930 --> 00:36:49.080
+Pablo Eduardo Abad: Este hoy creo que sería un suicidio intentarlo, pero bueno, en esa época eran otras las condiciones, también
+
+307
+00:36:50.800 --> 00:36:52.929
+Pablo Eduardo Abad: un cifrado por sustitución.
+
+308
+00:36:53.180 --> 00:36:54.780
+Pablo Eduardo Abad: ¿cómo funciona?
+
+309
+00:36:55.130 --> 00:37:02.800
+Pablo Eduardo Abad: Bueno, la idea, un cifrado por sustitución es para cada símbolo del lenguaje, por ejemplo para cada letra del
+
+310
+00:37:03.190 --> 00:37:08.370
+Pablo Eduardo Abad: del alfabeto que va a componer el mensaje. Se establece una transformación única.
+
+311
+00:37:09.640 --> 00:37:18.130
+Pablo Eduardo Abad: Sí, acuérdense que todas estas transformaciones. Cuando yo cifro algo, se tienen que poder invertir, ¿no? Entonces
+
+312
+00:37:18.900 --> 00:37:24.629
+Pablo Eduardo Abad: en el fondo vamos a estar asinándole a cada símbolo un símbolo distinto.
+
+313
+00:37:25.980 --> 00:37:32.840
+Pablo Eduardo Abad: de tal forma que no haya repeticiones, O sea, no va a haber 2 símbolos distintos que se transformen en lo mismo, porque si No, no podríamos volver hacia atrás.
+
+314
+00:37:34.210 --> 00:37:35.080
+Pablo Eduardo Abad: ¿sí?
+
+315
+00:37:36.280 --> 00:37:40.710
+Pablo Eduardo Abad: Entonces, por cada símbolo del alfabeto se establece
+
+316
+00:37:41.130 --> 00:37:50.250
+Pablo Eduardo Abad: una una versión distinta y cifrar El mensaje que es tomar cada símbolo y reemplazarlo por el equivalente, Por ejemplo, acá tenemos una E
+
+317
+00:37:50.880 --> 00:37:54.769
+Pablo Eduardo Abad: que se reemplaza por una C. Entonces, en el texto cifrado la E pasa a ser una C,
+
+318
+00:37:54.910 --> 00:37:56.190
+Pablo Eduardo Abad: La S
+
+319
+00:37:58.400 --> 00:38:04.499
+Pablo Eduardo Abad: pasa a ser una, o y así sucesivamente con todas las letras. Por ejemplo, el mensaje. Esto es una prueba.
+
+320
+00:38:05.740 --> 00:38:14.980
+Pablo Eduardo Abad: Queda cifrado en algo que de casualidad es casi irrenunciable. Al principio se vuelve inmanejable.
+
+321
+00:38:16.390 --> 00:38:25.639
+Pablo Eduardo Abad: Este es otro tipo de criptosistemas. Si primera pregunta para entenderlo, cuántas claves tiene este criptosistema
+
+322
+00:38:27.120 --> 00:38:29.890
+Pablo Eduardo Abad: tiene la misma debilidad que la anterior o.
+
+323
+00:38:30.540 --> 00:38:32.230
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Tiene una debilidad diferente.
+
+324
+00:38:33.170 --> 00:38:34.970
+Pablo Eduardo Abad: Okay. Antes de pasar a eso.
+
+325
+00:38:35.230 --> 00:38:37.139
+Pablo Eduardo Abad: hablemos de la cantidad de claves.
+
+326
+00:38:38.730 --> 00:38:39.590
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: De una.
+
+327
+00:38:39.590 --> 00:38:42.150
+Pablo Eduardo Abad: Problema por el lado de las claves y este.
+
+328
+00:38:43.010 --> 00:38:46.299
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Este sigue teniendo. Tiene una. No.
+
+329
+00:38:55.400 --> 00:38:57.220
+Pablo Eduardo Abad: No sé el resto. Qué opinas.
+
+330
+00:38:58.870 --> 00:39:01.189
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: En el chat dicen que son 27 factoríal.
+
+331
+00:39:01.190 --> 00:39:02.690
+Pablo Eduardo Abad: Sí te faltaría algo
+
+332
+00:39:02.840 --> 00:39:13.380
+Pablo Eduardo Abad: muy bien correcto en principio, porque fíjense como nosotros. La clave en sí es es la transformación no es la asociación
+
+333
+00:39:13.880 --> 00:39:22.259
+Pablo Eduardo Abad: de cada letra del falta, la otra. Por esta necesidad de no repetirla. Lo que ocurre es que si de esta tabla, nos quedamos con la fila de arriba.
+
+334
+00:39:23.080 --> 00:39:30.039
+Pablo Eduardo Abad: Si lo que estamos teniendo es una permutación, un cambio en el orden de las letras del alfabeto, porque no pueden aparecer repetidos
+
+335
+00:39:30.170 --> 00:39:32.809
+Pablo Eduardo Abad: entonces la cantidad de posibles claves es
+
+336
+00:39:33.070 --> 00:39:37.449
+Pablo Eduardo Abad: sobre el mismo alfabeto base. De cuántas formas podemos reordenar esta transformación.
+
+337
+00:39:38.040 --> 00:39:45.880
+Pablo Eduardo Abad: 27 símbolos por 27, letras del español, 27 factorial, 27 factorial.
+
+338
+00:39:47.110 --> 00:39:49.889
+Pablo Eduardo Abad: No sé si alguien lo quiere calcular rápido.
+
+339
+00:39:50.870 --> 00:39:55.119
+Pablo Eduardo Abad: es un número de aproximadamente 28 dígitos
+
+340
+00:39:56.640 --> 00:40:05.070
+Pablo Eduardo Abad: a ver 6 dígitos. Es un 1 000 012 dígitos. Es un 1 000 000 000 018 dígitos, Es un trillón
+
+341
+00:40:05.590 --> 00:40:09.099
+Pablo Eduardo Abad: cuatrillón, estamos hablando de cuatrillones y pico de
+
+342
+00:40:09.440 --> 00:40:12.400
+Pablo Eduardo Abad: y no de los americanos, ¿ De los de los nuestros.
+
+343
+00:40:12.660 --> 00:40:15.000
+Pablo Eduardo Abad: o sea, en americano, se sería como tillón.
+
+344
+00:40:15.130 --> 00:40:21.090
+Pablo Eduardo Abad: Es un número bestialmente alto. Digo, pongan una computadora, pónganse, ustedes es mucho para probar
+
+345
+00:40:21.830 --> 00:40:28.660
+Pablo Eduardo Abad: de alguna manera. Así que en principio, este radicalmente podemos decir, no tiene pocas claves.
+
+346
+00:40:29.670 --> 00:40:36.080
+Pablo Eduardo Abad: Pero ahora voy a repetir la misma pregunta. Sin ser expertos en criptografía? ¿les parece que esto es seguro.
+
+347
+00:40:38.650 --> 00:40:39.570
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Para mí, No.
+
+348
+00:40:42.730 --> 00:40:43.520
+Pablo Eduardo Abad: Bien.
+
+349
+00:40:43.840 --> 00:40:54.010
+Pablo Eduardo Abad: si alguien se anima a aprender un ¿por qué digo acá, no hay errores. No, no vimos teoría, estamos estamos metiéndonos en el tema, así que su intuición acá vale. Y no hay respuesta equivocada.
+
+350
+00:40:54.670 --> 00:40:58.299
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: O sea, para mí, primero, que el mensaje queda de la misma longitud.
+
+351
+00:40:58.490 --> 00:41:01.579
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: el mensaje normal y descifrado que también pasaba con el otro.
+
+352
+00:41:01.750 --> 00:41:09.120
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Pero poner el que ahí está, esto es una prueba, poner que yo tengo en el mensaje original. Eduardo
+
+353
+00:41:09.770 --> 00:41:12.240
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: y en el cifrado me va a quedar
+
+354
+00:41:13.410 --> 00:41:21.960
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: la segunda y la anteúltima letra van a ser iguales, y yo puedo empezar a buscar todas las palabras de esa cantidad de letras que tengan letras iguales
+
+355
+00:41:22.360 --> 00:41:26.660
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: en el segundo y el anteúltimo despacio.
+
+356
+00:41:27.210 --> 00:41:30.150
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y una de esas probablemente sea eduardo.
+
+357
+00:41:31.310 --> 00:41:33.289
+Pablo Eduardo Abad: Ok, ¿Correcto? Lo que decís me.
+
+358
+00:41:33.290 --> 00:41:34.279
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Probables encima tiene.
+
+359
+00:41:34.280 --> 00:41:34.610
+Pablo Eduardo Abad: De la.
+
+360
+00:41:34.610 --> 00:41:35.210
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí.
+
+361
+00:41:35.940 --> 00:41:43.609
+Pablo Eduardo Abad: Fíjense que eso a Acá la piña. Tenemos casos para ver, fíjense que la E se transforma en C, y siempre que aparezca una e se transforma en C.
+
+362
+00:41:44.600 --> 00:41:55.229
+Pablo Eduardo Abad: Sí, el Formalmente, lo que decimos es que esta transformación preserva las características estadísticas del lenguaje
+
+363
+00:41:55.770 --> 00:42:01.569
+Pablo Eduardo Abad: es una forma por ahí muy rimbombante de dar esta noción de que
+
+364
+00:42:02.990 --> 00:42:07.929
+Pablo Eduardo Abad: ustedes intuitivamente saben, por ejemplo, que las vocales aparecen mucho más que las consonantes.
+
+365
+00:42:08.490 --> 00:42:17.959
+Pablo Eduardo Abad: Entonces, si usted ve un texto cifrado por sustitución y una consonante aparece mucho. Hay altas chances de que esa sea la transformación de una vocal.
+
+366
+00:42:18.100 --> 00:42:23.449
+Pablo Eduardo Abad: porque se mantuvo esa idea estadística de que las vocales aparecen más que las consonantes.
+
+367
+00:42:24.060 --> 00:42:39.750
+Pablo Eduardo Abad: Si yo te tengo otra forma intuitiva de de de pensar que esto no es muy inseguro. A alguno de ustedes es aficionado o tiene algún pariente aficionado a las revistas, esas de acertijos de grillas de
+
+368
+00:42:40.530 --> 00:42:41.409
+Pablo Eduardo Abad: o o, bueno.
+
+369
+00:42:41.410 --> 00:42:45.620
+NICOLÁS CANZONIERI: Sí, Sí, Sí, Eso.
+
+370
+00:42:45.620 --> 00:42:50.380
+Pablo Eduardo Abad: Para chicos en primaria.
+
+371
+00:42:50.740 --> 00:42:54.730
+NICOLÁS CANZONIERI: Hay muchos juegos que son así de.
+
+372
+00:42:56.130 --> 00:42:57.080
+Pablo Eduardo Abad: La gente lo resuelve.
+
+373
+00:42:57.080 --> 00:42:58.280
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Evidentemente interpretando.
+
+374
+00:42:58.280 --> 00:43:02.649
+Pablo Eduardo Abad: Sin hacer un doctorado, sin sin haber cursado seguridad.
+
+375
+00:43:02.960 --> 00:43:14.669
+Pablo Eduardo Abad: Nosotros tenemos esa noción intuitiva. Una vez que aprendemos la estructura gramatical, y sabemos hablar y generamos texto. Esta idea estadística la tenemos. Entonces esto que yo les dije.
+
+376
+00:43:14.970 --> 00:43:21.149
+Pablo Eduardo Abad: de las vocales aparecen más que las consonantes es como un detalle internalizado. Y a través de eso, y prueba y error.
+
+377
+00:43:22.190 --> 00:43:27.699
+Pablo Eduardo Abad: O sea bueno. Y si esto es una a a ver que tiene. ¡ah, Mira, esto tiene sentido. Esto no lo podemos ir sacando.
+
+378
+00:43:28.370 --> 00:43:34.280
+Pablo Eduardo Abad: Obviamente, hay métodos mucho más eficientes para el que está formado en esto.
+
+379
+00:43:35.410 --> 00:43:36.940
+Pablo Eduardo Abad: Y
+
+380
+00:43:37.910 --> 00:43:46.699
+Pablo Eduardo Abad: ahora vuelvo a esto un segundo que tienen que ver con el estudio o la estadística formal de los lenguajes. Si yo les digo cualquier
+
+381
+00:43:47.150 --> 00:43:58.379
+Pablo Eduardo Abad: lenguaje español, inglés, ese lenguaje tiene lo que se llama una tabla de frecuencias, si donde a cada símbolo a cada letra, le podemos asignar estadísticas de una frecuencia
+
+382
+00:43:59.490 --> 00:44:02.220
+Pablo Eduardo Abad: si esto existe o se lo bajan. Pero si no
+
+383
+00:44:02.360 --> 00:44:06.820
+Pablo Eduardo Abad: saben cómo se hace agarran 3 o 4 libros grandes del lenguaje.
+
+384
+00:44:07.170 --> 00:44:11.030
+Pablo Eduardo Abad: y se calculan la cantidad de veces que aparece cada letra y arman el histograma
+
+385
+00:44:11.140 --> 00:44:14.980
+Pablo Eduardo Abad: no tiene mucha variación. Es una característica intrínseca del lenguaje.
+
+386
+00:44:15.370 --> 00:44:21.390
+Pablo Eduardo Abad: y esto ordena de una forma mucho más y
+
+387
+00:44:25.040 --> 00:44:26.700
+Pablo Eduardo Abad: algoritmzable.
+
+388
+00:44:26.860 --> 00:44:35.019
+Pablo Eduardo Abad: Esto de bueno si esta es la letra que más aparece, debe ser una vocal. Bueno, si tengo que empezar a probar en español, probemos con la E, que es la que más aparece.
+
+389
+00:44:35.140 --> 00:44:38.989
+Pablo Eduardo Abad: Y si no es, sigamos con la A. Y si no sigamos con la S entonces
+
+390
+00:44:39.740 --> 00:44:48.789
+Pablo Eduardo Abad: la tabla de frecuencias contra un algoritmo de sustitución nos permite hacer un árbol de pruebas muy eficiente para para recuperar rápido el mensaje
+
+391
+00:44:49.690 --> 00:44:57.820
+Pablo Eduardo Abad: y después que hacen intuitivamente cuando asume que una letra es la correcta reemplaza esa letra en todos los lugares y después empieza a ver
+
+392
+00:44:58.820 --> 00:45:07.200
+Pablo Eduardo Abad: si el texto que empieza a aparecer tiene sentido o no. Si de repente me aparecen 3 o 3 consonantes juntas y en español, 3 consonantes juntas
+
+393
+00:45:07.490 --> 00:45:08.630
+Pablo Eduardo Abad: no existe.
+
+394
+00:45:08.740 --> 00:45:10.110
+Pablo Eduardo Abad: Sí, eso se.
+
+395
+00:45:10.230 --> 00:45:21.149
+Pablo Eduardo Abad: Y después hay construcciones que aparecen mucho más seguido, o sea, en español, por los artículos. Construcciones como el la D la los aparecen mucho más seguido. Entonces.
+
+396
+00:45:21.590 --> 00:45:26.400
+Pablo Eduardo Abad: si aparecen de esas, pareceríamos bien, si aparecen cosas prohibidas, parece que vamos mal.
+
+397
+00:45:26.600 --> 00:45:27.780
+Pablo Eduardo Abad: Y con eso
+
+398
+00:45:28.780 --> 00:45:36.670
+Pablo Eduardo Abad: un chico de 8 a 9 años puede llegar a resolver este tipo de criptosistemas. Alguien quería hablar.
+
+399
+00:45:37.600 --> 00:45:43.350
+NICOLÁS CANZONIERI: Sí, perdón. Las q siempre vienen seguidas de la misma letra, la U, o sea, si vos ves que es una.
+
+400
+00:45:43.350 --> 00:45:43.840
+Pablo Eduardo Abad: Es una.
+
+401
+00:45:43.840 --> 00:45:44.750
+NICOLÁS CANZONIERI: Y hay otra.
+
+402
+00:45:45.360 --> 00:45:46.780
+NICOLÁS CANZONIERI: Puede ser que sea una q.
+
+403
+00:45:47.290 --> 00:45:50.160
+NICOLÁS CANZONIERI: Y si es de 3 letras, nada más puede ser un que.
+
+404
+00:45:52.180 --> 00:45:57.249
+Pablo Eduardo Abad: Por ejemplo, exacto, O sea, 1 1 utiliza todo ese tipo de cosas.
+
+405
+00:45:58.090 --> 00:46:14.060
+Pablo Eduardo Abad: Había un curso, un curso de criptoanálisis que hice hace mucho tiempo que que planteaba que u una tiene estas características innatas. Pero incluso sin conocer el lenguaje apoyado en los indicadores estadísticos formales. Uno puede
+
+406
+00:46:14.160 --> 00:46:24.070
+Pablo Eduardo Abad: descifrar un mensaje, y me acuerdo que el el el trabajo práctico de esa de esa unidad había sido no había nadie que hablaba alemán. Tuvimos que descifrar un mensaje en alemán.
+
+407
+00:46:24.940 --> 00:46:31.339
+Pablo Eduardo Abad: Sí, nadie hablaba alemán, Nadie entendía. Todos nos imaginábamos que iba a ser muy distinto.
+
+408
+00:46:31.650 --> 00:46:37.349
+Pablo Eduardo Abad: Estuvo bien que las palabras se me van largas. Tienen muchas consonantes o muchas vocales juntas
+
+409
+00:46:37.460 --> 00:46:45.610
+Pablo Eduardo Abad: pasaba todo eso. Nos dieron todos los indicadores estadísticos del lenguaje, mensajes cifrados, y la verdad que pudimos hacerlo fue muy, muy revelador
+
+410
+00:46:46.310 --> 00:46:47.430
+Pablo Eduardo Abad: en ese momento.
+
+411
+00:46:51.110 --> 00:46:57.940
+Pablo Eduardo Abad: ¿Cuál es la debilidad. Entonces, de esto esto de mantener. Nosotros conocemos muy bien los lenguajes. Y esto qué
+
+412
+00:46:58.520 --> 00:47:06.049
+Pablo Eduardo Abad: lo decimos con el español? Se puede llevar al mundo digital moderno. Si ustedes me dicen que están cifrando una película.
+
+413
+00:47:06.540 --> 00:47:12.510
+Pablo Eduardo Abad: no sé en en formato en P: 4.
+
+414
+00:47:13.160 --> 00:47:23.620
+Pablo Eduardo Abad: Sí, en P. Cuatro, que es de lo que más hay hoy. Hay mucha estructura definida en el formato de ese archivo que pasa a ser parte de la estad de la estructura estadística de ese lenguaje.
+
+415
+00:47:23.660 --> 00:47:33.169
+Pablo Eduardo Abad: entonces se puede. Se puede utilizar el mismo tipo de mecanismos para descifrarlo. Si me dicen que es un documento o un word, lo mismo hay mucha estructura.
+
+416
+00:47:33.620 --> 00:47:38.349
+Pablo Eduardo Abad: De hecho, hasta es a veces más fácil, porque muchos de estos protocolos tienen
+
+417
+00:47:38.480 --> 00:47:45.650
+Pablo Eduardo Abad: ciertas partes muy duras. Aparecen Heathers, que tienen que tener valores concretos, y eso ya basta, simplifica el tema.
+
+418
+00:47:46.480 --> 00:47:48.370
+Pablo Eduardo Abad: Así que
+
+419
+00:47:49.270 --> 00:47:56.629
+Pablo Eduardo Abad: una debilidad conceptual que hemos visto cantidad de claves. Otra debilidad conceptual es esto de que mantenga las propias estadísticas
+
+420
+00:47:56.850 --> 00:48:06.549
+Pablo Eduardo Abad: del mensaje plano en el mensaje cifrado. Una cosa que me había salteado, y vuelvo ahora: la cifra de sustitución no necesariamente
+
+421
+00:48:06.870 --> 00:48:11.750
+Pablo Eduardo Abad: tienen que ir de un alfabeto hacia el mismo Si, de hecho
+
+422
+00:48:12.560 --> 00:48:17.900
+Pablo Eduardo Abad: podrían ser símbolos. Este se podría reemplazar cada letra con un símbolo.
+
+423
+00:48:18.330 --> 00:48:23.339
+Pablo Eduardo Abad: pero la idea es la misma, no cada Cada letra del mensaje original tiene una única representación.
+
+424
+00:48:23.850 --> 00:48:31.720
+Pablo Eduardo Abad: Esto que les estoy mostrando acá. Es un poco tétrico, es un criptograma que se encontró en una tumba en un cementerio en
+
+425
+00:48:32.120 --> 00:48:37.630
+Pablo Eduardo Abad: en Nueva York, la tumba data de 1 790. Y 4. Y
+
+426
+00:48:37.980 --> 00:48:43.229
+Pablo Eduardo Abad: si ven la imagen, no sé si se notará por el tamaño, pero después miren la búsqueda
+
+427
+00:48:43.490 --> 00:48:50.739
+Pablo Eduardo Abad: a lo largo del del borde de la tumba. Hay como una serie de símbolos que acá están puestos
+
+428
+00:48:51.460 --> 00:48:54.950
+Pablo Eduardo Abad: de forma esquemática abajo. Bueno, eso eso era un mensaje.
+
+429
+00:48:55.740 --> 00:48:59.649
+Pablo Eduardo Abad: No les voy a decir cuál es el mensaje. Se los dejo de tareas, pero
+
+430
+00:49:00.240 --> 00:49:07.389
+Pablo Eduardo Abad: ese criptograma fue como todo criptógrafo amateur En los últimos 200 años jugaba para resolverlo
+
+431
+00:49:07.980 --> 00:49:10.910
+Pablo Eduardo Abad: en 1 980, y 6 lo lo resolvieron.
+
+432
+00:49:11.370 --> 00:49:17.439
+Pablo Eduardo Abad: No es que haya tardado. Se haya tardado tanto porque el criptosistema era difícil. El mensaje era muy corto, básicamente.
+
+433
+00:49:18.150 --> 00:49:19.260
+Pablo Eduardo Abad: ¿
+
+434
+00:49:19.670 --> 00:49:24.559
+Pablo Eduardo Abad: ¿cómo es la traducción? Bueno, la traducción sigue otro tipo de
+
+435
+00:49:24.940 --> 00:49:32.380
+Pablo Eduardo Abad: es un criptosistema de sustitución, donde la clave se arma de una forma esquemática simple.
+
+436
+00:49:32.610 --> 00:49:42.009
+Pablo Eduardo Abad: Donde se arman tipo tableros de tatety se pone cada letra. Sí, como hay más de un tablero a los tableros, se los distingue con un punto con 2 o con 0,
+
+437
+00:49:42.510 --> 00:49:48.170
+Pablo Eduardo Abad: sí, y se reemplaza cada letra por la representación de ese cuadrante.
+
+438
+00:49:48.390 --> 00:49:50.619
+Pablo Eduardo Abad: Por ejemplo, la R.
+
+439
+00:49:51.150 --> 00:49:58.040
+Pablo Eduardo Abad: Fíjense que está rodeada a izquierda arriba y derecha y tiene 2 puntos. Este primer símbolo es una R.
+
+440
+00:49:59.730 --> 00:50:01.080
+Pablo Eduardo Abad: Y así, con cada 1.
+
+441
+00:50:01.540 --> 00:50:08.599
+Pablo Eduardo Abad: Una forma distinta va a pasar que este símbolo, si este símbolo es una R. Este de acá también es una R.
+
+442
+00:50:10.410 --> 00:50:13.410
+Pablo Eduardo Abad: Es es un criptosistema de sustitución
+
+443
+00:50:13.520 --> 00:50:20.119
+Pablo Eduardo Abad: con una forma elaborada, si quieren o no sé si elaborada o más simple de entender cuál es la clave
+
+444
+00:50:21.140 --> 00:50:24.420
+Pablo Eduardo Abad: después. Les dejo de tarea si quieren este
+
+445
+00:50:24.530 --> 00:50:30.999
+Pablo Eduardo Abad: descifrar el mensaje, o si quieren, búsquenlo. Es el mensaje del cementerio de Trinity. Es súper conocido.
+
+446
+00:50:37.530 --> 00:50:40.290
+Pablo Eduardo Abad: Vamos a hacer una pausa. Los voy a dejar.
+
+447
+00:50:40.710 --> 00:50:45.779
+Pablo Eduardo Abad: así como como como con un un teaser
+
+448
+00:50:45.890 --> 00:50:51.669
+Pablo Eduardo Abad: de lo que vamos a hacer a la vuelta. Vamos a ponernos en en este rol de criptógrafo amateur.
+
+449
+00:50:52.370 --> 00:50:58.810
+Pablo Eduardo Abad: que tiene ciertos instintos. La verdad que el el querer romper criptosistemas es, no sé parte de nuestro Adn como que
+
+450
+00:50:59.010 --> 00:51:01.970
+Pablo Eduardo Abad: sale sale natural el querer hacerlo.
+
+451
+00:51:02.350 --> 00:51:14.310
+Pablo Eduardo Abad: Y ya que vimos que estos cripto sistemas que vimos parecen no ser seguros e incluso sin necesidad de formación. ¿vamos a pararnos a prueba para matizar eso también. ¿no? Y no quedarnos con Son triviales de romper. Son re fáciles.
+
+452
+00:51:15.490 --> 00:51:17.180
+Pablo Eduardo Abad: Lo que están viendo acá es
+
+453
+00:51:17.320 --> 00:51:24.380
+Pablo Eduardo Abad: el resultado de haber cifrado con un criptosistema de sustitución, un mensaje en castellano, Sí,
+
+454
+00:51:25.070 --> 00:51:35.460
+Pablo Eduardo Abad: claramente no estamos cifrando letra a letra. Estamos reemplazando las letras por símbolos o números, y
+
+455
+00:51:36.930 --> 00:51:41.209
+Pablo Eduardo Abad: y en aras de que no estemos toda la clase, porque van a ver que
+
+456
+00:51:42.400 --> 00:51:46.279
+Pablo Eduardo Abad: una cosa es decir que es fácil hacerlo, pero es un poco distinto hacerlo.
+
+457
+00:51:46.850 --> 00:51:50.330
+Pablo Eduardo Abad: Vamos a. Les voy a dar una pista extra
+
+458
+00:51:50.500 --> 00:52:05.049
+Pablo Eduardo Abad: este que que se usa mucho. No sé si alguien vio estoy tratando de acordarme la la película, esta de que cuenta la historia de cómo Shannon desarrolla Bomb, la la primera protocomputadora para tratar de descifrar enigma.
+
+459
+00:52:08.190 --> 00:52:10.889
+Pablo Eduardo Abad: no me acuerdo. Ahora, cómo se llama la película no importa.
+
+460
+00:52:10.950 --> 00:52:30.189
+Pablo Eduardo Abad: básicamente lo lo que lo que desarrollan es una computadora capaz de repetir el mismo cálculo con variantes 1 000 000 de veces que era para hacer un ataque por fuerza bruta. Para tratar de descifrar el código de los alemanes y básicamente fallan estrepitosamente arman. La computadora tiene muy buena capacidad, pero no daba para probar todas las claves
+
+461
+00:52:30.510 --> 00:52:31.620
+Pablo Eduardo Abad: y
+
+462
+00:52:32.790 --> 00:52:44.730
+Pablo Eduardo Abad: sin arruinar mucho. El hecho histórico es que en algún momento, interceptan un par de mensajes en plano y se dan cuenta que los mensajes empezaban con el mismo saludo casi siempre.
+
+463
+00:52:46.010 --> 00:52:54.140
+Pablo Eduardo Abad: Entonces, sabiendo que los mensajes empezaban con cierto cierto. Saludo igual. Eso. Es información extra que se puede usar para acelerar
+
+464
+00:52:55.120 --> 00:52:58.770
+Pablo Eduardo Abad: a eso que en inglés se le llama Handsline.
+
+465
+00:52:59.070 --> 00:53:04.559
+Pablo Eduardo Abad: Se lo traduce como gancho en español. Y es la pista que les que les voy a dar.
+
+466
+00:53:05.200 --> 00:53:12.299
+Pablo Eduardo Abad: Dentro de este mensaje está la secuencia en la cabeza. Como parte del mensaje, en algún lado aparece en el mensaje plano.
+
+467
+00:53:12.990 --> 00:53:16.750
+Pablo Eduardo Abad: Ese tipo de información suele acelerar bastante al al desarrollo.
+
+468
+00:53:18.780 --> 00:53:23.660
+Pablo Eduardo Abad: Vamos a hacer una pausa para volver fresco y a la vuelta. Le vamos a dedicar unos minutos a
+
+469
+00:53:23.870 --> 00:53:26.150
+Pablo Eduardo Abad: a descifrar ese mensaje.
+
+470
+00:53:30.270 --> 00:53:37.680
+Pablo Eduardo Abad: Bien, estuvimos un tiempo tratando de resolver el criptosistema y
+
+471
+00:53:38.140 --> 00:53:46.839
+Pablo Eduardo Abad: a veces lo logran resolver en el tiempo. Como les decía, a veces no, algunos se quedan grabados al principio en el medio, o sea, que al final es es bastante normal.
+
+472
+00:53:47.040 --> 00:53:49.909
+Pablo Eduardo Abad: No les voy a dar la solución de este criptosistema.
+
+473
+00:53:50.290 --> 00:53:51.750
+Pablo Eduardo Abad: A
+
+474
+00:53:52.770 --> 00:54:08.289
+Pablo Eduardo Abad: si alguno lo sigue, lo termina y quiere verificarlo. Este criptosistema es parte de un mensaje que aparece en un libro. Hay un un criptógrafo amateur que también fue escritor bastante conocido de Edgar Allan Poe, y tiene un un libro que se llama el escarabajo de oro.
+
+475
+00:54:08.730 --> 00:54:14.410
+Pablo Eduardo Abad: Y gran parte del libro explica cómo decodificar un mensaje. Esto es parte de ese mensaje.
+
+476
+00:54:14.970 --> 00:54:21.839
+Pablo Eduardo Abad: Así que si si cuando tienen un no lo quieren verificar, pueden buscar por ese lado para para ver si está bien.
+
+477
+00:54:22.360 --> 00:54:32.639
+Pablo Eduardo Abad: no se preocupen igual en la práctica. Vamos a Vamos a jugar este con otros criptosistemas, pero más que nada, lo lo que quería que vean con esto. Es
+
+478
+00:54:33.280 --> 00:54:40.950
+Pablo Eduardo Abad: una cosa, es, desde un punto de vista más abstracto decir que un criptosistema es fácil.
+
+479
+00:54:48.080 --> 00:54:51.490
+Pablo Eduardo Abad: Mhm perdón. Estaba viendo los comentarios.
+
+480
+00:54:52.150 --> 00:55:06.700
+Pablo Eduardo Abad: Una cosa, es decir, un sistema es débil, es fácil de romper. Otra cosa es romperlo. Si este criptosistema es de la familia que vimos antes que por preservar las características y estadísticas del lenguaje era fácil de romper.
+
+481
+00:55:06.930 --> 00:55:21.040
+Pablo Eduardo Abad: Fíjense que, o sea, de decir fácil hacerlo. Hay todo un trecho, ¿sí? Y van a ver que cuando veamos otros y en la práctica los traten de romper. Cuanto más complejo. El criptosistema más grande es ese espacio. Entonces
+
+482
+00:55:21.150 --> 00:55:26.159
+Pablo Eduardo Abad: esto es importante porque, si quieren la contra de esto es
+
+483
+00:55:27.160 --> 00:55:43.889
+Pablo Eduardo Abad: hoy día, ya por suerte es una práctica muy desterrada. Pero un momento donde surgieron un montón de criptosistemas a los cuales se les consideraba buenos, básicamente porque nadie los había roto. Y no es porque eran fundacionalmente seguros. Era porque
+
+484
+00:55:44.500 --> 00:55:57.120
+Pablo Eduardo Abad: nadie le había dedicado el tiempo que necesitan para para resolverlo bien ahí. Joaquín. Pero lo puedo resolver Super
+
+485
+00:55:57.350 --> 00:56:02.859
+Pablo Eduardo Abad: Bueno, nada. Esto es como para moverlos un poco.
+
+486
+00:56:04.660 --> 00:56:14.660
+Pablo Eduardo Abad: Sigamos acercándonos a la cronología, todo lo que vimos es periodo histórico antes de Cristo.
+
+487
+00:56:14.850 --> 00:56:21.179
+Pablo Eduardo Abad: época griega, romana, Edad Media, un poco saliendo de la Edad Media.
+
+488
+00:56:21.660 --> 00:56:26.280
+Pablo Eduardo Abad: Sí, ya entrando en el renacentismo. En este nuevo auge, surgen los
+
+489
+00:56:27.460 --> 00:56:41.280
+Pablo Eduardo Abad: criptosistemas de sustitución polialfabética, sí que son de sustitución. También hay alguna regla para reemplazar símbolo símbolo, pero que tienen como característica que un mismo símbolo puede terminar
+
+490
+00:56:41.460 --> 00:56:50.500
+Pablo Eduardo Abad: en distintas en distintos símbolos. No siempre es igual si 1 de los criptosistemas más emblemáticos de este género es el de vigener
+
+491
+00:56:51.660 --> 00:56:54.000
+Pablo Eduardo Abad: el criptosistir debí llenar
+
+492
+00:56:54.610 --> 00:57:02.890
+Pablo Eduardo Abad: lo que tiene es conceptualmente muy simple pero muestra el salto de complejidad que hay entre él y los anteriores. Y estos
+
+493
+00:57:04.050 --> 00:57:07.539
+Pablo Eduardo Abad: vigener es una composición de criptosistemas de rotación.
+
+494
+00:57:08.110 --> 00:57:09.380
+Pablo Eduardo Abad: ¿cuál es la idea.
+
+495
+00:57:10.490 --> 00:57:15.500
+Pablo Eduardo Abad: Uno define una clave de cierta longitud, ¿sí? Donde
+
+496
+00:57:15.880 --> 00:57:21.210
+Pablo Eduardo Abad: cada elemento de la clave va a explicar cuántas veces hay que rotar
+
+497
+00:57:23.010 --> 00:57:27.619
+Pablo Eduardo Abad: una letra en cada una de las posiciones. Supongo Sé que tenemos una clave de
+
+498
+00:57:27.800 --> 00:57:33.020
+Pablo Eduardo Abad: 4 de 4 símbolos, 4, 2, 5, 3, como está en la pantalla.
+
+499
+00:57:33.420 --> 00:57:44.130
+Pablo Eduardo Abad: Esto nos dice algo así como que la transformación, usando esa clave, tomaría el primer elemento y lo rotaría 4 veces al segundo, lo rotaría 2. El tercero lo rotaría 5 al cuarto, lo rotaría 3.
+
+500
+00:57:45.210 --> 00:57:48.419
+Pablo Eduardo Abad: ¿qué pasa cuando el mensaje es más largo, volvemos a empezar.
+
+501
+00:57:48.970 --> 00:57:58.360
+Pablo Eduardo Abad: Entonces conceptualmente, Si tenemos una clave de 4, podemos pensar en tomar un mensaje, seguimos con el mensaje de siempre y dividirlo en bloques
+
+502
+00:57:58.720 --> 00:58:00.160
+Pablo Eduardo Abad: de 4 letras.
+
+503
+00:58:01.210 --> 00:58:09.490
+Pablo Eduardo Abad: Entonces, primera letra, la rotamos 4 veces segunda letra, la rotamos 2, la rotamos 5, la rotamos 3,
+
+504
+00:58:09.780 --> 00:58:18.360
+Pablo Eduardo Abad: y volvemos a empezar. Rotamos 4. Rotamos 2, Rotamos 5, Rotamos 3, 4, 2, 5, 3. Y así, hasta terminar todas las letras.
+
+505
+00:58:19.080 --> 00:58:27.990
+Pablo Eduardo Abad: ¿cuál es la gran diferencia. Fíjense la letra e, por ejemplo, si la letra e al principio del mensaje se transforma en una I
+
+506
+00:58:28.470 --> 00:58:31.569
+Pablo Eduardo Abad: y que aparece en el segundo bloque se transforma en una G
+
+507
+00:58:32.430 --> 00:58:43.569
+Pablo Eduardo Abad: y en el cuarto bloque que vuelve a aparecer se transforma en una h misma letra en el texto plano. Ahora son 3 letras distintas. Este sí no no entendí cómo funciona.
+
+508
+00:58:44.580 --> 00:58:46.040
+Pablo Eduardo Abad: Vamos de vuelta.
+
+509
+00:58:46.040 --> 00:58:49.150
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: El k igual. Esta es la clave, pues el mensaje.
+
+510
+00:58:49.150 --> 00:58:49.630
+Pablo Eduardo Abad: La clave.
+
+511
+00:58:49.630 --> 00:58:49.960
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Es el.
+
+512
+00:58:49.960 --> 00:58:51.349
+Pablo Eduardo Abad: Es un ejemplo clave, no
+
+513
+00:58:52.720 --> 00:59:01.520
+Pablo Eduardo Abad: la la clave a ver acá, pues una clave de texto. Y lo compartí en números. En esta idea de que Vos Podes decir la clave podría ser 4, 2, 5, 3
+
+514
+00:59:01.860 --> 00:59:09.050
+Pablo Eduardo Abad: o lo podrías representar como letras, no típicamente arma un alfabeto donde la A vale Cero, la B Vale, Uno, la C, Vale, 2,
+
+515
+00:59:09.450 --> 00:59:14.129
+Pablo Eduardo Abad: o sea, 1 puede hacer una correspondencia, Pero si quieren, pueden pensar en la clave, es 4, 2, 5, 3.
+
+516
+00:59:14.790 --> 00:59:21.930
+Pablo Eduardo Abad: El punto es cada símbolo de la clave, y la clave acá tiene longitud, 4. Podría tener la longitud que quieras
+
+517
+00:59:22.550 --> 00:59:30.260
+Pablo Eduardo Abad: cada símbolo de la clave que es lo que estoy poniendo acá en la segunda línea, si lo que indica es cuánto se va a rotar
+
+518
+00:59:31.220 --> 00:59:34.550
+Pablo Eduardo Abad: cada letra que se transforma, entonces
+
+519
+00:59:34.760 --> 00:59:43.619
+Pablo Eduardo Abad: está basado en un criptosistema de rotación. Pero en vez de rotar todo el mensaje por la misma cantidad de veces de desplazamientos.
+
+520
+00:59:44.500 --> 00:59:46.990
+Pablo Eduardo Abad: cada letra tiene una rotación distinta.
+
+521
+00:59:48.230 --> 00:59:53.309
+Pablo Eduardo Abad: Esto no es infinito cuando se te acaba la clave que hacés volvés al principio de la clave.
+
+522
+00:59:56.440 --> 01:00:06.009
+Pablo Eduardo Abad: Entonces fíjate la e toca el primer carácter de la clave se la rota por el símbolo que está 4 veces después. E. F, G, H, I, Queda la I,
+
+523
+01:00:06.350 --> 01:00:09.290
+Pablo Eduardo Abad: pero a la S que viene después, la rotas 2 veces.
+
+524
+01:00:09.670 --> 01:00:12.830
+Pablo Eduardo Abad: Así que ese T, U y a la U.
+
+525
+01:00:13.720 --> 01:00:18.180
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Me estaba confundiendo con todo lo que venía antes del 4 53.
+
+526
+01:00:19.950 --> 01:00:21.040
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Eso. ¿qué.
+
+527
+01:00:21.340 --> 01:00:22.799
+Pablo Eduardo Abad: Esta parte de Acá
+
+528
+01:00:23.070 --> 01:00:31.359
+Pablo Eduardo Abad: bien mala mía es otra forma de representar lo mismo. Si vos lo representas como letras, necesitas convertirlo en números para las rotaciones.
+
+529
+01:00:33.320 --> 01:00:34.340
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Okay.
+
+530
+01:00:34.340 --> 01:00:37.409
+Pablo Eduardo Abad: Me medio. Lo tengo muy internalizado. Esto como que sí
+
+531
+01:00:37.810 --> 01:00:44.230
+Pablo Eduardo Abad: convertís a las letras dándole por el por el ordinal que tiene el alfabeto, la vale Cero, la B Vale, Uno, la C. Vale, 2,
+
+532
+01:00:44.350 --> 01:00:48.710
+Pablo Eduardo Abad: la D Vale, 3, la vale 4, la F Vale. Cinco
+
+533
+01:00:51.820 --> 01:00:55.390
+Pablo Eduardo Abad: en Vagon! Punto, pues lo lo voy a sacar después.
+
+534
+01:00:59.090 --> 01:01:02.279
+Pablo Eduardo Abad: pero entendiste la idea de de la transformación.
+
+535
+01:01:11.250 --> 01:01:16.489
+Pablo Eduardo Abad: Voy a asumir que Sí, el resto más o menos lo entendió.
+
+536
+01:01:20.550 --> 01:01:21.650
+Pablo Eduardo Abad: Sí, buenísimo.
+
+537
+01:01:24.750 --> 01:01:25.750
+Pablo Eduardo Abad: Gracias.
+
+538
+01:01:26.170 --> 01:01:27.110
+Pablo Eduardo Abad: Bien.
+
+539
+01:01:27.260 --> 01:01:35.460
+Pablo Eduardo Abad: Entonces lo que les decía. Fíjense que a diferencia del otro, nosotros acá podemos tener la misma letra transformada en letras distintas.
+
+540
+01:01:36.940 --> 01:01:46.590
+Pablo Eduardo Abad: Sí, también puede ser que la misma letra. Fíjense el espacio en el segundo bloque que se transforma en una C y el espacio En el segundo bloque que se transforma en una C. También
+
+541
+01:01:47.650 --> 01:01:53.609
+Pablo Eduardo Abad: este podría ser que se transforme en la misma. Pero lo importante es que se abre el escenario que sean distintas
+
+542
+01:01:54.430 --> 01:01:59.850
+Pablo Eduardo Abad: y se abre a la inversa también. Fíjense la letra C, no la letra C. En el texto cifrado.
+
+543
+01:02:00.520 --> 01:02:06.020
+Pablo Eduardo Abad: La primera C representa un espacio, la segunda C representa un espacio. Y la tercera C representa la letra A
+
+544
+01:02:07.010 --> 01:02:14.899
+Pablo Eduardo Abad: o la letra T en el texto cifrado. Fíjense que acá hay 2 te seguidas. Una representa una P, otra representa una R.
+
+545
+01:02:16.070 --> 01:02:17.650
+Pablo Eduardo Abad: Esto rompe
+
+546
+01:02:17.930 --> 01:02:29.420
+Pablo Eduardo Abad: todas las propiedades estadísticas. La letra que más aparece deja de ser el símbolo que más aparece en el texto cifrado. Y si estudiásemos las distintas características y estadísticas, se pierden todas.
+
+547
+01:02:30.330 --> 01:02:34.119
+Pablo Eduardo Abad: entonces rompe la debilidad que tenía el criptosistema de sustitución.
+
+548
+01:02:37.580 --> 01:02:43.090
+Pablo Eduardo Abad: El cifrado de villaner se creó en 1 553, y
+
+549
+01:02:44.350 --> 01:02:49.840
+Pablo Eduardo Abad: estuvo. Ah, bueno, ahí lo tengo. Todo. Estuvo un poco más de 300 años
+
+550
+01:02:50.850 --> 01:02:54.530
+Pablo Eduardo Abad: sin ser quebrado, sin sin que hayan podido romper
+
+551
+01:02:54.710 --> 01:02:57.660
+Pablo Eduardo Abad: durante 300 años, casi se lo consideró seguro
+
+552
+01:02:57.920 --> 01:03:01.219
+Pablo Eduardo Abad: en 1 863, un soldado
+
+553
+01:03:02.580 --> 01:03:16.369
+Pablo Eduardo Abad: aficionado a la criptografía. En esa época no existían los cripto analistas profesionales. Este yo siempre digo soldado destacado en la parte fría de Rusia, sin mucho que hacer aficionado a esto, tenía mucho tiempo.
+
+554
+01:03:16.450 --> 01:03:24.829
+Pablo Eduardo Abad: Este se dedicó a estudiar el criptosistema del bienestar y en 1 863 publica un método que encuentra para resolverlo.
+
+555
+01:03:25.070 --> 01:03:29.230
+Pablo Eduardo Abad: Sí que
+
+556
+01:03:30.000 --> 01:03:45.279
+Pablo Eduardo Abad: que demuestra este método. Ahora vamos a ver el método de Kazynski y en la práctica van a resolver un criptosistema de estos, pero una de las consecuencias que vuelve muy patentes este método, que para este tipo de criptosistemas ya no va a haber una solución genérica.
+
+557
+01:03:45.950 --> 01:03:52.609
+Pablo Eduardo Abad: Nosotros podríamos construir un algoritmo que, de forma genérica resuelva cualquier criptosistema de sustitución simple
+
+558
+01:03:53.760 --> 01:04:02.269
+Pablo Eduardo Abad: para los criptosistemas de sustitución alfabética empiezan a aparecer algoritmos especializados para cada tipo ya no hay como una solución genérica.
+
+559
+01:04:05.500 --> 01:04:10.759
+Pablo Eduardo Abad: El Cacynski resuelve el problema partiéndolo en 2.
+
+560
+01:04:11.710 --> 01:04:16.510
+Pablo Eduardo Abad: Si el el desarrolla su ataque en 2 fases. La primera fase
+
+561
+01:04:16.980 --> 01:04:23.529
+Pablo Eduardo Abad: es determinar la longitud de la clave. Nosotros acá vimos un ejemplo con una clave de longitud, 4, pero
+
+562
+01:04:23.780 --> 01:04:36.289
+Pablo Eduardo Abad: desde un punto de vista de atacante, la clave puede tener cualquier longitud y el atacante no conoce la clave, así que no sabe su longitud. Entonces la primera parte del del cripto análisis de Kaczynski busca
+
+563
+01:04:36.680 --> 01:04:39.999
+Pablo Eduardo Abad: entender el tamaño de la clave
+
+564
+01:04:40.490 --> 01:04:54.979
+Pablo Eduardo Abad: sí y que de qué es lo que se da cuenta. Kazyski es algo que acá en este ejemplo chico parece aparece que es esto que les decía una letra. Por ejemplo, la S. Podemos ver a distintos símbolos, pero si esa misma letra
+
+565
+01:04:55.150 --> 01:05:03.900
+Pablo Eduardo Abad: cae en la misma posición del bloque, como pasa con los espacios en el segundo y en el tercer bloque. Si se va a mapear a la misma letra del texto cifrado.
+
+566
+01:05:04.430 --> 01:05:07.729
+Pablo Eduardo Abad: entonces lo que observó Kacynski, es
+
+567
+01:05:08.000 --> 01:05:19.099
+Pablo Eduardo Abad: o la apreciación de gasesquíes. Si yo encuentro secuencias repetidas en el texto cifrado, lo más probable es que sean los mismos caracteres en el texto plano
+
+568
+01:05:21.080 --> 01:05:24.580
+Pablo Eduardo Abad: que hayan caído justo en la misma posición en el bloque.
+
+569
+01:05:25.420 --> 01:05:30.760
+Pablo Eduardo Abad: Sí, porque una cosa es que haya una coincidencia de una letra, pero si yo encuentro una coincidencia de 3 letras seguidas.
+
+570
+01:05:31.630 --> 01:05:42.100
+Pablo Eduardo Abad: podría pasar, pero es cada vez menos probable, no cuantas más letras. Entonces lo que él plantea en su test para la primera parte es dado un texto acá Tenemos un texto un poco más grande.
+
+571
+01:05:42.460 --> 01:05:45.310
+Pablo Eduardo Abad: Busquemos secuencias que aparecen repetidas.
+
+572
+01:05:45.760 --> 01:05:49.569
+Pablo Eduardo Abad: Si en este texto están subrayadas algunas secuencias de caracteres
+
+573
+01:05:51.200 --> 01:05:54.669
+Pablo Eduardo Abad: que aparecen más de una vez sí. Ahora hay un resumen.
+
+574
+01:05:57.660 --> 01:06:14.280
+Pablo Eduardo Abad: sí, y lo que plantea es bueno, calculemos la distancia que hay entre cada una de esas secuencias Y entonces, por ejemplo, Gmp, que es una secuencia de 4 caracteres acá sentados de 4 caracteres que vimos está separada por 256 caracteres y 104 caracteres
+
+575
+01:06:14.610 --> 01:06:15.790
+Pablo Eduardo Abad: toma de la otra
+
+576
+01:06:15.940 --> 01:06:21.280
+Pablo Eduardo Abad: y de ese que aparece 2 veces. Esas 2 veces están separadas por 72 caracteres.
+
+577
+01:06:21.390 --> 01:06:26.240
+Pablo Eduardo Abad: 156, hace de corta s. V, 32 caracteres.
+
+578
+01:06:27.220 --> 01:06:32.480
+Pablo Eduardo Abad: Y casi que dice, bueno, si yo me creo que esas secuencias están apareciendo
+
+579
+01:06:33.790 --> 01:06:37.059
+Pablo Eduardo Abad: porque es el mismo texto plano en el mismo.
+
+580
+01:06:37.220 --> 01:06:39.270
+Pablo Eduardo Abad: en la misma posición de bloque.
+
+581
+01:06:39.420 --> 01:06:45.150
+Pablo Eduardo Abad: Eso tendría como consecuencia que la diferencia que haya es una
+
+582
+01:06:46.710 --> 01:06:50.629
+Pablo Eduardo Abad: cantidad de caracteres que tiene que ser un múltiplo del tamaño del bloque.
+
+583
+01:06:53.220 --> 01:06:58.889
+Pablo Eduardo Abad: Si, si, por decir algo, mis blogs. Mi tamaño de clave fue ese: 32 caracteres
+
+584
+01:06:59.550 --> 01:07:04.449
+Pablo Eduardo Abad: no puede aparecer una de estas secuencia separada 14 caracteres
+
+585
+01:07:04.860 --> 01:07:08.549
+Pablo Eduardo Abad: porque no estarían en la misma posición del mismo bloque. Podrían aparecer
+
+586
+01:07:09.200 --> 01:07:13.139
+Pablo Eduardo Abad: separadas 32 caracteres o 64, porque justo 2 bloques
+
+587
+01:07:14.760 --> 01:07:23.969
+Pablo Eduardo Abad: o 96 o 100, 28 o cualquier múltiple. Entonces él dice: calculemos todos los todas las diferencias, calculemos el máximo como un divisor.
+
+588
+01:07:24.390 --> 01:07:28.129
+Pablo Eduardo Abad: Y hay altas chances de que el tamaño del bloqueo sea eso
+
+589
+01:07:31.030 --> 01:07:34.760
+Pablo Eduardo Abad: es una prueba estadística. Podría fallar. Pero si falla
+
+590
+01:07:36.140 --> 01:07:47.539
+Pablo Eduardo Abad: El fallo típico es que hayamos agarrado 2 secuencias que no, que que fue casualidad, que daban exactamente lo mismo, pero eran caracteres distintos. El máximo común divisor va a dar 1
+
+591
+01:07:49.350 --> 01:07:53.989
+Pablo Eduardo Abad: es ir sacando de todas las muestras de a una
+
+592
+01:07:54.200 --> 01:07:59.929
+Pablo Eduardo Abad: hasta encontrar la que hace que el máximo común divisor. Suba de vuelta funciona bastante bien. El método Kazynski.
+
+593
+01:08:02.490 --> 01:08:04.740
+Pablo Eduardo Abad: Primera parte del método.
+
+594
+01:08:07.120 --> 01:08:12.530
+Pablo Eduardo Abad: si la resolvemos bien, lo que tenemos que es el tamaño de la clave que se usó el tamaño de los bloques.
+
+595
+01:08:13.870 --> 01:08:18.129
+Pablo Eduardo Abad: La segunda parte de Kazyski, Voy a venir acá porque es más fácil explicarlo.
+
+596
+01:08:19.180 --> 01:08:20.420
+Pablo Eduardo Abad: Dice esto.
+
+597
+01:08:20.609 --> 01:08:26.909
+Pablo Eduardo Abad: si yo ya sé que el mensaje está dividido en bloques de aquí tamaño. Supongamos 4 para subir este ejemplo.
+
+598
+01:08:27.279 --> 01:08:31.189
+Pablo Eduardo Abad: Yo sé que el primer elemento de cada bloque.
+
+599
+01:08:32.779 --> 01:08:36.739
+Pablo Eduardo Abad: si el primer elemento de cada bloque, la primera letra de cada bloque
+
+600
+01:08:39.410 --> 01:08:49.729
+Pablo Eduardo Abad: pertenece al mismo lenguaje, no porque es una letra del mismo texto plano y además está rotada la misma cantidad de posiciones, o sea. Todas las primeras letras, en este caso están rotadas 4 veces.
+
+601
+01:08:51.960 --> 01:09:04.580
+Pablo Eduardo Abad: Entonces yo podría pensar en un mensaje formado por las primeras letras de cada bloque solamente ese mensaje.
+
+602
+01:09:05.590 --> 01:09:10.759
+Pablo Eduardo Abad: Si yo pienso en el texto plano por ahi, no tendría sentido, no porque estoy cortándole letras al mensaje, pero
+
+603
+01:09:10.890 --> 01:09:15.040
+Pablo Eduardo Abad: parte de un histograma correspondiente al lenguaje, por ejemplo, castellano.
+
+604
+01:09:15.500 --> 01:09:21.470
+Pablo Eduardo Abad: y a ese histograma lo estoy rotando una cantidad fija de veces 4 en el ejemplo.
+
+605
+01:09:21.710 --> 01:09:25.250
+Pablo Eduardo Abad: Entonces esa propia estadística se mantiene.
+
+606
+01:09:28.939 --> 01:09:30.370
+Pablo Eduardo Abad: Me siguen hasta allí.
+
+607
+01:09:34.090 --> 01:09:35.830
+TOMÁS PINAUSIG CASTILLO: Un proceso.
+
+608
+01:09:37.399 --> 01:09:38.039
+Pablo Eduardo Abad: Dele
+
+609
+01:09:38.289 --> 01:09:49.259
+Pablo Eduardo Abad: casi que primera parte averiguamos el tamaño de la clave. Entonces podemos dividir el mensaje al texto cifrado en bloques de ese tamaño. No supongamos que dio 4 para usar este ejemplo.
+
+610
+01:09:49.669 --> 01:09:54.549
+Pablo Eduardo Abad: La segunda observación, que es la segunda parte del ataque de Kazyski. Él dice, bueno.
+
+611
+01:09:55.649 --> 01:09:58.779
+Pablo Eduardo Abad: yo ya sé que la clave tiene longitud 4.
+
+612
+01:09:59.999 --> 01:10:01.049
+Pablo Eduardo Abad: Ahora.
+
+613
+01:10:01.489 --> 01:10:16.489
+Pablo Eduardo Abad: yo sé que cada primer elemento de cada 1 de los bloques está ahí, que está acá. En el primero, el espacio del segundo, la U del tercero, la P del cuarto, la ave corda el 5, Bueno, en realidad estamos trabajando sobre el texto disfraz. Así que sería esta. Ahí
+
+614
+01:10:16.679 --> 01:10:27.469
+Pablo Eduardo Abad: la D, la y la T y la F del texto cifrado si se corresponden a haber rotado una misma cantidad de veces a
+
+615
+01:10:28.749 --> 01:10:36.419
+Pablo Eduardo Abad: letras con sentido en un lenguaje normal. Sí, la estadística del lenguaje
+
+616
+01:10:36.809 --> 01:10:43.139
+Pablo Eduardo Abad: por ser un indicador estadístico, tiene una propiedad súper interesante que si yo agarro, no sé si yo agarro Don Quijote de la Mancha.
+
+617
+01:10:43.329 --> 01:10:47.259
+Pablo Eduardo Abad: y le calculo el histograma me va a dar algo muy parecido al del lenguaje.
+
+618
+01:10:48.259 --> 01:10:54.359
+Pablo Eduardo Abad: Si yo agarro un libro gigante. Así es un mensaje gigante. Y me quedo, por ejemplo, con
+
+619
+01:10:54.669 --> 01:11:01.719
+Pablo Eduardo Abad: todas las letras que son módulo, 1 que tienen resto. Uno de hierro por 4. O sea, me quedo
+
+620
+01:11:02.859 --> 01:11:19.589
+Pablo Eduardo Abad: estoy diciendo de forma complicada. Este eliminó cada letra, le eliminó 3 letras en el medio me quedo con el equivalente a tomar la primera letra de cada 4, nada más. Ese conjunto es totalmente ilegible, pero tienen las mismas propiedades estadísticas que el lenguaje.
+
+621
+01:11:20.409 --> 01:11:33.819
+Pablo Eduardo Abad: Si en ese conjunto de letras, de haber tomado una de cada 4, siempre la primera, las vocales van a aparecer más. Las letras que tenían poca frecuencia de aparición también van a tener poca el histograma. De hecho, es muy parecido para un texto muy grande.
+
+622
+01:11:34.839 --> 01:11:40.579
+Pablo Eduardo Abad: ¿qué quiere decir eso? Que si yo armo el mensaje formado por las primeras letras de cada Grupo.
+
+623
+01:11:41.039 --> 01:11:53.189
+Pablo Eduardo Abad: si todo ese mensaje cifrado fue el resultado de una única rotación. En este ejemplo, siempre rotábamos 4 veces, no, pero eso no lo sabemos como atacante, pero sabemos que es un número concreto.
+
+624
+01:11:54.789 --> 01:12:02.109
+Pablo Eduardo Abad: con lo cual, si le calculo un histograma de frecuencias, me va a dar
+
+625
+01:12:03.619 --> 01:12:07.369
+Pablo Eduardo Abad: un histograma muy parecido al del español en este caso.
+
+626
+01:12:09.679 --> 01:12:18.209
+Pablo Eduardo Abad: entonces yo puedo dividir el mensaje cifrado en 4 grupos, en este caso un mensaje formado solo por la primera letra de cada Grupo.
+
+627
+01:12:19.199 --> 01:12:25.439
+Pablo Eduardo Abad: Otro mensaje formado por la segunda, otro por la tercera y otro por la cuarta y así correcto.
+
+628
+01:12:30.390 --> 01:12:31.720
+TOMÁS PINAUSIG CASTILLO: Sí, clarísimo.
+
+629
+01:12:33.080 --> 01:12:33.840
+Pablo Eduardo Abad: Bien.
+
+630
+01:12:34.340 --> 01:12:38.660
+Pablo Eduardo Abad: Entonces, ¿qué? ¿cuál ¿Cuál es la idea?
+
+631
+01:12:40.360 --> 01:12:44.650
+Pablo Eduardo Abad: Si yo, junto cualquiera de esos 2 mensajes se rompe la estadística
+
+632
+01:12:45.100 --> 01:12:49.930
+Pablo Eduardo Abad: si podía juntar símbolos, por ejemplo, rotados 4 veces y rotados 2 veces. Se rompe todo.
+
+633
+01:12:50.790 --> 01:12:54.420
+Pablo Eduardo Abad: Y esta es la brillantez de Kazyski. Kazyski empieza.
+
+634
+01:12:55.610 --> 01:13:02.379
+Pablo Eduardo Abad: Ok, son 2 rotaciones distintas, pero sé que son 2 rotaciones. Sí, ¿Qué pasa si empiezo a probar por fuerza bruta
+
+635
+01:13:02.610 --> 01:13:07.260
+Pablo Eduardo Abad: el descifrar algunos de estos mensajes rotándolo una vez 2 veces, 3 veces, 4 veces
+
+636
+01:13:08.250 --> 01:13:16.070
+Pablo Eduardo Abad: alguna de todas las rotaciones. Es la correcta. El problema es que, como son mensajes parciales, no sabría decirlo. Pero lo que casi que se da cuenta es
+
+637
+01:13:17.200 --> 01:13:19.930
+Pablo Eduardo Abad: que si, por ejemplo, juntamos
+
+638
+01:13:21.330 --> 01:13:32.799
+Pablo Eduardo Abad: el el mensaje con todas las partes. Uno sí y al mensaje de todas las partes. Dos: lo rotamos 2 veces más, cosa que quede rotado 4 veces cuando lo juntemos.
+
+639
+01:13:33.200 --> 01:13:35.009
+Pablo Eduardo Abad: el histograma se va a mantener.
+
+640
+01:13:39.390 --> 01:13:40.560
+Pablo Eduardo Abad: Me siguen
+
+641
+01:13:41.570 --> 01:13:50.300
+Pablo Eduardo Abad: yo calculo. El El grupo de las primeras letras de cada bloque. Me da un histograma, calculo. El grupo de las segundas me va a dar un histograma parecido.
+
+642
+01:13:50.570 --> 01:13:54.930
+Pablo Eduardo Abad: Sí. Ahora, si si junto esos 2 se rompe todo el histograma.
+
+643
+01:13:55.220 --> 01:14:00.589
+Pablo Eduardo Abad: Lo que Kazyinski se dio cuenta es, pero pará si llora si yo roto 1 de los grupos.
+
+644
+01:14:01.520 --> 01:14:08.430
+Pablo Eduardo Abad: y lo junto, se va a seguir rompiendo el histograma, pero va a haber una rotación en la cual quedaron alineados.
+
+645
+01:14:09.010 --> 01:14:09.940
+Pablo Eduardo Abad: ¿sí?
+
+646
+01:14:11.350 --> 01:14:16.949
+Pablo Eduardo Abad: Y cuando lo juntes se va a mantener, va a ser la rotación que sea la diferencia relativa entre los 2,
+
+647
+01:14:17.280 --> 01:14:19.260
+Pablo Eduardo Abad: o sea, si yo al segundo grupo
+
+648
+01:14:19.380 --> 01:14:24.979
+Pablo Eduardo Abad: que yo no sé, ¿no? Pero hacemos trampa, que conocemos. La clave que estaba rotado 2 veces, lo roto 2 veces más.
+
+649
+01:14:25.100 --> 01:14:31.689
+Pablo Eduardo Abad: El resultado va a ser una rotación de 4. Entonces, cuando junte los 2 grupos rotados de 4, se va a mantener el histograma.
+
+650
+01:14:33.860 --> 01:14:39.660
+Pablo Eduardo Abad: Sí, No pregunten cómo se le ocurrió eso, o sea, parece reobio este.
+
+651
+01:14:40.410 --> 01:14:42.100
+Pablo Eduardo Abad: Pero bueno, eso eso
+
+652
+01:14:43.580 --> 01:14:52.170
+Pablo Eduardo Abad: que nos permite, nos permite, usamos el primer grupo. Calculamos el histograma y vamos rotando el segundo y mezclándolo hasta que de el histograma
+
+653
+01:14:52.440 --> 01:14:55.410
+Pablo Eduardo Abad: Cuando lo encontramos, resolvimos
+
+654
+01:14:55.920 --> 01:15:02.810
+Pablo Eduardo Abad: o encontramos la diferencia relativa a rotaciones. Sabemos que el segundo grupo está rotado 2 veces menos que el primero.
+
+655
+01:15:03.010 --> 01:15:13.399
+Pablo Eduardo Abad: ¿y qué hacemos ahora? Tomamos El tercero nos rompe el histograma, rotamos una vez al tercero, nos rompe 2 veces. Rompe 3, Rompe 4, Rompe 5. Uy se mantiene el histograma.
+
+656
+01:15:14.270 --> 01:15:20.130
+Pablo Eduardo Abad: Listo. Sabemos que la rotación relativa
+
+657
+01:15:21.990 --> 01:15:28.780
+Pablo Eduardo Abad: perdón dije cualquier cosa justo al estar rotada 5. Entonces lo que va a ocurrir es que cuando al 5. Lo rotemos
+
+658
+01:15:30.900 --> 01:15:36.660
+Pablo Eduardo Abad: 26 veces, vemos todas las vueltas y vamos para arriba. Se va a mantener el histograma porque la diferencia es 1
+
+659
+01:15:37.170 --> 01:15:43.140
+Pablo Eduardo Abad: hacia arriba y lo mismo con el cuarto.
+
+660
+01:15:44.510 --> 01:15:57.439
+Pablo Eduardo Abad: Cuando resolvemos eso con todos, ¿qué tenemos? Vamos a tener como las diferencias de rotación en cada 1, pero una transformación entre ellas que nos dejó a todo el mensaje rotado por el mismo, por el mismo número
+
+661
+01:15:59.010 --> 01:16:02.460
+Pablo Eduardo Abad: que no lo sabemos, acá pero sería 4 en este ejemplo si lo aplicásemos.
+
+662
+01:16:03.360 --> 01:16:12.569
+Pablo Eduardo Abad: Pero ¿qué hicimos? Transformamos el criptosistema en un criptosistema de por rotación al criptosistema por rotación que hacemos ahora. Probamos los veintipico de posibilidades
+
+663
+01:16:12.740 --> 01:16:14.490
+Pablo Eduardo Abad: y recuperamos el mensaje original.
+
+664
+01:16:17.510 --> 01:16:26.130
+Pablo Eduardo Abad: mucho más elaborado es un poco lo que está explicado acá en
+
+665
+01:16:26.940 --> 01:16:36.379
+Pablo Eduardo Abad: lleva mucho más tiempo de resolverlo. En la práctica, el lunes van a van a resolver un criptosistema del bienar acá ayuda a que sea más largo el texto como para tener más
+
+666
+01:16:36.720 --> 01:16:39.929
+Pablo Eduardo Abad: más información para hacerlo. Pero bueno, es
+
+667
+01:16:40.540 --> 01:16:53.690
+Pablo Eduardo Abad: empieza a complicarse un poco el mecanismo. Pero más allá de eso, ya empiezan a aparecer mecanismos que son ad hoc, o sea, esto que funciona para no funciona para ningún otro sistema. Esto explota el algoritmo en sí de villanar.
+
+668
+01:16:53.840 --> 01:16:55.990
+Pablo Eduardo Abad: Explota el conocer el criptosistema
+
+669
+01:16:57.670 --> 01:17:04.339
+Pablo Eduardo Abad: Si si yo no conociese y no tuviese acceso a videonar. Y quiero probar por fuerza bruta, o quiero desarrollar otro mecanismo.
+
+670
+01:17:04.520 --> 01:17:10.820
+Pablo Eduardo Abad: Es muy difícil, y entonces los criptosistemas de esta familia Hay muchos.
+
+671
+01:17:11.600 --> 01:17:20.849
+Pablo Eduardo Abad: Este. Empiezan a compartir este trade de que los ataques ya son específicos. No es que está el ataque genérico para criptosistemas polialfabéticos.
+
+672
+01:17:25.560 --> 01:17:29.980
+Pablo Eduardo Abad: La sustitución por ley alfabética es una familia gigante de
+
+673
+01:17:30.080 --> 01:17:35.220
+Pablo Eduardo Abad: de transformaciones y de alguna manera lo que ocurre después de
+
+674
+01:17:35.950 --> 01:17:43.950
+Pablo Eduardo Abad: de de de haber demostrado que se podían romper. Es como una escala de Co, un juego de gato y ratón. No se inventan criptosistemas nuevos se rompen, se inventan, se rompen.
+
+675
+01:17:44.510 --> 01:17:55.240
+Pablo Eduardo Abad: y eso escala hasta la Segunda Guerra Mundial, que es por lo menos de donde hay mejor documentación, donde
+
+676
+01:17:55.450 --> 01:18:05.640
+Pablo Eduardo Abad: todos los ejércitos que participaron ante la necesidad de proteger las comunicaciones y de de sincronizar este distintos
+
+677
+01:18:05.940 --> 01:18:08.739
+Pablo Eduardo Abad: distintas células que trabajaban en distintos lugares.
+
+678
+01:18:08.950 --> 01:18:13.510
+Pablo Eduardo Abad: Este utilizaban criptografía para proteger esos mensajes y
+
+679
+01:18:13.670 --> 01:18:18.129
+Pablo Eduardo Abad: el estado del arte. En ese momento eran criptosistemas polialfabéticos
+
+680
+01:18:18.620 --> 01:18:23.740
+Pablo Eduardo Abad: mucho más sofisticados que el de Viena. Sí, Uno de los más estudiados es enigma.
+
+681
+01:18:23.960 --> 01:18:30.210
+Pablo Eduardo Abad: Inma fue el criptosistema que utilizaron los alemanes durante la guerra para proteger sus comunicaciones.
+
+682
+01:18:31.590 --> 01:18:41.009
+Pablo Eduardo Abad: Es un sistema que se llama de rotores. Y es muy famoso porque los aliados lograron criptonalizar Enigma antes de que termine la guerra
+
+683
+01:18:41.440 --> 01:18:50.879
+Pablo Eduardo Abad: o una parte de Enigma, Sí. Y fue clave para criptanalizarlo, que en una incursión lograron tener acceso físico a una máquina
+
+684
+01:18:51.400 --> 01:18:57.370
+Pablo Eduardo Abad: teniendo acceso físico a la máquina, hicieron ingeniería inversa, entendieron el algoritmo y entendiendo el algoritmo
+
+685
+01:18:57.580 --> 01:19:04.560
+Pablo Eduardo Abad: bueno, básicamente inventaron la computadora para probar después este cristo, analizarlo porque seguía siendo una cantidad explosiva
+
+686
+01:19:04.840 --> 01:19:15.539
+Pablo Eduardo Abad: de cosas enigma. Bueno, está la la película que mencioné en Inglaterra hay un museo de Benchley Park que fue el lugar donde se construyó todo esto, donde hay
+
+687
+01:19:15.660 --> 01:19:18.359
+Pablo Eduardo Abad: un par de máquinas semima originales.
+
+688
+01:19:18.470 --> 01:19:26.590
+Pablo Eduardo Abad: Esta es una foto de una máquina reconstruida. Sí, era como una máquina de escribir de las viejas
+
+689
+01:19:26.950 --> 01:19:35.830
+Pablo Eduardo Abad: salvo que cuando 1 tocaba una letra. Lo que imprimía no era la letra que tocaba. Si este es el esquema conceptual del enigma, se dice que es un criptosistema de rotores.
+
+690
+01:19:37.660 --> 01:19:47.010
+Pablo Eduardo Abad: La idea es enigma, el enigma original tenía 3 rotores, hubo versiones de 4 rotores, Pero imagínense cada rotor
+
+691
+01:19:47.530 --> 01:19:58.040
+Pablo Eduardo Abad: como una, como una sustitución simple donde entra una letra y sale otra sí
+
+692
+01:20:01.520 --> 01:20:08.210
+Pablo Eduardo Abad: con el catch de que el rotarlo quiere decir la a entra y hoy se mapea en una. Pero si lo roto la A, se mapean otra, no.
+
+693
+01:20:08.410 --> 01:20:13.389
+Pablo Eduardo Abad: Entonces estos eran 3 rotores. Así, con la particularidad de que, además.
+
+694
+01:20:13.850 --> 01:20:18.020
+Pablo Eduardo Abad: cada vez que se tipipea una letra cambiaba 1 de los retores.
+
+695
+01:20:18.230 --> 01:20:23.399
+Pablo Eduardo Abad: o sea, 1 de los rotores, daba toda una vuelta y cuando iba a volver a la posición original, rotaba el segundo.
+
+696
+01:20:24.240 --> 01:20:30.759
+Pablo Eduardo Abad: Imagínenselo como dígitos, no llegaba el último y antes de volver a repetir rotar el que sigue y después el tercero.
+
+697
+01:20:31.720 --> 01:20:40.330
+Pablo Eduardo Abad: con lo cual la secuencia de que que podían producir los rotores en principio, era 26 al cubo
+
+698
+01:20:41.550 --> 01:20:45.940
+Pablo Eduardo Abad: mucho más largo que cualquier mensaje posible, no sin repetir esa secuencia.
+
+699
+01:20:46.690 --> 01:20:53.449
+Pablo Eduardo Abad: Y la idea esquemática era esa, de alguna manera. Cuando 1 tocaba una tecla sin el teclado.
+
+700
+01:20:54.220 --> 01:21:00.929
+Pablo Eduardo Abad: primero había un tablero que no sé si acá se llega a ver. Bueno, es esta parte del medio
+
+701
+01:21:01.680 --> 01:21:10.560
+Pablo Eduardo Abad: donde 1 podía, tenía como cables conectados en paralelo, y 1 podía jugar con eso y y cruzar las conexiones.
+
+702
+01:21:11.450 --> 01:21:14.810
+Pablo Eduardo Abad: Sí, esto era todo eléctrico electromecánico.
+
+703
+01:21:14.960 --> 01:21:20.499
+Pablo Eduardo Abad: Y después, ¿cuál es la idea de esto. Cuando 1 tocaba una tecla, esa tecla pasaba por el Blackboard
+
+704
+01:21:22.780 --> 01:21:32.700
+Pablo Eduardo Abad: entraba en el primer rotor, el rotor lo transformaba en otro, salía. Entraba el segundo rotor que la transformaba en el tercero del Tercero, había como un punto fijo
+
+705
+01:21:34.280 --> 01:21:39.049
+Pablo Eduardo Abad: que rebotaba. La señal entraba en algún lugar para el tercero. Se iba comunicando
+
+706
+01:21:39.360 --> 01:21:42.259
+Pablo Eduardo Abad: con cada 1 salía por alguna de las otras posiciones.
+
+707
+01:21:42.550 --> 01:21:49.320
+Pablo Eduardo Abad: pasaba por el por el Blackburg, y eso nada, o iluminaba o imprimía una letra.
+
+708
+01:21:49.840 --> 01:21:52.919
+Pablo Eduardo Abad: Entonces fíjense, que Desde luego, si yo
+
+709
+01:21:53.250 --> 01:21:58.490
+Pablo Eduardo Abad: mi casa apretando la misma tecla, ¿qué pasa cuando entra el Blackboard?
+
+710
+01:21:58.620 --> 01:22:05.780
+Pablo Eduardo Abad: Pasa por el mismo lugar, la tecla, pero cada vez que yo tiro una tecla, el rotor, 1
+
+711
+01:22:06.380 --> 01:22:10.589
+Pablo Eduardo Abad: cambia. Entonces la primera parte queda igual, la segunda, que da igual cuando llega acá
+
+712
+01:22:10.970 --> 01:22:16.350
+Pablo Eduardo Abad: este rotor, 1 ya cambió. Entonces se mapea otro lugar. No sé, inventémonos por acá
+
+713
+01:22:16.570 --> 01:22:20.770
+Pablo Eduardo Abad: que esto se mapea otro por acá y otro por y otro, y otro.
+
+714
+01:22:21.280 --> 01:22:25.320
+Pablo Eduardo Abad: Entonces podríamos cansarnos de escribir. Ahí. Empiezan a salir letras al azar.
+
+715
+01:22:25.640 --> 01:22:34.250
+Pablo Eduardo Abad: Sí que tiene. Esto es como si tuviésemos una sustitución simple, mono alfabética, pero que se varía letra a letra
+
+716
+01:22:34.480 --> 01:22:42.559
+Pablo Eduardo Abad: que, a diferencia de billanar donde tenemos bloques que podrían ser de 4. Acá Los bloques donde se volvía a repetir todo esto
+
+717
+01:22:43.280 --> 01:22:46.759
+Pablo Eduardo Abad: tenían 26 al cubo 27 al cubo.
+
+718
+01:22:46.950 --> 01:22:53.079
+Pablo Eduardo Abad: caracteres de longitud, algo en términos prácticos, para un mensaje, no se repetían nunca.
+
+719
+01:22:56.260 --> 01:23:06.070
+Pablo Eduardo Abad: Esto fue como el estado del arte. Ahí perdón. Ve un comentario. Fue Turinga Turin fue 1 de los científicos que lideró el toda la parte criptanesis no fue el único
+
+720
+01:23:06.710 --> 01:23:11.090
+Pablo Eduardo Abad: este, pero pero sí sí sí. Turín fue el
+
+721
+01:23:11.940 --> 01:23:17.180
+Pablo Eduardo Abad: el el que lidero toda esta parte en
+
+722
+01:23:20.800 --> 01:23:24.079
+Pablo Eduardo Abad: cómo se ponían de acuerdo. Para la clave. Muy buena. Pregunta.
+
+723
+01:23:24.320 --> 01:23:29.310
+Pablo Eduardo Abad: La clave de esto era, en general en general, el
+
+724
+01:23:30.720 --> 01:23:46.579
+Pablo Eduardo Abad: el el Blackboard era algo que que que medio quedaba definido más que nada por el tipo de unidad. O sea, usan la misma máquina para comunicar lo que era la marina. Lo que era infantería. Cada una tenía su su plan fijo. La clave era la disposición inicial de los 3 rotores
+
+725
+01:23:47.340 --> 01:23:51.900
+Pablo Eduardo Abad: Se ha estado. Ca: Cada posición tenía un número, Entonces la clave era, No sé,
+
+726
+01:23:52.000 --> 01:23:59.010
+Pablo Eduardo Abad: por decir algo. Quince 8 14, y empezaban con esa clave. Ponían los rotores en eso y empezaban a tipear
+
+727
+01:23:59.250 --> 01:24:14.949
+Pablo Eduardo Abad: algo que no dije por la naturaleza de esto. Bien que hay como un espejo, no como que la señal base espeja y vuelve la gracia de esto es que si 1 pone la misma clave al principio y tipea el texto cifrado, este espejado le devuelve el texto plano. Entonces la misma máquina se usaba para cifrar y para descifrar.
+
+728
+01:24:20.400 --> 01:24:28.770
+Pablo Eduardo Abad: Eso es algo que después, en en otros ejemplos de sistema moderno robamos la idea este y y está bastante bueno porque simplifica un montón de análisis
+
+729
+01:24:30.270 --> 01:24:31.600
+Pablo Eduardo Abad: y
+
+730
+01:24:38.570 --> 01:24:40.900
+Pablo Eduardo Abad: es una muy buena pregunta.
+
+731
+01:24:41.130 --> 01:24:45.399
+Pablo Eduardo Abad: Hoy, con el diario el lunes te diría que
+
+732
+01:24:46.740 --> 01:24:51.869
+Pablo Eduardo Abad: no, No necesariamente y justo en enigma, no
+
+733
+01:24:52.080 --> 01:24:59.989
+Pablo Eduardo Abad: el el el que sea así direccional. Si está mal hecho, te podría reducir a la mitad el el campo de búsqueda. Pero
+
+734
+01:25:00.170 --> 01:25:04.309
+Pablo Eduardo Abad: cuando estás hablando de miles de trillones de claves que te digan que sean
+
+735
+01:25:05.040 --> 01:25:09.789
+Pablo Eduardo Abad: este 500 de miles de trillones de claves, no pasa nada.
+
+736
+01:25:10.150 --> 01:25:18.329
+Pablo Eduardo Abad: Habiendo robado la máquina, pudieron entender el algoritmo, pero el problema era la configuración inicial de claves, porque había un
+
+737
+01:25:18.610 --> 01:25:29.809
+Pablo Eduardo Abad: 26 al al cubo posibles este claves. De hecho, la idea original con la que desarrollan la computadora era para poder calcular todas esas y no les alcanza el poder de cómputo que desarrollan.
+
+738
+01:25:30.620 --> 01:25:39.800
+Pablo Eduardo Abad: terminan resolviéndolo cuando logran a través de hipotetizar el comienzo de los mensajes, reducir bastante la cantidad de cosas que tenían para probar
+
+739
+01:25:40.720 --> 01:25:45.389
+Pablo Eduardo Abad: algo que pasaba en las comunicaciones que en la película lo dramatizan bastante bien. Es
+
+740
+01:25:46.940 --> 01:25:57.670
+Pablo Eduardo Abad: los alemanes lo que habían hecho. Es un cuaderno que se llevaba cada oficial a mando, donde para cada día había una configuración distinta para los engranajes. Entonces no era que
+
+741
+01:25:57.880 --> 01:26:05.610
+Pablo Eduardo Abad: encontraban la combinación y ya está cada día tenían que volver a empezar. Y si en un día no lograban barrer las posibilidades, listo, trabajo tirado.
+
+742
+01:26:07.450 --> 01:26:13.030
+Pablo Eduardo Abad: De hecho, la cerca del final de la guerra, los submarinos usaban máquinas de 4 rotores
+
+743
+01:26:13.710 --> 01:26:19.409
+Pablo Eduardo Abad: y no pudieron, no pudieron descifrar las durante la guerra.
+
+744
+01:26:21.300 --> 01:26:26.990
+Pablo Eduardo Abad: Pero Bueno, enigma es el más conocido.
+
+745
+01:26:27.210 --> 01:26:35.899
+Pablo Eduardo Abad: Pero de la complejidad técnica Enigma, Estados Unidos, Japón, Inglaterra, todos tenían algún criptosistema de este tipo.
+
+746
+01:26:36.370 --> 01:26:53.730
+Pablo Eduardo Abad: Lo interesante es que para resolver esto, digo, prácticamente inventamos la computadora. Digo, esto es este. Es de acá Sale el modelo de procesamiento automático que después toma Bonoiman para crear la arquitectura, monoiman nuestra memoria y ejecución que usamos hoy en día en casi todas las computadoras.
+
+747
+01:26:54.160 --> 01:26:58.040
+Pablo Eduardo Abad: Este. Así que Este es casi como la razón por la que se inventan las computadoras.
+
+748
+01:26:58.430 --> 01:27:00.899
+Pablo Eduardo Abad: Pero lo importante es que
+
+749
+01:27:05.590 --> 01:27:19.589
+Pablo Eduardo Abad: el trabajo que se nunca se había puesto tanta cabeza y tanta gente inteligente a tratar de romper criptosistemas en algo tan crítico, y la Segunda Guerra Mundial, más allá de todos los otros souttans en en criptografía genera una crisis porque
+
+750
+01:27:21.320 --> 01:27:27.310
+Pablo Eduardo Abad: el auto más importante o la realización más importante es que no hay un criterio
+
+751
+01:27:27.870 --> 01:27:35.359
+Pablo Eduardo Abad: que permita dar fiabilidad de la seguridad de de los criptosistemas. La definición era algo así como esto es seguro porque nadie lo rompió.
+
+752
+01:27:36.330 --> 01:27:42.729
+Pablo Eduardo Abad: Y se dieron cuenta que cuando juntaron un montón de gente brillante, lograron romper cosas que se suponían que eran muy seguras.
+
+753
+01:27:43.510 --> 01:27:56.009
+Pablo Eduardo Abad: Y Y de esa crisis surge el trabajo fundacional que da hoy día el y el cuerpo de conocimiento de lo que llamamos la criptografía moderna, que si quieren 10 3 pilares muy grandes y muy distintos.
+
+754
+01:27:57.040 --> 01:28:05.740
+Pablo Eduardo Abad: Primero, los criptosistemas necesitan representaciones formales, ya no son recetas algorítmicas necesitan una definición precisa.
+
+755
+01:28:06.130 --> 01:28:07.550
+Pablo Eduardo Abad: Segundo.
+
+756
+01:28:09.200 --> 01:28:19.430
+Pablo Eduardo Abad: no, no hay una única definición de seguridad. Eso fue algo que surgió en el análisis técnicamente, no pudieron romper enigma
+
+757
+01:28:19.670 --> 01:28:27.580
+Pablo Eduardo Abad: de forma completa, lograron romper ese uso de Enigma aprovechándose de la capacidad de tener acceso. Una parte de los mensajes
+
+758
+01:28:29.110 --> 01:28:32.470
+Pablo Eduardo Abad: como el como el gancho que les di en el otro, ese de la cabeza.
+
+759
+01:28:32.860 --> 01:28:39.160
+Pablo Eduardo Abad: o sea, no, no rompieron enigma. De forma general, para cualquier mensaje, solo para mensajes donde supiesen una parte del texto.
+
+760
+01:28:39.560 --> 01:28:46.159
+Pablo Eduardo Abad: entonces. Ah, no hay una única definición de seguridad. Tal vez enigma era seguro, pero enigma como lo estaban usando, no lo era.
+
+761
+01:28:46.330 --> 01:28:49.410
+Pablo Eduardo Abad: Entonces ¿Será que no hay una única definición? Bueno, necesitamos
+
+762
+01:28:50.150 --> 01:28:58.730
+Pablo Eduardo Abad: entender mejor qué es la seguridad, un criptosistema en un mundo donde parece ser que no hay ninguna definición única de seguridad
+
+763
+01:28:59.270 --> 01:29:02.749
+Pablo Eduardo Abad: y si no hay una única definición de seguridad.
+
+764
+01:29:04.830 --> 01:29:20.540
+Pablo Eduardo Abad: Necesitamos algún tipo de formalidad que nos haga salir de esta definición vaga. De esto es seguro porque nadie lo rompió. ¿cómo podemos saber si 2 cosas que nadie rompió. Una es más segura que la otra. En alguno de los escenarios.
+
+765
+01:29:21.260 --> 01:29:27.570
+Pablo Eduardo Abad: si estas ideas son las que refundan la criptografía y crean la criptografía moderna.
+
+766
+01:29:27.750 --> 01:29:43.579
+Pablo Eduardo Abad: Todo lo que vimos y otros criptosistemas clásicos, como se les llama hoy no se usan en la práctica, pues son fáciles de romper. Ya hay formas algorítmicas de romperlo. Ni siquiera hay que pensarlo, se tiran a un programa, sí, pero son la base a partir de la cual se construye
+
+767
+01:29:44.380 --> 01:29:46.260
+Pablo Eduardo Abad: la criptografía moderna.
+
+768
+01:29:48.410 --> 01:29:58.570
+Pablo Eduardo Abad: Hasta ahora veníamos trabajando con una definición informal. Si pasamos al mundo moderno, vamos a introducir la primera definición ya un poco más formal de criptosistema.
+
+769
+01:30:00.000 --> 01:30:04.510
+Pablo Eduardo Abad: un criptosistema es una terna de algoritmos son 3 algoritmos.
+
+770
+01:30:05.970 --> 01:30:08.129
+Pablo Eduardo Abad: Un algoritmo de generación de clave.
+
+771
+01:30:08.410 --> 01:30:12.389
+Pablo Eduardo Abad: Sí, es una función capaz de generar claves criptográficas.
+
+772
+01:30:12.720 --> 01:30:15.130
+Pablo Eduardo Abad: En particular, esta función
+
+773
+01:30:15.400 --> 01:30:21.939
+Pablo Eduardo Abad: suele ser una función sin parámetros y nos determina el espacio de claves. Esta función es la que dice: si hay
+
+774
+01:30:22.080 --> 01:30:27.710
+Pablo Eduardo Abad: 26 claves: un 1 000 000, un cuatrillón, o cuántas son y cuáles son las claves posibles
+
+775
+01:30:28.000 --> 01:30:30.610
+Pablo Eduardo Abad: y 2 funciones. Una función de cifrado
+
+776
+01:30:31.900 --> 01:30:34.850
+Pablo Eduardo Abad: que tiene 2 parámetros, una clave
+
+777
+01:30:36.460 --> 01:30:42.869
+Pablo Eduardo Abad: y un mensaje plano dentro de un posible espacio de todos los mensajes que lo transforma en un
+
+778
+01:30:43.560 --> 01:30:46.660
+Pablo Eduardo Abad: mensaje cifrado y una función de descifrado
+
+779
+01:30:49.760 --> 01:30:57.520
+Pablo Eduardo Abad: que cumplen con 2 propiedades, o por lo menos primero con una propiedad básica fundamental que
+
+780
+01:30:57.650 --> 01:31:04.250
+Pablo Eduardo Abad: recoge la utilidad que le queremos extraer al criptosistema, que es que para una misma clave.
+
+781
+01:31:05.170 --> 01:31:08.809
+Pablo Eduardo Abad: la función de cifrado y descifrado deberían actuar como inversas.
+
+782
+01:31:08.960 --> 01:31:16.970
+Pablo Eduardo Abad: O sea, Si ciframos un mensaje cualquiera con una clave y lo desciframos con la misma clave, deberíamos llegará
+
+783
+01:31:17.980 --> 01:31:19.270
+Pablo Eduardo Abad: el mismo mensaje.
+
+784
+01:31:20.360 --> 01:31:21.310
+Pablo Eduardo Abad: Sí,
+
+785
+01:31:22.160 --> 01:31:41.589
+Pablo Eduardo Abad: esta es la definición básica del criptosistema, pero está incompleta porque, de hecho, yo podría definir a la función identidad de una función que ignore la clave y me devuelva el mismo mensaje y cumple con esta propiedad. Si esta es la propiedad sanitaria, si quieren. Por eso se le llama básica. Si esto no se cumple, no podríamos recuperar mensaje original.
+
+786
+01:31:41.760 --> 01:31:43.549
+Pablo Eduardo Abad: pero ésta no habla de la seguridad.
+
+787
+01:31:43.720 --> 01:31:46.699
+Pablo Eduardo Abad: ¿por qué no tenemos una una propiedad de seguridad.
+
+788
+01:31:46.900 --> 01:31:50.140
+Pablo Eduardo Abad: Por esto que dijimos de que no hay una única noción de seguridad.
+
+789
+01:31:55.100 --> 01:31:56.289
+Pablo Eduardo Abad: Vamos a
+
+790
+01:31:57.540 --> 01:32:04.259
+Pablo Eduardo Abad: hablar primero de una cosa muy importante. Cuando empezaron a estudiar esto, se buscó formalizar la la seguridad.
+
+791
+01:32:04.510 --> 01:32:12.409
+Pablo Eduardo Abad: a a ver si existía. Sí, y Shannon define un criterio
+
+792
+01:32:14.820 --> 01:32:20.930
+Pablo Eduardo Abad: que llama secreto perfecto. Una formulación estadística de propiedades que debería cumplir
+
+793
+01:32:21.430 --> 01:32:29.160
+Pablo Eduardo Abad: la función de cifrado en relación a los conjuntos que llama secreto. Perfecto.
+
+794
+01:32:30.590 --> 01:32:37.290
+Pablo Eduardo Abad: Aplicado criptosistemas. La definición de Shannon dice que un criptosistema tiene secreto perfecto si para
+
+795
+01:32:37.570 --> 01:32:48.560
+Pablo Eduardo Abad: toda distribución de probabilidades de los mensajes o sea, para cualquier tipo de mensajes. No importa si son mensajes en español, en inglés, archivos, este documentos, vídeo, lo que sea para todo tipo de mensajes.
+
+796
+01:32:49.430 --> 01:32:53.999
+Pablo Eduardo Abad: Ocurre que para cualquier mensaje m de ese conjunto
+
+797
+01:32:57.580 --> 01:33:02.630
+Pablo Eduardo Abad: y cualquier mensaje cifrado posible de eso.
+
+798
+01:33:04.170 --> 01:33:12.089
+Pablo Eduardo Abad: la probabilidad de que el mensaje haya sido ese en particular, sabiendo que el texto cifrado es
+
+799
+01:33:13.050 --> 01:33:20.629
+Pablo Eduardo Abad: C. Es igual a la probabilidad de que el mensaje haya sido ese originalmente
+
+800
+01:33:23.110 --> 01:33:28.679
+Pablo Eduardo Abad: la clase que viene. Vamos a repasar un poco este tema de estos temas de probabilidades, Sí, pero lo que está diciendo acá es
+
+801
+01:33:29.330 --> 01:33:41.760
+Pablo Eduardo Abad: si yo tipifico a los tipos de mensajes, por ejemplo, mensajes en español. Sí, la probabilidad de que supóngase que son usamos mensajes de una letra para hacerlo más fácil. La probabilidad de que el mensaje sea a
+
+802
+01:33:42.190 --> 01:33:48.630
+Pablo Eduardo Abad: va a ser la frecuencia de la probabilidad, que el mensaje sea una E va a ser la frecuencia de la E. No podemos
+
+803
+01:33:48.760 --> 01:33:51.709
+Pablo Eduardo Abad: definir la probabilidad de cada mensaje que aparezca.
+
+804
+01:33:54.310 --> 01:33:58.350
+Pablo Eduardo Abad: Lo que dice Shannon es: ¿existe el secreto perfecto. Si
+
+805
+01:34:01.260 --> 01:34:03.810
+Pablo Eduardo Abad: la probabilidad que yo conozco a priori
+
+806
+01:34:05.550 --> 01:34:10.879
+Pablo Eduardo Abad: sobre el tipo de mensajes no se modifica por conocer el texto cifrado.
+
+807
+01:34:12.100 --> 01:34:16.410
+Pablo Eduardo Abad: Supóngase que yo había cifrado una letra. Yo puedo dar la probabilidad de a era.
+
+808
+01:34:17.190 --> 01:34:20.720
+Pablo Eduardo Abad: Estoy inventando porque no me acuerdo, pero supongamos 0, 0, 23,
+
+809
+01:34:21.270 --> 01:34:25.729
+Pablo Eduardo Abad: sí, porque de todas las letras la aparece 23 por 100 de las veces.
+
+810
+01:34:26.040 --> 01:34:31.340
+Pablo Eduardo Abad: Si Si yo les digo que el texto cifrado es. J.
+
+811
+01:34:31.470 --> 01:34:39.890
+Pablo Eduardo Abad: Y cuando ustedes calculan, me dicen, bueno, sabiendo que el texto disfraz, j la probabilidad de que el mensaje sea sigue siendo 0, coma 23,
+
+812
+01:34:40.220 --> 01:34:45.909
+Pablo Eduardo Abad: y eso ocurre para todas las letras, el criptosistema tiene secreto perfecto.
+
+813
+01:34:46.110 --> 01:34:54.429
+Pablo Eduardo Abad: Es una definición formal matemática castellana dentro de un cuerpo de conocimiento que define.
+
+814
+01:34:54.870 --> 01:34:57.980
+Pablo Eduardo Abad: entendiendo la información que que viajan los mensajes.
+
+815
+01:34:58.630 --> 01:35:08.410
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Entonces lo que quiere decir es que hay secreto perfecto. Si tengo igual probabilidad de conocer el mensaje sin importar el cifrado.
+
+816
+01:35:11.150 --> 01:35:27.059
+Pablo Eduardo Abad: No necesariamente de conocer el mensaje, porque vos es esto, por ejemplo, suponete que los mensajes son 2 nada más. Sí o no? Es la respuesta a algo y vos sabes que el mensaje? La respuesta es sí o no. Vos Podés saber a priori. No sé por información extra que tenés que hay un 80 por 100 de chances de que sea así.
+
+817
+01:35:27.610 --> 01:35:31.990
+Pablo Eduardo Abad: Pero si te tenés que jugar a algo. ¿vas a decir Sí, Sí, ¿Por qué? Porque hay un 80.
+
+818
+01:35:32.660 --> 01:35:45.020
+Pablo Eduardo Abad: Lo que dice Shannon es, si vos. Sabes, eso a priori. Y tiene. Y esto tiene secreto perfecto. Que yo te diga que el mensaje cifrado es sarasa, es esto. No te cambia esa probabilidad. No aprendiste nada del mensaje.
+
+819
+01:35:45.300 --> 01:35:54.139
+Pablo Eduardo Abad: No es solamente no lo puedes decodificar. No podés decir que ese 0 coma 80 que vos sabías a priori pasó a ser 0, coma, 81 o 0, 79.
+
+820
+01:35:55.550 --> 01:35:58.949
+Pablo Eduardo Abad: Es mucho más fuerte que que no puedo decodificar el mensaje.
+
+821
+01:35:59.510 --> 01:36:10.879
+Pablo Eduardo Abad: Digo, si ahora vos podías no saber nada del mensaje, podías ser Che, es si o no, pero es un 50 50. Si esto tiene secreto perfecto, quiere decir que si yo te digo, el texto cifrado era. J. Y M:
+
+822
+01:36:11.600 --> 01:36:14.980
+Pablo Eduardo Abad: Lo único que puedo decir es que sigue habiendo un 50 50.
+
+823
+01:36:15.590 --> 01:36:23.100
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Okay, entonces el secreto perfecto sería que yo no puedo aprender nada del mensaje por cómo está cifrado.
+
+824
+01:36:23.510 --> 01:36:29.510
+Pablo Eduardo Abad: Exacto es mucho más fuerte que no poder recuperar el mensaje. No puedes extraer nada de información.
+
+825
+01:36:30.180 --> 01:36:35.210
+Pablo Eduardo Abad: Vamos a volver sobre este tema No se preocupen. Lo quiero introducir porque
+
+826
+01:36:36.870 --> 01:36:42.080
+Pablo Eduardo Abad: lo que define Shannon acá es el ideal de los criptosistemas.
+
+827
+01:36:43.440 --> 01:36:48.210
+Pablo Eduardo Abad: Sí, la condición se llama secreto perfecto. Casualmente, porque un criptosistema que tenga esta propiedad
+
+828
+01:36:50.130 --> 01:36:55.910
+Pablo Eduardo Abad: es imposible de romper, incluso por fuerza bruta. Esa es la consecuencia más más bestial de esto
+
+829
+01:36:56.330 --> 01:37:08.649
+Pablo Eduardo Abad: en términos de estadísticas, antes de que entremos este más a ver esto. Fíjense, hay algo que se llama la paradoja del secreto perfecto. Si yo la miro estadísticamente, lo que estamos diciendo acá
+
+830
+01:37:08.770 --> 01:37:21.620
+Pablo Eduardo Abad: no importa si no se acuerdan, pero esta es la definición. Si si llamo X e y a a M y C de 2 variables aleatorias discretas que son estadísticamente paradísticamente independientes.
+
+831
+01:37:22.600 --> 01:37:32.440
+Pablo Eduardo Abad: no sé si se acuerdan de esa parte, pero es la definición de de de que son 2 variables, probaísticamente independientes que conocer una no modifica la proba la tabla de probabilidad de la otra.
+
+832
+01:37:34.110 --> 01:37:40.879
+Pablo Eduardo Abad: Pero nosotros sabemos que por diseño hay una función que relaciona a M y C, la función de cifrado, si quieren.
+
+833
+01:37:43.400 --> 01:37:49.860
+Pablo Eduardo Abad: entonces es como ya hay una función que que las relaciona, pero tienen que comportarse estadísticamente independientes.
+
+834
+01:37:49.960 --> 01:37:51.650
+Pablo Eduardo Abad: Sí. Esto
+
+835
+01:37:52.890 --> 01:38:05.709
+Pablo Eduardo Abad: deja sembrada una duda que voy a dejarles piloteando, que es Ok, ¿Será que esto es un una síntota teórica del máximo, y no se puede llegar, pero nos deja medir cuando cerca estamos, o será que se puede llegar a esto
+
+836
+01:38:05.880 --> 01:38:10.450
+Pablo Eduardo Abad: porque tiene una construcción que estadísticamente suena como demasiado perfecta.
+
+837
+01:38:14.420 --> 01:38:19.740
+Pablo Eduardo Abad: Y con esa con esa idea detrás de fondo vamos a terminar la clase de hoy.
+
+838
+01:38:21.020 --> 01:38:38.139
+Pablo Eduardo Abad: esto que vimos está recogido en el capítulo 1 del libro de Cats. Hay más ejemplos de criptosistemas clásicos. Así que si a alguno le le pareció divertido. Le interesó Dale. Hay Hay varios en la clase práctica que tenemos más tiempo. Vamos a. Vamos a explayarnos sobre alguno más
+
+839
+01:38:38.520 --> 01:38:41.770
+Pablo Eduardo Abad: Pero bueno, esto es súper introductorio.
+
+840
+01:38:42.330 --> 01:38:44.199
+Pablo Eduardo Abad: y quería dejarles con esta idea
+
+841
+01:38:44.350 --> 01:38:49.180
+Pablo Eduardo Abad: la clase que viene. Vamos a retomar este concepto del secreto perfecto. Y vamos a empezar a
+
+842
+01:38:49.380 --> 01:38:53.249
+Pablo Eduardo Abad: a ver los matices que nos van a permitir definir distintos
+
+843
+01:38:53.380 --> 01:38:57.480
+Pablo Eduardo Abad: distintas definiciones de seguridad que vamos a ir usando a lo largo de la materia.
+

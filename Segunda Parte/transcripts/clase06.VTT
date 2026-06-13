@@ -1,0 +1,3674 @@
+WEBVTT
+
+1
+00:00:03.840 --> 00:00:04.800
+Pablo Eduardo Abad: Bien.
+
+2
+00:00:06.760 --> 00:00:15.899
+Pablo Eduardo Abad: nosotros en criptografía entre todas las cosas que aprendimos, aprendimos algo súper importante, que es que no hay una única definición de seguridad.
+
+3
+00:00:16.290 --> 00:00:25.729
+Pablo Eduardo Abad: Sí, si se acuerdan incluso para una misma función criptográfica. Había tal vez distintas pruebas de seguridad y cada prueba de seguridad. Lo que dice en el fondo es
+
+4
+00:00:26.140 --> 00:00:32.420
+Pablo Eduardo Abad: lo que nos da. Es una definición distinta de seguridad y nos dice así: si la función pasaba o no pasaba esa prueba.
+
+5
+00:00:35.130 --> 00:00:42.600
+Pablo Eduardo Abad: Cuando queremos mover ese concepto hacia aplicaciones hacia sistemas, pasa lo mismo. No hay una única definición de seguridad.
+
+6
+00:00:42.800 --> 00:00:43.700
+Pablo Eduardo Abad: Sí,
+
+7
+00:00:49.380 --> 00:00:56.110
+Pablo Eduardo Abad: ¿qué ocurre? Hay Hay una suerte de definición genérica
+
+8
+00:00:56.550 --> 00:01:04.249
+Pablo Eduardo Abad: para cuando estamos considerando ya algo más complejo que definiciones matemáticas, sino sistemas dinámicos de seguridad que dice
+
+9
+00:01:04.430 --> 00:01:05.959
+Pablo Eduardo Abad: algo así como
+
+10
+00:01:06.470 --> 00:01:22.619
+Pablo Eduardo Abad: si nosotros pudiésemos clasificar a todos los Estados del sistema que estamos estudiando en Estados seguros e inseguros. Si podemos decir que un sistema es seguro mientras esté transicionando en Estados que consideremos seguros.
+
+11
+00:01:24.040 --> 00:01:27.640
+Pablo Eduardo Abad: esta es una definición más teórica. Les diría por qué?
+
+12
+00:01:27.790 --> 00:01:34.830
+Pablo Eduardo Abad: Para los que ya hicieron ingeniería de software, si yo planteo una aplicación cualquiera, como una máquina de Estados. La cantidad Estados es
+
+13
+00:01:34.960 --> 00:01:40.239
+Pablo Eduardo Abad: abismalmente grandes. Se escapa a nuestra comprensión, entonces es difícil de clasificar.
+
+14
+00:01:40.630 --> 00:01:46.609
+Pablo Eduardo Abad: Pero esta definición tiene 2 conceptos muy poderosos que sí que sí aplican.
+
+15
+00:01:47.310 --> 00:01:56.060
+Pablo Eduardo Abad: Uno es: Necesitamos alguna forma de poder caracterizar si en un momento dado.
+
+16
+00:01:56.990 --> 00:02:14.050
+Pablo Eduardo Abad: si sacando una foto en el tiempo del estado actual de un sistema, el Estado lo consideramos seguro o no. De acuerdo a la definición que manejemos, y punto 1 sí, y eso es tan importante que tiene nombre. Una política de seguridad. Es literalmente la definición.
+
+17
+00:02:14.520 --> 00:02:26.049
+Pablo Eduardo Abad: de alguna manera de qué Estados, de un sistema. ¿vamos a considerar seguros versus el resto sí. La segunda cosa, el segundo concepto importante que tiene esta definición es que
+
+18
+00:02:27.510 --> 00:02:32.229
+Pablo Eduardo Abad: un sistema que pasa eventualmente a un Estado inseguro.
+
+19
+00:02:32.840 --> 00:02:37.750
+Pablo Eduardo Abad: Deja de ser seguro. No importa si después vuelve a un Estado que consideremos seguro.
+
+20
+00:02:37.950 --> 00:02:44.910
+Pablo Eduardo Abad: Esto tiene mucha importancia en en todos los campos más de seguridad defensiva.
+
+21
+00:02:45.690 --> 00:03:02.390
+Pablo Eduardo Abad: porque si ustedes tienen, por ejemplo, un servidor al cual se le vio comprometida la seguridad. Las buenas prácticas dicen que tendrían que más o menos prenderles fuego y traer 1. Distinto, sí, pero bueno, Si Si no queremos llegar a ese nivel de de de destrucción física, deberían reinstalarlo.
+
+22
+00:03:02.830 --> 00:03:06.670
+Pablo Eduardo Abad: Sí, es muy difícil cuando la seguridad se comprometió
+
+23
+00:03:06.820 --> 00:03:10.989
+Pablo Eduardo Abad: volver a a un Estado que le dé seguridad del sistema.
+
+24
+00:03:11.250 --> 00:03:13.130
+Pablo Eduardo Abad: Sí, hay muchas técnicas para
+
+25
+00:03:14.820 --> 00:03:31.310
+Pablo Eduardo Abad: si no es posible hacer algo tan dramático este como empezar todo desde 0 como para poder ganar cada vez más confianza de que la vuelta al Estado es realmente un Estado seguro y se puede resetear el sistema. Pero ya ahí las garantías son cada vez más más difíciles de asegurar.
+
+26
+00:03:32.090 --> 00:03:39.549
+Pablo Eduardo Abad: Sí, esto para los que se dediquen profesionalmente a seguridad es la base de
+
+27
+00:03:40.800 --> 00:04:00.640
+Pablo Eduardo Abad: todos los problemas y frustraciones de los que estamos en seguridad, porque, parecido a criptografía, no la seguridad. Es un juego de bajar la probabilidad que tengamos un problema, pero nunca se puede matar del todo. Y cuando hay un incidente. El costo de volver a un Estado seguro es altísimo. Entonces es como que
+
+28
+00:04:00.840 --> 00:04:08.040
+Pablo Eduardo Abad: nos preparamos para que pase algo, sabiendo que hagamos lo que vamos a pasar y después volver a empezar. El juego
+
+29
+00:04:08.410 --> 00:04:09.479
+Pablo Eduardo Abad: cuesta un montón.
+
+30
+00:04:09.820 --> 00:04:17.210
+Pablo Eduardo Abad: Por eso el el trabajar en seguridad requiere cierto mindset de de adaptabilidad y de resiliencia que que no es para todos.
+
+31
+00:04:19.410 --> 00:04:24.099
+Pablo Eduardo Abad: Pero si les si les atrae eso y y no les asusta Eso les
+
+32
+00:04:24.450 --> 00:04:30.299
+Pablo Eduardo Abad: desde mi punto de vista, que obviamente es muy subjetivo. Es un área súper divertida para mí para trabajar
+
+33
+00:04:32.020 --> 00:04:32.920
+Pablo Eduardo Abad: bien.
+
+34
+00:04:36.040 --> 00:04:46.149
+Pablo Eduardo Abad: cuando hablamos de seguridad, nosotros podemos enfocar la seguridad. Desde muchos lados se acuerdan en criptografía. Venimos trabajando con criptosistemas y hablamos de confidencialidad
+
+35
+00:04:46.520 --> 00:04:56.690
+Pablo Eduardo Abad: si confidencialidad, es 1 de los grandes tipos de servicios de seguridad. En algún momento nos chocamos con un problema que no tenía nada que ver con confidencialidad y empezamos a hablar de integridad.
+
+36
+00:04:57.170 --> 00:05:07.979
+Pablo Eduardo Abad: Sí, en general, el espectro completo de seguridad tiene un tercer tipo de servicio, que es disponibilidad. Sí, a esto se le llama la tríada de seguridad.
+
+37
+00:05:08.810 --> 00:05:12.370
+Pablo Eduardo Abad: confidencialidad. Atañe a
+
+38
+00:05:12.750 --> 00:05:21.030
+Pablo Eduardo Abad: la diseminación de información. Si hay información que tiene que ser accesible a cierto grupo y no a cierto otro grupo
+
+39
+00:05:21.620 --> 00:05:30.770
+Pablo Eduardo Abad: integridad. Tiene que ver con relaciones de confianza. Necesito poder garantizar o certificar la calidad de algo.
+
+40
+00:05:31.170 --> 00:05:38.290
+Pablo Eduardo Abad: Sí, necesito poder certificar con la transacción ocurre o que los datos de una transacción son correctos o que el origen
+
+41
+00:05:38.560 --> 00:05:41.489
+Pablo Eduardo Abad: de de algo es el que dice ser
+
+42
+00:05:43.920 --> 00:05:58.399
+Pablo Eduardo Abad: la disponibilidad, tiene que ver con la capacidad de que, ante la necesidad de acceder a información o ejecutar una acción. Esa posibilidad de ejecución exista en el momento dado
+
+43
+00:05:59.020 --> 00:06:00.809
+Pablo Eduardo Abad: sí es
+
+44
+00:06:00.950 --> 00:06:16.459
+Pablo Eduardo Abad: con la disponibilidad. Es algo que involucra temporalidad. También es un poco más compleja y y por involucrar temporalidad y ser dinámica. No se estudia tanto en criptografía con criptografía vieron que era todo estático, analizamos las funciones en abstracto.
+
+45
+00:06:16.530 --> 00:06:21.449
+Pablo Eduardo Abad: las disponibilidades por ahí. Algo más más nuevo de esta parte de la materia que vamos a ir ahondando.
+
+46
+00:06:24.340 --> 00:06:37.340
+Pablo Eduardo Abad: Vamos a Vamos a introducir 3 conceptos básicos que nos van a acompañar por un tiempo y se van a cansar de escucharlos, pero porque son la base de de cómo podemos empezar a construir teoría simple y después empezar a complicarnos la vida.
+
+47
+00:06:39.870 --> 00:06:49.529
+Pablo Eduardo Abad: Vamos a hablar de sujetos. Piensen en un mundo donde hay ciertas entidades que quieren
+
+48
+00:06:49.990 --> 00:07:07.040
+Pablo Eduardo Abad: ejecutar cosas sobre otras entidades. Si los sujetos son las las personas que ejecutan cosas. Si pueden ser personas, pueden ser servicios, aplicaciones, pueden ser servidores si lo los sujetos, lo que tienen es que son como el origen de algún estímulo.
+
+49
+00:07:07.990 --> 00:07:11.290
+Pablo Eduardo Abad: El destino de esos estímulos se llaman objetos.
+
+50
+00:07:11.980 --> 00:07:20.489
+Pablo Eduardo Abad: Generalmente son recursos, pueden ser datos, servicios, bases de datos, tablas podrían ser programas, también podrían ser archivos.
+
+51
+00:07:20.750 --> 00:07:24.660
+Pablo Eduardo Abad: Sí, en general, son los objetos de de alguna acción, sí
+
+52
+00:07:25.000 --> 00:07:29.569
+Pablo Eduardo Abad: y accesos son las formas que tienen los sujetos de interactuar con el objeto.
+
+53
+00:07:29.990 --> 00:07:37.450
+Pablo Eduardo Abad: Si quieren, para para ejemplificar algo, nosotros podríamos tener un usuario que quiera hacer algo con un archivo. Si
+
+54
+00:07:37.890 --> 00:07:44.980
+Pablo Eduardo Abad: los accesos posibles son todas las operaciones que 1 podría hacer, 1 podría querer leerlo, escribirlo, borrarlo.
+
+55
+00:07:46.630 --> 00:07:48.100
+Pablo Eduardo Abad: No sé moverlo.
+
+56
+00:07:48.800 --> 00:07:53.469
+Pablo Eduardo Abad: Eso ya depende de del sistema, Sí, pero son 3 conceptos bastante
+
+57
+00:07:54.160 --> 00:07:59.489
+Pablo Eduardo Abad: intuitivos de entender, pero aunque no lo crean son la base de con la que construimos todo esto.
+
+58
+00:08:00.030 --> 00:08:00.870
+Pablo Eduardo Abad: Sí,
+
+59
+00:08:01.120 --> 00:08:18.470
+Pablo Eduardo Abad: los van a ver. Y los vieron en todos lados, o sea. Si si vamos a a Linux al sistema operativo, este tenemos un esquema de sujetos que son los usuarios y de objetos que son los archivos y de accesos que se suele ver como permisos
+
+60
+00:08:23.070 --> 00:08:27.579
+Pablo Eduardo Abad: y que rigen qué se qué operaciones se pueden hacer y qué No, Este es un modelo
+
+61
+00:08:29.180 --> 00:08:33.670
+Pablo Eduardo Abad: engañosamente simple. Es más complicado de lo que parece, pero es un modelo simple de
+
+62
+00:08:33.929 --> 00:08:36.169
+Pablo Eduardo Abad: de sujeto a objeto de acceso.
+
+63
+00:08:38.200 --> 00:08:41.979
+Pablo Eduardo Abad: Pero todos ya de alguna manera seguro que interactuaron con algún modelo de este tipo.
+
+64
+00:08:42.970 --> 00:08:57.670
+Pablo Eduardo Abad: ¿por qué es importante? Porque nosotros podemos reducir estos 3 servicios de seguridad si confidencialidad, integridad y disponibilidad a una mínima expresión que se puede modelar en función de estas tríadas. Sí.
+
+65
+00:08:58.110 --> 00:09:06.730
+Pablo Eduardo Abad: Cuando hablamos de confidencialidad, vamos a estar modelando que van a existir sujetos que no pueden acceder a ciertos objetos.
+
+66
+00:09:07.970 --> 00:09:16.279
+Pablo Eduardo Abad: Cuando hablemos de integridad. Vamos a ver que lo podemos pensar como que existen objetos que sólo pueden ser modificados por ciertos sujetos.
+
+67
+00:09:18.880 --> 00:09:26.640
+Pablo Eduardo Abad: Y cuando hablemos de disponibilidad. Vamos a ver que va a implicar la existencia de objetos que pueden ser accedidos
+
+68
+00:09:27.980 --> 00:09:32.130
+Pablo Eduardo Abad: por ciertos sujetos con el Tweet cuando lo requieran?
+
+69
+00:09:33.490 --> 00:09:34.710
+Pablo Eduardo Abad: Sí. Pero
+
+70
+00:09:35.030 --> 00:09:41.959
+Pablo Eduardo Abad: sobre esta base, simple de sujeto objeto acceso, nosotros podemos construir la idea de los 3 servicios de seguridad.
+
+71
+00:09:43.150 --> 00:09:44.020
+Pablo Eduardo Abad: Mhm.
+
+72
+00:09:48.710 --> 00:09:53.400
+Pablo Eduardo Abad: ¿qué es un modelo de seguridad. Bueno, nosotros tenemos esta idea de
+
+73
+00:09:53.510 --> 00:10:02.660
+Pablo Eduardo Abad: el sujeto a objeto. Tenemos esta idea de servicios de confidencialidad, pero cuando vamos a un problema práctico. Necesitamos resolver esto. Necesitamos poder resolver
+
+74
+00:10:03.200 --> 00:10:13.750
+Pablo Eduardo Abad: cómo definimos de los Estados del sistema, cuáles Estados son seguros y cuáles son los seguros. Sí, un modelo de seguridad es un modelo formal y lógico
+
+75
+00:10:14.030 --> 00:10:21.800
+Pablo Eduardo Abad: que define casualmente las reglas e interacciones que me permiten implementar este mecanismo de control de acceso.
+
+76
+00:10:23.290 --> 00:10:29.039
+Pablo Eduardo Abad: Sí, los modelos suelen estar especializados. Hay modelos
+
+77
+00:10:29.150 --> 00:10:35.699
+Pablo Eduardo Abad: que resuelven problemas de confidencialidad, Hay modelos que resuelven problemas de integridad, hay modelos de disponibilidad también
+
+78
+00:10:36.460 --> 00:10:42.790
+Pablo Eduardo Abad: sí. Y ¿Y por qué existen los modelos, pues nosotros podríamos para cada sistema que hagamos
+
+79
+00:10:43.260 --> 00:10:47.540
+Pablo Eduardo Abad: partir de defino mi lista de sujeto, defino mi lista de objetos
+
+80
+00:10:47.930 --> 00:10:55.949
+Pablo Eduardo Abad: y empiezo artesanalmente, definir los accesos posibles y no posibles, y podría resolver este problema y dar servicio de confidencialidad
+
+81
+00:10:56.620 --> 00:11:06.680
+Pablo Eduardo Abad: es un trabajo bastante complejo, muy propenso a errores y muy difícil de demostrar que, como resultado emergente cumple con lo que queramos hacer.
+
+82
+00:11:07.000 --> 00:11:17.970
+Pablo Eduardo Abad: Los modelos de seguridad, que son son generalizaciones que ya sabemos que funcionan, que nos permiten resolver los problemas, pero pensándolos como a un nivel más adelante.
+
+83
+00:11:18.390 --> 00:11:23.279
+Pablo Eduardo Abad: O sea, piensen en en poder trabajar esto a mano con el ensamblador para el cual
+
+84
+00:11:23.460 --> 00:11:26.129
+Pablo Eduardo Abad: los modelos serían un lenguaje de más alto nivel.
+
+85
+00:11:31.860 --> 00:11:43.179
+Pablo Eduardo Abad: preguntas Hasta acá alguna duda, un comentario que dice suena a definición legal, me perdí qué parte
+
+86
+00:11:50.630 --> 00:12:01.939
+Pablo Eduardo Abad: si me Lo de tipo sujeto objeto de acceso es una definición, sí, o sea.
+
+87
+00:12:02.130 --> 00:12:05.630
+Pablo Eduardo Abad: no sé si legal, pero sí más más formal.
+
+88
+00:12:06.290 --> 00:12:12.070
+Pablo Eduardo Abad: ¿qué otra cosa que que aplicable Okay?
+
+89
+00:12:13.510 --> 00:12:14.470
+Pablo Eduardo Abad: Hay
+
+90
+00:12:14.580 --> 00:12:25.920
+Pablo Eduardo Abad: una cantidad Im gigante de modelos, pero pero como suele pasar con todo. Hay 2 o 3 modelos que dominan si quieren el el escenario y que está bueno, conocer.
+
+91
+00:12:27.260 --> 00:12:35.740
+Pablo Eduardo Abad: Sí, Uno de los modelos más conocidos, también por temas históricos. Se conoce como modelos Bell. La Padula
+
+92
+00:12:36.120 --> 00:12:41.280
+Pablo Eduardo Abad: Bell y la Padula son 2 investigadores de i B M, que diseñaron este modelo
+
+93
+00:12:42.080 --> 00:12:46.400
+Pablo Eduardo Abad: porque se volvió famoso porque fue el primer modelo
+
+94
+00:12:46.970 --> 00:13:00.710
+Pablo Eduardo Abad: de es un modelo de confidencialidad del primer modelo de políticas de confidencialidad que se aprobó para uso en organismos gubernamentales en Estados Unidos, que que en ese momento era como el más pionero en este tipo de cosas.
+
+95
+00:13:01.080 --> 00:13:11.920
+Pablo Eduardo Abad: Entonces parecía, si quieren, a la historia de Des. Fue la primera vez que hubo un modelo que era público que se podía conocer y se podía usar en ambientes este civiles.
+
+96
+00:13:12.120 --> 00:13:17.329
+Pablo Eduardo Abad: Así que todo el mundo que que podía usar lo que estaba buscando algo parecido. Lo lo empezó a usar.
+
+97
+00:13:18.240 --> 00:13:26.149
+Pablo Eduardo Abad: Sí, el modelo plantea un esquema en el cual existen niveles
+
+98
+00:13:26.580 --> 00:13:35.269
+Pablo Eduardo Abad: de de seguridad. Sí, El modelo original plantea estos 4 niveles: top secret secret confidencial y anglas y file.
+
+99
+00:13:35.380 --> 00:13:40.310
+Pablo Eduardo Abad: pero de forma genérica, admite básicamente una secuencia ordenada de niveles.
+
+100
+00:13:41.980 --> 00:13:44.620
+Pablo Eduardo Abad: Y lo que establece es
+
+101
+00:13:46.730 --> 00:14:01.130
+Pablo Eduardo Abad: que si nosotros podemos clasificar a todos los sujetos del sistema en 1 de estos niveles y a todos los objetos del sistema. En 1 de estos 2 niveles, el modelo nos puede dar una serie de reglas que regulen las operaciones
+
+102
+00:14:02.070 --> 00:14:07.840
+Pablo Eduardo Abad: que nos den ciertas garantías de confidencialidad ya vía teórica.
+
+103
+00:14:12.880 --> 00:14:15.880
+Pablo Eduardo Abad: ¿cómo funciona esto? Las
+
+104
+00:14:17.720 --> 00:14:26.669
+Pablo Eduardo Abad: Las reglas del del modelo de la válvula son 2, si quieren. Y hay una tercera que se puede sintetizar, como la la síntesis de las 2.
+
+105
+00:14:27.090 --> 00:14:31.339
+Pablo Eduardo Abad: Sí, la primera regla, que es la regla
+
+106
+00:14:31.650 --> 00:14:39.470
+Pablo Eduardo Abad: de confidencialidad simple dice, Y ahora que nos permite para entender la idea del modelo, dice que un usuario, un sujeto perdón
+
+107
+00:14:39.960 --> 00:14:44.769
+Pablo Eduardo Abad: puede leer un objeto si, y solo sí,
+
+108
+00:14:45.480 --> 00:14:47.959
+Pablo Eduardo Abad: el nivel de su usuario es
+
+109
+00:14:48.570 --> 00:14:51.139
+Pablo Eduardo Abad: igual o superior al del objeto.
+
+110
+00:14:52.000 --> 00:14:59.530
+Pablo Eduardo Abad: Sí, esta regla a veces se traduce como leer hacia abajo, porque la idea es si si piensa en esto como una
+
+111
+00:15:00.480 --> 00:15:06.050
+Pablo Eduardo Abad: como una lista ordenada. Así puesta en posición vertical. Lo que nos dice es que un usuario que está en un nivel
+
+112
+00:15:06.930 --> 00:15:10.970
+Pablo Eduardo Abad: o un sujeto que esté en un nivel puede leer objetos de ese nivel para abajo.
+
+113
+00:15:12.270 --> 00:15:17.520
+Pablo Eduardo Abad: Sí, esto quiere decir que si yo, por ejemplo, clasifico un documento como confidencial
+
+114
+00:15:17.830 --> 00:15:22.800
+Pablo Eduardo Abad: y tengo una persona que está clasificada como confidencial puede leerlo.
+
+115
+00:15:23.020 --> 00:15:27.489
+Pablo Eduardo Abad: Y si tengo una persona que tiene acceso Secret podría leerlo también.
+
+116
+00:15:28.030 --> 00:15:34.030
+Pablo Eduardo Abad: Pero una persona que esté clasificada como Ancla Csyfile en ultimalte. No podría leerlo.
+
+117
+00:15:34.390 --> 00:15:39.530
+Pablo Eduardo Abad: Sí, entonces esto nos da un esquema jerárquico relativamente simple
+
+118
+00:15:40.450 --> 00:15:45.260
+Pablo Eduardo Abad: para ordenar. Las cosas. Si se pone interesante con la regla de cierre
+
+119
+00:15:45.890 --> 00:15:52.070
+Pablo Eduardo Abad: la regla de cierre, que es la segunda regla del modelo dice que un
+
+120
+00:15:52.370 --> 00:16:01.100
+Pablo Eduardo Abad: usuario. Un sujeto puede escribir un objeto si solo si el nivel del objeto es igual o superior
+
+121
+00:16:04.950 --> 00:16:07.780
+Pablo Eduardo Abad: al del objeto que quiere modificar.
+
+122
+00:16:08.130 --> 00:16:13.819
+Pablo Eduardo Abad: Cuando hablamos de escritura acá o de lectura, Piénsenlo como operaciones
+
+123
+00:16:14.690 --> 00:16:23.299
+Pablo Eduardo Abad: que no cambian estado u operaciones que cambian estado, sí, o sea, de forma general, la escritura podría ser borrar, modificar, agregar, sacar cosas.
+
+124
+00:16:23.430 --> 00:16:30.839
+Pablo Eduardo Abad: la lectura. Podría ser, No sé ver metadata ver el tamaño, ver si existe o ver el contenido.
+
+125
+00:16:33.990 --> 00:16:43.389
+Pablo Eduardo Abad: el famoso Top Secret. Sí, bueno, o sea esto, esto, esta clasificación y este modelo, pero en películas también literatura perdió en todos lados.
+
+126
+00:16:44.950 --> 00:16:48.570
+Pablo Eduardo Abad: Y y el concepto de toxicleta en muchos lugares viene de este modelo
+
+127
+00:16:53.370 --> 00:16:58.529
+Pablo Eduardo Abad: Juan Decís, pero entonces, lectura y escritura al mismo tiempo no serían incompatibles.
+
+128
+00:16:59.900 --> 00:17:06.879
+Pablo Eduardo Abad: Bueno, la vos podés sintetizar estas 2 reglas y ver que aplican. Y es lo que aparece acá a la derecha.
+
+129
+00:17:07.680 --> 00:17:14.650
+Pablo Eduardo Abad: Sí, La síntesis de esto es que si vos tuvieses, una persona que necesita leer y escribir
+
+130
+00:17:17.020 --> 00:17:23.459
+Pablo Eduardo Abad: un mismo objeto solo lo va a poder hacer con objetos de su misma clasificación, porque al aplicar las 2 reglas
+
+131
+00:17:24.200 --> 00:17:27.229
+Pablo Eduardo Abad: por la regla de lectura, solo va a poder
+
+132
+00:17:28.230 --> 00:17:35.460
+Pablo Eduardo Abad: leer cosas de su nivel o abajo. Y por la escritura solo es un nivel arriba, o sea, que lo único que se mantiene en las 2 situaciones. Es el mismo nivel.
+
+133
+00:17:37.910 --> 00:17:42.970
+Pablo Eduardo Abad: porque esto funciona porque los flujos en muchos sistemas son unidireccionales.
+
+134
+00:17:43.940 --> 00:17:54.840
+Pablo Eduardo Abad: Sí, entonces hay hay tareas que van pasando de un lugar a otro, este o información que tiene que fluir de un lugar a otro. Sí, entonces
+
+135
+00:17:56.270 --> 00:18:04.099
+Pablo Eduardo Abad: la idea de este modelo de alguna manera, es garantizarnos la confidencialidad, pero no desde un punto de vista estático.
+
+136
+00:18:04.440 --> 00:18:11.929
+Pablo Eduardo Abad: Si lo que nos garantiza este modelo, que es muy poderoso, Es un control de flujo de información. De de, déjenme
+
+137
+00:18:12.200 --> 00:18:14.730
+Pablo Eduardo Abad: darles un ejemplo para ver la diferencia. Sí,
+
+138
+00:18:16.280 --> 00:18:28.859
+Pablo Eduardo Abad: supóngase que ustedes tienen un archivo, un archivo en el cual pusieron, no sé la la receta que les va a hacer ganar el campeonato de de hamburguesas de la semana que viene con el ingrediente secreto.
+
+139
+00:18:29.680 --> 00:18:40.269
+Pablo Eduardo Abad: entonces ponen el archivo en un lugar y, obviamente, quieren que no sé ustedes y y su compañero con el que van a cocinar solamente pueda puedan verlo. Entonces
+
+140
+00:18:41.480 --> 00:18:54.189
+Pablo Eduardo Abad: no sé, vamos a vamos a usar este un modelo parecido a este, si quieren, sólo por la primera arriba vamos a decir top secret, sí, Y los únicos que tenemos: Top's Secret. Somos yo y mi amigo
+
+141
+00:18:55.630 --> 00:18:56.670
+Pablo Eduardo Abad: listo.
+
+142
+00:18:57.160 --> 00:19:03.690
+Pablo Eduardo Abad: Sabemos por la primera regla que nadie debería poder leerlo correcto.
+
+143
+00:19:03.910 --> 00:19:13.190
+Pablo Eduardo Abad: ¿qué pasa? Ignoremos por un segundo que existe la segunda regla. Si la de la escritura, imaginemos que la escritura es es libre, sí, ¿cuál es el riesgo.
+
+144
+00:19:14.990 --> 00:19:21.079
+Pablo Eduardo Abad: Yo quiero ver el documento, entonces abro un editor de texto. Abro el archivo.
+
+145
+00:19:21.370 --> 00:19:23.209
+Pablo Eduardo Abad: Sí, y veo el documento.
+
+146
+00:19:23.920 --> 00:19:29.190
+Pablo Eduardo Abad: pero resulta que el el el editor de texto. No sé para evitar que si se
+
+147
+00:19:29.320 --> 00:19:36.450
+Pablo Eduardo Abad: se apaga la computadora, algo así, yo pierda modificaciones. Hace una copia de ese archivo y la dejamos en el directorio temporal.
+
+148
+00:19:37.280 --> 00:19:42.619
+Pablo Eduardo Abad: Sí, un recuerdo por si yo empiezo a modificar y se rompe o quiero volver para atrás.
+
+149
+00:19:42.950 --> 00:19:49.989
+Pablo Eduardo Abad: Sí, ¿qué va a pasar el archivo? Este que crea el directorio temporal es otro archivo
+
+150
+00:19:50.440 --> 00:19:51.870
+Pablo Eduardo Abad: que va a estar en otro lugar
+
+151
+00:19:52.550 --> 00:19:55.959
+Pablo Eduardo Abad: sobre el cual van a aplicar otro tipo de reglas. Sí,
+
+152
+00:19:59.110 --> 00:20:09.700
+Pablo Eduardo Abad: el archivo original que yo quise proteger va a estar protegido no lo va a poder leer nadie. Pero ¿quién me garantiza que el archivo nuevo que tiene el mismo contenido y, por lo tanto, tiene la misma información.
+
+153
+00:20:11.420 --> 00:20:14.940
+Pablo Eduardo Abad: No va a ser leído por alguien que no debiera.
+
+154
+00:20:16.120 --> 00:20:23.389
+Pablo Eduardo Abad: Entienden la diferencia, o sea, la primera regla, y por ahí. La versión más ingenua del modelo de poner permisos.
+
+155
+00:20:23.510 --> 00:20:27.699
+Pablo Eduardo Abad: como podríamos ponernos en un archivo en un servidor
+
+156
+00:20:28.430 --> 00:20:35.619
+Pablo Eduardo Abad: nos permite resolver el problema del acceso directo. Ahora nadie impide que alguien que tenga acceso directo pueda leer esa información
+
+157
+00:20:36.160 --> 00:20:37.780
+Pablo Eduardo Abad: y volcarla en otro lado.
+
+158
+00:20:38.530 --> 00:20:39.460
+Pablo Eduardo Abad: Sí
+
+159
+00:20:40.060 --> 00:20:50.299
+Pablo Eduardo Abad: es la punta del iceberg. Si este este modelo en particular, si bien fue el primero que se estandarizó para uso civil, se usó para operaciones de inteligencia militar al principio.
+
+160
+00:20:50.860 --> 00:20:54.439
+Pablo Eduardo Abad: Y cuál es el problema en operaciones de inteligencia militar?
+
+161
+00:20:55.460 --> 00:20:59.720
+Pablo Eduardo Abad: Digo, no no importa el porqué, pero imagínense que son secretos peligrosos. Donde
+
+162
+00:20:59.910 --> 00:21:06.010
+Pablo Eduardo Abad: o sea de de algún secreto de este tipo que que se filtre y que llega la persona equivocada puede depender la vida de una persona.
+
+163
+00:21:06.780 --> 00:21:10.829
+Pablo Eduardo Abad: entonces se justificaba ser riguroso en el tratamiento.
+
+164
+00:21:12.520 --> 00:21:18.510
+Pablo Eduardo Abad: Una ni siquiera puede hacer esto a propósito. Uno puede tener acceso a información de un nivel muy alto.
+
+165
+00:21:20.160 --> 00:21:20.890
+Pablo Eduardo Abad: sí
+
+166
+00:21:21.100 --> 00:21:30.519
+Pablo Eduardo Abad: de física. Tres: Uno Uno puede tener acceso a información en un nivel muy alto si, y cuando 1 lee esa información, digo, forma parte de su conocimiento.
+
+167
+00:21:30.690 --> 00:21:32.350
+Pablo Eduardo Abad: supóngase que 1 después.
+
+168
+00:21:32.610 --> 00:21:46.259
+Pablo Eduardo Abad: No sé esto pasa en empresas. Por ejemplo, los directivos de una empresa suelen tener acceso a información confidencial de la empresa, sí que podría generarles pérdidas si y una
+
+169
+00:21:46.950 --> 00:22:03.879
+Pablo Eduardo Abad: un directivo, tiene un n día implícito en el trabajo y demás, lo que no quiere decir que lo que leyó lo sabe si y tal vez no lo va a querer contar. Pero ¿y los periodistas son expertos en esto, el hecho de que 1 lo sepa, puede hacer que 1 sin querer de información parcial de eso.
+
+170
+00:22:04.310 --> 00:22:06.949
+Pablo Eduardo Abad: Entonces yo tal vez sé que no sé, este
+
+171
+00:22:07.500 --> 00:22:14.250
+Pablo Eduardo Abad: se está discutiendo entrar en un mercado y y y y no lo puedo contar. Pero yo ya lo sé, eso.
+
+172
+00:22:15.210 --> 00:22:23.099
+Pablo Eduardo Abad: Y ahora voy a hablar en un entorno de gente que no tiene que saber esa información. Digo, hay chances de que sin querer esa información se filtre.
+
+173
+00:22:23.990 --> 00:22:27.280
+Pablo Eduardo Abad: sí, ya ya no, porque lo quería hacer porque
+
+174
+00:22:27.760 --> 00:22:35.749
+Pablo Eduardo Abad: no sé, me hicieron una pregunta tangencial. Y la respuesta da a entender eso. Y como yo sé si eso iba a ser sí o no. Esa respuesta tiene un peso distinto.
+
+175
+00:22:36.180 --> 00:22:42.460
+Pablo Eduardo Abad: Estas vieron a a las personas importantes que les miran hasta si miran para abajo para arriba. Es por este tipo de cosas.
+
+176
+00:22:43.650 --> 00:22:45.060
+Pablo Eduardo Abad: En
+
+177
+00:22:45.980 --> 00:22:51.749
+Pablo Eduardo Abad: el modelo de ver la padula. Utiliza la regla de cierre para evitar eso, porque la regla de cierre nos dice
+
+178
+00:22:52.030 --> 00:23:00.619
+Pablo Eduardo Abad: si vos tenés acceso a información y es muy sensible, vos No podés interactuar con niveles abajo del tuyo.
+
+179
+00:23:01.370 --> 00:23:04.030
+Pablo Eduardo Abad: porque podrías estar filtrando esa información.
+
+180
+00:23:06.500 --> 00:23:07.580
+Pablo Eduardo Abad: Entonces.
+
+181
+00:23:10.470 --> 00:23:21.059
+Pablo Eduardo Abad: si yo tengo acceso algo Top Secret, si, por ejemplo, cualquier persona fuera del sistema va a caer en el nivel más bajo seguro. Sí, si yo tengo acceso a esta información en un esquema
+
+182
+00:23:21.360 --> 00:23:30.090
+Pablo Eduardo Abad: rígido en la padula. Yo no podría interactuar en algo que se considere como generar información como una operación de escritura con los niveles más bajos.
+
+183
+00:23:30.760 --> 00:23:32.719
+Pablo Eduardo Abad: Esa es la idea de la segunda regla.
+
+184
+00:23:33.440 --> 00:23:34.490
+Pablo Eduardo Abad: Sí,
+
+185
+00:23:37.430 --> 00:23:49.210
+Pablo Eduardo Abad: esto tiene una consecuencia muy concreta. Es un modelo muy, muy estricto, no porque diría algo así como, bueno si accediste a este tipo de información, ahora no puedes hablar más con con el resto de los mortales que no la tienen.
+
+186
+00:23:49.670 --> 00:23:52.810
+Pablo Eduardo Abad: Sí, esto
+
+187
+00:23:53.020 --> 00:24:04.349
+Pablo Eduardo Abad: como todo lo que vamos a hacer en seguridad. Después hay que matizarlo. No 1 tiene las técnicas para hacerlo que se pueden llevar al extremo. O 1 puede implementarlas parcialmente para conseguir
+
+188
+00:24:04.610 --> 00:24:15.660
+Pablo Eduardo Abad: robustez hasta cierto momento. Pero en los casos más extremos si acá, si quieren acá, me voy a casos, generalmente son de índole estratégico militar para un país, pero
+
+189
+00:24:16.130 --> 00:24:17.160
+Pablo Eduardo Abad: ¿y
+
+190
+00:24:18.750 --> 00:24:25.719
+Pablo Eduardo Abad: la aplicación de esta regla. Por ejemplo, llevó a que cuando Estados Unidos estaba desarrollando la bomba atómica, el Proyecto Manhattan.
+
+191
+00:24:26.500 --> 00:24:33.959
+Pablo Eduardo Abad: para evitar este tipo de cosas a todos los científicos que estaban involucrados en el proyecto. Los movió a una ciudad
+
+192
+00:24:34.350 --> 00:24:40.099
+Pablo Eduardo Abad: para que no puedan tener interacción con gente que no esté participando le llevaron a la familia, los aislaron
+
+193
+00:24:40.330 --> 00:24:43.680
+Pablo Eduardo Abad: y armaron una ciudad completa, un pueblo, un pueblo completo.
+
+194
+00:24:44.220 --> 00:24:46.870
+Pablo Eduardo Abad: ¿y por qué? Porque están aplicando en la padula.
+
+195
+00:24:52.090 --> 00:24:53.829
+Pablo Eduardo Abad: Es un caso super extremo.
+
+196
+00:24:54.150 --> 00:24:59.989
+Pablo Eduardo Abad: Digo, no, no es que no es que nosotros, en los sistemas que vamos vamos a encerrar. Pero pero hay sistemas donde
+
+197
+00:25:00.160 --> 00:25:06.480
+Pablo Eduardo Abad: donde la la confidencialidad de ciertas cosas es tan importante que en una parte del sistema se aplica este modelo?
+
+198
+00:25:07.110 --> 00:25:07.970
+Pablo Eduardo Abad: Sí,
+
+199
+00:25:08.080 --> 00:25:18.859
+Pablo Eduardo Abad: como regla práctica. Casi ninguno de estos modelos técnicos que vamos a ver se se suele aplicar enteramente a un sistema como que todos los sistemas tienen alguna parte más
+
+200
+00:25:19.860 --> 00:25:23.529
+Pablo Eduardo Abad: más tranquila. Si lo sabemos, era el nombre del pueblo.
+
+201
+00:25:24.180 --> 00:25:32.980
+Pablo Eduardo Abad: es como que todos los sistemas tienen alguna parte más crítica, ¿sí? Y Y y una parte donde esto
+
+202
+00:25:33.470 --> 00:25:38.109
+Pablo Eduardo Abad: donde esto aplica y una parte más relajada donde se puede aplicar un modelo más más tranquilo.
+
+203
+00:25:38.640 --> 00:25:39.730
+Pablo Eduardo Abad: ¿qué vamos a ver?
+
+204
+00:25:39.940 --> 00:25:45.209
+Pablo Eduardo Abad: Sí, pero esto es Este es un modelo muy, muy fuerte en cuanto a las
+
+205
+00:25:46.560 --> 00:25:55.529
+Pablo Eduardo Abad: las propiedades que nos garantiza. Este es un modelo que nos puede garantizar confidencialidad en un escenario dinámico, o sea, excede a lo que podíamos hacer, ya con criptografía
+
+206
+00:25:55.640 --> 00:25:57.669
+Pablo Eduardo Abad: y así totalmente implementable
+
+207
+00:25:59.520 --> 00:26:06.850
+Pablo Eduardo Abad: y conceptualmente, no es no es muy complicado. ¿qué problemas tiene? Bueno, el el problema más grande que tiene es
+
+208
+00:26:07.710 --> 00:26:16.199
+Pablo Eduardo Abad: lo que se conoce como el principio de tranquilidad. Si el modelo de ver, la padula asume que la clasificación que le damos a
+
+209
+00:26:17.200 --> 00:26:22.569
+Pablo Eduardo Abad: a un sujeto a un objeto no cambia a lo largo del tiempo, sí. Y la verdad que sí cambia.
+
+210
+00:26:22.850 --> 00:26:42.200
+Pablo Eduardo Abad: Si esto fuese en una empresa, hay gente que asciende y tal vez no sé, tal vez todos los empleados se clasifican a nivel confidencial y hay gente que va a ascender y va a pasar a niveles superiores, tal vez a nivel más alto, ¿sí? Y hay gente que va a ser promovida o despedida, promovida de usuarios o despedida, y probablemente baje de nivel.
+
+211
+00:26:42.580 --> 00:26:50.639
+Pablo Eduardo Abad: Sí, lo mismo pasa con la información. Hay información que hoy es confidencial, pero que tal vez en un par de meses es pública
+
+212
+00:26:51.620 --> 00:26:53.940
+Pablo Eduardo Abad: sí en
+
+213
+00:26:56.020 --> 00:27:12.279
+Pablo Eduardo Abad: ven, la padula tiene ciertos problemas con con ese tipo de cosas, como sistema en una implementación real de un sistema dinámico que implemente ven la padula suelen agregarse mecanismos al costado para reclasificar las cosas.
+
+214
+00:27:12.580 --> 00:27:18.100
+Pablo Eduardo Abad: Sí, yo suelo contar en
+
+215
+00:27:18.480 --> 00:27:30.649
+Pablo Eduardo Abad: en alguna lista de de investigadores este así en seguridad que que compartimos mucha gente donde participa gente de organismos gubernamentales que tienen este tipo de políticas
+
+216
+00:27:30.830 --> 00:27:44.230
+Pablo Eduardo Abad: suele llamar la atención al principio que los emails que llegan de esas personas tienen un mensaje abajo que dice pesado portal. De ahí desclasificado para utilización a nivel de información en classify.
+
+217
+00:27:44.840 --> 00:27:59.289
+Pablo Eduardo Abad: Esos son los mecanismos que compensan por afuera del sistema, porque, según las reglas, un tipo que por ahí tiene acceso a nivel secret a información de Estado, no debería poder interactuar en foros afuera de eso. Entonces, ¿qué ocurre?
+
+218
+00:27:59.290 --> 00:28:05.219
+Pablo Eduardo Abad: Todas las interacciones que ocurren se verifican y se reclasifican. Sí,
+
+219
+00:28:05.220 --> 00:28:10.340
+Pablo Eduardo Abad: es un modelo que vamos a ver ahora que se llama Clark Wilson, que se usa como complemento.
+
+220
+00:28:11.750 --> 00:28:29.279
+Pablo Eduardo Abad: Pero si quieren, para salir de esos casos y llevarlos más a sistemas, La idea de este modelo, así de arbitrariedad de arbitración de Clark Wilson es la base por la cual existen los Kernes del sistema operativo, y existe este concepto de User Space Kern Space como cosas separadas.
+
+221
+00:28:30.560 --> 00:28:37.399
+Pablo Eduardo Abad: Sí, es como todos estos niveles de protección que son estáticos. Necesitan algún mecanismo compensatorio?
+
+222
+00:28:40.930 --> 00:28:45.700
+Pablo Eduardo Abad: Bien, ¿
+
+223
+00:28:48.770 --> 00:28:50.780
+Pablo Eduardo Abad: El modelo de ver la pádula
+
+224
+00:28:51.300 --> 00:29:03.209
+Pablo Eduardo Abad: si lo dejamos solamente en estos 4 niveles. Lo que tiene es que es demasiado simple para una organización. Cualquiera que maneja distintas cosas. Entonces, hay otra dimensión del modelo.
+
+225
+00:29:03.500 --> 00:29:12.960
+Pablo Eduardo Abad: sí que básicamente dice que, además de un nivel de seguridad, puede haber una lista de etiquetas
+
+226
+00:29:13.270 --> 00:29:15.209
+Pablo Eduardo Abad: que se le pueden asignar
+
+227
+00:29:15.440 --> 00:29:23.090
+Pablo Eduardo Abad: a cada sujeto o a cada objeto. Y entonces se habla de compartimientos, un nivel y una lista de etiquetas forman un compartimiento.
+
+228
+00:29:25.800 --> 00:29:34.519
+Pablo Eduardo Abad: Esto que permite, bueno, permite tener distintas segregaciones donde tal vez no toda la información Top Secret
+
+229
+00:29:34.730 --> 00:29:45.029
+Pablo Eduardo Abad: es de lo mismo y tiene que ser accesible por todos. Entonces no deja clasificar acá. Acá. Saco un ejemplo del libro, por ejemplo, donde dice: bueno, hay 2 grandes temas.
+
+230
+00:29:45.330 --> 00:29:52.150
+Pablo Eduardo Abad: si mensajes criptográficos e información nuclear de proyectos nucleares.
+
+231
+00:29:52.280 --> 00:29:57.450
+Pablo Eduardo Abad: entonces yo puedo tener de alguna manera información clasificada
+
+232
+00:29:57.740 --> 00:30:01.950
+Pablo Eduardo Abad: como que tenga que ver solo con criptografía. Sí, a los distintos niveles.
+
+233
+00:30:02.830 --> 00:30:10.219
+Pablo Eduardo Abad: información que tenga que ver con cosas nucleares e incluso información que o no tenga que ver con ninguna de esas cosas, o tenga que ver con las 2,
+
+234
+00:30:11.340 --> 00:30:14.630
+Pablo Eduardo Abad: Sí. ¿y qué ocurre con eso?
+
+235
+00:30:14.830 --> 00:30:20.939
+Pablo Eduardo Abad: Bueno, complica un poco el modelo de toma de decisiones, pero no demasiado siga aplicando lo mismo.
+
+236
+00:30:21.780 --> 00:30:27.250
+Pablo Eduardo Abad: salvo que hay que transformar el nivel superior inferior en otro concepto que se llama dominancia.
+
+237
+00:30:27.750 --> 00:30:28.640
+Pablo Eduardo Abad: ¿sí?
+
+238
+00:30:28.760 --> 00:30:29.910
+Pablo Eduardo Abad: Donde
+
+239
+00:30:31.300 --> 00:30:38.699
+Pablo Eduardo Abad: un sujeto va a poder leer un objeto sí solo. Si el nivel del sujeto domina el nivel del objeto
+
+240
+00:30:40.920 --> 00:30:58.180
+Pablo Eduardo Abad: sujeto va a poder escribir si solo si el nivel del sujeto del objeto domina el sujeto, y lo mismo cambiando el igual o mayor por por domina, y donde la relación de dominancia pasa a ser una condición doble si para que haya dominancia para que un
+
+241
+00:30:58.600 --> 00:31:05.570
+Pablo Eduardo Abad: A domina B tiene que ocurrir que el nivel de A sea mayor al de B mayor a igual
+
+242
+00:31:05.910 --> 00:31:07.980
+Pablo Eduardo Abad: si la misma regla de antes.
+
+243
+00:31:08.130 --> 00:31:13.679
+Pablo Eduardo Abad: Pero las etiquetas de A tienen que contener a las etiquetas de B. Entonces, por ejemplo.
+
+244
+00:31:14.320 --> 00:31:18.809
+Pablo Eduardo Abad: Top secret nuclear le gana domina a secret nuclear.
+
+245
+00:31:18.920 --> 00:31:26.339
+Pablo Eduardo Abad: ¿sí? Pero también ocurre que secret nuclear domina a Secret sin etiquetas
+
+246
+00:31:26.470 --> 00:31:32.800
+Pablo Eduardo Abad: sí. Y Top Secret nuclear cripto domina a, por ejemplo, top secret nuclear.
+
+247
+00:31:34.560 --> 00:31:42.900
+Pablo Eduardo Abad: Esto forma una una estructura que se llama reticulado, donde la particularidad que hay es que no todas las
+
+248
+00:31:43.810 --> 00:31:51.770
+Pablo Eduardo Abad: las relaciones se pueden ordenar. Es un es un conjunto de orden parcial. Se le dice si, por ejemplo.
+
+249
+00:31:53.270 --> 00:32:04.740
+Pablo Eduardo Abad: un sujeto que tenga que tenga acceso secret con la etiqueta nuclear, si no va a dominar nunca a un objeto que tenga acceso Secret
+
+250
+00:32:05.790 --> 00:32:11.130
+Pablo Eduardo Abad: con etiqueta? Cripto sí. ¿por qué? Porque a nivel
+
+251
+00:32:11.230 --> 00:32:20.999
+Pablo Eduardo Abad: de seguridad Okay son iguales, pasaría bien. La condición a nivel etiquetas nuclear no es un subconjunto. Perdón, no
+
+252
+00:32:21.100 --> 00:32:35.590
+Pablo Eduardo Abad: cripto. No es un subconjunto de las etiquetas nuclear, pero si lo pensamos al revés, pasa lo mismo. O sea, si yo tengo un sujeto que está en secret cripto, no va a dominar nunca un objeto que esté en siglas nuclear.
+
+253
+00:32:36.960 --> 00:32:39.669
+Pablo Eduardo Abad: Entre estas 2 cosas no hay
+
+254
+00:32:39.810 --> 00:32:49.419
+Pablo Eduardo Abad: relación, nunca hay dominancia. Entonces, cuando aplicamos las reglas, no manchar ni la lectura ni la escritura, con lo cual están efectivamente separados.
+
+255
+00:32:50.120 --> 00:32:51.110
+Pablo Eduardo Abad: Entonces.
+
+256
+00:32:51.860 --> 00:33:01.929
+Pablo Eduardo Abad: con este tema de reticulados, el modelo, que es bastante simple sólo por niveles, se puede abrir como en dimensiones que pueden ser proyectos distintos, áreas distintas
+
+257
+00:33:02.430 --> 00:33:15.060
+Pablo Eduardo Abad: que operen por separado. Entonces 1 puede decir, si lo lleva una empresa, tal vez una etiqueta de finanzas. Otra etiqueta es producción. Otra etiqueta es marketing. Yo puedo tener separada la información
+
+258
+00:33:15.170 --> 00:33:20.340
+Pablo Eduardo Abad: donde de repente hay información súper súper sensible, que es de marketing
+
+259
+00:33:20.590 --> 00:33:29.409
+Pablo Eduardo Abad: este o financiera. ¿sí? Y tengo gente que sólo accede la parte financiera, gente que sólo accede a la parte de marketing y tal vez gente que pueda acceder a las 2
+
+260
+00:33:30.710 --> 00:33:36.110
+Pablo Eduardo Abad: sí como un segundo nivel de de segmentación.
+
+261
+00:33:36.440 --> 00:33:45.289
+Pablo Eduardo Abad: Este es el modelo completo de ver La padula es un modelo de compartimentos este con con estructura de
+
+262
+00:33:47.860 --> 00:33:50.200
+Pablo Eduardo Abad: de reticulado de orden parcial
+
+263
+00:33:55.670 --> 00:34:03.560
+Pablo Eduardo Abad: a nivel implementación es súper fácil, o sea, si ya lo fueron pensando conceptualmente. Yo tengo que tener
+
+264
+00:34:03.870 --> 00:34:07.130
+Pablo Eduardo Abad: para cada objeto del sistema
+
+265
+00:34:09.219 --> 00:34:17.580
+Pablo Eduardo Abad: una lista de etiquetas y un y un nivel para cada sujeto. Tengo que tener almacenado como metadata sujeto. Normalmente es un usuario.
+
+266
+00:34:18.139 --> 00:34:21.080
+Pablo Eduardo Abad: Este un nivel
+
+267
+00:34:21.190 --> 00:34:30.339
+Pablo Eduardo Abad: y una lista de etiquetas y después las operaciones. El resolver si se puede ejecutar o no siguiendo las 2 reglas es bastante simple de implementar
+
+268
+00:34:30.800 --> 00:34:39.749
+Pablo Eduardo Abad: Sí, de vuelta es muy rígido como modelo. Entonces es raro que lo apliquen a todos los usuarios para todos los objetos de un sistema suele ser para cosas muy críticas.
+
+269
+00:34:42.530 --> 00:34:48.399
+Pablo Eduardo Abad: Dicho eso, es un modelo bastante usado que se lo pueden llegar a encontrar de nombre en algún sistema.
+
+270
+00:34:48.870 --> 00:34:53.570
+Pablo Eduardo Abad: especialmente si están trabajando en un sistema bastante complejo o muy, muy, muy sensible.
+
+271
+00:34:53.780 --> 00:34:54.570
+Pablo Eduardo Abad: Anda
+
+272
+00:34:57.630 --> 00:35:05.040
+Pablo Eduardo Abad: el siguiente modelo famoso que hay dando vueltas Es el modelo de viva. Sí, en realidad
+
+273
+00:35:06.530 --> 00:35:14.950
+Pablo Eduardo Abad: tienes viva, que es el el investigador que desarrolló este modelo, desarrolló una familia de como 7 modelos que en conjunto se llaman modelo viva.
+
+274
+00:35:15.160 --> 00:35:16.030
+Pablo Eduardo Abad: ¿sí?
+
+275
+00:35:16.300 --> 00:35:17.510
+Pablo Eduardo Abad: Y
+
+276
+00:35:18.300 --> 00:35:30.390
+Pablo Eduardo Abad: Y es famoso porque históricamente fue el primer modelo que se hizo público, que no buscaba mantener la información confidencial, sino que buscaba proteger la integridad de la información.
+
+277
+00:35:31.660 --> 00:35:41.970
+Pablo Eduardo Abad: Sí, el modelo de vida tiene mucha importancia en sistemas documentales, en sistemas que almacenan documentación o almacenan evidencia.
+
+278
+00:35:42.780 --> 00:35:50.199
+Pablo Eduardo Abad: donde es necesario tener garantías muy fuertes de la procedencia y de que no hubo adulteración de la información.
+
+279
+00:35:50.550 --> 00:36:05.760
+Pablo Eduardo Abad: Entonces, si lo pueden llegar a encontrar en algún sistema muy avanzado, por ejemplo, de registros de contabilidad histórica de alguna empresa o de registros financieros que hay que retener o en sistemas judiciales.
+
+280
+00:36:06.770 --> 00:36:09.770
+Pablo Eduardo Abad: En por ahí como casos más
+
+281
+00:36:09.950 --> 00:36:21.059
+Pablo Eduardo Abad: donde es más probable que que se lo encuentren. Sí, el modelo de de viva es muy parecido
+
+282
+00:36:21.730 --> 00:36:31.980
+Pablo Eduardo Abad: al al debel. La padula sí en el sentido de que define niveles de integridad. Sí, la
+
+283
+00:36:33.770 --> 00:36:43.469
+Pablo Eduardo Abad: la la realidad es que los niveles de integridad de vida, Si bien muchos los implementan de esta manera suelen estar asociados a calidad, integridad de la información, entonces
+
+284
+00:36:43.820 --> 00:36:55.440
+Pablo Eduardo Abad: esto depende de la literatura de donde lo tomen. Pero hay otra clasificación que a mí me gusta más de los niveles que habla de información no confiable, poco confiable, confiable, muy confiable
+
+285
+00:36:55.900 --> 00:37:02.340
+Pablo Eduardo Abad: y un pitual que sería como fidedigna.
+
+286
+00:37:02.920 --> 00:37:13.340
+Pablo Eduardo Abad: Sí, refleja un poco más la idea de de del modelo de viva el cacho es que hay hay muchos sistemas que integran en la pádula y viva, y ahí usan el mismo nombre de
+
+287
+00:37:14.450 --> 00:37:18.750
+Pablo Eduardo Abad: de los de los modelos, la calle.
+
+288
+00:37:19.060 --> 00:37:23.400
+Pablo Eduardo Abad: 2 temas muy importantes. Hay varios modelos de viva. Sí,
+
+289
+00:37:24.430 --> 00:37:28.459
+Pablo Eduardo Abad: en particular, hay 2 que me gustaría contarles
+
+290
+00:37:28.640 --> 00:37:30.919
+Pablo Eduardo Abad: que son los 2 más usados. Sí,
+
+291
+00:37:33.850 --> 00:37:43.510
+Pablo Eduardo Abad: El primero es el modelo estricto de viva. El modelo estricto de viva es muy, muy, muy parecido a ver la padula. De hecho.
+
+292
+00:37:43.690 --> 00:37:49.370
+Pablo Eduardo Abad: si se acuerdan bien de la padula, es al revés. En cuanto a reglas, Sí, es
+
+293
+00:37:49.850 --> 00:37:53.440
+Pablo Eduardo Abad: según el modelo de vida. Un sujeto puede leer
+
+294
+00:37:53.920 --> 00:37:59.950
+Pablo Eduardo Abad: un objeto si solo si su nivel de integridad, el nivel del objeto es igual o superior al
+
+295
+00:38:00.110 --> 00:38:01.319
+Pablo Eduardo Abad: el del sujeto
+
+296
+00:38:02.070 --> 00:38:09.290
+Pablo Eduardo Abad: y puede escribir un objeto si solo así el nivel de integridad del objeto es igual o menor al
+
+297
+00:38:10.370 --> 00:38:11.650
+Pablo Eduardo Abad: el del sujeto.
+
+298
+00:38:12.250 --> 00:38:17.830
+Pablo Eduardo Abad: Y a a a mí me gusta. Me gusta explicar esto. Como
+
+299
+00:38:19.640 --> 00:38:30.899
+Pablo Eduardo Abad: hay. Hay un Hay un dicho que que dice que una persona es tan confiable como las fuentes que utiliza, no entonces. Y iba. Recoge eso de alguna manera. Fíjense que lo que dice es
+
+300
+00:38:31.120 --> 00:38:43.500
+Pablo Eduardo Abad: para para yo considerar a un usuario con cierto nivel de integridad de confianza. Yo necesito que la información en la que él va a basar lo que haga o lo que diga las cosas que lee.
+
+301
+00:38:43.900 --> 00:38:52.189
+Pablo Eduardo Abad: sea de ese mismo nivel o más alto. O sea, si yo digo que alguien es confiable. Yo espero que la información que utilice sea confiable o más que confiable
+
+302
+00:38:53.240 --> 00:39:04.889
+Pablo Eduardo Abad: sí, porque si resulta que la información que usa bien es dudosa, poco creíble este sin pruebas, y yo no lo querría clasificar a esa a ese sujeto como confiable.
+
+303
+00:39:05.350 --> 00:39:06.320
+Pablo Eduardo Abad: ¿sí?
+
+304
+00:39:06.600 --> 00:39:16.730
+Pablo Eduardo Abad: Y si ese sujeto va a generar con la información que tuvo algo para ejecutar una acción, o va a generar más información.
+
+305
+00:39:17.320 --> 00:39:21.560
+Pablo Eduardo Abad: Yo me creo que la información que cree va a ser tan buena
+
+306
+00:39:22.960 --> 00:39:25.160
+Pablo Eduardo Abad: como el valor que le atribuye a ese sujeto.
+
+307
+00:39:26.030 --> 00:39:33.469
+Pablo Eduardo Abad: Entonces, cuando un sujeto escribe lo que escribe podría tener un nivel igual o menor, nunca algo mayor.
+
+308
+00:39:34.030 --> 00:39:43.429
+Pablo Eduardo Abad: O sea, si yo tengo a alguien que ya catalogue como súper poco fiable, no puedo decir lo que me diga esa persona o lo lo que genere esa persona va a ser súper confiable.
+
+309
+00:39:43.980 --> 00:39:49.150
+Pablo Eduardo Abad: Estas 2 ideas son las que recogen las reglas del modelo de vida.
+
+310
+00:39:51.120 --> 00:39:56.440
+Pablo Eduardo Abad: Sí, el modelo de B I V a versión estricta.
+
+311
+00:39:57.120 --> 00:40:03.539
+Pablo Eduardo Abad: Lo que nos garantiza es eso, y suele ser un modelo que se utiliza en el curado de información. Es un modelo que
+
+312
+00:40:05.660 --> 00:40:10.500
+Pablo Eduardo Abad: muchos muchos diarios, por ejemplo, utilizan por ahí sin saber qué
+
+313
+00:40:11.000 --> 00:40:23.580
+Pablo Eduardo Abad: ya para ir. Muchos perdieron la idea y no no saben que están usando el modelo de viva, pero es, está muy arraigado en las técnicas que 1 usa para sanitizar información y para verificar información y generar
+
+314
+00:40:23.890 --> 00:40:31.610
+Pablo Eduardo Abad: artículos confiables. Sí, pero en general aplica a cualquier lugar donde necesitemos garantizar un nivel de integridad.
+
+315
+00:40:31.720 --> 00:40:32.560
+Pablo Eduardo Abad: Sí,
+
+316
+00:40:33.740 --> 00:40:45.040
+Pablo Eduardo Abad: acá lo estamos modelando como sujeto usuario objeto persona. Pero hay otra otra forma de considerar estos modelos en las cuales el sujeto es un programa
+
+317
+00:40:45.530 --> 00:40:49.239
+Pablo Eduardo Abad: y los objetos son datos que el programa manipula, que el programa genera.
+
+318
+00:40:49.380 --> 00:40:52.030
+Pablo Eduardo Abad: Sí, el modelo de viva.
+
+319
+00:40:53.450 --> 00:41:01.129
+Pablo Eduardo Abad: Si tenemos un sistema cerrado que está bien clasificado resolvería muchos de los problemas de seguridad que tienen que ver con
+
+320
+00:41:03.330 --> 00:41:09.120
+Pablo Eduardo Abad: que un programa no tan confiable no tan robusto esté procesando datos de muy mala calidad
+
+321
+00:41:09.670 --> 00:41:12.389
+Pablo Eduardo Abad: y que le traigan problemas de seguridad. Si un
+
+322
+00:41:12.500 --> 00:41:20.250
+Pablo Eduardo Abad: un problema, no un problema no confiable, tal vez no tiene protecciones, por ejemplo, contra ese cual inyección sí.
+
+323
+00:41:20.500 --> 00:41:29.310
+Pablo Eduardo Abad: Y si lo dejamos, que procese cosas de dudosa calidad que probablemente podrían tener algún algún tipo de explotación de ese tipo de problemas.
+
+324
+00:41:30.120 --> 00:41:31.930
+Pablo Eduardo Abad: Tenemos Tenemos problemas.
+
+325
+00:41:32.250 --> 00:41:33.920
+Pablo Eduardo Abad: Esta filosofía.
+
+326
+00:41:34.740 --> 00:41:39.600
+Pablo Eduardo Abad: Supongo que algunos de ustedes han usado o tienen una Mac.
+
+327
+00:41:39.780 --> 00:41:52.079
+Pablo Eduardo Abad: Yo hace mucho que dejé de usar Windows, así que no sé, pero creo que Windows también lo agregó, pero en algún momento pasó que si usted se baja en un archivo de Internet de un ejecutable, lo instalan la primera vez que lo quieren correr el sistema operativo les va a decir
+
+328
+00:41:52.440 --> 00:41:58.890
+Pablo Eduardo Abad: ojo que este archivo se lo estás bajando de un lugar de fuentes dudosas. Estás seguro que quieres correrlo.
+
+329
+00:41:59.770 --> 00:42:13.339
+Pablo Eduardo Abad: Sí, eso es una aplicación de la idea del modelo. No digo que estén usando idea, pero es una aplicación de la idea, o sea, clasificó la confianza del archivo según el origen, y si ese mismo programa se lo bajaban desde el App Store seguro que no les pregunta nada.
+
+330
+00:42:15.680 --> 00:42:19.640
+Pablo Eduardo Abad: Y como considera que ustedes tienen un nivel de confianza superior.
+
+331
+00:42:20.170 --> 00:42:27.210
+Pablo Eduardo Abad: no les va a decir, no puedo hacerlo porque nada más frustrante que mi computadora no me deje hacer lo que quiero hacer, pero les va a preguntar.
+
+332
+00:42:28.150 --> 00:42:32.759
+Pablo Eduardo Abad: Sí, eso es un control de integridad, lo que lo que están viendo cuando les preguntas. Y
+
+333
+00:42:39.980 --> 00:42:50.620
+Pablo Eduardo Abad: dentro de la familia de viva hay hay muchas variantes, pero hay otro modelo que que después, en la en la práctica lo van a ver un poco más que se llama Low Watermark.
+
+334
+00:42:51.050 --> 00:42:58.379
+Pablo Eduardo Abad: que refleja, a diferencia de estos, que son estáticos, refleja cierto dinamismo y tiene como filosofía
+
+335
+00:42:58.640 --> 00:43:02.260
+Pablo Eduardo Abad: Algo así como 1 es tan confiable como la información que usa.
+
+336
+00:43:03.200 --> 00:43:08.950
+Pablo Eduardo Abad: Sí, el modelo de los Watermark es muy parecido a esto, pero no restringe la lectura.
+
+337
+00:43:09.760 --> 00:43:15.919
+Pablo Eduardo Abad: Dice: cualquier sujeto tiene derecho a leer cualquier tipo de objeto.
+
+338
+00:43:16.240 --> 00:43:23.410
+Pablo Eduardo Abad: Pero cuando lo hace, el nivel de integridad del sujeto, se reclasifica al mínimo entre el que tenía y el del objeto.
+
+339
+00:43:25.420 --> 00:43:30.860
+Pablo Eduardo Abad: O sea, si yo estoy considerado por el sistema como una persona súper
+
+340
+00:43:31.330 --> 00:43:34.189
+Pablo Eduardo Abad: súper íntegra, o sea, súper confiable.
+
+341
+00:43:34.520 --> 00:43:38.590
+Pablo Eduardo Abad: Este y y en algún momento leo
+
+342
+00:43:39.310 --> 00:43:45.419
+Pablo Eduardo Abad: interactúo ejecuto. Hago algo con algo de poca integridad, mi nivel baja automáticamente.
+
+343
+00:43:45.920 --> 00:43:47.840
+Pablo Eduardo Abad: sí. Y esto en muchos sistemas
+
+344
+00:43:48.190 --> 00:43:50.959
+Pablo Eduardo Abad: se usa para levantar controles adicionales.
+
+345
+00:43:51.930 --> 00:44:01.210
+Pablo Eduardo Abad: Esta este usuario tiene ciertos niveles de acceso. Puede ejecutar ciertas cosas en este entorno si vemos que interactúo con algo más raro.
+
+346
+00:44:02.870 --> 00:44:10.629
+Pablo Eduardo Abad: Le bajamos el nivel de integridad, con lo cual va a tener que, como volver a pedir permiso o volver a revalidarse para volver al al otro nivel.
+
+347
+00:44:10.880 --> 00:44:14.820
+Pablo Eduardo Abad: Sí, esta es la base de muchos sistemas que
+
+348
+00:44:14.990 --> 00:44:19.310
+Pablo Eduardo Abad: hoy se venden como adaptativos personalizados
+
+349
+00:44:19.730 --> 00:44:29.150
+Pablo Eduardo Abad: este en en el sentido de, según las interacciones, ir cambiando el nivel de confianza del del sujeto
+
+350
+00:44:34.690 --> 00:44:43.500
+Pablo Eduardo Abad: misma idea, o sea, la la regla directa. La regla siempre es fácil de entender. La regla de cierre. La Star
+
+351
+00:44:44.910 --> 00:44:50.520
+Pablo Eduardo Abad: básicamente nos permite garantizar integridad En este escenario donde alguien
+
+352
+00:44:51.060 --> 00:44:59.150
+Pablo Eduardo Abad: obtiene el contenido de algún lado y lo vuelca en otro. Si no no solo por el lugar donde está, sino por la información que se puede ir moviendo
+
+353
+00:45:02.090 --> 00:45:09.250
+Pablo Eduardo Abad: ambos modelos, y por ahí esto excede a la materia. Tienen demostraciones matemáticas de éstos que les digo sí, este.
+
+354
+00:45:10.030 --> 00:45:19.019
+Pablo Eduardo Abad: Estos modelos son la época. Son de los 70, así que las demostraciones son demostraciones super divertidas sobre máquinas de Turing. Son un poco largas.
+
+355
+00:45:19.340 --> 00:45:22.189
+Pablo Eduardo Abad: Este en el libro del Bishop.
+
+356
+00:45:23.120 --> 00:45:28.120
+Pablo Eduardo Abad: No sé si la de viva, pero la de ver la padula seguro está si a alguien le le interesa
+
+357
+00:45:28.300 --> 00:45:37.890
+Pablo Eduardo Abad: este, pero tienen demostraciones formales de que no hay flujo de información que contravenga las reglas del modelo.
+
+358
+00:45:38.400 --> 00:45:43.699
+Pablo Eduardo Abad: Y esto es bueno porque porque estas 2 reglas son muy fáciles de razonar.
+
+359
+00:45:43.890 --> 00:45:53.920
+Pablo Eduardo Abad: Sí, yo las las puedo razonar de forma estática. Digo, Bueno, esta información es confidencial, listo. Esta persona tiene acceso a información oficial listo.
+
+360
+00:45:54.620 --> 00:46:08.050
+Pablo Eduardo Abad: El modelo nos garantiza que en el sistema no hay ningún camino de información. O sea, no hay ninguna secuencia de otro usuario. Lee la información y la graba en otro lugar, y un tercero, la toma de ese lugar y la graba en otro.
+
+361
+00:46:08.050 --> 00:46:15.299
+Pablo Eduardo Abad: y manosear la información por todos lados y que ocurra que alguien de un nivel más bajo pueda leerla.
+
+362
+00:46:16.040 --> 00:46:20.419
+Pablo Eduardo Abad: Eso es un montón en términos de flujo de información, porque
+
+363
+00:46:21.350 --> 00:46:28.120
+Pablo Eduardo Abad: mecanismos para controlar de forma estática la información. Hay un montón. Vamos a ver más después de la materia.
+
+364
+00:46:29.440 --> 00:46:41.290
+Pablo Eduardo Abad: Cuando nos metemos en dinamismo, cuando la información fluye por distintos lugares, se copia se sintetiza, se resume, se fragmenta, se vuelve a juntar. Es muy difícil garantizar
+
+365
+00:46:42.050 --> 00:46:48.849
+Pablo Eduardo Abad: que solo la acceda, la persona a la que debería accederla o que solo o que mantenga el nivel de confiabilidad que tenía.
+
+366
+00:46:49.110 --> 00:46:54.000
+Pablo Eduardo Abad: Estos 2 modelos nos dan ese tipo de garantías y por eso son importantes conceptualmente.
+
+367
+00:47:00.080 --> 00:47:06.879
+Pablo Eduardo Abad: El tercer modelo que vamos a ver se llama Clark Wilson, y
+
+368
+00:47:08.390 --> 00:47:11.580
+Pablo Eduardo Abad: es un modelo mucho más acotado, mucho más simple.
+
+369
+00:47:12.010 --> 00:47:18.679
+Pablo Eduardo Abad: pero introduce un concepto muy importante, que es la base, especialmente del desarrollo de sistemas operativos
+
+370
+00:47:18.880 --> 00:47:22.299
+Pablo Eduardo Abad: para mantener la integridad de los sistemas operativos.
+
+371
+00:47:23.300 --> 00:47:31.500
+Pablo Eduardo Abad: El modelo de Clark Wilson es un modelo de integridad, ¿sí? Y básicamente habla de
+
+372
+00:47:33.090 --> 00:47:39.730
+Pablo Eduardo Abad: cómo establecer un mecanismo ordenado para
+
+373
+00:47:39.960 --> 00:47:45.130
+Pablo Eduardo Abad: mantener la integridad de un sistema En un escenario donde vamos a tener que operar
+
+374
+00:47:46.660 --> 00:47:53.530
+Pablo Eduardo Abad: con información red confiable y no confiable, usuarios confiables y usuarios no confiables al mismo tiempo.
+
+375
+00:47:53.720 --> 00:48:02.789
+Pablo Eduardo Abad: sí. Entonces básicamente define un marco teórico donde existen procesos de transformación y procesos de verificación, y lo que plantea es
+
+376
+00:48:05.010 --> 00:48:15.360
+Pablo Eduardo Abad: la información y los sujetos pueden ser confiables y no confiables. Sí, si los sujetos y la información son no confiables que hagan lo que quieran. No me interesan.
+
+377
+00:48:16.170 --> 00:48:23.150
+Pablo Eduardo Abad: Si el sujeto es confiable, no puede utilizar información no confiable
+
+378
+00:48:23.890 --> 00:48:30.349
+Pablo Eduardo Abad: y si la información es confiable, no puede ser utilizada por un sujeto no confiable.
+
+379
+00:48:31.350 --> 00:48:45.809
+Pablo Eduardo Abad: Eso nos nos abre una serie de limitaciones. En particular, ¿qué pasa cuando un sujeto confiable. Quiere usar información que es no confiable. Entonces ahí entra en el mecanismo de transformación y y verificación lo que plantea
+
+380
+00:48:46.570 --> 00:48:50.530
+Pablo Eduardo Abad: el modelo Clark Wilson es para resolver ese tema.
+
+381
+00:48:50.770 --> 00:48:59.929
+Pablo Eduardo Abad: Sí, lo que tenemos que hacer es, a partir de la información no confiable, transformarla con un proceso formal
+
+382
+00:49:00.370 --> 00:49:02.700
+Pablo Eduardo Abad: en información distinta
+
+383
+00:49:03.460 --> 00:49:09.949
+Pablo Eduardo Abad: que luego de pasar por un proceso independiente de verificación, se empieza a considerar como información confiable.
+
+384
+00:49:13.750 --> 00:49:15.309
+Pablo Eduardo Abad: Este proceso
+
+385
+00:49:15.850 --> 00:49:23.659
+Pablo Eduardo Abad: y este modelo se aplica a sistemas, pero se aplica también a a sistemas no informáticos. Sí, la base es la base de
+
+386
+00:49:23.910 --> 00:49:31.079
+Pablo Eduardo Abad: algo que, en teoría de diseño de empresa se conoce como principio de separación de privilegios.
+
+387
+00:49:32.420 --> 00:49:34.710
+Pablo Eduardo Abad: Si lo tengo acá. Separation of Beautiv.
+
+388
+00:49:34.930 --> 00:49:41.479
+Pablo Eduardo Abad: separación de tareas. Si los bancos hacen mucho de esto, Si Si alguno de ustedes
+
+389
+00:49:41.660 --> 00:49:46.940
+Pablo Eduardo Abad: trabaja en una empresa en la parte financiera o eventualmente tiene una empresa, abre una cuenta de empresa.
+
+390
+00:49:47.350 --> 00:49:52.329
+Pablo Eduardo Abad: Los bancos hacen algo que es armar un registro de firmas donde les plantean. Bueno.
+
+391
+00:49:52.860 --> 00:50:04.599
+Pablo Eduardo Abad: Cuánta plata van a mover más o menos por mes? Bueno, tanto genial, hagamos una cosa para todos los movimientos abajo de cierto monto. Vos decime quiénes pueden hacerlo. Esta persona, esta persona, esta persona genial
+
+392
+00:50:04.970 --> 00:50:11.119
+Pablo Eduardo Abad: arriba de eso vamos a querer cualquiera esas firmas más, otra
+
+393
+00:50:12.240 --> 00:50:17.719
+Pablo Eduardo Abad: sí que están haciendo ahí, conceptualmente están definiendo una serie de operaciones
+
+394
+00:50:20.770 --> 00:50:30.780
+Pablo Eduardo Abad: que van a manejar más en el modelo and constraint, o sea, sin restricciones y operaciones que van a requerir restricciones adicionales Cuando ocurre una de esas operaciones.
+
+395
+00:50:31.280 --> 00:50:33.820
+Pablo Eduardo Abad: va a haber una transformación y una verificación.
+
+396
+00:50:34.930 --> 00:50:44.559
+Pablo Eduardo Abad: sí esta transformación y esta verificación son, según el modelo. Tienen que ser ejecutadas en ambientes independientes, y esa es la base de todo.
+
+397
+00:50:44.980 --> 00:50:52.609
+Pablo Eduardo Abad: Cuando queremos procesar una transacción de este tipo en el banco hay 2 personas involucradas siempre, aunque sea todo vía sistema.
+
+398
+00:50:52.730 --> 00:50:59.949
+Pablo Eduardo Abad: Una persona va a verificar las firmas. Sería un sistema verificar las firmas, y esa persona no es la que va a ejecutar la transacción.
+
+399
+00:51:00.070 --> 00:51:06.780
+Pablo Eduardo Abad: Va a ser otra. Si esto está todo automatizado, va a haber un proceso que verifique y un proceso totalmente independiente que ejecute.
+
+400
+00:51:07.970 --> 00:51:14.090
+Pablo Eduardo Abad: Sí, los sistemas operativos hacen lo mismo los sistemas operativos para protegerse.
+
+401
+00:51:15.410 --> 00:51:24.169
+Pablo Eduardo Abad: Bueno, ustedes son por ahí muy jóvenes. Pero en la Edad antigua de los sistemas operativos, 1 se mandaba una macana de cada 2 por 3 y colgaba la computadora
+
+402
+00:51:24.260 --> 00:51:36.919
+Pablo Eduardo Abad: si hoy esa pasa cada vez menos. Pero antes era súper fácil colgar la computadora. Entonces los sistemas operativos empezaron a escalar su modelo de integridad para protegerse de eso, para que no sea trivial.
+
+403
+00:51:38.020 --> 00:51:39.280
+Pablo Eduardo Abad: romperlos.
+
+404
+00:51:40.170 --> 00:51:49.269
+Pablo Eduardo Abad: y eso devino. En hay hay muchos modelos, pero el que más se utiliza es la separación del espacio de ejecución en espacio usuario, espacio carnel.
+
+405
+00:51:49.480 --> 00:51:56.690
+Pablo Eduardo Abad: Sí, el espacio Kernel es un espacio de alta confidencial, confiabilidad. Se supone que los programas que corren ahí
+
+406
+00:51:56.800 --> 00:51:59.669
+Pablo Eduardo Abad: o las cosas que corren ahí. Las funciones
+
+407
+00:52:00.230 --> 00:52:07.440
+Pablo Eduardo Abad: son super confiables porque pueden hacer lo que quieran. Pueden romper todo. Pueden saltarse todos los modelos, todos los controles que hay
+
+408
+00:52:08.080 --> 00:52:14.269
+Pablo Eduardo Abad: son las funciones, por ejemplo, donde están las cosas para acceder a al disco rígido.
+
+409
+00:52:14.920 --> 00:52:19.269
+Pablo Eduardo Abad: saltándose el sistema de archivos, saltándose los permisos. Lo que sea
+
+410
+00:52:21.310 --> 00:52:27.940
+Pablo Eduardo Abad: El resto de las cosas se ejecutan como cosas no confiables en el en el entorno de del usuario.
+
+411
+00:52:29.700 --> 00:52:34.950
+Pablo Eduardo Abad: ¿qué pasa cuando como usuarios, necesitamos hacer algo que está en el otro lugar?
+
+412
+00:52:35.310 --> 00:52:40.589
+Pablo Eduardo Abad: Bueno, existe algo que ya pasaron por sistemas operativos.
+
+413
+00:52:41.070 --> 00:52:42.400
+Pablo Eduardo Abad: No sé si todos.
+
+414
+00:52:46.050 --> 00:52:53.560
+Pablo Eduardo Abad: Bueno, hay varios que sí. ¿cómo ¿Cómo se arbitra la ejecución de algo entre Wieurspace y Carnal Space ¿Se acuerdan?
+
+415
+00:52:57.340 --> 00:53:01.029
+Pablo Eduardo Abad: Fish Cols Okay. Perfecto. Ese es el término. O sea, hay
+
+416
+00:53:01.410 --> 00:53:05.219
+Pablo Eduardo Abad: hay un recurso, una llamada al sistema que qué hace?
+
+417
+00:53:05.590 --> 00:53:07.830
+Pablo Eduardo Abad: Sal? ¿saben ¿Cómo funcionan los scouls?
+
+418
+00:53:09.990 --> 00:53:13.190
+Pablo Eduardo Abad: Bueno, de depende, obviamente el sistema operativo, pero de forma general.
+
+419
+00:53:19.630 --> 00:53:20.799
+Pablo Eduardo Abad: nada No importa
+
+420
+00:53:20.850 --> 00:53:34.089
+Pablo Eduardo Abad: si nadie se anima la idea de un fiscal que es yo necesito ejecutar algo privilegiado que puede ser tanto como leer un archivo, que es una operación privilegiada, porque Si yo pudiese leer arbitrariamente cualquier cosa, Me puedo saltar un montón de controles.
+
+421
+00:53:34.090 --> 00:53:41.360
+Pablo Eduardo Abad: El funcionamiento típico de eso es que yo voy a construir un dataset voy a construir datos que expliquen lo que quiero hacer.
+
+422
+00:53:41.590 --> 00:53:45.550
+Pablo Eduardo Abad: Sí, te voy a agarrar un bloque de memoria. Y decir, yo quiero leer.
+
+423
+00:53:45.720 --> 00:53:53.100
+Pablo Eduardo Abad: No sé, voy a inventarme. Quiero abrir el archivo para lectura que está en tal lugar con tal filpad, este contar esos atributos.
+
+424
+00:53:53.290 --> 00:53:54.150
+Pablo Eduardo Abad: ¿sí?
+
+425
+00:53:54.900 --> 00:53:58.089
+Pablo Eduardo Abad: Y ejecutó la Sis con la ejecución de la Sis, con.
+
+426
+00:53:58.500 --> 00:54:05.379
+Pablo Eduardo Abad: básicamente dispara un proceso que va a tomar esa información que está en la memoria del usuario y la va a transformar en
+
+427
+00:54:05.780 --> 00:54:11.539
+Pablo Eduardo Abad: a veces es simplemente moverla. A veces es también modificarla, y la va a dejar en la zona de memoria del Carmen
+
+428
+00:54:12.180 --> 00:54:27.349
+Pablo Eduardo Abad: va a disparar otro proceso que va a verificar la integridad de la información que no esté queriendo hacer algo raro que que que no sé donde había un file, pad has un file Pad, que donde Tendría que haber un número positivo y un número positivo verifica la información.
+
+429
+00:54:27.570 --> 00:54:35.619
+Pablo Eduardo Abad: Y cuando esas 2 cosas pasan, si la verificación termina, se le pasa el control a un programa que está corriendo
+
+430
+00:54:36.330 --> 00:54:44.820
+Pablo Eduardo Abad: ya en el espacio protegido que opera sobre esta información transformada y
+
+431
+00:54:45.030 --> 00:54:49.269
+Pablo Eduardo Abad: ejecuta. Y después. Bueno, hay un camino de vuelta que es más más fácil y más directo.
+
+432
+00:54:52.170 --> 00:54:56.830
+Pablo Eduardo Abad: Esa es la la idea atrás de todo eso es una aplicación del modelo Clark Wilson.
+
+433
+00:54:57.680 --> 00:55:02.930
+Pablo Eduardo Abad: y es una forma de proteger, en este caso, la integridad del sistema operativo
+
+434
+00:55:03.530 --> 00:55:09.149
+Pablo Eduardo Abad: versus un usuario que, como puede ejecutar cualquier cosa desde el punto de vista del sistema operativo, es no confiable.
+
+435
+00:55:19.290 --> 00:55:25.109
+Pablo Eduardo Abad: Estos 3 modelos que vimos son 3 de muchos. Hay varios otros y somos de los teóricos. O sea.
+
+436
+00:55:26.210 --> 00:55:30.470
+Pablo Eduardo Abad: vamos a practicar. Vamos a hacer casos de juguete de estos modelos.
+
+437
+00:55:30.780 --> 00:55:36.140
+Pablo Eduardo Abad: Si se tienen que llevar cosas concretas que les ayuden en su vida profesional.
+
+438
+00:55:37.060 --> 00:55:40.870
+Pablo Eduardo Abad: En la práctica son muy difíciles de aplicar.
+
+439
+00:55:41.310 --> 00:55:46.269
+Pablo Eduardo Abad: Sería muy raro que vean un sistema completo cubierto por un modelo de estos.
+
+440
+00:55:47.510 --> 00:55:56.310
+Pablo Eduardo Abad: Sí, dicho eso, se van a encontrar con partes de un sistema o partes de los datos de un sistema que sigan un modelo muy parecido.
+
+441
+00:55:56.930 --> 00:56:15.120
+Pablo Eduardo Abad: Sí, no pongas las manos en el fuego de que encuentren el nombre explícito de belga Padula Viva y Clark Wilson, porque hay mucha gente que lo aplica porque lo vio, pero no no sabe el nombre. Pero, por ejemplo, si trabajan con sistemas que manejan información médica y que están sujetos a temas regulatorios, es muy probable que
+
+442
+00:56:15.430 --> 00:56:19.380
+Pablo Eduardo Abad: haya alguna compartimentalización parecida a ver la padura.
+
+443
+00:56:20.620 --> 00:56:30.029
+Pablo Eduardo Abad: si trabajan con sistemas de clasificación y archivo de información para para diarios o lejos judiciales o declaraciones fiscales. Es muy probable que
+
+444
+00:56:31.800 --> 00:56:43.349
+Pablo Eduardo Abad: tengan algún si sistema de estos de control Voy a hacer una pausa, si están bien hechos, O sea, también puede ser un sistema hecho en 2 min por alguien que tuvo mucho éxito y no tiene nada de esto. No
+
+445
+00:56:43.640 --> 00:56:49.030
+Pablo Eduardo Abad: como pues eso bueno, no se puede evitar. Pero si está bien hecha, es muy probable que implementen
+
+446
+00:56:49.290 --> 00:56:51.629
+Pablo Eduardo Abad: este modelo o algún otro parecido.
+
+447
+00:56:53.040 --> 00:56:58.950
+Pablo Eduardo Abad: Y bueno. Y el de Clark Wilson, como les decía, suele aparecer en muchos conceptos de Kearnel User Space
+
+448
+00:57:05.730 --> 00:57:11.950
+Pablo Eduardo Abad: Mhm, Bien, recibimos
+
+449
+00:57:12.530 --> 00:57:18.879
+Pablo Eduardo Abad: modelos de de control de acceso que son como marcos teóricos que se pueden utilizar para fundamentar
+
+450
+00:57:19.410 --> 00:57:22.310
+Pablo Eduardo Abad: parte de de la seguridad de un sistema.
+
+451
+00:57:22.540 --> 00:57:32.090
+Pablo Eduardo Abad: sí siempre aprendo sobre esta premisa, que el control de acceso parece ser algo medular, con lo que podemos implementar integridad, confidencialidad.
+
+452
+00:57:33.380 --> 00:57:41.050
+Pablo Eduardo Abad: disponibilidad. Incluso les había dicho, los modelos suelen tener
+
+453
+00:57:41.160 --> 00:57:48.029
+Pablo Eduardo Abad: muy buenas propiedades, suelen ser muy restrictivos. Es raro que se utilicen completamente en un sistema.
+
+454
+00:57:48.630 --> 00:57:55.919
+Pablo Eduardo Abad: suelen estar abarcando una parte. ¿qué se utiliza en el resto del sistema cuando necesitamos manejar control de acceso.
+
+455
+00:58:00.180 --> 00:58:08.499
+Pablo Eduardo Abad: si nosotros tenemos que clasificar los mecanismos de control de acceso. Hay como 2 grandes familias: los controles de acceso mandatorios.
+
+456
+00:58:09.070 --> 00:58:09.970
+Pablo Eduardo Abad: sí
+
+457
+00:58:11.220 --> 00:58:19.910
+Pablo Eduardo Abad: a los que pertenecen, entre otros. Los modelos que vimos sí son modelos donde existen reglas universales que se aplican a todos los accesos.
+
+458
+00:58:21.010 --> 00:58:34.310
+Pablo Eduardo Abad: Si el modelo de la padula define el conjunto de reglas que regulan los accesos de tipo, lectura, de tipo escritura para todos o para todo lo que sea al alcance. Sí se dice que cuando hay un modelo de ese tipo, está aplicando
+
+459
+00:58:34.430 --> 00:58:36.730
+Pablo Eduardo Abad: un control de acceso mandatorio.
+
+460
+00:58:37.760 --> 00:58:41.600
+Pablo Eduardo Abad: El opuesto a eso es un sistema de control laxo discrecional
+
+461
+00:58:43.090 --> 00:58:45.939
+Pablo Eduardo Abad: en un sistema de control de acceso discrecional.
+
+462
+00:58:48.600 --> 00:58:59.280
+Pablo Eduardo Abad: La determinación de que operaciones se pueden hacer un sujeto puede ejecutar sobre lo que accesos tiene un sujeto sobre un objeto.
+
+463
+00:58:59.860 --> 00:59:09.649
+Pablo Eduardo Abad: Queda a discreción de algún responsable. Si ese responsable normalmente lo llamamos administrador es el administrador del sistema
+
+464
+00:59:12.440 --> 00:59:21.699
+Pablo Eduardo Abad: en general. Cuando necesitamos mucha flexibilidad. Los sistemas de control de acceso mandatorios son demasiado rígidos. Entonces.
+
+465
+00:59:21.800 --> 00:59:28.289
+Pablo Eduardo Abad: cuando se imaginan un sistema de propósito general, como puede ser un sistema operativo, una base de datos. Este
+
+466
+00:59:28.420 --> 00:59:35.820
+Pablo Eduardo Abad: un sistema de oficina, como puede ser de Google Workspace o Microsoft. 65,
+
+467
+00:59:35.990 --> 00:59:39.720
+Pablo Eduardo Abad: los sistemas de control de acceso tienden a ser discrecionales.
+
+468
+00:59:40.470 --> 00:59:45.030
+Pablo Eduardo Abad: Sí, el el punto el sistema de control de acceso discrecional es
+
+469
+00:59:45.490 --> 00:59:50.980
+Pablo Eduardo Abad: básicamente las propiedades de seguridad que se quieran obtener.
+
+470
+00:59:51.930 --> 00:59:57.759
+Pablo Eduardo Abad: No las da el sistema. Las da el señor Administrador en función de cómo lo configure. Entonces
+
+471
+00:59:57.930 --> 01:00:06.589
+Pablo Eduardo Abad: es una forma elegante de cubrir múltiples escenarios. Es una forma elegante de sacarse los problemas de tener que garantizar o dar garantías fuertes
+
+472
+01:00:06.910 --> 01:00:11.010
+Pablo Eduardo Abad: de ciertos requisitos de seguridad
+
+473
+01:00:14.660 --> 01:00:15.430
+Pablo Eduardo Abad: Mhm
+
+474
+01:00:18.730 --> 01:00:21.259
+Pablo Eduardo Abad: Dentro de los accesos discrecionales.
+
+475
+01:00:21.370 --> 01:00:28.940
+Pablo Eduardo Abad: Sí, hay hay accesos que se dan por extensión. O sea, piensan, piensan en los accesos discrecionales como un conjunto de accesos, entonces
+
+476
+01:00:29.230 --> 01:00:35.979
+Pablo Eduardo Abad: a todos los conjuntos? Los podemos de alguna manera, definir, por extensión, enumerando las cosas. ¿sí? Y
+
+477
+01:00:36.090 --> 01:00:40.430
+Pablo Eduardo Abad: Y dentro de la idea de controles, discreciones, por extensión aparecen
+
+478
+01:00:40.700 --> 01:00:45.429
+Pablo Eduardo Abad: 2 grandes modelos. Voy a hablar de un tercero muy rápido, pero no lo vamos a ver.
+
+479
+01:00:45.540 --> 01:00:50.989
+Pablo Eduardo Abad: Sí. El primero es: vamos a empezar por el más simple: la matriz de control de accesos.
+
+480
+01:00:51.250 --> 01:00:57.449
+Pablo Eduardo Abad: Sí, la matriz de control de accesos es una representación matricial donde se pone en 1 de los ejes.
+
+481
+01:00:57.680 --> 01:01:02.070
+Pablo Eduardo Abad: por ejemplo, la las pilas, acá, los sujetos
+
+482
+01:01:02.360 --> 01:01:05.900
+Pablo Eduardo Abad: y en el otro eje, los objetos y en la intersección
+
+483
+01:01:06.340 --> 01:01:11.520
+Pablo Eduardo Abad: se definen las operaciones que son posibles para
+
+484
+01:01:12.110 --> 01:01:15.159
+Pablo Eduardo Abad: la combinación sujeto a objeto. Sí,
+
+485
+01:01:16.480 --> 01:01:23.120
+Pablo Eduardo Abad: es un modelo súper simple de entender. Es un modelo relativamente simple de construir? Sí,
+
+486
+01:01:23.480 --> 01:01:33.440
+Pablo Eduardo Abad: porque es un modelo discrecional, porque en estos modelos típicamente 1 puede a discreción determinar qué operaciones se ejecutan y que no para cualquier combinación que se les ocurra.
+
+487
+01:01:34.030 --> 01:01:37.000
+Pablo Eduardo Abad: ¿por qué son? Por extensión, es un modelo, por extensión.
+
+488
+01:01:37.190 --> 01:01:42.030
+Pablo Eduardo Abad: porque hay que definir, 1 por 1, todas las operaciones permitidas.
+
+489
+01:01:43.740 --> 01:01:56.669
+Pablo Eduardo Abad: Sí, en un sistema muy chico donde la cantidad de usuarios y objetos es relativamente acotada, es una opción, pero la matriz de control de acceso se suele usar más como
+
+490
+01:01:57.170 --> 01:02:03.950
+Pablo Eduardo Abad: como un concepto para ilustrar que, como para implementarlo directamente, por qué
+
+491
+01:02:04.930 --> 01:02:14.330
+Pablo Eduardo Abad: tenía un montón de de problemas prácticos, o sea, en en un sistema donde hay 100 000 usuarios y 1 000 000 de objetos.
+
+492
+01:02:14.440 --> 01:02:18.010
+Pablo Eduardo Abad: Madrid crece violentamente, sí.
+
+493
+01:02:18.440 --> 01:02:19.810
+Pablo Eduardo Abad: Y
+
+494
+01:02:20.560 --> 01:02:27.689
+Pablo Eduardo Abad: y por cada sujeto, y por cada objeto es como que habría que definir todas las interacciones posibles. Si meto un sujeto nuevo al sistema
+
+495
+01:02:27.850 --> 01:02:36.619
+Pablo Eduardo Abad: tendría que definir todas las interacciones con todos los objetos que ya existen. Si meto un objeto nuevo sistema tendría que definir cómo interactúa con todos los sujetos. Entonces.
+
+496
+01:02:37.280 --> 01:02:45.599
+Pablo Eduardo Abad: en la práctica se utilizan técnicas para simplificar esto. La matriz en por sí es un dolor de cabeza en ese sentido, no
+
+497
+01:02:48.420 --> 01:02:57.000
+Pablo Eduardo Abad: una de las formas de resolver, esto es pensar que en un sistema muy grande, estas configuraciones de permisos aparecen como por islas
+
+498
+01:02:57.420 --> 01:03:03.260
+Pablo Eduardo Abad: y hay como ciertos objetos que interactúan con ciertos sujetos y otro grupo de sujetos
+
+499
+01:03:03.480 --> 01:03:14.140
+Pablo Eduardo Abad: que trabaja con otros. Entonces, si yo pienso en la matriz que representa esos va a quedar una matriz dispersa, una matriz que tiene una gran mayoría de celdas vacías.
+
+500
+01:03:14.480 --> 01:03:22.250
+Pablo Eduardo Abad: Sí, hay muchas técnicas eficientes para representar matrices dispersas sin tener que modelar todo el contenido.
+
+501
+01:03:24.550 --> 01:03:29.249
+Pablo Eduardo Abad: Generalmente se basan en pararse en 1 de los lugares. Por ejemplo.
+
+502
+01:03:29.920 --> 01:03:34.099
+Pablo Eduardo Abad: podríamos pararnos en no sé, por filas y decir
+
+503
+01:03:34.460 --> 01:03:39.709
+Pablo Eduardo Abad: para esta fila, y en vez de enumerar todos los valores posibles. Enumerar los pares
+
+504
+01:03:39.840 --> 01:03:51.979
+Pablo Eduardo Abad: columna, valor que tengan sentido eso. Esa idea de describir de forma dispersa una matriz es lo que se conoce como Acls o listas de control de acceso.
+
+505
+01:03:52.740 --> 01:03:58.549
+Pablo Eduardo Abad: Las listas de control de acceso son listas que para cada objeto
+
+506
+01:03:59.400 --> 01:04:02.909
+Pablo Eduardo Abad: determinan los pares de sujetos y acciones permitidos.
+
+507
+01:04:07.080 --> 01:04:13.619
+Pablo Eduardo Abad: Sí, pero fíjense que es la misma información que podría haber una matriz simplemente que
+
+508
+01:04:13.730 --> 01:04:31.269
+Pablo Eduardo Abad: de forma compacta entendiendo esto, en general, eso no alcanza para un sistema real. Esto ataca parte del problema, pero no quita el segundo problema, que es en cada 1 de estos clusters. Voy a tener grupos de usuarios y grupos de objetos para los cuales voy a tener prácticamente la misma
+
+509
+01:04:31.370 --> 01:04:37.370
+Pablo Eduardo Abad: la misma distribución de de accesos, Sí, en general, en este tipo de sistemas
+
+510
+01:04:38.580 --> 01:04:46.300
+Pablo Eduardo Abad: se agregan extensiones. Hay Hay un montón de extensiones, pero les diría una de las más importantes: son el concepto de permisos por defecto.
+
+511
+01:04:46.790 --> 01:04:51.560
+Pablo Eduardo Abad: Sí, se le asignan a los usuarios ciertos permisos por defecto
+
+512
+01:04:51.700 --> 01:04:55.120
+Pablo Eduardo Abad: que son permisos que aplicarían si yo no defino nada
+
+513
+01:04:57.400 --> 01:05:05.300
+Pablo Eduardo Abad: y se suelen introducir el concepto de grupos o agrupaciones donde a muchos
+
+514
+01:05:05.520 --> 01:05:11.569
+Pablo Eduardo Abad: objetos parecidos. Se los trata como si fuese una sola entrada, se los clasifica como algo así
+
+515
+01:05:12.310 --> 01:05:21.940
+Pablo Eduardo Abad: y se utiliza una sola una sola columna en este caso y a los sujetos. Lo mismo se los clasifica en algún grupo
+
+516
+01:05:22.230 --> 01:05:29.699
+Pablo Eduardo Abad: y se aplican las reglas a nivel grupo. Y con eso se puede mantener el problema un poco más acotado, ¿sí? Porque
+
+517
+01:05:31.460 --> 01:05:34.239
+Pablo Eduardo Abad: para una computadora no es problema tener la matriz
+
+518
+01:05:34.360 --> 01:05:41.969
+Pablo Eduardo Abad: ahí? Joaquín conecta con tu pregunta, Digo, para poner la computadora, tener una matriz gigante de 1 000 000 por 1 000 000 de entradas? Cero, problema
+
+519
+01:05:42.250 --> 01:05:47.080
+Pablo Eduardo Abad: el problema es el pobre humano que tiene la discreción, poner los valores. Eso es lo que no escala.
+
+520
+01:05:47.920 --> 01:05:55.140
+Pablo Eduardo Abad: Entonces lo que buscamos son formas sistemáticas de describir esta matriz. Y ahí empezamos a hablar de trabajar
+
+521
+01:05:55.260 --> 01:06:03.320
+Pablo Eduardo Abad: más que por extensión, por comprensión, si se acuerdan la otra forma de definir un conjunto es a través de las propiedades, sí,
+
+522
+01:06:04.620 --> 01:06:12.220
+Pablo Eduardo Abad: entonces una definición de control discrecional por comprensión, se hace a través de reglas, ¿sí?
+
+523
+01:06:12.650 --> 01:06:23.240
+Pablo Eduardo Abad: Donde lo que se termina almacenando es como un una suerte de reglas más compactas que podrían llegar a usarse para reconstruir una matriz de acceso bajo demanda
+
+524
+01:06:24.910 --> 01:06:37.590
+Pablo Eduardo Abad: y las reglas se suelen agrupar si los los 3 modelos más conocidos de control de acceso por comprensión. Son modelos basados en roles modelos basados en atributos y modelos basados en reglas.
+
+525
+01:06:40.640 --> 01:06:45.620
+Pablo Eduardo Abad: Y están los 3, porque no hay 1 mejor que el otro dependiendo de la situación. Este
+
+526
+01:06:46.220 --> 01:06:49.560
+Pablo Eduardo Abad: va 1 o a otro que convenga más.
+
+527
+01:06:53.750 --> 01:06:58.119
+Pablo Eduardo Abad: Los sistemas de control de acceso basados en roles
+
+528
+01:06:59.720 --> 01:07:02.720
+Pablo Eduardo Abad: se basan en la en la idea de
+
+529
+01:07:05.600 --> 01:07:15.689
+Pablo Eduardo Abad: estereotipar roles. Sí que lo podemos ver como una suerte de grupo, pero es un poco más abarcativo es generar estereotipos que agrupen permisos. Entonces, por ejemplo.
+
+530
+01:07:15.690 --> 01:07:26.260
+Pablo Eduardo Abad: en un sistema de gestión empresarial, Si pueden aparecer agrupaciones pueden aparecer roles que dependan del área donde trabajan, o sea, una count manager.
+
+531
+01:07:26.490 --> 01:07:38.129
+Pablo Eduardo Abad: Este, una persona de ventas, un administrador de de de de Haití, este un administrador de operaciones, este un usuario común, Si.
+
+532
+01:07:38.480 --> 01:07:46.149
+Pablo Eduardo Abad: y lo que define 1 es como una suerte de plantilla de template donde para cada 1 de esos roles define
+
+533
+01:07:46.370 --> 01:07:49.269
+Pablo Eduardo Abad: qué acciones se pueden ejecutar.
+
+534
+01:07:50.560 --> 01:07:59.239
+Pablo Eduardo Abad: Sí, en algunos libros van a escuchar hablar de que R. Back, que es el Rolweisaccess, Control.
+
+535
+01:07:59.780 --> 01:08:06.709
+Pablo Eduardo Abad: Algunos libros lo describen como mandatorio porque lo que plantean es que lo que 1 está haciendo es definiendo reglas de juego universales.
+
+536
+01:08:07.000 --> 01:08:13.700
+Pablo Eduardo Abad: Sí, es una forma medio sesgada de verlo. Lo cierto es que
+
+537
+01:08:14.960 --> 01:08:21.499
+Pablo Eduardo Abad: esto podría ser un juego de reglas así universales, donde a cada 1 de los de los roles se le asignan
+
+538
+01:08:21.840 --> 01:08:25.470
+Pablo Eduardo Abad: los permisos específicos de acuerdo a tipos de objetos, sí
+
+539
+01:08:26.180 --> 01:08:35.179
+Pablo Eduardo Abad: Pero hay sistemas donde esta asignación de roles y cosas para hacer es configuración dinámica lo que lo volvería discrecional.
+
+540
+01:08:35.359 --> 01:08:41.249
+Pablo Eduardo Abad: Pero incluso si no lo fuera. Hay una discrecionalidad muy fuerte en que hay que asignarle a los
+
+541
+01:08:43.330 --> 01:08:47.479
+Pablo Eduardo Abad: usuarios, a a los distintos roles, entonces
+
+542
+01:08:49.550 --> 01:08:57.610
+Pablo Eduardo Abad: las garantías de seguridad dependen muy fuerte de cómo se hace esa asignación. Y esa es la característica que define a los a los modelos discrecionales.
+
+543
+01:09:00.740 --> 01:09:09.170
+Pablo Eduardo Abad: ¿qué tiene de de, bueno. Este tipo de sistemas que una vez hecha la definición de roles, es muy simple: la gestión diaria.
+
+544
+01:09:10.060 --> 01:09:20.450
+Pablo Eduardo Abad: o sea, los roles suelen ser o tipo de cargo o tipo de función, Entonces, a a un administrador. A un grupo de administradores le suele ser fácil ante un usuario nuevo.
+
+545
+01:09:20.600 --> 01:09:30.550
+Pablo Eduardo Abad: Darle los permisos a través de los roles que sean correctos, los roles no son grupos o podrían llegar a verse como grupos en el sentido de que
+
+546
+01:09:30.729 --> 01:09:40.170
+Pablo Eduardo Abad: y en los sistemas tradicionales, un usuario pertenece a un solo a un solo rol.
+
+547
+01:09:40.899 --> 01:09:49.160
+Pablo Eduardo Abad: Pero la realidad es que esta línea se desdibuja en en aplicaciones más complejas que permiten que el usuario tenga varios roles.
+
+548
+01:09:49.560 --> 01:09:55.909
+Pablo Eduardo Abad: lo que nos va a generar un problema después, este muy interesante que se los voy tirando. Así para
+
+549
+01:09:56.580 --> 01:10:04.499
+Pablo Eduardo Abad: para que lo vayan pensando, pero que es que en algún momento podemos tener más de un sistema de control de acceso interactuando sobre la misma interacción?
+
+550
+01:10:05.120 --> 01:10:06.010
+Pablo Eduardo Abad: Sí,
+
+551
+01:10:06.350 --> 01:10:22.909
+Pablo Eduardo Abad: tal vez acá tengamos un esquema de roles donde por algún rol algo se puede hacer por otro ¿no? Y eso nos lleva a tener que pensar cómo resolvemos esos conflictos, va a pasar lo mismo si tenemos un sistema, por ejemplo, de roles y alguna parte del sistema protegida por un esquema más fuerte tipo en la padura.
+
+552
+01:10:24.080 --> 01:10:30.990
+Pablo Eduardo Abad: a ver alguna zona donde interactúan los 2, y suele ser este una zona complicada En cuanto al
+
+553
+01:10:31.410 --> 01:10:33.240
+Pablo Eduardo Abad: al al mecanismo de control.
+
+554
+01:10:36.720 --> 01:10:44.009
+Pablo Eduardo Abad: muy parecido, muy parecido a al mecanismo de roles. Es un mecanismo basado en reglas.
+
+555
+01:10:44.500 --> 01:10:45.410
+Pablo Eduardo Abad: Sí,
+
+556
+01:10:46.520 --> 01:10:56.040
+Pablo Eduardo Abad: ¿Cuál es la diferencia entre roles y reglas? Los roles se basan en en esto estereotipar roles y asignar sujetos. Las reglas no tienen una asignación de sujetos.
+
+557
+01:10:56.260 --> 01:11:04.509
+Pablo Eduardo Abad: Sí, lo que plantean es alguna clasificación, agrupación de principales de de sujetos, alguna
+
+558
+01:11:05.530 --> 01:11:09.689
+Pablo Eduardo Abad: agrupación de objetos con algún tipo de acceso se permite o se bloquea
+
+559
+01:11:10.430 --> 01:11:18.789
+Pablo Eduardo Abad: y, en particular, los sistemas basados en reglas. Lo que tienen es como una lista ordenada de reglas donde aplica la primera regla que ocurra
+
+560
+01:11:21.170 --> 01:11:27.570
+Pablo Eduardo Abad: o alguna otra política así se explícita, pero típicamente son sistemas donde hay una lista ordenada de reglas
+
+561
+01:11:28.250 --> 01:11:36.409
+Pablo Eduardo Abad: que aplican a todas las interacciones y se va resolviendo. Si la interacción puede ocurrir o no en función de ir yendo por las reglas. Ahora ahora vamos a ver algunos ejemplos de esto.
+
+562
+01:11:37.180 --> 01:11:39.630
+Pablo Eduardo Abad: Cuando hay múltiples reglas.
+
+563
+01:11:40.360 --> 01:11:56.489
+Pablo Eduardo Abad: pasa lo mismo que cuando se juntan los mecanismos. Tenemos que ver qué hacemos para aplicar una regla contradictoria, y no hay una única forma, y la realidad es que depende mucho del tipo de sistema. ¿qué regla aplica conceptualmente? Hay como 3 grandes formas de de resolverlo.
+
+564
+01:11:56.890 --> 01:12:01.520
+Pablo Eduardo Abad: First Match es si las reglas tienen un orden. La primera que aplica es la que va.
+
+565
+01:12:02.450 --> 01:12:10.200
+Pablo Eduardo Abad: Best Match es si hay reglas más específicas. Esas reglas aplican antes que las reglas más generales. ¿sí?
+
+566
+01:12:11.310 --> 01:12:18.910
+Pablo Eduardo Abad: Y Dinay Overau, es que si hay múltiples reglas que aplican, todas tienen que permitir la operación o
+
+567
+01:12:19.290 --> 01:12:20.649
+Pablo Eduardo Abad: o no se va a permitir.
+
+568
+01:12:23.770 --> 01:12:25.649
+Pablo Eduardo Abad: Por ejemplo, esta es
+
+569
+01:12:25.830 --> 01:12:35.969
+Pablo Eduardo Abad: esta es una configuración muy simple de un Firewall para los que todavía no vieron redes. Un Firewall es un mecanismo de seguridad que arbitra las comunicaciones entre 2 redes.
+
+570
+01:12:36.500 --> 01:12:39.119
+Pablo Eduardo Abad: Sí, entonces hay una red de origen, una red destino.
+
+571
+01:12:39.600 --> 01:12:49.929
+Pablo Eduardo Abad: Este y el Firewall. Básicamente, es un sistema basado en reglas en su forma más fácil, que permite controlar el acceso a nivel tráfico entre las 2 redes.
+
+572
+01:12:50.440 --> 01:13:00.150
+Pablo Eduardo Abad: Sí, supóngase que la implementación del Fireward que estemos usando tiene este juego de reglas.
+
+573
+01:13:00.400 --> 01:13:10.380
+Pablo Eduardo Abad: ¿sí? Y estaba usando una resolución Farmatch. Y hay un intento de comunicación de desde el I P. Diez, 1, 1, 1 a la 20, Uno, 1, 1, Puerto 80,
+
+574
+01:13:10.900 --> 01:13:17.070
+Pablo Eduardo Abad: Si First Match evaluaría en orden estas reglas, entonces
+
+575
+01:13:18.000 --> 01:13:26.699
+Pablo Eduardo Abad: fíjense que en principio habría 2 reglas que bachean. Acá La primera te dice explícitamente esa Ip
+
+576
+01:13:26.840 --> 01:13:31.049
+Pablo Eduardo Abad: con ese destino a ese puerto que dice aceptar, y hay otra
+
+577
+01:13:32.040 --> 01:13:37.660
+Pablo Eduardo Abad: que aplica a la red en la cual, de la cual forma parte, está que dice, no debería pasar.
+
+578
+01:13:37.930 --> 01:13:42.710
+Pablo Eduardo Abad: Sí, En principio, hay 2 reglas que aplican First Match
+
+579
+01:13:44.170 --> 01:13:50.619
+Pablo Eduardo Abad: haría que aplique cuál de las reglas o si quieren que cuál sería el resultado? ¿se aceptaría o se denegaría la operación.
+
+580
+01:13:50.620 --> 01:13:51.800
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y se asustaría.
+
+581
+01:13:52.480 --> 01:14:00.669
+Pablo Eduardo Abad: Se aceptaría. Es bastante. Es bastante simple. Una vez que identificamos las reglas involucradas, Este y el nombre dice mucho.
+
+582
+01:14:01.350 --> 01:14:05.380
+Pablo Eduardo Abad: Ahora este mismo juego de reglas.
+
+583
+01:14:06.060 --> 01:14:13.370
+Pablo Eduardo Abad: Bueno, un cachito distinto. Este podría aplicar también a más de una
+
+584
+01:14:13.750 --> 01:14:16.669
+Pablo Eduardo Abad: sí, Pero tener una resolución que sea
+
+585
+01:14:17.300 --> 01:14:20.939
+Pablo Eduardo Abad: Best Match supone que las reglas están así y están ordenadas.
+
+586
+01:14:21.750 --> 01:14:22.670
+Pablo Eduardo Abad: Sí,
+
+587
+01:14:23.060 --> 01:14:31.129
+Pablo Eduardo Abad: si nosotros tuviésemos un modelo de resolución first match en este caso, Si esta operación que manchea estas 2 líneas resaltadas
+
+588
+01:14:31.240 --> 01:14:38.980
+Pablo Eduardo Abad: se aceptaría si si tuviésemos un mecanismo de la regla más exacta si
+
+589
+01:14:39.260 --> 01:14:47.130
+Pablo Eduardo Abad: la primera regla apunta a un conjunto a un grupo de direcciones, la segunda punta a una dirección específica. La segunda, más específica.
+
+590
+01:14:48.080 --> 01:14:57.869
+Pablo Eduardo Abad: entonces denegaríamos Fíjense que dependiendo como funciona el motor, yo necesito escribir las reglas de forma distinta para resolverlo
+
+591
+01:14:58.170 --> 01:15:06.429
+Pablo Eduardo Abad: en un motor Farst Match. Este conjunto de reglas dicen algo así como no permitas comunicación entre esta red.
+
+592
+01:15:07.250 --> 01:15:14.459
+Pablo Eduardo Abad: La 10. Uno punto 1 punto lo que sea, salvo desde el servidor. 111
+
+593
+01:15:18.010 --> 01:15:22.410
+Pablo Eduardo Abad: en un motor best match Yo tengo que hacerlo.
+
+594
+01:15:22.580 --> 01:15:30.320
+Pablo Eduardo Abad: No sé. S Se me puede complicar hacerlo. Fíjense que acá. Con un best match Lo que hacen es, pueden hacer. La otra es permitir a todos los de esta red.
+
+595
+01:15:30.420 --> 01:15:34.690
+Pablo Eduardo Abad: salvo a el 10, 3, 3, 9,
+
+596
+01:15:39.560 --> 01:15:43.029
+Pablo Eduardo Abad: Disney Overalaw. Volviendo al primer ejemplo.
+
+597
+01:15:44.830 --> 01:15:55.820
+Pablo Eduardo Abad: ¿en qué terminaría? Bueno, tenemos una regla que lo dice explícitamente, que debería pasar. Pero hay otra regla más general que dice que no. Entonces, como tenemos 2 reglas que aplican Dinaio Veralau
+
+598
+01:15:55.920 --> 01:16:02.290
+Pablo Eduardo Abad: para evaluar el resultado esperado, la acción esperada de todas estas reglas y si
+
+599
+01:16:02.410 --> 01:16:08.049
+Pablo Eduardo Abad: ocurre que no todas permiten el acceso, lo va a frenar, entonces en este caso se frenaría
+
+600
+01:16:14.460 --> 01:16:31.129
+Pablo Eduardo Abad: si alguna vez les toca trabajar configurando Firewalls y demás, habrán visto. Es súper importante entender cómo resuelve reglas. El Firewall en general cualquier sistema de reglas de este tipo o de control de acceso son reglas. Es súper importante que entiendan esto, porque
+
+601
+01:16:31.580 --> 01:16:36.260
+Pablo Eduardo Abad: al mismo juego de reglas resuelve muy distinto, según como se manejen los conflictos.
+
+602
+01:16:40.740 --> 01:16:45.390
+Pablo Eduardo Abad: Y un tercer tipo de reglas, que son los sistemas
+
+603
+01:16:48.810 --> 01:16:50.050
+Pablo Eduardo Abad: basados en
+
+604
+01:16:53.870 --> 01:16:56.120
+Pablo Eduardo Abad: en información de contexto
+
+605
+01:16:57.460 --> 01:17:02.710
+Pablo Eduardo Abad: que son un poco más esotéricos. Son Son más raros que que que se los encuentren.
+
+606
+01:17:02.890 --> 01:17:06.409
+Pablo Eduardo Abad: sí, pero básicamente permiten construir reglas
+
+607
+01:17:06.860 --> 01:17:10.370
+Pablo Eduardo Abad: que incluyan información contextual. No solamente
+
+608
+01:17:10.800 --> 01:17:22.349
+Pablo Eduardo Abad: este, no sé la la información de entrada y salida de la operación misma, sino por ejemplo, momentos del día: ubicación geográfica de origen y destino
+
+609
+01:17:22.730 --> 01:17:33.189
+Pablo Eduardo Abad: metadata del sujeto, como el departamento al que pertenece información de otros sistemas. No sé si está de vacaciones, nivel de confiabilidad de la máquina donde se ejecuta.
+
+610
+01:17:33.850 --> 01:17:43.999
+Pablo Eduardo Abad: Estos sistemas de reglas basados en contextos son más raros de encontrar, pero tienen un nicho muy particular en el cual seguro aparecen, que son los sistemas de prevención de fraude
+
+611
+01:17:45.220 --> 01:17:46.220
+Pablo Eduardo Abad: en
+
+612
+01:17:46.680 --> 01:17:58.729
+Pablo Eduardo Abad: en sistemas de E commerce en sistemas financieros hay hay toda una. Hay toda una parte del desarrollo de sistemas que tiene que ver con la prevención de fraudes. Los fraudes son abusos
+
+613
+01:18:00.630 --> 01:18:03.350
+Pablo Eduardo Abad: al sistema, pero dentro de las reglas del sistema.
+
+614
+01:18:03.800 --> 01:18:09.020
+Pablo Eduardo Abad: Sí, los los los problemas de seguridad son abusos de un sistema salteándose las reglas del sistema.
+
+615
+01:18:11.070 --> 01:18:27.899
+Pablo Eduardo Abad: Los de fraude son siguiendo las reglas del sistema, pero haciendo algo que 1 no esperaría entonces hay abusos de todo tipo. Por ejemplo, si si yo hago una aplicación que procesa pagos con tarjetas de crédito, si un tipo de fraude es alguien que está usando tarjetas de crédito robadas.
+
+616
+01:18:29.110 --> 01:18:35.669
+Pablo Eduardo Abad: Desde el punto de vista nuestro me cargan una tarjeta de crédito, proceso el pago. El pago sale bien. Genial. Todo bien
+
+617
+01:18:36.610 --> 01:18:41.950
+Pablo Eduardo Abad: en la realidad. Uso todas las reglas del sistema. No es que nos rompió la seguridad, sí,
+
+618
+01:18:42.680 --> 01:18:44.210
+Pablo Eduardo Abad: pero hizo algo
+
+619
+01:18:44.470 --> 01:18:53.159
+Pablo Eduardo Abad: que no era la intención del sistema, porque el dueño de esa tarjeta se va a dar cuenta, va a llamar al banco, van a anular el pago, nos van a cobrar una multa, etcétera, etcétera.
+
+620
+01:18:53.470 --> 01:18:54.770
+Pablo Eduardo Abad: Y
+
+621
+01:18:57.310 --> 01:19:06.200
+Pablo Eduardo Abad: la forma en la que se resuelve sistemáticamente el los temas de fraude es generando un control de acceso que trate de
+
+622
+01:19:06.940 --> 01:19:08.650
+Pablo Eduardo Abad: determinar
+
+623
+01:19:09.120 --> 01:19:19.309
+Pablo Eduardo Abad: la probabilidad de que una operación que se va a ejecutar sea fraudulenta, entonces el el control de acceso suele estar basado en contexto y básicamente deniega la operación
+
+624
+01:19:19.980 --> 01:19:24.949
+Pablo Eduardo Abad: cuando hay indicios por todo el contexto y la información de que es fraudulenta.
+
+625
+01:19:25.140 --> 01:19:33.509
+Pablo Eduardo Abad: Esto podría ser en el login para proteger las cuentas. Podría ser un checkout para proteger una transacción podría ser
+
+626
+01:19:33.990 --> 01:19:40.320
+Pablo Eduardo Abad: en la pantalla de administrar para proteger el borrado de información o la fuga de información
+
+627
+01:19:40.710 --> 01:19:47.619
+Pablo Eduardo Abad: en general. Los sistemas basados en reglas de contexto son raros porque son muy, muy sofisticados y muy complejos.
+
+628
+01:19:47.750 --> 01:19:53.269
+Pablo Eduardo Abad: Tienen un nicho en lo que son los los sistemas y los equipos de prevención de fraude.
+
+629
+01:19:58.520 --> 01:20:12.369
+Pablo Eduardo Abad: Acá Hay ejemplos, por ejemplo, de cosas que se pueden hacer con estos, O sea, a nivel Login, 1 podría detectar como anomalía y frenar la operación. Si hay un intento de login desde China y otro desde Argentina con 5 min de diferencia.
+
+630
+01:20:13.120 --> 01:20:14.120
+Pablo Eduardo Abad: que es algo que
+
+631
+01:20:14.510 --> 01:20:24.010
+Pablo Eduardo Abad: suena raro o de repente, un usuario que está de licencia y se lo guíe a a una base de datos o un sistema muy sensible cuando no debería estar trabajando
+
+632
+01:20:24.410 --> 01:20:26.720
+Pablo Eduardo Abad: este o
+
+633
+01:20:27.480 --> 01:20:36.009
+Pablo Eduardo Abad: un usuario que se indique que entra a a la V P. N de la empresa a la red privada de la empresa desde 2 lugares distintos
+
+634
+01:20:36.310 --> 01:20:38.030
+Pablo Eduardo Abad: en muy poco tiempo.
+
+635
+01:20:38.360 --> 01:20:45.830
+Pablo Eduardo Abad: No, acá La creatividad nos lleva a miles de situaciones. Pero ese es el tipo de cosas que se hacen con reglas basadas en el contexto
+
+636
+01:20:46.440 --> 01:21:00.819
+Pablo Eduardo Abad: en general son tan complejas que suelen involucrar perfiles técnicos. Y en una empresa grande, es normal que haya no 1 o varios equipos de desarrollo que estén trabajando en la parte de prevención de fraude, sino se terceriza
+
+637
+01:21:01.520 --> 01:21:03.050
+Pablo Eduardo Abad: en
+
+638
+01:21:05.530 --> 01:21:10.309
+Pablo Eduardo Abad: en un modelo que vamos a ver más cerca del final de la materia que se llama Zero Trust.
+
+639
+01:21:12.250 --> 01:21:20.500
+Pablo Eduardo Abad: El esquema de de red de validación de reglas basadas en contexto se define como un componente externo del sistema.
+
+640
+01:21:20.790 --> 01:21:26.150
+Pablo Eduardo Abad: Sí, es como que a la hora de de llamar
+
+641
+01:21:27.070 --> 01:21:34.580
+Pablo Eduardo Abad: o de poder ejecutar una operación. Hay un tercero que la valida, y
+
+642
+01:21:35.230 --> 01:21:39.890
+Pablo Eduardo Abad: y este tipo de reglas son tan complejas que existen productos específicos para esto.
+
+643
+01:21:40.780 --> 01:21:48.230
+Pablo Eduardo Abad: La realidad es que si se topan con este tipo de productos, es muy probable que estén con alguna aplicación empresarial muy pesada
+
+644
+01:21:49.360 --> 01:22:05.670
+Pablo Eduardo Abad: porque nos estamos yendo, si quieren, al extremo de de la organización más clásica pesada con sistemas muy complejos con poca velocidad de cambio, pero en su espectro de trabajo profesional se pueden encontrar con este tipo de de organizaciones.
+
+645
+01:22:06.000 --> 01:22:08.809
+Pablo Eduardo Abad: Hay una, hay un estándar
+
+646
+01:22:10.080 --> 01:22:23.400
+Pablo Eduardo Abad: que se llama o P a open Policiation, que es como un framework de seguridad para tercerizar la la implementación de políticas de control de acceso basadas en contextos.
+
+647
+01:22:25.740 --> 01:22:29.889
+Pablo Eduardo Abad: Uf, el Estándar define un lenguaje
+
+648
+01:22:30.700 --> 01:22:33.880
+Pablo Eduardo Abad: de propósito específico que se llama rego.
+
+649
+01:22:34.430 --> 01:22:43.400
+Pablo Eduardo Abad: Y a través de reo, 1 puede definir políticas de la complejidad que se le ocurra. Esto es esto es una política de arrigo, por ejemplo, para
+
+650
+01:22:44.170 --> 01:22:50.150
+Pablo Eduardo Abad: meterse en un sistema de despliegue que está usando governetes y restringir que
+
+651
+01:22:50.360 --> 01:22:55.089
+Pablo Eduardo Abad: los despliegues sean solo de imágenes que vengan de un dominio en particular.
+
+652
+01:22:57.800 --> 01:23:10.220
+Pablo Eduardo Abad: La idea es es un esquema de arbitración bastante simple, donde el servicio que quiere hacer, básicamente cuando quiera hacer una operación en vez de resolverla, El servicio la va a delegar en un serví de Europa.
+
+653
+01:23:12.050 --> 01:23:20.119
+Pablo Eduardo Abad: Hay un formato estándar. Si el servidor va a tener sus polisis y su metadata extra y en función de eso, va a recibir una decisión
+
+654
+01:23:21.980 --> 01:23:23.380
+Pablo Eduardo Abad: en
+
+655
+01:23:24.710 --> 01:23:32.279
+Pablo Eduardo Abad: el pedido. Tiene cierta estandarización, pero en general, son datos que se utilizan para bachar reglas y para para salvarla.
+
+656
+01:23:33.460 --> 01:23:39.530
+Pablo Eduardo Abad: El servidor va a tener polisis que va a manchar contra los datos que recibe. Si Esta es, por ejemplo.
+
+657
+01:23:39.680 --> 01:23:51.240
+Pablo Eduardo Abad: este es un ejemplo de una regla para machear la integridad de de pedidos de préstamos.
+
+658
+01:23:51.380 --> 01:23:58.019
+Pablo Eduardo Abad: Sí, es un una suerte de pedido de de un préstamo bancario y un par de reglas duras de de cosas que
+
+659
+01:23:58.530 --> 01:24:03.449
+Pablo Eduardo Abad: se consideran fraudulentas en este caso, probablemente y deberían impedir directamente que ocurran.
+
+660
+01:24:05.240 --> 01:24:10.350
+Pablo Eduardo Abad: La respuesta básicamente genera una serie de de atributos que que se resuelven.
+
+661
+01:24:13.450 --> 01:24:15.820
+Pablo Eduardo Abad: Es un estándar bastante pesado
+
+662
+01:24:16.270 --> 01:24:24.029
+Pablo Eduardo Abad: interoperable es la ventaja, pero en el fondo actúa como una suerte de servicio remoto que resuelve la parte de autorización.
+
+663
+01:24:30.610 --> 01:24:40.619
+Pablo Eduardo Abad: Vamos a ver algunos ejemplos de control de acceso como para bajar esto a algo más más concreto. Sí, por ahí 1 con el que estamos todos familiarizados y
+
+664
+01:24:41.240 --> 01:24:42.359
+Pablo Eduardo Abad: y y que es
+
+665
+01:24:43.570 --> 01:24:52.749
+Pablo Eduardo Abad: yo suelo decir, es engañosamente simple. O parece que lo entendemos, pero después empiezan a aparecer cada vez más detalles es la forma en la que
+
+666
+01:24:53.180 --> 01:24:59.570
+Pablo Eduardo Abad: y Unix Linux maneja el el acceso en el paradigma de unix.
+
+667
+01:25:00.390 --> 01:25:07.470
+Pablo Eduardo Abad: Nosotros tenemos usuarios que son sujetos, ¿sí? Y el resto de las cosas son archivos. Todo Todo es un archivo.
+
+668
+01:25:08.130 --> 01:25:18.089
+Pablo Eduardo Abad: Supongo que no les estoy contando nada nuevo, pero digo, filosofía unix. El monitor es un archivo. La memoria es un archivo. El disco es un archivo. Los archivos son archivos.
+
+669
+01:25:18.450 --> 01:25:21.410
+Pablo Eduardo Abad: el mouse es un archivo. El teclado es un archivo.
+
+670
+01:25:21.870 --> 01:25:30.219
+Pablo Eduardo Abad: Y entonces es como que tenemos un mapeo de sujeto a objeto muy, muy regular. No todo archivo.
+
+671
+01:25:31.180 --> 01:25:34.329
+Pablo Eduardo Abad: Lo que se hace es un archivo. Los sujetos son los usuarios
+
+672
+01:25:34.750 --> 01:25:42.470
+Pablo Eduardo Abad: y las acciones se clasifican en principio en 3 grandes acciones: lectura, escritura y ejecución.
+
+673
+01:25:42.810 --> 01:25:51.610
+Pablo Eduardo Abad: Sí, ¿Qué significa lectura y escritura? Es más o menos estándar, ejecución puede variar, sí.
+
+674
+01:25:51.830 --> 01:25:58.959
+Pablo Eduardo Abad: Y Y en función de eso, se resuelve qué se puede hacer y qué no.
+
+675
+01:25:59.890 --> 01:26:03.780
+Pablo Eduardo Abad: En un lugar donde la cantidad de usuarios y la cantidad de objetos puede crecer
+
+676
+01:26:03.950 --> 01:26:14.089
+Pablo Eduardo Abad: violentamente. Necesitamos más cosas para que sea administrable. Entonces ahí aparece la noción de grupos, que es otra cosa que que tiene u Nnix.
+
+677
+01:26:14.170 --> 01:26:24.639
+Pablo Eduardo Abad: Cada usuario pertenece a 1 o más grupos, ¿sí? Y cuando se asignan permisos, estos 3 permisos que mencioné se asignan en 3 secciones.
+
+678
+01:26:25.130 --> 01:26:30.130
+Pablo Eduardo Abad: Sí, todo archivo tiene un usuario y un grupo.
+
+679
+01:26:30.750 --> 01:26:33.940
+Pablo Eduardo Abad: y los permisos se asignan casualmente
+
+680
+01:26:34.170 --> 01:26:40.459
+Pablo Eduardo Abad: permisos para el usuario, permisos para el grupo dueño del archivo y permisos para el resto.
+
+681
+01:26:41.210 --> 01:26:45.110
+Pablo Eduardo Abad: Entonces esto nos permite construir prácticamente cualquier cosa.
+
+682
+01:26:48.630 --> 01:27:03.890
+Pablo Eduardo Abad: En términos de permisos, podemos tener archivos que solo el que los creó, los pueda ver que los comparta con un grupo de personas que los comparta con todo el mundo este archivos que para algunos son solo de lectura y para otros, son de electro escritura.
+
+683
+01:27:04.710 --> 01:27:05.630
+Pablo Eduardo Abad: En fin.
+
+684
+01:27:07.080 --> 01:27:15.749
+Pablo Eduardo Abad: sobre esto. Después se agregan un montón de otras cosas, no porque aparecen tipos de archivos, aparecen referencias. Pero este es el esquema básico
+
+685
+01:27:16.190 --> 01:27:28.520
+Pablo Eduardo Abad: de archivos, que incluye también un esquema, un conjunto de reglas para la creación de archivos donde los archivos están contenidos en carpetas. Las carpetas son archivos también. Así que tienen
+
+686
+01:27:28.660 --> 01:27:36.120
+Pablo Eduardo Abad: los mismos atributos. Y cuando 1 crea un archivo hereda inicialmente los mismos, los mismos atributos
+
+687
+01:27:36.970 --> 01:27:45.369
+Pablo Eduardo Abad: podemos seguir complicándolo. No sé si todos conocen el Comando Umask Umask, de de Unix o de Linux.
+
+688
+01:27:48.090 --> 01:27:48.720
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Eso no.
+
+689
+01:27:49.840 --> 01:28:00.929
+Pablo Eduardo Abad: Uno 1 puede decirle al sistema operativo que, en lugar de dar para los archivos nuevos, los atributos del del directorio donde esté, le saque permisos según una máscara.
+
+690
+01:28:01.260 --> 01:28:05.279
+Pablo Eduardo Abad: Ese es el U Mask como una variable entorno que se puede definir
+
+691
+01:28:05.690 --> 01:28:13.559
+Pablo Eduardo Abad: este, y 1 podría decir cosas como, por ejemplo, no importa cómo sea el directorio. Si yo quiero un archivo nuevo jamás que jamás ejecutable con el
+
+692
+01:28:13.980 --> 01:28:18.280
+Pablo Eduardo Abad: o quiero que sin importar el directorio, los archivos que creas, solo los puedo ver yo.
+
+693
+01:28:18.490 --> 01:28:20.909
+Pablo Eduardo Abad: Y tengo que explícitamente ponerle más cosas.
+
+694
+01:28:21.180 --> 01:28:28.960
+Pablo Eduardo Abad: El el sistema en sí, y especialmente con el pasaje de los años, se fue complicando bastante entonces, conceptualmente simple, pero tiene un montón de
+
+695
+01:28:29.550 --> 01:28:31.110
+Pablo Eduardo Abad: de complicaciones
+
+696
+01:28:31.750 --> 01:28:39.999
+Pablo Eduardo Abad: sobre esa hermosa complicación se agregan un montón de extensiones, a veces en ambientes muy complejos. Este sistema se queda corto.
+
+697
+01:28:41.960 --> 01:28:47.790
+Pablo Eduardo Abad: Uno de los de los sistemas modernos de permisos de Linux. Se llama C Linux.
+
+698
+01:28:48.240 --> 01:28:53.610
+Pablo Eduardo Abad: Ese Linux es el el Ese es el acrónimo de Security in Hans
+
+699
+01:28:53.760 --> 01:29:00.260
+Pablo Eduardo Abad: es un conjunto de modificaciones al carmel de Linux y que, en particular, agregan un
+
+700
+01:29:00.690 --> 01:29:04.059
+Pablo Eduardo Abad: control de de seguridad adicional
+
+701
+01:29:06.620 --> 01:29:17.440
+Pablo Eduardo Abad: que en el fondo es un conjunto de reglas bastante complejas, pero que siempre apuntan a responder la misma pregunta: ¿Puede este sujeto acceder a este objeto puede usuario acceder a este archivo.
+
+702
+01:29:18.170 --> 01:29:25.569
+Pablo Eduardo Abad: Básicamente, cualquier cosa que se esté ejecutando tiene un contexto. Felinux.
+
+703
+01:29:25.820 --> 01:29:36.820
+Pablo Eduardo Abad: Sí, el usuario tiene un contexto que es el que hereda el Shell el que está corriendo o el gestor de ventanas que está corriendo. Y a partir de ahí se van como heredando las cosas.
+
+704
+01:29:37.330 --> 01:29:38.690
+Pablo Eduardo Abad: y
+
+705
+01:29:39.490 --> 01:29:55.980
+Pablo Eduardo Abad: todos los recursos tienen también cosas de ese tipo, y 1 puede empezar a plantear reglas bastante complejos, Linux para hacer para para funcionar bien reglas que limiten los Is Calls, o sea, las operaciones que se pueden ejecutar entre combinaciones de sujeto objeto.
+
+706
+01:29:56.260 --> 01:30:00.049
+Pablo Eduardo Abad: Hay un sistema de macros. Hay un montón de cosas predefinidas.
+
+707
+01:30:00.340 --> 01:30:07.350
+Pablo Eduardo Abad: pero que permite ese Linux permite cosas de este tipo. Por ejemplo, podemos tener 2 procesos corriendo con con el Wit 0 como Root.
+
+708
+01:30:07.640 --> 01:30:15.009
+Pablo Eduardo Abad: que históricamente tiene permiso para hacer todo y que aún así no puedan acceder a archivos del otro.
+
+709
+01:30:16.560 --> 01:30:20.869
+Pablo Eduardo Abad: Sí, en general se Linux se usa en en servidores más que nada
+
+710
+01:30:21.290 --> 01:30:26.539
+Pablo Eduardo Abad: en en lo que se conoce como etapa de jardinización, en endurecer el servidor para que sea más difícil
+
+711
+01:30:27.240 --> 01:30:30.400
+Pablo Eduardo Abad: que que un ataque a la seguridad sea exitoso
+
+712
+01:30:32.100 --> 01:30:39.000
+Pablo Eduardo Abad: otro sistema de control de acceso. Así, estos generales, que que todos podemos acceder y que es bastante complejo, es el de Windows
+
+713
+01:30:39.880 --> 01:30:40.790
+Pablo Eduardo Abad: Mhm.
+
+714
+01:30:41.150 --> 01:30:42.750
+Pablo Eduardo Abad: Cada
+
+715
+01:30:43.530 --> 01:30:49.969
+Pablo Eduardo Abad: cada archivo en Windows en Windows. No sé si el paradigma de que todo es un archivo, pero para los archivos.
+
+716
+01:30:50.210 --> 01:30:54.200
+Pablo Eduardo Abad: Windows tiene un sistema bastante complejo y bastante flexible.
+
+717
+01:30:54.670 --> 01:30:59.350
+Pablo Eduardo Abad: Los archivos tienen un dueño parecido a hay un ex
+
+718
+01:30:59.780 --> 01:31:02.989
+Pablo Eduardo Abad: el dueño puede definir los permisos es discrecional.
+
+719
+01:31:03.890 --> 01:31:09.150
+Pablo Eduardo Abad: Ahora hay un esquema de usuarios y grupos
+
+720
+01:31:09.490 --> 01:31:12.740
+Pablo Eduardo Abad: sí que que pueden interactuar con
+
+721
+01:31:16.920 --> 01:31:21.050
+Pablo Eduardo Abad: con un archivo. Sí, hasta ahí, sigue igual.
+
+722
+01:31:22.240 --> 01:31:26.370
+Pablo Eduardo Abad: pero hay un nivel de de permisos que es mucho, mucho más granular ahí
+
+723
+01:31:27.050 --> 01:31:32.990
+Pablo Eduardo Abad: A esta altura, no sé, pero solía haber como ho de 11 a 13 operaciones distintas por archivos. Ahí tienen algunas
+
+724
+01:31:33.430 --> 01:31:39.840
+Pablo Eduardo Abad: este, modificar, leer, escribir, ver contenido, ejecutar, Y
+
+725
+01:31:40.460 --> 01:31:47.910
+Pablo Eduardo Abad: con el tiempo empezaron a aparecer agrupaciones de acciones para simplificar, y terminó complicándolo más. Así que, bueno, depende de donde estén.
+
+726
+01:31:48.050 --> 01:31:56.889
+Pablo Eduardo Abad: En Pero además, existe la el concepto de permisos heredados, entonces
+
+727
+01:31:57.890 --> 01:32:09.389
+Pablo Eduardo Abad: un archivo puede tener permisos asociados a usuarios para ejecutar ciertas cosas, pero podrían no tener permisos y aún así, permitir operaciones porque las está heredando de su contenedor
+
+728
+01:32:09.860 --> 01:32:10.770
+Pablo Eduardo Abad: del
+
+729
+01:32:12.460 --> 01:32:17.630
+Pablo Eduardo Abad: como es de la carpeta donde está o de la carpeta padre de donde está o de la carpeta a raíz del disco.
+
+730
+01:32:17.970 --> 01:32:25.779
+Pablo Eduardo Abad: entonces la la resolución de permisos en Windows es bastante compleja y lleva bastante tiempo.
+
+731
+01:32:26.170 --> 01:32:32.360
+Pablo Eduardo Abad: Hoy día, con discos de estado sólido, No, no es un problema, pero una de las quejas normales que había
+
+732
+01:32:32.470 --> 01:32:35.090
+Pablo Eduardo Abad: en Windows hace muchas versiones era que
+
+733
+01:32:35.940 --> 01:32:39.970
+Pablo Eduardo Abad: había momentos de acceder a archivos donde se notaban como
+
+734
+01:32:40.350 --> 01:32:47.220
+Pablo Eduardo Abad: como microcortes y tenía que ver con que por ahí para resolver el acceso a un archivo. Había que leer 14 lugares en el disco
+
+735
+01:32:48.730 --> 01:32:55.199
+Pablo Eduardo Abad: para tener toda la información para resolverlo. Eso con el tiempo se fue corrigiendo hoy día con los discos de Estado sólido es menos problema aún.
+
+736
+01:32:55.720 --> 01:33:01.869
+Pablo Eduardo Abad: pero Pero el modelo, el modelo que tiene a nivel herencia es es tremendo, porque
+
+737
+01:33:02.930 --> 01:33:10.990
+Pablo Eduardo Abad: lo que están viendo acá en esta pantalla es la versión simplificada de permisos, porque la versión completa es una versión donde cada entrada
+
+738
+01:33:11.500 --> 01:33:17.279
+Pablo Eduardo Abad: tiene la posibilidad de permitir denegar o dejar los 2 en blanco.
+
+739
+01:33:18.520 --> 01:33:20.260
+Pablo Eduardo Abad: Los 2 en blanco es.
+
+740
+01:33:20.990 --> 01:33:30.240
+Pablo Eduardo Abad: puede correr un permiso heredado de negar explícitamente, No me importa permiso heredado. Vale, esto y es un no permitir explícitamente. Es
+
+741
+01:33:30.650 --> 01:33:34.390
+Pablo Eduardo Abad: este no me importan los heredados. Es un sím.
+
+742
+01:33:37.260 --> 01:33:42.470
+Pablo Eduardo Abad: pero pero tampoco es tan simple porque hay otras restricciones. No importa.
+
+743
+01:33:42.680 --> 01:33:49.410
+Pablo Eduardo Abad: esto es un dolor de cabeza si les toca administrar servidores.
+
+744
+01:33:49.640 --> 01:33:55.870
+Pablo Eduardo Abad: Y ahí hay un hay un ejemplo, porque si yo tengo un archivo que está heredando muchos permisos y lo copio a otro lugar.
+
+745
+01:33:56.220 --> 01:33:57.060
+Pablo Eduardo Abad: Sí
+
+746
+01:33:57.480 --> 01:34:06.789
+Pablo Eduardo Abad: puede cambiar el perfil de acceso del archivo, aunque yo no quiera. Entonces, bueno, con el tiempo, también han agregado cosas. Y ahora, en un servidor con esto configurado. Si yo quiero copiar cosas, a.
+
+747
+01:34:06.890 --> 01:34:15.859
+Pablo Eduardo Abad: me va a preguntar qué quiero hacer si cambian, es decir, querés convertir los heredados en en permisos directamente del archivo queres, dejarlo como está y que cambian
+
+748
+01:34:16.170 --> 01:34:24.210
+Pablo Eduardo Abad: en nada dolor de cabeza que lo ha tomado más de un administrador, bastantes horas para para detectar Mhm.
+
+749
+01:34:27.910 --> 01:34:28.760
+Pablo Eduardo Abad: Bueno.
+
+750
+01:34:30.330 --> 01:34:40.030
+Pablo Eduardo Abad: nada ulti Último comentario de esto es tan complicado. El mecanismo que hay una parte de de Windows donde puede calcular los permisos efectivos, o sea, resuelve todo esto y nos muestra
+
+751
+01:34:40.510 --> 01:34:46.589
+Pablo Eduardo Abad: después de aplicar todas las reglas y todos los órdenes y y resolver los conflictos. Esto es esto es lo que queda
+
+752
+01:34:47.350 --> 01:34:58.350
+Pablo Eduardo Abad: Este Esto es como una herramienta de producto de muchos años de tener que hacer otra vez shooting. Pero ya para que sea una idea de la complejidad que tienen. Hay un simulador del resultado de aplicar las reglas de control de acceso
+
+753
+01:35:02.830 --> 01:35:14.589
+Pablo Eduardo Abad: pobres pobres. Es una base de datos open source para el que no la conoce. Sí, pobres tiene un modelo de control de acceso basado en roles, que es otro de los que vimos.
+
+754
+01:35:14.730 --> 01:35:20.919
+Pablo Eduardo Abad: Un rol puede estar de usuario, Puede asociarse a un usuario, a un grupo, O sea, hay grupos de usuarios y roles.
+
+755
+01:35:21.340 --> 01:35:22.200
+Pablo Eduardo Abad: ¿sí?
+
+756
+01:35:22.870 --> 01:35:27.859
+Pablo Eduardo Abad: O se pueden armar roles sintéticos a partir de la combinación de otros roles.
+
+757
+01:35:28.120 --> 01:35:33.640
+Pablo Eduardo Abad: Entonces, de vuelta, busca ser bastante flexible a costa de ser un poco más complejo.
+
+758
+01:35:36.620 --> 01:35:41.839
+Pablo Eduardo Abad: Los roles tienen atributos que definen sus capacidades. Ahora ahora vamos a ver un ejemplo
+
+759
+01:35:42.860 --> 01:35:49.739
+Pablo Eduardo Abad: en particular. De hecho, hay una propiedad que se llama Login, que permite determinar si un rol puede o no iniciar sesión en la base de datos
+
+760
+01:35:52.600 --> 01:36:00.769
+Pablo Eduardo Abad: y todos los objetos creados por un rol van a tener como un era. Ese rol. Es un caso parecido al uner de los archivos.
+
+761
+01:36:01.290 --> 01:36:07.420
+Pablo Eduardo Abad: Solo los usuarios tendrían como los administradores y el Alner pueden acceder a a ese objeto.
+
+762
+01:36:09.770 --> 01:36:13.650
+Pablo Eduardo Abad: ¿cómo se configura todo el esquema de roles a través de polisis
+
+763
+01:36:13.850 --> 01:36:22.440
+Pablo Eduardo Abad: por creer se vuelve. Tiene como un esquema donde podemos garantizar ciertas cosas de seguridad a nivel police, Por ejemplo.
+
+764
+01:36:23.640 --> 01:36:31.809
+Pablo Eduardo Abad: supóngase que tenemos una tabla con información de clientes, sí, y tenemos un equipo de ventas
+
+765
+01:36:32.930 --> 01:36:35.869
+Pablo Eduardo Abad: y los equipos de ventas
+
+766
+01:36:37.570 --> 01:36:52.360
+Pablo Eduardo Abad: suelen estar integrados por vendedores que son muy celosos de sus contactos, porque van a comisión, entonces nadie no quiere que se los roben los otros. Suele ser necesario que si hay prospectos, si hay clientes con los que está trabajando 1, digo, sean del y no del resto.
+
+767
+01:36:52.520 --> 01:37:02.060
+Pablo Eduardo Abad: Y eso se puede pensar como algo más de buscar confidencialidad, no que que cada que cada vendedor tenga acceso a la información de sus clientes y solamente sus clientes.
+
+768
+01:37:02.300 --> 01:37:10.890
+Pablo Eduardo Abad: Nosotros podríamos configurar un policia en postres que nos garantice eso a nivel que se huele
+
+769
+01:37:11.520 --> 01:37:18.949
+Pablo Eduardo Abad: sí, entonces yo podría habilitar policis en pobres y, por ejemplo, crear un policia
+
+770
+01:37:21.970 --> 01:37:26.230
+Pablo Eduardo Abad: que aplique sobre cierto lugar y aplique condiciones extra
+
+771
+01:37:27.990 --> 01:37:33.050
+Pablo Eduardo Abad: sobre la información de ese lugar, y podría ser algo donde
+
+772
+01:37:33.380 --> 01:37:40.750
+Pablo Eduardo Abad: una vez entrado, vamos a necesitar definir el rol, porque si aplica algún police y no se define el rol, no vamos a poder hacer nada. Sí,
+
+773
+01:37:43.050 --> 01:37:53.460
+Pablo Eduardo Abad: pero fíjense que acá lo que estamos Lo que estamos diciendo es, de alguna manera va a aplicar el rol sobre el 6, la perdón
+
+774
+01:37:53.570 --> 01:38:04.220
+Pablo Eduardo Abad: en la en la tabla kligents sobre el campo siles personal Id contra el Karren Duser, que va a ser el nombre del rol. Y esto nos permite que desde afuera el usuario se lo vea.
+
+775
+01:38:07.210 --> 01:38:14.960
+Pablo Eduardo Abad: hace una consulta contra toda la tabla, y solo va a tener acceso a esto, pues es como que se agrega un filtro adicional
+
+776
+01:38:15.750 --> 01:38:22.820
+Pablo Eduardo Abad: para filtrar la información, ya tuvieran bases de datos
+
+777
+01:38:24.250 --> 01:38:33.309
+Pablo Eduardo Abad: y ya tuvieron un proyecto de aplicaciones web. Así que probablemente hayan visto. Hay Hay como 2 grandes modelos de acceso a datos: 1 que
+
+778
+01:38:34.120 --> 01:38:42.989
+Pablo Eduardo Abad: básicamente hace que los usuarios de la aplicación sean usuarios en la base de datos y delegan la la gestión de usuarios a la base de datos. Ese es el modelo
+
+779
+01:38:43.760 --> 01:38:59.600
+Pablo Eduardo Abad: tradicional, llamémoslo para aplicaciones internas suele funcionar, y el otro modelo donde la aplicación es el usuario de la base de datos de caras a la base de datos. Hay por ahí un solo usuario entrando. Si este tipo de políticas van para el primer caso
+
+780
+01:39:00.100 --> 01:39:06.189
+Pablo Eduardo Abad: donde tenemos aplicaciones que están tercerizando el control de acceso y la autenticación en la base de datos.
+
+781
+01:39:08.140 --> 01:39:19.140
+Pablo Eduardo Abad: La postura más ágil hoy día de desarrollo de software suele ir. Por el otro lado, suele ir por el lado de mantener esos problemas afuera de la base de datos. La base de datos son buenas gestionando datos.
+
+782
+01:39:19.750 --> 01:39:24.830
+Pablo Eduardo Abad: No son tan buenas gestionando usuarios y y todo el problema de de login
+
+783
+01:39:24.980 --> 01:39:27.879
+Pablo Eduardo Abad: y autenticación que ya vamos a ver más adelante.
+
+784
+01:39:28.620 --> 01:39:35.929
+Pablo Eduardo Abad: Entonces las las prácticas más modernas de software nos llevan a modelos donde este tipo de Fiachers no se usan, Pero bueno.
+
+785
+01:39:37.050 --> 01:39:41.180
+Pablo Eduardo Abad: de vuelta en horas de que conozcan el espectro completo de cosas. Esto existe.
+
+786
+01:39:46.320 --> 01:39:52.170
+Pablo Eduardo Abad: Otro ejemplo de de control de acceso es esquid desquid. Es un proxy web.
+
+787
+01:39:52.440 --> 01:40:02.970
+Pablo Eduardo Abad: Hemos el próximo jueves, básicamente un un agente intermediario que arbitra que controla el acceso entre computadoras
+
+788
+01:40:04.420 --> 01:40:07.199
+Pablo Eduardo Abad: y a Internet, por decirlo fácil.
+
+789
+01:40:07.780 --> 01:40:08.910
+Pablo Eduardo Abad: Es.
+
+790
+01:40:11.160 --> 01:40:20.389
+Pablo Eduardo Abad: A veces se utilizan estas cosas por eficiencia para callar cosas, pero muchas veces es para controlar el acceso para impedir el acceso a ciertas páginas o para bloquear
+
+791
+01:40:20.660 --> 01:40:30.799
+Pablo Eduardo Abad: este contenido no deseado contenido protegido por copyright o para simplemente evitar que la gente entre a páginas que se sabe que son
+
+792
+01:40:30.940 --> 01:40:35.169
+Pablo Eduardo Abad: páginas comprometidas para algún caso de fraude o de robo de identidad.
+
+793
+01:40:35.860 --> 01:40:36.810
+Pablo Eduardo Abad: Mhm
+
+794
+01:40:36.980 --> 01:40:43.549
+Pablo Eduardo Abad: Desquid es un es una implementación de un próximo web y tiene un control de acceso basado en reglas.
+
+795
+01:40:44.350 --> 01:40:47.140
+Pablo Eduardo Abad: Sí, es un control de acceso.
+
+796
+01:40:47.600 --> 01:40:50.600
+Pablo Eduardo Abad: Qué mandatorio sí. ¿y qué
+
+797
+01:40:50.880 --> 01:40:57.570
+Pablo Eduardo Abad: por esto de que te nos encantan los acrónimos? Tiene un acrónimo que se hace L, pero no son Acel. Eso es otra cosa. Importa.
+
+798
+01:40:57.810 --> 01:41:06.859
+Pablo Eduardo Abad: Utiliza reglas para filtrar y también para permitir si las operaciones de lectura acceder a un sitio
+
+799
+01:41:07.000 --> 01:41:15.180
+Pablo Eduardo Abad: tienen que permitirse o o no permitirse utilizando estas listas de acceso.
+
+800
+01:41:17.390 --> 01:41:27.150
+Pablo Eduardo Abad: Hay básicamente, es un sistema de reglas ordenadas. Es muy parecido a un Firewall, pero con información.
+
+801
+01:41:27.890 --> 01:41:30.409
+Pablo Eduardo Abad: capacidad de de de más alto nivel.
+
+802
+01:41:30.850 --> 01:41:41.309
+Pablo Eduardo Abad: entonces se pueden armar reglas por dominio por Protocolo por u R l por header son requerimiento. Puede haber listas negras, y hay listas dinámicas.
+
+803
+01:41:41.390 --> 01:41:54.929
+Pablo Eduardo Abad: hay hay páginas que se dedican a recolectar páginas no sé de contenido para adultos de contenido que Viole Copyright. Y Y todos estos sistemas pueden hacer, pueden armar reglas dinámicas que trabajen contra esas listas
+
+804
+01:41:57.810 --> 01:42:00.269
+Pablo Eduardo Abad: un ejemplo que por ahí tienen
+
+805
+01:42:00.530 --> 01:42:07.870
+Pablo Eduardo Abad: bastante chance de encontrarse esa doble Bs a doble Bs es el servicio de
+
+806
+01:42:09.630 --> 01:42:16.670
+Pablo Eduardo Abad: de provisionamiento de de hardware virtual en la nube de Amazon es 1 de los
+
+807
+01:42:17.080 --> 01:42:26.369
+Pablo Eduardo Abad: hiperskailers, como se le dice, de las infraestructuras que nos permiten vender nuestro propio data Sender. Básicamente alquilar 1 y armarlo dinámicamente
+
+808
+01:42:27.570 --> 01:42:37.469
+Pablo Eduardo Abad: a doble s. Hoy día es un conjunto de más de 1 000 servicios distintos si hay un servicio para provisionar servidores, pero hay servicios para provisionar redes firewalls. Este
+
+809
+01:42:37.970 --> 01:42:43.190
+Pablo Eduardo Abad: Routers Low, balanceers, bases de datos, lo que se les ocurra.
+
+810
+01:42:43.660 --> 01:42:45.700
+Pablo Eduardo Abad: Son más de 1 000 servicios ya.
+
+811
+01:42:46.360 --> 01:42:47.680
+Pablo Eduardo Abad: Y
+
+812
+01:42:48.280 --> 01:42:56.199
+Pablo Eduardo Abad: y es de propósito general porque se construye lo que sea ahí arriba, entonces tiene un esquema bastante bastante complejo de de control de acceso
+
+813
+01:42:57.410 --> 01:43:02.960
+Pablo Eduardo Abad: que junta, que junta 2 mecanismos distintos: 1 basado en
+
+814
+01:43:04.740 --> 01:43:08.699
+Pablo Eduardo Abad: en mapeo de identidades y otro basado en recursos.
+
+815
+01:43:14.090 --> 01:43:21.240
+Pablo Eduardo Abad: Entonces hay hay pólizas. Hay reglas que están asociadas a la cuenta en sí. Sí. Uno podría plantear. Bueno.
+
+816
+01:43:22.130 --> 01:43:23.900
+Pablo Eduardo Abad: este usuario
+
+817
+01:43:24.570 --> 01:43:32.149
+Pablo Eduardo Abad: tiene acceso a este tipo de servicios o tiene acceso a esta cuenta? Sí, pues tu usuario con este rol
+
+818
+01:43:32.900 --> 01:43:35.050
+Pablo Eduardo Abad: tiene acceso a a tal servicio.
+
+819
+01:43:35.730 --> 01:43:42.959
+Pablo Eduardo Abad: Sí, acá podríamos tener, por ejemplo, Amazon. S Tres serían como es un repositorio de archivos.
+
+820
+01:43:43.370 --> 01:43:47.120
+Pablo Eduardo Abad: Sí, Yo no podría tener Bueno, este usuario, en particular
+
+821
+01:43:48.920 --> 01:43:58.200
+Pablo Eduardo Abad: si tiene el rol X, puede acceder a esto. Sí, esto es mandatorio. Sí, se se define
+
+822
+01:43:58.330 --> 01:44:06.020
+Pablo Eduardo Abad: para la cuenta en sí, y generalmente lo hacen administradores. Tiene también políticas asociadas al recurso donde
+
+823
+01:44:06.900 --> 01:44:16.800
+Pablo Eduardo Abad: existe el usuario. Pero quien crea el recurso, si puede definirlo un policía, el recurso donde diga, por ejemplo, en este caso Che. Y esto que creé, el el user A tiene acceso.
+
+824
+01:44:18.650 --> 01:44:24.929
+Pablo Eduardo Abad: combina los 2 modelos. Si en situaciones complejas, les diría que se usan los 2 modelos.
+
+825
+01:44:25.600 --> 01:44:32.330
+Pablo Eduardo Abad: Generalmente esto es un modelo más centralizado con administradores que cubre lo grueso
+
+826
+01:44:32.520 --> 01:44:37.860
+Pablo Eduardo Abad: 1 1. En este tipo de cuentas, se crea un montón de como subredes virtuales.
+
+827
+01:44:38.110 --> 01:44:49.699
+Pablo Eduardo Abad: Este, y lo que es la configuración de quién accede a cada red. Quien configura los Firewalls, o sea, la parte de más general de la infraestructura, suele suele estar asociada a políticas mandatorias
+
+828
+01:44:49.860 --> 01:44:59.759
+Pablo Eduardo Abad: y la parte más discrecional. No sé, en una red hay un equipo de desarrollo que ya está desarrollando una aplicación particular, suele ser discrecional esa parte por un tema de velocidad y darle agilidad al equipo.
+
+829
+01:45:01.790 --> 01:45:03.110
+Pablo Eduardo Abad: En
+
+830
+01:45:08.830 --> 01:45:13.959
+Pablo Eduardo Abad: Finalmente, en en esto, en esto de tener ejemplos. Hay
+
+831
+01:45:14.620 --> 01:45:22.719
+Pablo Eduardo Abad: hay un estándar que que se fue desarrollando de forma abierta a lo largo del tiempo y que hoy es bastante bastante utilizado que se llama Out Out. Es
+
+832
+01:45:23.090 --> 01:45:35.179
+Pablo Eduardo Abad: el acrónimo de open autorization, y es el estándar que está atrás. De vieron cuando ustedes entran a un sistema y les dice qué quieres registrarte con email o quieres entrar con tu cuenta de Google con tu cuenta de meta
+
+833
+01:45:35.480 --> 01:45:40.199
+Pablo Eduardo Abad: el entrar con tu cuenta de Google, entrar con tu cuenta de meta. Usa guau por atrás.
+
+834
+01:45:40.420 --> 01:45:48.819
+Pablo Eduardo Abad: pues es un sistema para poder delegarle a otro sistema las funciones de autorización.
+
+835
+01:45:49.410 --> 01:45:50.230
+Pablo Eduardo Abad: Sí,
+
+836
+01:45:50.330 --> 01:46:03.999
+Pablo Eduardo Abad: nació con la idea de crear como mini aplicaciones. Twitter inventó en su momento. Esto sobre la idea de. Bueno, vos. Tenés tu cuenta y darles a alguien quiere hacer una aplicación que algo creativo sobre tu feed.
+
+837
+01:46:04.410 --> 01:46:10.920
+Pablo Eduardo Abad: Y de alguna manera tiene que acceder a tu cuenta, y tiene que no sé postear cosas y demás, pero eso es algo que se hace sobre la
+
+838
+01:46:11.080 --> 01:46:13.700
+Pablo Eduardo Abad: sobre la aplicación de Twitter. En ese momento.
+
+839
+01:46:14.290 --> 01:46:23.530
+Pablo Eduardo Abad: Ols nació como una forma programática para que un usuario pueda delegarle a una aplicación. La capacidad que ejecute cosas en su nombre.
+
+840
+01:46:23.880 --> 01:46:33.989
+Pablo Eduardo Abad: Entonces, Out es un protocolo ordenado. No no es algo fuera de serie de complejo en el cual
+
+841
+01:46:34.140 --> 01:46:41.810
+Pablo Eduardo Abad: generalmente hay involucrado un una aplicación que interactúa con el cliente, sí, y después.
+
+842
+01:46:41.920 --> 01:46:45.439
+Pablo Eduardo Abad: un recurso que no tiene nada que ver con la aplicación.
+
+843
+01:46:45.630 --> 01:46:55.190
+Pablo Eduardo Abad: Sí que tiene su servidor de autorización. En el ejemplo que les di Twitter sería las 2 columnas de la derecha o bueno, X, Ahora.
+
+844
+01:46:55.650 --> 01:47:06.619
+Pablo Eduardo Abad: sí. Y esto sería, por ejemplo, una aplicación que no sé. Este postea un un feel Random Este sobre
+
+845
+01:47:07.660 --> 01:47:10.850
+Pablo Eduardo Abad: el clima todos los días por inventar. Sí,
+
+846
+01:47:13.110 --> 01:47:24.369
+Pablo Eduardo Abad: digo una forma no muy linda conceptualmente y que, obviamente, a estos dueños no les gustaría sería que yo, en la aplicación ponga. Che. Mira, mi usuario del servicio es tal. Mi contraseña es tal. Hace lo que quieras.
+
+847
+01:47:24.510 --> 01:47:27.670
+Pablo Eduardo Abad: Sí, eso le daría a esta aplicación
+
+848
+01:47:28.180 --> 01:47:37.209
+Pablo Eduardo Abad: poder para borrar la cuenta, cambiar la contraseña, dejarme a mí afuera, hacer un montón de cosas que que son un dolor de cabeza para el que provee la aplicación. Sí,
+
+849
+01:47:37.770 --> 01:47:47.750
+Pablo Eduardo Abad: Por otro lado, a mí no me daría la tranquilidad de dejar mis credenciales acá porque van a estar en alguna base de datos. Yo no sé la seguridad de esto.
+
+850
+01:47:48.180 --> 01:48:05.409
+Pablo Eduardo Abad: si en algún momento tienen algún problema de seguridad por ahí. Me robaron todo y me entran en las cuentas del del otro lugar. La idea de Out es resolver todos esos problemas. Entonces, cuando 1 está trabajando en una aplicación que va a hacer uso de algún recurso de un tercero que soporte este Protocolo.
+
+851
+01:48:05.770 --> 01:48:16.719
+Pablo Eduardo Abad: La idea es que a la hora de usar el recurso, la aplicación genera un pedido de autorización. Si te pido autorización, básicamente es una url. Tengo acá un ejemplo. No
+
+852
+01:48:17.060 --> 01:48:25.979
+Pablo Eduardo Abad: es una u R L que del lado del cliente o en una web, vio en la misma aplicación o en un si están en una página web como un Redirect.
+
+853
+01:48:26.480 --> 01:48:29.599
+Pablo Eduardo Abad: Va a llevar al usuario al servidor de autorización.
+
+854
+01:48:29.930 --> 01:48:33.399
+Pablo Eduardo Abad: El señor le dio autorización, va a validar al usuario?
+
+855
+01:48:33.540 --> 01:48:34.400
+Pablo Eduardo Abad: ¿sí?
+
+856
+01:48:36.550 --> 01:48:52.869
+Pablo Eduardo Abad: Y en este caso, si bien es opcional. Es altamente sugerido por el protocolo probablemente le muestre al usuario. El permiso que está dando Acá es donde aparece una pantalla, que dice la aplicación tanto está queriendo tener acceso. No sé a tu dirección de email y a postear cosas en tu feed
+
+857
+01:48:53.580 --> 01:48:54.960
+Pablo Eduardo Abad: querés dejarlo o no.
+
+858
+01:48:55.210 --> 01:49:04.330
+Pablo Eduardo Abad: Si 1 acepta el flujo, sigue básicamente con el servidor que tiene registrada la aplicación enviándole una cosa que se llama código de autorización.
+
+859
+01:49:04.940 --> 01:49:07.300
+Pablo Eduardo Abad: que es un bloque de información
+
+860
+01:49:08.140 --> 01:49:14.119
+Pablo Eduardo Abad: que la aplicación al recibirlo, va a intercambiarlo después por un token. Esta es una llamada
+
+861
+01:49:14.650 --> 01:49:17.200
+Pablo Eduardo Abad: protegida que tiene sus cosas de seguridad.
+
+862
+01:49:17.520 --> 01:49:26.269
+Pablo Eduardo Abad: sí y que le permiten a la aplicación recuperar un access token. Si el access token es una pieza de información que se guarda en la aplicación
+
+863
+01:49:26.630 --> 01:49:36.709
+Pablo Eduardo Abad: que hace que ahora, cuando le cuando quiera hacer la acción o acceder al recurso. Simplemente va a hacer el requerimiento enviando ese access token
+
+864
+01:49:37.410 --> 01:49:47.489
+Pablo Eduardo Abad: en algún Header. Generalmente es un header que se llama este virar, y y se pone el valor.
+
+865
+01:49:47.650 --> 01:49:51.280
+Pablo Eduardo Abad: Eso lo define ya el el dueño del dato.
+
+866
+01:49:51.520 --> 01:50:02.430
+Pablo Eduardo Abad: Y cuando llega un requerimiento que no tenga eso, el servidor va a decir, no, no estás autorizado. Si llega 1 con un axe stoker bueno, y se valía, el access Token es válido vuelve el recurso.
+
+867
+01:50:03.050 --> 01:50:14.660
+Pablo Eduardo Abad: Este mecanismo que hace la aplicación en sí va a guardar Stacs Token y va a usarlo si Prestas token lo consiguió porque el el usuario lo consintió en algún momento.
+
+868
+01:50:14.950 --> 01:50:21.940
+Pablo Eduardo Abad: Sí, Es más, Y todas estas aplicaciones tienen algún mecanismo para decir, ¿sabes qué revoca el acceso
+
+869
+01:50:22.200 --> 01:50:31.969
+Pablo Eduardo Abad: de la aplicación? Está a mi servicio. Entonces, cada vez que la aplicación hace esto, acá hay una validación. Decir, access Token todavía es válido y en función de eso va y vuelve
+
+870
+01:50:32.090 --> 01:50:40.849
+Pablo Eduardo Abad: entonces el usuario nunca comparte con la aplicación las credenciales del otro. Si y delega el control de acceso al recurso
+
+871
+01:50:43.460 --> 01:50:52.329
+Pablo Eduardo Abad: al al dueño del recurso, entonces la aplicación no no es que tiene acceso siempre al al recurso, porque se lo dimos con las credenciales y después Eliges, si me lo muestra o no.
+
+872
+01:50:52.690 --> 01:50:56.940
+Pablo Eduardo Abad: y que determina el control de acceso es el dueño del recurso.
+
+873
+01:51:02.140 --> 01:51:09.359
+Pablo Eduardo Abad: Esos access tokens no duran de por vida. Sí. Lo Lo que vimos recién es como un flujo simplificado.
+
+874
+01:51:10.940 --> 01:51:17.950
+Pablo Eduardo Abad: La realidad es que en los flujos típicos aparecen 2 tokens, una ex token y un refresh token. Entonces, la idea cuál es
+
+875
+01:51:18.820 --> 01:51:21.480
+Pablo Eduardo Abad: 1 va usando el access token.
+
+876
+01:51:22.140 --> 01:51:26.470
+Pablo Eduardo Abad: Si el recurso requis y el recurso en algún momento le dicen, no, el token es inválido.
+
+877
+01:51:26.600 --> 01:51:30.509
+Pablo Eduardo Abad: En ese momento, el cliente envía el ref token
+
+878
+01:51:30.820 --> 01:51:37.600
+Pablo Eduardo Abad: de vuelta al servidor y ahora sin preguntarle al usuario esto le devuelve un access token y un refresh Stoken nuevo.
+
+879
+01:51:38.800 --> 01:51:40.599
+Pablo Eduardo Abad: la idea de esto
+
+880
+01:51:42.620 --> 01:51:48.060
+Pablo Eduardo Abad: tienen que ver más que nada con la seguridad del protocolo, Pero para impedir que si alguien roba un access token.
+
+881
+01:51:49.150 --> 01:51:50.110
+Pablo Eduardo Abad: sí,
+
+882
+01:51:50.560 --> 01:52:02.799
+Pablo Eduardo Abad: no sé la aplicación. Esta, que es más chica es menos segura. No sé, sufre algún problema y roban todos los access tokens. Teóricamente, el dueño del access Token puede hacer esta llamada y conseguir la información o ejecutar cosas.
+
+883
+01:52:03.200 --> 01:52:07.670
+Pablo Eduardo Abad: Los access tokens depende mucho de la aplicación, pero suelen tener un periodo chico de vida.
+
+884
+01:52:07.830 --> 01:52:13.900
+Pablo Eduardo Abad: Sí, chico depende del contexto. Puede ser una hora pueden ser 3 días. Depende
+
+885
+01:52:14.200 --> 01:52:18.089
+Pablo Eduardo Abad: entonces después de cierto tiempo, expiran y
+
+886
+01:52:19.160 --> 01:52:35.330
+Pablo Eduardo Abad: cuando expiran, o hay que empezar el flujo de vuelta con la autorización del usuario, o hay que enviar el refresh token. Sí, ¿Qué pasa con el refresh Stoken? El refresh token se usa una sola vez y muere Cuando se usa, vuelve un accesomen nuevo y un Refresh Token nuevo. Entonces.
+
+887
+01:52:36.660 --> 01:52:45.119
+Pablo Eduardo Abad: incluso si alguien robase el el autorization el el access token y el refresh token sí.
+
+888
+01:52:46.460 --> 01:52:59.090
+Pablo Eduardo Abad: Cuando se use o el atacante o la aplicación, el otro el otro pierde acceso out. Y cuando se renueva el flujo por porque pasan por el principio, caducan todos los refreshtokers, entonces
+
+889
+01:52:59.370 --> 01:53:07.839
+Pablo Eduardo Abad: es un mecanismo hecho en el Protocolo para tener cierta forma de recuperarse ante ante un robo de los tokens
+
+890
+01:53:11.340 --> 01:53:12.540
+Pablo Eduardo Abad: en
+
+891
+01:53:12.780 --> 01:53:22.820
+Pablo Eduardo Abad: y esta es la forma con la cual se manejan el el concepto de las sesiones que son eternas. Vieron que si ustedes entran, no sé al mercado libre a Google, Amazon.
+
+892
+01:53:23.070 --> 01:53:29.049
+Pablo Eduardo Abad: si lo vean una vez, y es una vez en la vida, prácticamente están logueados después por siempre. En realidad.
+
+893
+01:53:30.280 --> 01:53:36.029
+Pablo Eduardo Abad: la sesión se mide a través de access tokens que van expirando. Pero hay como un mecanismo de
+
+894
+01:53:37.380 --> 01:53:43.949
+Pablo Eduardo Abad: de de Riflesh que cuando vuelven, aunque está expirada, la pueden renovar sin tener que entrar de vuelta en el login.
+
+895
+01:53:44.370 --> 01:53:49.070
+Pablo Eduardo Abad: Y así van manteniendo esta ilusión de una sesión infinita
+
+896
+01:53:49.960 --> 01:53:58.999
+Pablo Eduardo Abad: sin el problema de que si la sesión fuese realmente infinita, si con un mismo access token, si se lo llegasen a robar alguna vez el game over, o sea, perdieron la cuenta
+
+897
+01:54:05.040 --> 01:54:10.120
+Pablo Eduardo Abad: dentro de lo que es el Protocolo de Oauf y
+
+898
+01:54:11.170 --> 01:54:15.740
+Pablo Eduardo Abad: en todo este Hand Shake, si cuando
+
+899
+01:54:17.450 --> 01:54:32.909
+Pablo Eduardo Abad: cuanto más complejo es el recurso, más operaciones y más información hay. O sea, si imagínense que si bueno, Google Gmail es un proveedor que implementa. Vamos entonces si yo pienso en Gmail Okay, puede ser que
+
+900
+01:54:33.340 --> 01:54:40.049
+Pablo Eduardo Abad: quiera acceder a ver los emails que quiera acceder a ver el calendario que quiera, tal vez enviar emails.
+
+901
+01:54:40.460 --> 01:54:47.480
+Pablo Eduardo Abad: Tal vez este no sé, crear reglas para filtrar emails automáticamente. Hay un montón de operaciones
+
+902
+01:54:47.790 --> 01:54:53.430
+Pablo Eduardo Abad: oau tiene un concepto que es Scou, donde, básicamente.
+
+903
+01:54:53.560 --> 01:55:00.700
+Pablo Eduardo Abad: al hacer este pedido el pedido de autorización, la aplicación
+
+904
+01:55:01.450 --> 01:55:09.560
+Pablo Eduardo Abad: puede decir que es cobo qué tipo de actividades quiere hacer. Y eso es lo que hace que aparezca después este tipo de ventanas donde dice. Bueno.
+
+905
+01:55:11.050 --> 01:55:21.129
+Pablo Eduardo Abad: tal aplicación está queriendo acceder a los recursos y está pidiendo permiso para hacer este tipo de cosas. Y este tipo de cosas, lo dejas no lo dejas.
+
+906
+01:55:22.000 --> 01:55:29.070
+Pablo Eduardo Abad: pero 1 puede tener acceso a stokens que habiliten cierto tipo de información u otro, y
+
+907
+01:55:29.490 --> 01:55:36.220
+Pablo Eduardo Abad: y estos tokens actúan básicamente como como una llave para el sistema de control de acceso del del sistema destino.
+
+908
+01:55:43.960 --> 01:55:49.669
+Pablo Eduardo Abad: Después vamos a volver sobre este tema de Wags en particular sí. Y lo que estamos viendo acá es como
+
+909
+01:55:49.870 --> 01:55:54.270
+Pablo Eduardo Abad: un flujo. Es más complicado en el sentido que soporta más casos
+
+910
+01:55:54.780 --> 01:55:58.299
+Pablo Eduardo Abad: borde. Pero este es el uso normal de de Goath.
+
+911
+01:55:59.980 --> 01:56:12.469
+Pablo Eduardo Abad: La clase que viene. Vamos a ver autenticación. Y ahí vamos a retomar Off, porque hoy hoy día es un protocolo dual. Cumple 2 funciones de seguridad. Acá Estamos viendo la primera.
+
+912
+01:56:12.890 --> 01:56:20.800
+Pablo Eduardo Abad: pero hay hay otra función extra que necesitamos un poco más de teoría para ver en
+
+913
+01:56:21.540 --> 01:56:37.339
+Pablo Eduardo Abad: los temas de polisis y control de acceso. Son los capítulos 4 al 8 en el en el libro de Biyo le seleccionar ciertas partes que que cubren más que nada los temas que vemos. Hay los capítulos tienen más ejemplos. Entonces.
+
+914
+01:56:37.470 --> 01:56:44.399
+Pablo Eduardo Abad: si a alguien le interesa profundizar y más ejemplos de controles de acceso, mandatorios o modelos de control de acceso
+
+915
+01:56:44.610 --> 01:56:50.379
+Pablo Eduardo Abad: o o controles discrecionales de otra naturaleza.
+
+916
+01:56:51.340 --> 01:56:59.259
+Pablo Eduardo Abad: Si a alguien les interesa este temas, mención especial para un modelo que me parece súper interesante, que se llama capacidades.
+
+917
+01:56:59.910 --> 01:57:08.020
+Pablo Eduardo Abad: que es que es como un mecanismo dual en los A, C, L es que que permite trabajar muy bien con sistemas distribuidos a escalas gigantescas
+
+918
+01:57:08.950 --> 01:57:17.350
+Pablo Eduardo Abad: no es algo que sea tan convencional. Pero si alguno termina trabajando en alguna de las empresas gigantes, este es probable que se encuentre con algo de eso.
+

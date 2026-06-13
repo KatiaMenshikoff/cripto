@@ -1,0 +1,1826 @@
+WEBVTT
+
+1
+00:00:03.650 --> 00:00:04.950
+Rodrigo Ramele: Bueno, Excelente.
+
+2
+00:00:05.130 --> 00:00:08.150
+Rodrigo Ramele: Bueno, arrancamos entonces
+
+3
+00:00:08.300 --> 00:00:21.220
+Rodrigo Ramele: el primero. El primero está hablando de una aplicación de gestión de sueldo implementada, un modelo de 3 capas de nueva base de datos puede hacer un usuario de clase de datos, y lo mismo, un modelo de plan dulce
+
+4
+00:00:21.390 --> 00:00:32.410
+Rodrigo Ramele: por política de la empresa. Ningún empleado debe poder ver el salario del empleado para asegurar que ningún empleado pueda hacer el registro de tu usuario. Cada usuario tiene una cuenta definida en la base de datos y le hacen
+
+5
+00:00:32.409 --> 00:00:45.360
+Rodrigo Ramele: al hablarse la aplicación usa esas mismas credenciales para conectarse a la base de datos mientras duran si la empresa tiene una única red, una única red sin firewalls o equipos que se fija en las comunicaciones, cuál es la principal desventaja que ve en la arquitectura original.
+
+6
+00:00:46.690 --> 00:00:48.199
+Rodrigo Ramele: ¿Quién quiere contestar eso.
+
+7
+00:00:52.880 --> 00:00:55.109
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Parece que lo estaba copiando.
+
+8
+00:00:56.130 --> 00:00:57.850
+Rodrigo Ramele: Está subido. Igual.
+
+9
+00:00:58.370 --> 00:00:59.759
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: okay, Sí.
+
+10
+00:01:01.120 --> 00:01:03.379
+Rodrigo Ramele: Ya están todos subidos.
+
+11
+00:01:25.110 --> 00:01:27.160
+Rodrigo Ramele: Alguien que quiera contestar.
+
+12
+00:01:28.120 --> 00:01:32.150
+JUAN IGNACIO LATEGANA: Puedo acceder a la base de datos directamente sin acceder por el backend.
+
+13
+00:01:32.410 --> 00:01:33.479
+JUAN IGNACIO LATEGANA: Por ejemplo.
+
+14
+00:01:34.140 --> 00:01:39.740
+Rodrigo Ramele: Claro: el el principal desventaja que tenés es un tema de que los usuarios internos
+
+15
+00:01:39.890 --> 00:01:48.459
+Rodrigo Ramele: digamos que hay una exposición generalizada dentro de lo que es la base de datos que que que, al menos con un hardware tenés, una restricción adicional
+
+16
+00:01:54.110 --> 00:02:02.269
+Rodrigo Ramele: es muy simple. Este es el ruido. Dos mejoras que se pueden hacer para cumplir la política de seguridad.
+
+17
+00:02:03.020 --> 00:02:05.829
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y poner algo entre la base de datos y los usuarios.
+
+18
+00:02:05.830 --> 00:02:07.879
+Rodrigo Ramele: Claro, eso es una mejora. Y qué más?
+
+19
+00:02:11.280 --> 00:02:11.980
+Rodrigo Ramele: Sí.
+
+20
+00:02:29.760 --> 00:02:39.980
+Rodrigo Ramele: Y lo otro, es bastante obvio: separar las credenciales del sistema del sistema que usa el sistema de las densidades que son típicas de los usuarios.
+
+21
+00:02:40.060 --> 00:02:52.540
+Rodrigo Ramele: Eso es, tiene que ver con algún principio de separación de de Ti de privilegios, no que no sea el el mismo usuario el que hace varias cosas. Entonces, si hay una división en usuarios. Eso ya aporta una mejor
+
+22
+00:02:53.070 --> 00:02:59.820
+Rodrigo Ramele: y después compara la arquitectura original con la propuesta. Y si la propuesta, es decir, el cambio.
+
+23
+00:02:59.820 --> 00:03:03.240
+SANTIAGO BASSI: Rodríguez Perdón, una consulta.
+
+24
+00:03:03.390 --> 00:03:03.870
+Rodrigo Ramele: Dale.
+
+25
+00:03:03.870 --> 00:03:08.670
+SANTIAGO BASSI: Eso que dijo Joaco. Lo entendí como
+
+26
+00:03:08.990 --> 00:03:17.619
+SANTIAGO BASSI: como justamente esa segunda cosa que mencionaste. ¿vos de poner una restricción entre el usuario y la base de datos. Si quieres, yo prestaría pensando en que solo la accedes del backend y
+
+27
+00:03:18.100 --> 00:03:24.710
+SANTIAGO BASSI: y la restricción que él mencionaba era justamente que tengas que usar una clave distinta. Entonces no sé cuál sería la segunda.
+
+28
+00:03:25.300 --> 00:03:27.860
+SANTIAGO BASSI: ¿cuál sería la segunda mejora si quieres.
+
+29
+00:03:27.860 --> 00:03:39.950
+Rodrigo Ramele: No. La segunda, que vos tenés es la que vos que vos pongas alguna alguna capa intermedia, podría ser, por ejemplo, que haya una aplicación, un sistema que permita hacer eso y que los usuarios no sean directos, entendés.
+
+30
+00:03:39.950 --> 00:03:41.030
+SANTIAGO BASSI: Okay Okay.
+
+31
+00:03:41.030 --> 00:03:47.180
+Rodrigo Ramele: Ejemplo, un layer adicional. Eso podría hacer, y la otra, y que tengas usuarios directamente diferenciadas
+
+32
+00:03:47.310 --> 00:04:00.890
+Rodrigo Ramele: es muy libre, o sea, depende de depende de estos ejercicios entre 40 000 abiertos, porque son ejercicios más pensados como situaciones laborales y, como ustedes decantan lo que es la política general en
+
+33
+00:04:00.890 --> 00:04:12.569
+Rodrigo Ramele: una una política general. Después esa política en hay una restricción de autenticación o de control de accesos, y el proceso en en cuestiones concretas de aplicaciones, en sistemas que están corriendo, interactúan entre sí
+
+34
+00:04:13.600 --> 00:04:15.509
+Rodrigo Ramele: un poco un poco. ¿es eso no.
+
+35
+00:04:15.510 --> 00:04:16.620
+SANTIAGO BASSI: Perfecto. Gracias.
+
+36
+00:04:17.430 --> 00:04:23.049
+Rodrigo Ramele: Y finalmente, la última, si considera que la propuesta reduce el riesgo de un ataque de mano enemide.
+
+37
+00:04:24.670 --> 00:04:25.840
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: A mí me parece que no.
+
+38
+00:04:28.780 --> 00:04:31.670
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Una. Qué?
+
+39
+00:04:32.360 --> 00:04:33.909
+Rodrigo Ramele: Dale dale dale explaya.
+
+40
+00:04:33.910 --> 00:04:47.619
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Porque esto de poner una capa más de seguridad o obligar al usuario a que se logue con otra credencial, a la base de datos. Al mening The Midlo mucho no le importa si pide si necesita loguearse de vuelta, Bueno, se pondrá en el medio y le sacará la clave igual
+
+41
+00:04:47.760 --> 00:04:51.989
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: si hay falta para más, se pone entre el usuario y esa capa y listo.
+
+42
+00:04:53.580 --> 00:04:54.420
+Rodrigo Ramele: Hay que, como.
+
+43
+00:04:54.420 --> 00:04:57.030
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: A nada Alemania. Mirror.
+
+44
+00:04:57.690 --> 00:05:03.339
+Rodrigo Ramele: Qué mecanismos terminas teniendo de de Hall para solucionar Manning The Middle.
+
+45
+00:05:04.180 --> 00:05:07.050
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y tener monitoreo de red.
+
+46
+00:05:08.740 --> 00:05:25.799
+Rodrigo Ramele: Bueno, eso es un Ok, podrías hacer monitoreo red. Es un mecanismo activo que estarías haciendo. Vos. Decís, Haces monitoreo, rey y detectas algo. ¿cómo detectas? Por ejemplo, yo ahora estoy en un bar justo cerca del colegio de mi hijo, pero como como haces cómo se gestiona.
+
+47
+00:05:25.800 --> 00:05:26.619
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Tenemos que hacer.
+
+48
+00:05:27.070 --> 00:05:32.929
+Rodrigo Ramele: Sí, Hombre: No, no. Pero ¿cómo no vas a poder conectarte a un banco. Lo que no tengo que hacer acá es hacer un mi cuenta bancaria.
+
+49
+00:05:33.120 --> 00:05:40.149
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Protocolos de comunicación nos dijeron que no vayamos con el aparato de monitoreo de raíz de un bar y nos sentemos a ver qué estaban haciendo, porque nos iban a.
+
+50
+00:05:40.150 --> 00:05:44.000
+Rodrigo Ramele: Por el tema de no, no se van a dar cuenta
+
+51
+00:05:44.180 --> 00:05:51.509
+Rodrigo Ramele: igual. Esto está grabado, pero bueno, no pasa nada en fin. Pero suponete que
+
+52
+00:05:51.610 --> 00:06:07.899
+Rodrigo Ramele: vos, ¿Cómo puedes, ¿Cómo puedes primero intentar detectar un maning de nivel? ¿cómo puedes tratar de evitarlo y eventualmente cuales ¿qué cambios en la arquitectura, si generales vos podés hacer que te pueden dar alguna garantía mayor de que un ataque de mano indemble no pueda aplicarse.
+
+53
+00:06:19.950 --> 00:06:26.700
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Podríamos usar alguno de los algoritmos de la primera parte que no permitían tanto el manning the Middle, o
+
+54
+00:06:27.370 --> 00:06:33.010
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: o sea todo lo que era. No me acordaba así la S. S. L, T, C, L, Ohh.
+
+55
+00:06:33.330 --> 00:06:34.869
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Si no la.
+
+56
+00:06:34.870 --> 00:06:42.430
+Rodrigo Ramele: Entonces se reformulo ahí. Y chicos participen los que quieran. Para eso pago se necesitan como
+
+57
+00:06:43.070 --> 00:06:48.369
+Rodrigo Ramele: qué o sea. S. C, L, como Protocolo que garantía se da para tratar de evitar un mal enemigo.
+
+58
+00:06:49.680 --> 00:06:57.020
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Me ha confidencialidad, integridad y la otra que no me acuerdo, que creo que hay disponible.
+
+59
+00:06:57.020 --> 00:06:59.380
+Rodrigo Ramele: No, no, no. Pero Joaquín también se la.
+
+60
+00:06:59.380 --> 00:06:59.730
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: De su.
+
+61
+00:06:59.730 --> 00:07:18.619
+Rodrigo Ramele: ¿qué garantías se da? S. S. L, para evitar un mal indebido? Ya sé que te indebido qué garantías te dan como como vos vos que que ¿de qué te agarras? S: L. Para decir? Bueno, tengo cierta garantía de que el mando indebido estar reducido o eliminado o no está reducido.
+
+62
+00:07:38.690 --> 00:07:41.369
+SANTIAGO BASSI: Puede ser con las con las firmas.
+
+63
+00:07:41.750 --> 00:07:45.700
+Rodrigo Ramele: Dale, te escucho. Sí. Santiago: Sí. Sí. Con las firmas como.
+
+64
+00:07:46.580 --> 00:08:05.009
+SANTIAGO BASSI: O sea, si usas una una firma, o sea, el mensaje, el otro lado de firma no se pone un cifrado asimétrico, o sea, son protocolos de firma asimétrico. Y si el otro firma eso puedes verificar quién fue el emisor de ese mensaje entonces.
+
+65
+00:08:06.210 --> 00:08:07.920
+Rodrigo Ramele: ¿y qué más haces con eso?
+
+66
+00:08:08.240 --> 00:08:10.620
+SANTIAGO BASSI: Bueno y cifrado No.
+
+67
+00:08:11.530 --> 00:08:13.100
+Rodrigo Ramele: Ahí alguien dijo algo.
+
+68
+00:08:13.100 --> 00:08:15.619
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Los certificados tienen.
+
+69
+00:08:16.770 --> 00:08:27.050
+Rodrigo Ramele: Exacto. Uds. Tienen que pensar a todas estas cosas, siempre cuando se pongan en la mente de seguridad. Primero tienen que activar el chip paranoico.
+
+70
+00:08:27.430 --> 00:08:34.279
+Rodrigo Ramele: Tienen que ser paranoicos al mango y pensar que y pensar cómo alguien me está hackeando en este momento a mí ahora.
+
+71
+00:08:34.440 --> 00:08:46.190
+Rodrigo Ramele: Y tienen que activar eso. Es muy difícil hacer eso a la vez que diseñan el sistema. Eso es muy complejo de hacer. Pasa lo mismo que pasa con Cuba. Pero ustedes tienen que pensar un poco en eso. Lo que tienen que tratar de hacer es encadenar cosas una con otra
+
+72
+00:08:46.470 --> 00:08:58.959
+Rodrigo Ramele: en total encadenarlas. L. ¿cómo evita el Manning lo evita un poco con lo que dijeron, aparte de Sc. L Hay una firma que se hace. Hay un intercambio de firmas. Eso se hace que justo lo que vimos en el primer parcial.
+
+73
+00:08:58.960 --> 00:09:11.169
+Rodrigo Ramele: hay un intercambio de firmas que se hace, y ese intercambio de firmas se utilizan las claves que están asociadas al certificado, enton y el certificado a su vez, de, por ejemplo, un sitio. Si yo ahora estoy accediendo a Itback, punto, com
+
+74
+00:09:11.260 --> 00:09:14.720
+Rodrigo Ramele: el certificado está asociado al Dns
+
+75
+00:09:15.070 --> 00:09:17.799
+Rodrigo Ramele: A está asociado al D. N. S. Y yo. A su vez.
+
+76
+00:09:17.880 --> 00:09:30.839
+Rodrigo Ramele: el certificado está firmado por una entidad certificante y que yo no la obtengo en este momento de Itba, punto clave, punto com, sino que la saco de un binario que yo ya tengo en mi computadora. Entonces ahí yo ato todos los cabos.
+
+77
+00:09:30.880 --> 00:09:46.680
+Rodrigo Ramele: entonces eso me da cierta garantía de que si alguien acá se está haciendo pasar por Isbat, punto class punto Com: Se me está metiendo en el medio y me dice: me arma, un servidor de necio y me dice que iba a punto class Punto. Com las 192, 168 0, 3. Y está acá mandándome los paquetes
+
+78
+00:09:47.570 --> 00:09:58.149
+Rodrigo Ramele: de mínima. Esa persona va a tener que haber habérselas rebuscado para tener un certificado que está firmado por una entidad certificante y que yo tengo en mi computadora.
+
+79
+00:09:58.680 --> 00:10:06.890
+Rodrigo Ramele: entienden todo cómo está enganchado. Entonces eso me da una garantía bastante fuerte con S. C. L de que es difícil que vos que haya algo de mar. Inde Miguel en el medio
+
+80
+00:10:07.390 --> 00:10:13.089
+Rodrigo Ramele: se entiende ¿no? ¿por qué? Porque van a tener que ir a una manera a a la vez, haber hackeado mi computadora.
+
+81
+00:10:13.150 --> 00:10:26.789
+Rodrigo Ramele: Ustedes tienen que pensar cuántas cosas hacen falta romper para poder hacer ese ataque y y tratar de agregar la mayor cantidad posible. Eso significa que eso es Él es infalible a Marilyn. Por supuesto que no. Lo único que es más difícil hacerlo.
+
+82
+00:10:26.790 --> 00:10:44.460
+Rodrigo Ramele: porque tiene que además haber hackeado el binario o hacerme creer a mí que que yo acepté un certificado firmado por quien sea o firmado por quienes ellos dijeron. Entonces ese es un poco el enganche que está ahí, Es decir, esa es una ventaja. Desde el entonces se le ofrece cierta garantía de marin enemigo.
+
+83
+00:10:44.590 --> 00:10:52.099
+Rodrigo Ramele: Entonces cualquier cosa que ustedes quieran hacer sobre la arquitectura, está y quieren hacer que tenga más enemigo mío. Va a tener que tener algún esquemas, Ocurre algún otro.
+
+84
+00:11:04.740 --> 00:11:10.879
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Que para hacer cambios en la base de datos, los empleados tengan que enchufar físicamente el enchufe a la la computadora, al servidor.
+
+85
+00:11:11.340 --> 00:11:12.720
+Rodrigo Ramele: Okay.
+
+86
+00:11:12.720 --> 00:11:13.969
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Muy marina. Amigos.
+
+87
+00:11:14.190 --> 00:11:22.709
+Rodrigo Ramele: Bueno, pará pará pará, pero ojo ojo quien ataca a quien porque cuando vos haces un Manning de Middle, al que atacas es al empleado, Sobre todo
+
+88
+00:11:23.350 --> 00:11:24.680
+Rodrigo Ramele: entiendes.
+
+89
+00:11:24.680 --> 00:11:25.420
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Mhm.
+
+90
+00:11:25.560 --> 00:11:33.220
+Rodrigo Ramele: Entonces, por más que el empleado, puede estar hiperautenticado con una llave física, pero el que es atacado es él mismo por el Mann in the middel
+
+91
+00:11:34.760 --> 00:11:38.179
+Rodrigo Ramele: entendés Joaquín a lo que dijiste en realidad está mal.
+
+92
+00:11:38.450 --> 00:11:48.230
+Rodrigo Ramele: porque tiene que ver con eso, porque el mande miedo en realidad está tocando los 2 lados por ahí con una con una llave física. Vos haces tener una llave física. Cuál qué ventaja te da tener una llave física.
+
+93
+00:11:51.390 --> 00:11:52.320
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y me.
+
+94
+00:11:52.320 --> 00:11:53.769
+NICOLÁS CANZONIERI: Es un factor más.
+
+95
+00:11:53.770 --> 00:11:55.980
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Tener las personas que tienen esa llave física.
+
+96
+00:11:56.480 --> 00:12:00.590
+Rodrigo Ramele: A ver quién quién más contestó. Ahora Ahora veo alguien habló por ahí atrás. También.
+
+97
+00:12:00.590 --> 00:12:03.069
+NICOLÁS CANZONIERI: Sí. Yo dije que era un factor más.
+
+98
+00:12:04.980 --> 00:12:11.099
+Rodrigo Ramele: Es un factor más claro, porque es algo que tenés que tener, no o sea tonto.
+
+99
+00:12:11.100 --> 00:12:13.430
+MARTÍN GALLARDO BERTUZZI: Para Profe, para que no te puedan impresonar.
+
+100
+00:12:14.170 --> 00:12:14.980
+Rodrigo Ramele: Ohh.
+
+101
+00:12:15.440 --> 00:12:21.579
+Rodrigo Ramele: Ahora vamos por parte de ahí el que es un factor más. Es cierto eso Eso es cierto. ¿y
+
+102
+00:12:21.810 --> 00:12:29.789
+Rodrigo Ramele: cómo funcionan las llaves estas de seguridad? Normalmente que ¿cuál es el secreto que tienen? ¿qué tienen adentro? ¿qué se imaginan que tienen una llave de seguridad.
+
+103
+00:12:36.040 --> 00:12:40.429
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Tiene una serie de patrones grabados que interactúan con la cerradura de tal forma que se abra.
+
+104
+00:12:41.370 --> 00:12:43.600
+Rodrigo Ramele: Una llave digital. Está, bueno.
+
+105
+00:12:43.600 --> 00:12:44.970
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Eso original.
+
+106
+00:12:44.970 --> 00:12:47.250
+Rodrigo Ramele: Está buenísimo, dice la gente.
+
+107
+00:12:47.250 --> 00:12:51.000
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Hasta que estábamos hablando de cosas físicas. Entonces pensé que.
+
+108
+00:12:51.210 --> 00:12:56.690
+Rodrigo Ramele: Es que es física. Es física porque es un USB. Ahí. Filippo dice una clave: Filipo Expandite.
+
+109
+00:12:58.490 --> 00:13:10.909
+FILIPO ARDENGHI: Nada. Se me ocurre que tenga una clave, así como vos. Tenés, una clave privada en tu en tu computadora, poner cuando armas una un par de claves. Pero en lugar de que vean tu computadora vive en una en un dispositivo físico.
+
+110
+00:13:11.500 --> 00:13:18.620
+Rodrigo Ramele: Muy bien. Excelente, entonces ahí de alguna manera es algo que vos tenés y que está en ese dispositivo físico y no está en tu computadora. Bueno, Ok.
+
+111
+00:13:19.110 --> 00:13:23.749
+Rodrigo Ramele: Pero yo puedo. Yo rodrigo uso. Quiero usarlo. Puedo agarrar la clave y copiármela
+
+112
+00:13:24.110 --> 00:13:27.100
+Rodrigo Ramele: Si está en un pendrive agarro, el sábado pende y me la copio o no.
+
+113
+00:13:27.390 --> 00:13:33.660
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí sí se puede en.
+
+114
+00:13:33.660 --> 00:13:33.980
+Rodrigo Ramele: Y por.
+
+115
+00:13:33.980 --> 00:13:36.849
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Evitar que la llave no se pueda copiar.
+
+116
+00:13:36.850 --> 00:13:37.550
+Rodrigo Ramele: En el.
+
+117
+00:13:38.410 --> 00:13:39.050
+FILIPO ARDENGHI: Claro.
+
+118
+00:13:39.300 --> 00:13:42.019
+NICOLÁS CANZONIERI: Claro. Por eso dije lo de otro factor más.
+
+119
+00:13:42.200 --> 00:13:44.759
+NICOLÁS CANZONIERI: porque, ya sabes, se puede robar. Por ello.
+
+120
+00:13:45.700 --> 00:14:04.939
+Rodrigo Ramele: Claro, claro está, perfecto. La razón por la que está bueno usar una llave es porque es un factor más. Eso está perfecto. Entonces, cuando indagamos a ver sobre por qué eso está bueno y que tiene adentro para que funcione, va a tener que tener una clave típicamente va a tener una clave secreta que se puede usar para firmar algo para tener una clave asimétrica, un algoritmo de ser.
+
+121
+00:14:05.680 --> 00:14:11.930
+Rodrigo Ramele: Pero si está ahí adentro, yo puedo copiarla. Y si la puedo copiar elimino la esencia que es otro factor.
+
+122
+00:14:12.100 --> 00:14:16.969
+Rodrigo Ramele: entonces hasta ahí. ¿qué más? ¿qué más? ¿qué más hay de eso?
+
+123
+00:14:19.700 --> 00:14:34.160
+Rodrigo Ramele: Bueno, les hago la película Corta básicamente todos estos los que son token de seguridad tienen una electrónica por firmware que hace que se genera la clave. Eso encripta. Pero la clave no se puede sacar, no tenés manera de copiarla para afuera.
+
+124
+00:14:34.350 --> 00:14:43.569
+Rodrigo Ramele: No tenés forma de acceder físicamente la electrónica que tiene. Y ahí está el chiste. Me entienden por qué no entienden que eso es lo que cierra todo.
+
+125
+00:14:45.020 --> 00:14:45.639
+Rodrigo Ramele: Eso sí.
+
+126
+00:14:45.640 --> 00:14:47.770
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Eso no se genera con enchufar las llaves.
+
+127
+00:14:48.360 --> 00:15:08.340
+Rodrigo Ramele: No, no, no. La clave se genera al principio. Vos tenés protocolos para generarla. Son los cripto chips, vos tenés, protocolos o los H se llaman hardware security Modus es el como el bloque general. Son sistemas embebidos para seguridad la clave de vos tenés un protocolo de momento para generarla Como cualquier clave. Cualquier una clave asimétrica, vas a generar la pública, la privada, la pública.
+
+128
+00:15:08.340 --> 00:15:08.850
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Vale.
+
+129
+00:15:09.250 --> 00:15:19.890
+Rodrigo Ramele: Claro por consola la pública, la vas a mandar a una entidad certificante que te la firma, La entidad certificante, te la firma y te y no le pagás y vos tenés el certificado público que tiene para qué vos vas a usar. La clave para autenticarte. Por ejemplo.
+
+130
+00:15:20.000 --> 00:15:26.309
+Rodrigo Ramele: ahora la clave privada que está asociada a esa pública que vos mandaste a generar el certificado está
+
+131
+00:15:26.520 --> 00:15:30.420
+Rodrigo Ramele: adentro de la electrónica del del del del pendrive. Si quieres.
+
+132
+00:15:30.890 --> 00:15:46.200
+Rodrigo Ramele: Y una vez que se genera, no se puede, no se accede más, no la podés leer más. Por lo tanto, la inscripción, el proceso de encriptar de hacerla. Por ejemplo, C Rca: pensar la elevación del número se hace en el pendrive.
+
+133
+00:15:46.310 --> 00:15:52.440
+Rodrigo Ramele: porque si no, no hay forma de hacerlo, porque la clave nunca sale de ahí. Entienden entonces cómo está esa restricción de seguridad.
+
+134
+00:15:52.640 --> 00:16:06.100
+Rodrigo Ramele: Esa restricción de seguridad hace justamente que fuerza lo que no sé quién fue el que lo dijo. Si Si vos lo dijiste, filipo que hace que eso tenga obligatoriamente que ser un segundo factor, porque no lo puedes copiar.
+
+135
+00:16:08.630 --> 00:16:09.500
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Ahora, Sí.
+
+136
+00:16:11.070 --> 00:16:27.870
+Rodrigo Ramele: Entonces esa es la otra parte en base a lo que vos dijiste, pero bueno, que otra otro mecanismo puede haber para evitar. Bueno, un poco Ahí sugirieron ustedes algunas cosas que pueden haber que tienen que ver con, por ejemplo, hacer monitoreo de la red, tener muy cerrada la red.
+
+137
+00:16:27.870 --> 00:16:31.079
+Rodrigo Ramele: hacer acciones preventivas sobre la red.
+
+138
+00:16:31.080 --> 00:16:47.830
+Rodrigo Ramele: hacer un monitoreo de qué son los paquetes que están viajando para ver si no hay una una situación de spuffing, controlar que, por ejemplo, a la red no puedan acceder. No puede haber access point adicionales, estructuras de V. P. N, V, P. N, O. Reds.
+
+139
+00:16:48.140 --> 00:16:58.660
+Rodrigo Ramele: Digamos la estructura de armar redes virtuales. Todas esas cosas ayudan. Eventualmente son otros mecanismos que evitan un poco más. Pero bueno, muy bien, todo lo que
+
+140
+00:17:00.030 --> 00:17:01.069
+Rodrigo Ramele: sigo. Entonces.
+
+141
+00:17:07.510 --> 00:17:16.070
+Rodrigo Ramele: bueno, vamos con este, que es el 2. El verdadero falso. ¿cuál es de los siguientes? No, No es un componente de Box.
+
+142
+00:17:16.900 --> 00:17:18.119
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Operaciones de I, T.
+
+143
+00:17:22.089 --> 00:17:23.980
+Rodrigo Ramele: ¿por qué?
+
+144
+00:17:27.800 --> 00:17:29.390
+Rodrigo Ramele: ¿qué es de Vox? Primero, No.
+
+145
+00:17:29.980 --> 00:17:35.579
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Si Osa es el proceso por el cual se desarrollan aplicaciones con ojo a la infraestructura.
+
+146
+00:17:36.030 --> 00:17:39.529
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Ahora que dije, eso, me parece que es control de calidad.
+
+147
+00:17:40.680 --> 00:17:44.049
+Rodrigo Ramele: Alguien que opine con distintos.
+
+148
+00:17:46.630 --> 00:17:48.629
+JUAN IGNACIO LATEGANA: Para mí es seguridad de la información.
+
+149
+00:17:49.320 --> 00:17:51.009
+Rodrigo Ramele: Muy bien. ¿por qué Juan.
+
+150
+00:17:51.380 --> 00:17:55.360
+JUAN IGNACIO LATEGANA: Porque no se cura, no se ocupa de Security. Esos deves secos.
+
+151
+00:17:55.510 --> 00:17:57.200
+Rodrigo Ramele: Exactamente. Exactamente. Muy bien.
+
+152
+00:17:57.200 --> 00:17:57.640
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Dejarla.
+
+153
+00:17:57.640 --> 00:18:03.369
+Rodrigo Ramele: Con excelente Ignacio. Muy bien. Exactamente es eso. Por eso es el sector. Y supóngase que ahí yo les pongo.
+
+154
+00:18:03.480 --> 00:18:08.119
+Rodrigo Ramele: les digo, les cambio la puntería. ¿cuál de los siguientes No es un componente del modelo
+
+155
+00:18:08.590 --> 00:18:13.639
+Rodrigo Ramele: Deve Seckops y le pongo Machine Learning, que me dice usted como una opción.
+
+156
+00:18:16.420 --> 00:18:17.590
+Rodrigo Ramele: M: L.
+
+157
+00:18:17.590 --> 00:18:19.300
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Margen de Rino es la incorrecta.
+
+158
+00:18:20.460 --> 00:18:36.420
+Rodrigo Ramele: Claro es lo mismo. Le estoy haciendo este juego. Miren ahí. Se los escribe, porque en realidad es como que hoy por hoy, hoy estamos se eleva en Ml. Ahí está ahí, se los puse, entienden la lógica de alguna manera.
+
+159
+00:18:36.820 --> 00:18:55.490
+Rodrigo Ramele: En realidad, 1 podría decir que. M. M. L Cops: No podría decir alguna cosa así. Pero bueno, se supone que si ya estás en M. L, o M. L. Ops un poco. Es algo que he estado viendo la operatoria de un ambiente que está haciendo desarrollo de la inteligencia artificial que cambia radicalmente la manera en la que se desarrolla.
+
+160
+00:18:55.680 --> 00:19:12.290
+Rodrigo Ramele: Entonces, sí o sí, tienes que tener, incluido todo lo que es de box de base más y con relación continua, más Devese Gobs, tema de seguridad y sobre todo arriba de todo eso. Mls: eso. Así que excelente
+
+161
+00:19:13.580 --> 00:19:19.559
+Rodrigo Ramele: la que sigue pone los siguientes esquemas: provee tolerancia, fallas en sistemas de almacenamiento.
+
+162
+00:19:25.810 --> 00:19:27.790
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Me suena, que es el sistema R E, I, D.
+
+163
+00:19:29.540 --> 00:19:34.739
+Rodrigo Ramele: Muy bien, ¿por qué yo diría 2 costillas.
+
+164
+00:19:35.100 --> 00:19:37.829
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Los balanceos de carga no tiene nada que ver con
+
+165
+00:19:38.440 --> 00:19:43.419
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: S, o sea, es sistemas de red, de la cantidad de cosas que entran y salen.
+
+166
+00:19:43.560 --> 00:19:44.459
+Rodrigo Ramele: Sí, la verdad.
+
+167
+00:19:44.460 --> 00:19:46.089
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y es algo de bases de datos
+
+168
+00:19:46.420 --> 00:19:49.229
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: en el parque Sacha. No me acuerdo que era, pero
+
+169
+00:19:49.440 --> 00:19:55.090
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: me suena que no es así, que por eliminación, tiene que ser el sistema R a I que lo escuché. Ya ha aplicado un par de veces a
+
+170
+00:19:55.520 --> 00:19:57.790
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: las fallas de almacenamiento.
+
+171
+00:19:58.500 --> 00:20:01.659
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: No sé muy exactamente qué es sistema. R A E. D.
+
+172
+00:20:03.460 --> 00:20:05.020
+Rodrigo Ramele: Qué más alguien tiene tu opinión?
+
+173
+00:20:12.550 --> 00:20:19.879
+Rodrigo Ramele: Claro, Efectivamente, miren que todas estas tienen muchas, muchas respuestas que ofrecer.
+
+174
+00:20:20.560 --> 00:20:23.100
+Rodrigo Ramele: Es como esto depende de cómo lo espetifiquen.
+
+175
+00:20:24.150 --> 00:20:28.009
+Rodrigo Ramele: Estas son las teóricas de
+
+176
+00:20:28.480 --> 00:20:43.620
+Rodrigo Ramele: lo que pasa. Es que pasó en un momento. Tratamos de hacer una modificación de la materia y vimos más cosas que tenían que ver con con temas cloud, y después eso medio que se repasó un poco. Así que por ahí algunas cosas exactamente. Ahora, no, Pablo no las dio porque las modificamos. La.
+
+177
+00:20:43.620 --> 00:20:47.830
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: No creo que hayamos, no, no hablamos mucho de cosas de Claudio.
+
+178
+00:20:47.830 --> 00:20:58.510
+Rodrigo Ramele: Okay Okay. Claro, claro, porque, porque, claro, esto por un momento lo modifica igual. De todas formas, este igual a ver pensando qué parte de bibliografía
+
+179
+00:20:58.700 --> 00:21:11.540
+Rodrigo Ramele: igual lo que se va a tomar es lo que está en las filminas que igual no se preocupen, pero les cuento de esta que básicamente es, como dijo balanCEO de carga. Cuando 1 tiene 1 pone varios servidores para distribuir la carga. Así que eso tiene No tiene que ver con
+
+180
+00:21:11.700 --> 00:21:23.200
+Rodrigo Ramele: con con tema de vayan sistemas de almacenamiento, porque eso es para carga. Los sistemas R A. I D Sí, tienen que ver con eso. Los rayos son típicos, casos Son en
+
+181
+00:21:23.750 --> 00:21:30.539
+Rodrigo Ramele: sistemas de donde 1 puede poner parecido a lo que son fund, donde puede poner varios discos que
+
+182
+00:21:30.610 --> 00:21:47.070
+Rodrigo Ramele: que que de repente actúan como despejados muchas veces. Entonces, eso es sistema de tolerancia falla todo lo que se graba en disco se graba en el otro también. Y con eso estamos después casting impares hacha puede llegar a ser porque los pares h a este jaiva bailability.
+
+183
+00:21:47.200 --> 00:22:08.239
+Rodrigo Ramele: Entonces 1 podría pensar que de repente tiene el sistema de almacenamiento. Y eso estaría bien, porque es la idea de alta disponibilidad, o sea, son sistemas que replican todo lo que se hace para que si físicamente alguno, se algunos pasa que acuérdense irán solo en tinta en sangre, en el brazo, los discos se cagan y dejan de andar. Y eso pasa siempre.
+
+184
+00:22:08.240 --> 00:22:12.419
+Rodrigo Ramele: Eso es algo que ocurre siempre con los discos. Es una cuestión de tiempo. Cuándo va a pasar.
+
+185
+00:22:12.420 --> 00:22:15.539
+Rodrigo Ramele: sobre todo los discos físicos. Bueno, pero también pasa con los S. S. C, D, No.
+
+186
+00:22:15.730 --> 00:22:23.859
+Rodrigo Ramele: los discos en algún momento se cagan cuestión de tiempo. Entonces, ténganlo presente, eso. Todos los discos fallan, salvo el mío, no Joaquín. El tuyo también.
+
+187
+00:22:23.860 --> 00:22:24.450
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Mhm.
+
+188
+00:22:24.450 --> 00:22:25.440
+Rodrigo Ramele: Este.
+
+189
+00:22:25.560 --> 00:22:39.119
+Rodrigo Ramele: Así que esos son los pares acha y catering, Eventualmente, muchas veces es una palabra muy genérica. Tiene que ver con catering a nivel de edad, por supuesto, pero pero casting en esquemas de servidores en esquema de infraestructura se refiere a cuando
+
+190
+00:22:39.210 --> 00:22:47.300
+Rodrigo Ramele: no hay un único servidor, sino que hay muchos servidores que responden como 1 solo. Y normalmente esos servidores actúan con sistemas de de
+
+191
+00:22:47.300 --> 00:23:04.099
+Rodrigo Ramele: de redundancia para almacenamiento, o sea, tienen van replicando transacciones para tener todo replicado en 1 o 2 discos, porque un disco sin ningún problema. Entonces, en un punto, la única que no es para no ser cargado. Todas las otras podían serlo bien la que sigue. Entonces.
+
+192
+00:23:04.820 --> 00:23:12.079
+Rodrigo Ramele: ¿Cuál de las siguientes estrategias no tendría sentido en un ataque? C, S. R. R, Primero que es Csr.
+
+193
+00:23:13.610 --> 00:23:15.549
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: El C, C, R. F.
+
+194
+00:23:15.890 --> 00:23:28.440
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Era un ataque en el que yo atacante. Usaba la clave de sesión abierta de otra cosa. Yo abro una sesión en el banco y vos usando mi sesión y mi computadora
+
+195
+00:23:28.640 --> 00:23:36.299
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: porque me pasaste un link malo, o algún archivo extraño. Te haces pasar por mí para enviar una
+
+196
+00:23:36.490 --> 00:23:37.870
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: una transferencia. Por ejemplo.
+
+197
+00:23:41.050 --> 00:23:45.480
+Rodrigo Ramele: Muy bien, entonces, Pues perfecta la definición. ¿cuál es la mejor.
+
+198
+00:23:45.480 --> 00:23:51.670
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: De bañar la ipé que la ipesa de mi computadora.
+
+199
+00:23:51.820 --> 00:23:53.270
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Soy de atacante.
+
+200
+00:23:53.700 --> 00:23:55.350
+Rodrigo Ramele: Exacto exactamente.
+
+201
+00:23:55.900 --> 00:23:59.070
+Rodrigo Ramele: Alguien tiene alguna otra opción, pues podrían ser otros.
+
+202
+00:24:01.630 --> 00:24:07.270
+JUAN IGNACIO LATEGANA: Cosa que es medio difícil que me dé cuenta cuál es el I P. Que está vulnerada, digamos
+
+203
+00:24:10.920 --> 00:24:15.240
+JUAN IGNACIO LATEGANA: porque ya ya se metió. O sea, yo lo estoy tomando como un usuario.
+
+204
+00:24:18.210 --> 00:24:29.609
+Rodrigo Ramele: Claro, claro, esa es la razón. Esa es la razón por la que esas esas es es una respuesta correcta en este caso perfecto, porque no tiene nada que ver con ataques. S. R. F, Porque es un usuario que es válido
+
+205
+00:24:30.260 --> 00:24:38.530
+Rodrigo Ramele: es forzar rico es forzar un sueño válido a que haga algo que él no quiso hacer
+
+206
+00:24:38.750 --> 00:24:43.530
+Rodrigo Ramele: o algo así. Así que bañarle el pie por si está mal el tema deportivo.
+
+207
+00:24:43.530 --> 00:24:49.610
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Como si fuera a robar un mango con una máscara de Rodrigo Ramírez, y después lo fueron a buscar a Rodrigo.
+
+208
+00:24:50.080 --> 00:24:57.440
+Rodrigo Ramele: Exacto es un poco. Eso sí, sí, exactamente en la biología, evitar que los líquidos puedan regresarse por violada. Eso quiere.
+
+209
+00:24:58.970 --> 00:25:01.220
+Rodrigo Ramele: ¿Por qué sí o por qué no.
+
+210
+00:25:04.770 --> 00:25:11.210
+NICOLÁS CANZONIERI: O sea, no me acuerdo si era para este ataque en sí, pero me acuerdo que una de las soluciones era forzar a que sean todos con post
+
+211
+00:25:15.700 --> 00:25:18.349
+NICOLÁS CANZONIERI: más que nada, porque.
+
+212
+00:25:18.620 --> 00:25:23.299
+NICOLÁS CANZONIERI: bueno, ahora me tengo que ir a no me acuerdo bien, pero me suena a que tenía que ver algo con
+
+213
+00:25:24.100 --> 00:25:32.370
+NICOLÁS CANZONIERI: la verificación o si era no me acuerdo, la palabra el que no sé.
+
+214
+00:25:34.390 --> 00:25:43.470
+Rodrigo Ramele: Muy bien. Nicolás Igual, estuviste muy bien exacto eso que Vos Te acordás. Y te digo porque es la razón. Es por lo que dijo Joaquín, porque muchas de las maneras que vos forzas a que, por ejemplo.
+
+215
+00:25:43.610 --> 00:25:52.979
+Rodrigo Ramele: ustedes me forzarían a mí a que, por ejemplo, yo ahora hago una transacción con el banco que me mandan un link trucho y el link. Cuando alguien aprieta en el link. Eso fuerza una transacción, porque entiendes
+
+216
+00:25:54.350 --> 00:26:09.940
+Rodrigo Ramele: entonces como esa es la vía por la cual se esfuerza. Eso tradicional. Es Es mejor que te esfuerces a que las cosas más importantes sean sí o sí por una transacción hecha por hecha por Post, porque por Post requiere algo que va más allá de un hacer un clic en un link.
+
+217
+00:26:09.960 --> 00:26:17.829
+Rodrigo Ramele: pues no puedes hacer una canción post en un link directo es más difícil. Se puede. En algún punto se puede. Depende del Browser que usen.
+
+218
+00:26:17.890 --> 00:26:20.789
+Rodrigo Ramele: pero es más difícil. No es lo tradicional. Entienden esto?
+
+219
+00:26:29.960 --> 00:26:35.399
+Rodrigo Ramele: ¿qué les parece concientizar a los usuarios sobre el phishing y el cuidado al que tienen enlaces.
+
+220
+00:26:35.710 --> 00:26:39.550
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: O sea, esa es siempre exacto. También
+
+221
+00:26:40.020 --> 00:26:44.850
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: el enlace mal es una de las formas que tenemos de hacer el C, C, R, F, Y.
+
+222
+00:26:44.850 --> 00:26:45.339
+Rodrigo Ramele: En la.
+
+223
+00:26:45.340 --> 00:26:47.119
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Arnason Punto. Com.
+
+224
+00:26:47.410 --> 00:26:53.780
+Rodrigo Ramele: Exacto. Y la primera, verificar si la información extra del requat fue generada de manera legítima. ¿eso qué significa.
+
+225
+00:26:56.100 --> 00:26:59.019
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: O sea, serían los los headers del del request No.
+
+226
+00:26:59.020 --> 00:27:09.429
+Rodrigo Ramele: ¿y cómo se hace eso? No porque los genes ricos se puede expresar vos lo podés armar. Qué? ¿cómo es el mecanismo que se implementan los sitios para tratar de mitigar ataques? S. R. F,
+
+227
+00:27:09.630 --> 00:27:11.429
+Rodrigo Ramele: ¿Qué es lo que hacen de alguna manera.
+
+228
+00:27:12.930 --> 00:27:15.229
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Las reglas también lo hayan otras Teniendo ideas.
+
+229
+00:27:28.910 --> 00:27:33.649
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: había que Re Acá dice que podía reidentificarme o usar algo que se llama.
+
+230
+00:27:33.650 --> 00:27:34.759
+Rodrigo Ramele: Muy bien.
+
+231
+00:27:34.970 --> 00:27:46.240
+Rodrigo Ramele: Muy bien. Ahí filipo, lo contestó. Es algún valor aleatorio para un para algún challenge que puede ser como operaría Filippo, y conectarlo con protocolo. Sí, señor con lo que vimos de de seguridad en protoco.
+
+232
+00:27:47.260 --> 00:28:04.530
+FILIPO ARDENGHI: O sea, para realizar determinada acción, como que va a requerir una confirmación del usuario a partir de un dato que se genera o de un valor que genera el el sistema, por ejemplo, el bancario en ese momento y es distinto para para cada 1 de los usuarios. Entonces no lo puedes repetir.
+
+233
+00:28:04.530 --> 00:28:05.260
+Rodrigo Ramele: A la.
+
+234
+00:28:05.260 --> 00:28:10.779
+FILIPO ARDENGHI: Si no, si no lo estás haciendo en el momento que que el banco primero. Este es aleatorio.
+
+235
+00:28:10.780 --> 00:28:13.369
+Rodrigo Ramele: A qué te hace acordar eso?
+
+236
+00:28:13.370 --> 00:28:17.470
+FILIPO ARDENGHI: Creo que era un protocolo que que funcionaba así con un challenge.
+
+237
+00:28:17.790 --> 00:28:19.529
+FILIPO ARDENGHI: la R, el que le mandaba.
+
+238
+00:28:19.720 --> 00:28:29.219
+Rodrigo Ramele: No. Pero es más simple. Si mira, hay protocolos que son con challenge. Y eso es siempre que es un Challenge, un responso, un challenge es algo que yo te utilizo yo ahora con un valor que vos no tenés que dar una respuesta.
+
+239
+00:28:29.750 --> 00:28:35.449
+Rodrigo Ramele: hay otra cosa en protocolos que tienen más parecido a esto, Te acordás que se usa
+
+240
+00:28:35.570 --> 00:28:38.690
+Rodrigo Ramele: que se usan para evitar ataques de Riflay.
+
+241
+00:28:40.350 --> 00:28:44.190
+FILIPO ARDENGHI: Sí, el el Nams, el Noms.
+
+242
+00:28:44.190 --> 00:29:02.729
+Rodrigo Ramele: Exactamente entendés, que es lo mismo, porque vos lo que hace el sitio, el sitio genera como un número, una vez, o un que puede ser un número aleatorio y lo pone dentro de un hider, no dentro de un hider, sino dentro de un de una variable del propio formulario que la persona está mandando, y ese número es único y se genera al azar, cosa que cuando le llega al Request
+
+243
+00:29:02.950 --> 00:29:04.800
+Rodrigo Ramele: con un pedido post.
+
+244
+00:29:05.280 --> 00:29:16.600
+Rodrigo Ramele: ese rico es, tiene que coincidir con el número que le mandó antes entendés, y eso le da frescura. Si no coincide, es porque es un número que de alguna manera alguien de otro lado que no vio ese formulario está está tratando de forzar.
+
+245
+00:29:17.870 --> 00:29:18.510
+FILIPO ARDENGHI: Claro.
+
+246
+00:29:18.800 --> 00:29:24.720
+Rodrigo Ramele: Esa es la conexión. Exactamente. Muy bien. Bien. Perfecto. Chicos. Muy bien, bueno, vamos con el principio.
+
+247
+00:29:33.640 --> 00:29:35.340
+Rodrigo Ramele: Bueno, este
+
+248
+00:29:35.530 --> 00:29:51.670
+Rodrigo Ramele: un criptobro afirma que si un atacante puede probar 10 a 4 pavos por segundos y los pagos están compuestos por símbolos ta Ta: ta ta ta entonces los pagos deberían tener 5 símbolos y 5 biden universal, para que la probabilidad de adivinarlos en lapso de un año sea menor a 0.
+
+249
+00:29:52.120 --> 00:29:55.020
+Rodrigo Ramele: Uno de estos entra siempre porque es un ejercicio
+
+250
+00:29:55.510 --> 00:30:07.869
+Rodrigo Ramele: fácil de hacer fácil de chequear y que se le puede dar vueltas a rosca interesantes para para para para hacerlos pensar básicamente. Así que, ¿cómo se resuelven.
+
+251
+00:30:08.750 --> 00:30:10.159
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: No porque es un criptogra.
+
+252
+00:30:11.980 --> 00:30:19.340
+Rodrigo Ramele: No tiene trampa. Es bastante directo que usabas filipo para resolver.
+
+253
+00:30:21.030 --> 00:30:29.490
+FILIPO ARDENGHI: Usas la fórmula de la probabilidad, que era la cantidad de veces que puedes probar por segundo por
+
+254
+00:30:30.930 --> 00:30:35.570
+FILIPO ARDENGHI: la cantidad de tiempo que quieres destinar y el espacio de claves.
+
+255
+00:30:36.100 --> 00:30:38.559
+Rodrigo Ramele: Según el cómputo, que claro.
+
+256
+00:30:39.080 --> 00:30:48.910
+FILIPO ARDENGHI: Claro lo del salte en este caso, no. O sea, es como que no, no, no aplican esa fórmula de de probabilidad, porque el espacio de claves no lo cambia. El salto.
+
+257
+00:30:49.570 --> 00:30:50.140
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Estuvimos.
+
+258
+00:30:50.140 --> 00:30:54.550
+Rodrigo Ramele: El espacio de clave, pero sí es cierto, pero eso es muy buena. Tu pregunta
+
+259
+00:30:54.760 --> 00:31:01.990
+Rodrigo Ramele: entre fase clave no cambia, pero sí lo que te cambia con el sal. ¿cómo funciona el salsive, ¿Cómo funciona? No, cómo funciona? Cuando ustedes usan un Sal
+
+260
+00:31:02.460 --> 00:31:03.000
+Rodrigo Ramele: Mhm.
+
+261
+00:31:03.000 --> 00:31:05.129
+FILIPO ARDENGHI: Como que le agrega un un valor.
+
+262
+00:31:05.130 --> 00:31:23.020
+Rodrigo Ramele: Tenés, una clave que utiliza el Protocolo de Pk Css, de el que hace las inscripciones sucesivas, que es 1 de los que está en las filminas. No me acuerdo el nombre ahora, y
+
+263
+00:31:23.150 --> 00:31:24.640
+Rodrigo Ramele: y
+
+264
+00:31:24.920 --> 00:31:33.509
+Rodrigo Ramele: y cómo, y y digamos, vos se generas una clave. Esa clave se guarda. La clave es: se guarda algo en la base de datos y cómo se verifica cómo operar.
+
+265
+00:31:33.660 --> 00:31:34.689
+Rodrigo Ramele: ¿alguien lo puede explicar.
+
+266
+00:31:35.840 --> 00:31:37.970
+FILIPO ARDENGHI: Ponele, que es un hash, lo que estás guardando.
+
+267
+00:31:37.970 --> 00:31:39.060
+Rodrigo Ramele: Un cash perfecto? Sí.
+
+268
+00:31:39.770 --> 00:31:43.890
+FILIPO ARDENGHI: Adelante del hash pones el salt que usaste para
+
+269
+00:31:44.870 --> 00:31:57.680
+FILIPO ARDENGHI: para para hacer ese ese hash. Entonces lo que te permite es que cada clave tiene como un valor distinto. Entonces, si vos llegaras a acceder a la base de datos, a a muchos valores de contraseña hackeadas. No puedes probar offline
+
+270
+00:31:57.850 --> 00:32:01.539
+FILIPO ARDENGHI: en esas. O sea.
+
+271
+00:32:01.540 --> 00:32:02.000
+Rodrigo Ramele: El en.
+
+272
+00:32:02.550 --> 00:32:07.200
+FILIPO ARDENGHI: O si no puedes probar vos offline claves que manchen contra esos hashis.
+
+273
+00:32:07.460 --> 00:32:11.140
+Rodrigo Ramele: Perfecto Filipo. Y cómo opera cuando vos querés validar la clave con eso.
+
+274
+00:32:12.170 --> 00:32:14.170
+Rodrigo Ramele: el usuario pone la clave y la crema.
+
+275
+00:32:15.850 --> 00:32:21.450
+FILIPO ARDENGHI: Agarra y le pone el el salt que usó para la
+
+276
+00:32:22.360 --> 00:32:26.500
+FILIPO ARDENGHI: para la que tiene hackeada y la vuelve a hachear, pero usando el mismo salto.
+
+277
+00:32:26.500 --> 00:32:40.110
+Rodrigo Ramele: Excelente. Exactamente exactamente entonces. Eso que hace. Desde el punto de vista, es cierto que no te aumenta el espacio de claves. Pero si, desde el punto de vista de quien tiene que hacer la validación, como tiene todos los hash completos.
+
+278
+00:32:40.110 --> 00:32:50.110
+Rodrigo Ramele: necesita que va a hacer que tenga que probar más cosas. Entiendes, porque ahora todas las claves que son iguales, no van a parar a una, van a parar a un montón.
+
+279
+00:32:51.110 --> 00:32:51.440
+FILIPO ARDENGHI: Claro.
+
+280
+00:32:51.440 --> 00:32:55.809
+Rodrigo Ramele: Tantas como posibles calles, longitud de calles, tengas, entendés.
+
+281
+00:32:56.130 --> 00:32:56.860
+FILIPO ARDENGHI: Claro.
+
+282
+00:32:56.990 --> 00:33:00.760
+Rodrigo Ramele: Entonces el punto de vista de la cantidad de pruebas que tiene que tiene que hacer es mayor.
+
+283
+00:33:00.880 --> 00:33:05.540
+Rodrigo Ramele: entonces esa es Esa es un poco la la por qué tiene sentido el hash?
+
+284
+00:33:05.750 --> 00:33:10.880
+Rodrigo Ramele: Porque ya estás haciendo que le estás penalizando en cómputo. ¿a quién te lo va a atacar.
+
+285
+00:33:13.190 --> 00:33:16.670
+FILIPO ARDENGHI: Y eso com hay forma de tenerlo en cuenta en esa fórmula o.
+
+286
+00:33:16.880 --> 00:33:20.270
+Rodrigo Ramele: Sí aumentan la cantidad de bits. Es como que te aumentan las bits.
+
+287
+00:33:20.980 --> 00:33:21.690
+FILIPO ARDENGHI: okay.
+
+288
+00:33:22.500 --> 00:33:23.699
+Rodrigo Ramele: Es así de directo?
+
+289
+00:33:24.040 --> 00:33:24.720
+Rodrigo Ramele: Mhm.
+
+290
+00:33:25.240 --> 00:33:27.269
+FILIPO ARDENGHI: O sea, que aumenta el tamaño de claves por 2.
+
+291
+00:33:27.270 --> 00:33:28.290
+Rodrigo Ramele: Exacto a.
+
+292
+00:33:28.340 --> 00:33:29.030
+FILIPO ARDENGHI: En este caso.
+
+293
+00:33:29.550 --> 00:33:32.829
+Rodrigo Ramele: Exacto Es como que hay un aumento en el tamaño de claves.
+
+294
+00:33:34.190 --> 00:33:34.860
+FILIPO ARDENGHI: Okay.
+
+295
+00:33:35.300 --> 00:33:47.990
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: O sea que acá. Sería 25, no 26 a 26 plus. Diez a las 5 por
+
+296
+00:33:50.180 --> 00:33:53.309
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: 2 h, 5, el espacio de claves.
+
+297
+00:33:54.550 --> 00:33:57.529
+Rodrigo Ramele: Sí, creo que sí. Creo que sí. Y después eso tiene que dar.
+
+298
+00:33:58.390 --> 00:34:11.120
+Rodrigo Ramele: Tienen que generar la probabilidad. Tienen que es la probabilidad es mayor, igual, o sea, el mínimo que tiene que tener para que la probabilidad sea de un valor específico. Si ustedes quieren, no es una cuota en definitiva.
+
+299
+00:34:12.760 --> 00:34:26.809
+Rodrigo Ramele: Fíjense el segundo punto, el B, que me dicen, o sea, lo que dice, es que José viene recargado y plantea que va a implementar, inscriptoró, va a implementar un sistema de autenticación multicanal, donde además, el segundo canal por Sms se va a poder utilizar para recuperar el password.
+
+300
+00:34:27.830 --> 00:34:30.130
+Rodrigo Ramele: ¿qué ¿Qué problemas podría tener esa estrategia.
+
+301
+00:34:34.050 --> 00:34:37.450
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y que me roben el teléfono o en mi clon, el número de S. M. S.
+
+302
+00:34:40.510 --> 00:34:42.839
+NICOLÁS CANZONIERI: Sí es un canal mucho más inseguro.
+
+303
+00:34:47.190 --> 00:34:51.199
+Rodrigo Ramele: Bien, pero eso para eso están los 2 canales, de alguna manera.
+
+304
+00:34:51.739 --> 00:34:57.709
+FILIPO ARDENGHI: O sea, estás anulando si puede cambiar la contraseña por S. M. S, Como que estás anulando el poder de de los 2 factores.
+
+305
+00:34:58.039 --> 00:34:58.849
+FILIPO ARDENGHI: Exactamente.
+
+306
+00:34:58.850 --> 00:35:17.839
+Rodrigo Ramele: Filipo exactamente. Esa es la respuesta correcta. Esa es la respuesta correcta, porque el hecho de que vos tengas varios factores y que que cada 1 de los factores te lo puedas perder o te lo puedan robar. Es parte del escenario. Es un poco la idea. El tener varios factores precisamente es para que no baste con que te roben 1 o lo pierdas 1, sino que necesitan hacer todos a la vez.
+
+307
+00:35:17.850 --> 00:35:23.509
+Rodrigo Ramele: Ahora, el tema es que si están entrelazados entre ellos, está diciendo, son independientes, entonces no tiene sentido.
+
+308
+00:35:24.070 --> 00:35:32.259
+Rodrigo Ramele: Se pierde la idea de los factores, porque con 1 derivas el otro, entonces ese es el punto crítico ahí en este muy en
+
+309
+00:35:32.640 --> 00:35:33.390
+Rodrigo Ramele: Thibir.
+
+310
+00:35:33.390 --> 00:35:34.499
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sería como tener.
+
+311
+00:35:34.500 --> 00:35:35.120
+Rodrigo Ramele: Lo que.
+
+312
+00:35:35.120 --> 00:35:37.389
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Dos llaves para la misma cerradura.
+
+313
+00:35:38.200 --> 00:35:40.380
+Rodrigo Ramele: Sí
+
+314
+00:35:40.610 --> 00:35:46.040
+Rodrigo Ramele: que solo costará de alguna manera y que y que te cualquiera de las 2 la abre completamente entendés.
+
+315
+00:35:46.040 --> 00:35:48.000
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí, Exacto.
+
+316
+00:35:48.220 --> 00:36:03.829
+Rodrigo Ramele: Más cómodos, pero menos seguro. Nicolás. Y ese es el punto crítico ahí que ese es un balance de de Acuérdense que seguridad siempre es un balance entre usabilidad, performance y seguridad. Las 3 cosas. No se puede tener todo a la vez.
+
+317
+00:36:04.160 --> 00:36:07.790
+Rodrigo Ramele: algo vas a penalizar entendés?
+
+318
+00:36:20.580 --> 00:36:28.210
+Rodrigo Ramele: Bueno, fíjense el último, el 5, el 4. Lo pasamos porque es nuestro queridísimo shamir en y el 5.
+
+319
+00:36:28.680 --> 00:36:29.580
+Rodrigo Ramele: Hizo sentir.
+
+320
+00:36:39.860 --> 00:36:57.120
+Rodrigo Ramele: Bueno en el 5, La idea es que ustedes establezcan como una especie de. No necesitan tiempo para hacerlo, porque es un ejercicio más de desarrollo, pero ustedes tienen que establecer como una estructura de permisos válida para la detección de de face para un organismo de la Onu
+
+321
+00:36:57.900 --> 00:37:02.849
+Rodrigo Ramele: o más que para la detección, para que esté que esté encargada de el tema de controlar
+
+322
+00:37:02.960 --> 00:37:06.040
+Rodrigo Ramele: como el tema de los Deep Fail
+
+323
+00:37:06.570 --> 00:37:08.969
+Rodrigo Ramele: por cómo todos saben lo que son. Deephane No, sí.
+
+324
+00:37:09.340 --> 00:37:09.970
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí.
+
+325
+00:37:10.540 --> 00:37:20.220
+Rodrigo Ramele: Entonces de base, si ya tienen que implementar un algoritmo de control de acceso, o sea, una estructura de control de accesos
+
+326
+00:37:20.920 --> 00:37:34.050
+Rodrigo Ramele: que derive de alguna política. Eventualmente, y estamos hablando del tema De Deepray, que es el cuáles de los objetivos de seguridad creen que es el que va a ser más relevante en eso.
+
+327
+00:37:36.770 --> 00:37:43.250
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Es que es muy amplio lo que se puede hacer con distrates. Se puede tal vez hasta llegar a
+
+328
+00:37:43.650 --> 00:37:49.599
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: ganarle a un factor idiométrico con un deight, dependiendo cual sea, no
+
+329
+00:37:51.190 --> 00:37:55.069
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: y pero también, aparte de todo lo influencia en la opinión pública.
+
+330
+00:37:55.270 --> 00:37:56.679
+Rodrigo Ramele: Ok Joaquín. Pero.
+
+331
+00:37:56.680 --> 00:37:57.200
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: No.
+
+332
+00:37:57.200 --> 00:38:02.060
+Rodrigo Ramele: El ejercicio. Este Eso, como dijiste, es cierto, Eso se llama Lines detection. Pero
+
+333
+00:38:02.660 --> 00:38:08.270
+Rodrigo Ramele: y es muy importante ahora, con todo el avance de los supermotores
+
+334
+00:38:08.380 --> 00:38:11.620
+Rodrigo Ramele: por el tema de Ca. Los Captcha, por ejemplo, que hoy están bastante.
+
+335
+00:38:11.620 --> 00:38:11.950
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: De la.
+
+336
+00:38:12.930 --> 00:38:18.449
+Rodrigo Ramele: Pero esto está pensado desde el punto de vista de un desde una organización de la Onu que tiene que
+
+337
+00:38:18.580 --> 00:38:31.040
+Rodrigo Ramele: controlar. Esto tiene que estructurar un mecanismo de de de de alguna manera, de seguridad en busca de qué objetivos de seguridad va a estar más asociado. Lo que vulnera la integridad? No exactamente. Esa es la respuesta
+
+338
+00:38:31.040 --> 00:38:40.470
+Rodrigo Ramele: viene por ese lado, el tema de la integridad. Entonces, qué mecanismos le parece mejor para que se podría de base para el caso este de esta organización.
+
+339
+00:38:43.110 --> 00:38:51.169
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Pasa que no me queda claro bien qué es lo que hace la la organización porque Acá dice producir contenido serio que aporta una mirada objetiva sobre las nativas noticias que circulan
+
+340
+00:38:51.320 --> 00:38:54.260
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: un un portal periodístico.
+
+341
+00:38:54.650 --> 00:39:06.779
+Rodrigo Ramele: Es como una especie de portal, no periodístico, pero que sí se encarga de alguna manera de verificar la integridad de la información. Entonces aparecen. Necesitan estructurarse con un modelo similar a viva.
+
+342
+00:39:07.020 --> 00:39:10.740
+Rodrigo Ramele: Entonces porque es como una imagínate que la Onu tiene una organización que Chula tiene
+
+343
+00:39:10.860 --> 00:39:25.859
+Rodrigo Ramele: que lo que hace. Recorre parecido a lo que hace chequeado punto com recorre un montón de sistemas y necesita de de sitios y necesita ofrecerte esa organización. Una garantía adicional para la población mundial de que las cosas
+
+344
+00:39:26.080 --> 00:39:28.120
+Rodrigo Ramele: son. Fake
+
+345
+00:39:28.690 --> 00:39:36.580
+Rodrigo Ramele: a propósito, ya sabe que es un falso a propósito? O es algo que tiene un contenido con verificados.
+
+346
+00:39:37.190 --> 00:39:44.250
+Rodrigo Ramele: Viene por ese lado, y la respuesta tiene que ser algo tipo, un modelo que ahí tienen que ser creativos en el planteo donde hacen y cómo lo supera.
+
+347
+00:39:45.220 --> 00:39:46.190
+Rodrigo Ramele: Está bien.
+
+348
+00:39:47.280 --> 00:39:50.069
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí entiendo por qué se usaría el modelo viva
+
+349
+00:39:50.280 --> 00:39:54.020
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: para preservar la integridad y permite que se lea para abajo.
+
+350
+00:39:54.190 --> 00:40:00.390
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y yo pensé que ibas más por el modelo de por un modo de diseñar el sistema.
+
+351
+00:40:01.320 --> 00:40:01.880
+Rodrigo Ramele: Mhm.
+
+352
+00:40:02.170 --> 00:40:05.240
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Pensé que Queri pensé que era la cocina. Quería otra cosa.
+
+353
+00:40:05.690 --> 00:40:15.770
+Rodrigo Ramele: No, no tiene que ir por ese lado. También puedes agregar. Esto es Nicolás. Está diciendo, también calificaría la fuente de autoridad exacto. Nicolás, un esquema que vos puedas hacer Eso Eso es algo interesante y válido para hacer
+
+354
+00:40:16.470 --> 00:40:21.960
+Rodrigo Ramele: pensado como un modelo de seguridad, un modelo de integridad parecido al mundo viva.
+
+355
+00:40:24.590 --> 00:40:31.929
+Rodrigo Ramele: Son estos ejercicios. Son abiertos. Son muy parecidos a los del pinar 2 casos relativamente legales
+
+356
+00:40:32.350 --> 00:40:37.159
+Rodrigo Ramele: y al parcial tiene esta pinta, no es mucho más complejo que esto.
+
+357
+00:40:37.400 --> 00:40:40.200
+Rodrigo Ramele: Vemos otro más. Te parece.
+
+358
+00:40:40.200 --> 00:40:41.090
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Sí.
+
+359
+00:40:41.090 --> 00:40:49.439
+JUAN IGNACIO LATEGANA: Dani. Te hago una consulta. Entonces, como hay que saber bien la teoría, pero después, como que hay que ser un tanto creativo con nuestra.
+
+360
+00:40:49.440 --> 00:40:49.880
+Rodrigo Ramele: No sé.
+
+361
+00:40:49.880 --> 00:40:50.740
+JUAN IGNACIO LATEGANA: No, no.
+
+362
+00:40:50.890 --> 00:41:01.750
+Rodrigo Ramele: Poco, ¿sí? Un poco. ¿sí? Juan, un poco, sí, un poco tenés que por eso que esto esto va va apuntando al objetivo principal de esta materia, que es tratar de generarles un poco de intuición y llevarlos rápido a casos reales.
+
+363
+00:41:01.750 --> 00:41:11.650
+Rodrigo Ramele: en donde medianamente reales donde digas, bueno, a ver qué es el cuál es el principio que tengo que aplicar? Porque esto esto me puede funcionar bien, ¿Y por qué esto no? ¿cuál es el
+
+364
+00:41:11.650 --> 00:41:15.260
+Rodrigo Ramele: el modelo que está por detrás de esto? Exactamente.
+
+365
+00:41:16.210 --> 00:41:17.720
+JUAN IGNACIO LATEGANA: Genial. Genial.
+
+366
+00:41:17.720 --> 00:41:28.799
+Rodrigo Ramele: Vas a ver que algunas de las preguntas, Este es un poco más difícil. En ese sentido, este estaba muy orientado a eso. A veces son preguntas más viste enciclopédicas. Si quieres entender, dice, bueno, qué es
+
+367
+00:41:28.800 --> 00:41:41.030
+Rodrigo Ramele: bueno. Strike, son buenos y que de repente, este son buenos. Eso está porque usted es parte de lo que tienen que hacer. Es aprender cosas metérselas en la cabeza. De alguna manera, eso sigue siendo importante, porque si no saben mi nombre, pero, bueno.
+
+368
+00:41:41.030 --> 00:41:44.389
+Rodrigo Ramele: no pudiste saber nombres para saber qué tienen que preguntar.
+
+369
+00:41:45.990 --> 00:41:47.290
+JUAN IGNACIO LATEGANA: Perfecto. Perfecto.
+
+370
+00:41:47.600 --> 00:41:49.100
+Rodrigo Ramele: Pasamos al otro.
+
+371
+00:42:39.060 --> 00:42:56.890
+Rodrigo Ramele: Bien, vamos con este, pues vamos a arrancar desde el quinto, vamos para arriba. Bueno, Tesla implementó un sistema de mejoramiento de la calidad del software, y su nuevo director, Charles Carl Patty, anunció. Bueno, no estamos en test de ahora anunció que este año, utilizando un nuevo esquema que garantizaba la seguridad basado en estrictas pruebas de pentes.
+
+372
+00:42:57.340 --> 00:43:06.200
+Rodrigo Ramele: Entonces provee argumentos sólidos para deslizarla al oído Eylon para que lo despida a Charles o lo promueva. Así el show
+
+373
+00:43:07.430 --> 00:43:20.930
+Rodrigo Ramele: Tesla. Este este subdirector Chavis Capati dice que van a usar un un nuevo esquema que garantiza la seguridad basado en distintas pruebas de intestinos. Ustedes que le dicen al oído botón, Jailón.
+
+374
+00:43:22.730 --> 00:43:24.440
+NICOLÁS CANZONIERI: Que me contrate a mí, que lo hago mejor.
+
+375
+00:43:24.770 --> 00:43:34.180
+Rodrigo Ramele: Tierra al otro es ujili.
+
+376
+00:43:36.230 --> 00:43:38.500
+Rodrigo Ramele: ¿qué más? ¿qué ¿Qué otra? ¿qué otra cosa.
+
+377
+00:43:38.930 --> 00:43:45.159
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: O sea, hacen, no hacen nada más.
+
+378
+00:43:45.760 --> 00:43:48.369
+Rodrigo Ramele: O sea, es lo que está ahí.
+
+379
+00:43:48.370 --> 00:43:52.180
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Solamente pen texting. Yo lo lo despido.
+
+380
+00:43:52.780 --> 00:43:53.700
+Rodrigo Ramele: ¿por qué?
+
+381
+00:43:54.110 --> 00:43:58.429
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Porque no hizo ninguna ningún moderado de amenaza. No hizo.
+
+382
+00:43:58.660 --> 00:44:03.409
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: No pensó en lo que podía pasar, solo pensando que se le ocurrió a él que podía.
+
+383
+00:44:03.410 --> 00:44:03.900
+Rodrigo Ramele: A la barara.
+
+384
+00:44:03.900 --> 00:44:04.220
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: No.
+
+385
+00:44:04.220 --> 00:44:09.590
+Rodrigo Ramele: Ojo ahí. ojo con esa respuesta. Si vos haces un vos podés hacer pantesting.
+
+386
+00:44:10.560 --> 00:44:17.320
+Rodrigo Ramele: vos, eventualmente cuando vos haces un padesting. En la mayoría de las veces se hace un modelado de amenazas, ¿
+
+387
+00:44:19.320 --> 00:44:26.769
+Rodrigo Ramele: Se pueden hacer, que es a veces muy a caja negra total, pero pero la mayoría de veces, si se hace un modelo.
+
+388
+00:44:26.770 --> 00:44:30.349
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Okay. Pero acá no dice si pasó, No pasó el pentesti en el caso. Le dice que lo hizo.
+
+389
+00:44:30.870 --> 00:44:40.039
+Rodrigo Ramele: Por eso acá. Está diciendo que eso es lo que él dice que va a hacer. Dice: vamos a usar los mejores penntesis del mundo y vamos a garantizar la seguridad que le dicen.
+
+390
+00:44:43.310 --> 00:44:48.470
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Y si entran, o sea sí, sí.
+
+391
+00:44:50.430 --> 00:44:54.089
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Es decir, si Vos Hacés Pendestein no significa que después lo vayas a arreglar.
+
+392
+00:44:56.080 --> 00:44:59.379
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Eso no significa haber ciencia o no, y después reportar.
+
+393
+00:45:00.290 --> 00:45:03.979
+Rodrigo Ramele: Sí por eso. Entonces, de alguna manera, aunque ¿qué es lo que
+
+394
+00:45:04.090 --> 00:45:12.870
+Rodrigo Ramele: lo interesante Hay mucho. Como todos estos ejercicios tienen muchas respuestas, ¿no? Pero el ejercicio tiene una tendencia obvio, que es la que, con la que se piensa el ejercicio.
+
+395
+00:45:13.370 --> 00:45:19.690
+Rodrigo Ramele: Si ustedes la detectan esa. ¿cuál es la un poco? La el el gancho más grande que tiene el ejercicio de error.
+
+396
+00:45:31.040 --> 00:45:38.339
+NICOLÁS CANZONIERI: Para mí está bien. Yo creo que el ejercicio de ir más por el lado de argumentar los beneficios del Plantesting.
+
+397
+00:45:38.780 --> 00:45:44.379
+Rodrigo Ramele: Okay, eso podría ser. Puedes ir por un lado, una argumentación fuerte de por ese lado.
+
+398
+00:45:44.490 --> 00:45:49.180
+Rodrigo Ramele: pero hay una parte del ejercicio, que es delicada, que tiene que ver con lo que dijo Charles
+
+399
+00:45:49.280 --> 00:45:52.040
+Rodrigo Ramele: Charles garantiza la seguridad.
+
+400
+00:45:52.700 --> 00:45:55.580
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Bueno, si nunca se puede garantizar la seguridad.
+
+401
+00:45:55.900 --> 00:46:10.660
+Rodrigo Ramele: Exacto. Ahí está el tema. El tema está en esa frase en esa frasecita, y ahí en la respuesta Eso, esa frase. Es como que si se les escapa, hay como una penalización un poco, porque el punto está ahí, porque garantizar la seguridad es algo que no se puede hacer jamás. De repente.
+
+402
+00:46:10.660 --> 00:46:12.830
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: El pantalón de parar.
+
+403
+00:46:12.830 --> 00:46:25.670
+Rodrigo Ramele: Claro que hacer puentes. Tienes una buena estrategia y ahí puede haber mucha instrumentación y porque es bueno y y como orientar todo el esquema a algo basado en tu intestino va a ser interesante. Va a andar bien.
+
+404
+00:46:26.120 --> 00:46:42.789
+Rodrigo Ramele: pero el problema está justamente en en el tema de la garantía de seguridad, entonces eso le pueden susurrar al oído o con esto. ¿qué otras maneras tendrían, por ejemplo que hoy que hoy podría ser incluso más válida que antes para hacer algo parecido al penntestino.
+
+405
+00:46:43.060 --> 00:46:45.649
+Rodrigo Ramele: o sea, otro otro esquema que de alguna manera
+
+406
+00:46:46.040 --> 00:46:55.050
+Rodrigo Ramele: o que otro esquema para hacerlo, que dé más garantía de seguridad, no que la garantice, pero que dé más garantía aún que el prendestino.
+
+407
+00:46:55.300 --> 00:46:55.920
+Rodrigo Ramele: cuál conocer.
+
+408
+00:46:55.920 --> 00:46:58.379
+NICOLÁS CANZONIERI: Las pruebas formales No.
+
+409
+00:46:58.380 --> 00:47:05.679
+Rodrigo Ramele: Exactamente Nicolás, exactamente que ahora tiene un rival gigante gigante, porque el tema de los Lm y los agentes
+
+410
+00:47:05.790 --> 00:47:21.410
+Rodrigo Ramele: entonces ahora está optado, se está. Se convirtió en una un área hiper central, y son las pruebas formales, porque mucho ahora es código que se genera y que, quizá de alguna manera, el código se genera en forma automática. El textil es insuficiente, el testeo en el cual sería insuficiente.
+
+411
+00:47:21.410 --> 00:47:34.460
+Rodrigo Ramele: y el pen testing como un testeo de cueva de seguridad sea insuficiente. Quizás requiera estructuras que sean formales, y hay un punto ahí va a garantizarlo, incluso de ahí la palabra garantía es más fuerte, pero tampoco es
+
+412
+00:47:34.460 --> 00:47:44.289
+Rodrigo Ramele: sector al 100 por 100 porque va a garantizarlo, pero siempre la seguridad está basada. Hay una parte que tiene que ver con la cuestión más técnica y la cuestión más matemática. Y
+
+413
+00:47:44.310 --> 00:47:51.530
+Rodrigo Ramele: pero hay otra parte que que con las personas y todo eso, con lo cual sería imposible realmente garantizar toda la seguridad informática.
+
+414
+00:48:03.440 --> 00:48:08.020
+Rodrigo Ramele: Bien, vamos a pasar a este, que es el 2 de responder la opción más correcta.
+
+415
+00:48:08.570 --> 00:48:13.250
+Rodrigo Ramele: Cuáles son los pasos para implementar un pentesting exitoso.
+
+416
+00:48:25.240 --> 00:48:27.270
+NICOLÁS CANZONIERI: La C.
+
+417
+00:48:27.890 --> 00:48:28.720
+Rodrigo Ramele: ¿por qué?
+
+418
+00:48:30.410 --> 00:48:34.000
+NICOLÁS CANZONIERI: Porque tiene la el planteo de hipótesis. Es falla
+
+419
+00:48:34.440 --> 00:48:38.499
+NICOLÁS CANZONIERI: que las otras no. Bueno, excepto la D, pero la D tampoco tienen.
+
+420
+00:48:38.500 --> 00:48:43.999
+Rodrigo Ramele: Exacto. Eso es enciclopédico perfecto
+
+421
+00:48:47.660 --> 00:49:01.120
+Rodrigo Ramele: en la que sigue la ley. 25 000 va a hablar de protección de datos personales establece mecanismos y normativas para regular el derecho al olvido, las bases de datos públicas y privadas, el manejo de los juicios y navegadores y las historias clínicas.
+
+422
+00:49:05.530 --> 00:49:11.590
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: A ver la ley de protección de datos personales.
+
+423
+00:49:13.590 --> 00:49:16.280
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Creo que son las bases de datos públicas y privadas.
+
+424
+00:49:16.280 --> 00:49:25.000
+Rodrigo Ramele: Muy bien. Y ahí Felipe, que habla del derecho al olvido Filipo filipo qué regulación tiene, si incluida el derecho al olvido.
+
+425
+00:49:26.160 --> 00:49:27.400
+Rodrigo Ramele: No sabes lo que es el derecho viejo.
+
+426
+00:49:27.400 --> 00:49:30.420
+FILIPO ARDENGHI: No, no es que no entendí que no sé qué es el derecho al olvido.
+
+427
+00:49:31.220 --> 00:49:36.179
+Rodrigo Ramele: Ah, el derecho de vida es re importante, pero no lo no es ninguna firmina eso.
+
+428
+00:49:36.350 --> 00:49:37.579
+Rodrigo Ramele: ¿qué lío con el cambio de.
+
+429
+00:49:37.580 --> 00:49:40.979
+FILIPO ARDENGHI: Hay una mina que habla de eso. Pero bueno, estaba la historia.
+
+430
+00:49:40.980 --> 00:49:59.510
+Rodrigo Ramele: Es súper fácil. El hecho del vídeo es algo re importante, y es tu derecho a que tu historia pasada no sea pública. Porque, bueno, sos un personaje público, pero que vos puedas decirle, por ejemplo, a Google que todas sus entradas en el pasado, donde de repente que sé, yo no sé
+
+431
+00:49:59.510 --> 00:50:04.229
+Rodrigo Ramele: trabajar en otra cosa, se eliminen, que es parte de
+
+432
+00:50:04.780 --> 00:50:08.199
+Rodrigo Ramele: el abeas corpus. Era eso, No, El aves corpus es otra cosa.
+
+433
+00:50:08.200 --> 00:50:10.230
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Otra cosa.
+
+434
+00:50:10.230 --> 00:50:26.939
+Rodrigo Ramele: G. P. R, La norma europea regula eso, Entre otras cosas, regula esta idea de que vos puedas tener derecho al olvido entendés de que alguna manera tengas el derecho a que no se a que tu pasado quede olvidado y que no quede digital por todos lados.
+
+435
+00:50:27.250 --> 00:50:29.099
+Rodrigo Ramele: ¿qué perro regula eso también.
+
+436
+00:50:29.750 --> 00:50:45.389
+Rodrigo Ramele: Pero la ley argentina, ¿no? Y después lo otro que decía en el corpus es una ley, no de digital. El área Scorpus es que en una casa una persona que está detenida vos podés pedirle abeas corpus que significa el hecho de poder ver a ese cuerpo ver a esa persona
+
+437
+00:50:45.410 --> 00:50:52.440
+Rodrigo Ramele: entendés que alguien no puede estar detenido y encerrado sin contacto con nadie. Eso es un tema de derechos humanos.
+
+438
+00:50:52.530 --> 00:51:11.779
+Rodrigo Ramele: Y el hábitat data es similar, Claro, el hábita es el dato. Eso que vos podés decir vos tenés derecho a esos datos y que Vos Vos Sos, el dueño de esos datos que están registrados, o sea que, vos, por ejemplo, Podes. Deberías poder pedirlo a una empresa, escuchame borrar todos los datos que tenga el mío y la empresa tiene que acotar, tiene que acatarlo. Tiene que no se puede negar
+
+439
+00:51:12.910 --> 00:51:24.270
+Rodrigo Ramele: eso en un mundo previo. 20 2 015 era así, olvidate por más que tal. Son leyes que existen, que no se respetan y el mundo aceptó que no se respeten además
+
+440
+00:51:28.830 --> 00:51:43.799
+Rodrigo Ramele: muy bien y chicos. Vamos con la última que yo no tengo más tiempo. ¿cuál de las siguientes estrategias no tendría sentido un ataque de báffer Overflow usar rast implementaron un grave colector validar todos los datos de entrada, implementar un Stack Canary.
+
+441
+00:51:44.410 --> 00:51:45.069
+Rodrigo Ramele: ¿cuál es.
+
+442
+00:51:45.070 --> 00:51:45.510
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: De la.
+
+443
+00:51:45.510 --> 00:51:46.330
+Rodrigo Ramele: Digital.
+
+444
+00:51:46.490 --> 00:51:50.760
+Rodrigo Ramele: ¿cuál de estas estrategias no tendría sentido de un ataque de Bósforo.
+
+445
+00:51:52.380 --> 00:51:56.440
+JOAQUÍN NICOLÁS YULÁN LUCIOLI: Lo cerrás frase. Es un lenguaje de programación.
+
+446
+00:51:56.950 --> 00:51:57.890
+Rodrigo Ramele: Sí
+
+447
+00:51:58.130 --> 00:52:05.900
+Rodrigo Ramele: el Stand Cannes y, sobre todo, progería de un estado del flow. Claro, el estado del Canary te protegería de un estadio como un flow. Así que bien, después.
+
+448
+00:52:06.010 --> 00:52:08.440
+Rodrigo Ramele: en hombre
+
+449
+00:52:09.320 --> 00:52:16.610
+Rodrigo Ramele: sí, esta esta en realidad depende depende más porque si todas pueden contestar, y todas están bien. La verdad es. Esa
+
+450
+00:52:16.720 --> 00:52:19.429
+Rodrigo Ramele: es un poco eso, porque
+
+451
+00:52:19.540 --> 00:52:30.519
+Rodrigo Ramele: más que nada tiene que ver con que en todos los casos es un ataque debajo del flow. Si ustedes son, raz lo pueden mitigarlo porque ras hace un manejo a su mejor manejo de la memoria.
+
+452
+00:52:30.590 --> 00:52:49.319
+Rodrigo Ramele: Después, si implementan un garbach colector. Bueno, el garba selector sirve justamente para manejar mejor la de referencia, así que evitaría alguna situación de que algo se salga del lugar. No que es un poco el Backford Flow Después, la variación de todos los datos de entradas es sirve porque sirve justamente para evitar que se cambie un índice
+
+453
+00:52:49.320 --> 00:52:56.449
+Rodrigo Ramele: y que el índice, ese es el que provoca el Affer. Ninguna es perfecta por sí sola exacto, Implementar. Stand, tanar y eventualmente bueno es para el Stand.
+
+454
+00:52:56.450 --> 00:53:03.819
+Rodrigo Ramele: Podrías decir una justificación. Podrías decir, Esto es solo para el Stack, pero pero bueno.
+
+455
+00:53:04.110 --> 00:53:05.720
+Rodrigo Ramele: en todas se puede justificar.
+
+456
+00:53:06.320 --> 00:53:07.250
+Rodrigo Ramele: Está bien.
+

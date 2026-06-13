@@ -1,0 +1,507 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+\section{Introducción a la Criptografía}
+
+Esta unidad usa la \textbf{historia de la criptografía} como vehículo para
+introducir, de forma intuitiva, los conceptos fundamentales: criptosistema,
+clave, principio de Kerckhoffs, criptoanálisis (ataque por fuerza bruta y
+análisis estadístico) y la noción de seguridad. Cierra con una primera
+formalización (terna de algoritmos) y la definición de \textbf{secreto
+perfecto} de Shannon, cuyo desarrollo formal continúa en la unidad 2.
+
+\prof{Hoy vamos a ver fundamentos, vamos a ver ideas. No vamos a entrar en el campo formal. Vamos a aprovechar la historia de la criptografía como para ir entendiendo los conceptos básicos.}
+
+\begin{examen}
+Los cifrados históricos son el \textbf{vehículo recurrente} para discutir
+secreto perfecto. En distintos años se pidió analizar: Hill (2015),
+transposición por columnas (2016), cilindro de Jefferson (2017), homofónico
+(2018), Vigenère (2025-2). Tareas típicas: \textbf{calcular los tamaños de los
+espacios} $\#M$, $\#K$, $\#C$ y \textbf{demostrar o refutar secreto perfecto}.
+También caen: principio de Kerckhoffs (V/F), análisis de frecuencias e índice
+de coincidencia, y distinguir sustitución vs.\ transposición / confusión vs.\
+difusión / linealidad.
+\end{examen}
+
+%======================================================================
+\subsection{Qué es la criptografía}
+
+Del griego: \textbf{escritura secreta}. Nace de la necesidad de ocultar
+información (``desde que el hombre es hombre y se agrupa, existe la necesidad de
+mantener alguna cosa en secreto'').
+
+\begin{definicion}{Criptografía}
+Conjunto de \textbf{funciones matemáticas y técnicas} que permiten asegurar
+distintas propiedades sobre la información. Son las herramientas básicas desde
+donde se construye la seguridad.
+\end{definicion}
+
+El concepto moderno trasciende la sola \textbf{confidencialidad} (esconder
+información) y abarca otras propiedades. Usos cotidianos donde hay criptografía
+``oculta en todos lados'': tráfico web e inalámbrico (Wi-Fi, satélite),
+protección de archivos en disco, autenticación de usuarios (segundo factor),
+protección de contenido (DRM, e-readers), firmas digitales, voto electrónico y
+dinero electrónico (Bitcoin / criptomonedas).
+
+\medskip
+Existe una distinción de especialidades:
+\begin{itemize}[nosep]
+  \item \textbf{Criptografía}: estudio (diseño) de las funciones.
+  \item \textbf{Criptoanálisis}: estudio de los \textbf{ataques} a esas funciones.
+\end{itemize}
+
+\begin{destacado}
+Objetivo secundario de la materia: entender la \textbf{complejidad} que hay
+detrás de las funciones criptográficas para \textbf{no inventar primitivas
+propias}. El profe estima que hay unas 30 o 40 personas en el mundo capaces de
+construir funciones que sobrevivan al escrutinio público. Como ingenieros,
+debemos \textbf{usar las que ya existen}.
+\end{destacado}
+
+%======================================================================
+\subsection{Criptosistema (visión informal)}
+
+La construcción más básica y común es el \textbf{criptosistema}: en principio,
+un conjunto de dos funciones.
+
+\begin{itemize}[nosep]
+  \item \textbf{Cifrado / encriptar}: toma un mensaje (texto plano) y lo
+        transforma en algo aparentemente sin sentido (texto cifrado).
+  \item \textbf{Descifrado / desencriptar}: toma el mensaje cifrado y recupera
+        el mensaje original.
+\end{itemize}
+
+\paragraph{Función de cifrado.} Es una función de \textbf{dos parámetros}:
+$$\text{Mensaje plano} \times \text{clave} \to \text{Mensaje cifrado}, \qquad e_k(p) = c.$$
+Diferentes representaciones, mismo significado:
+$$e_k(p) = \mathrm{enc}_k(p) = e(k,p) = \{p\}_k.$$
+(La notación $\{p\}_k$ se usa más en protocolos: lo que está entre llaves está
+cifrado con la clave del subíndice.)
+
+\paragraph{Función de descifrado.} También de dos parámetros:
+$$\text{Mensaje cifrado} \times \text{clave} \to \text{Mensaje plano}, \qquad d_k(c) = p.$$
+
+\paragraph{La clave.} Es un \textbf{bloque arbitrario de información}. Se la
+separa del mensaje y se le da un nombre especial porque, al probar la seguridad
+de un sistema, \textbf{siempre se presupone que la clave está protegida}.
+
+\begin{destacado}
+Ejercicio mental fundamental en seguridad: \textbf{ponerse en el lugar del
+atacante}. La única constante es que, donde aparezca algo llamado \emph{clave},
+se asume que el atacante \textbf{no la tiene}; y si la consigue, ``se acabó la
+seguridad''.
+\end{destacado}
+
+\paragraph{¿Para qué sirve?} Resuelve el problema de \textbf{controlar el acceso
+y la diseminación} de la información. La idea: ``patear el problema''. Proteger
+un mensaje de tamaño arbitrario es difícil; en cambio, ciframos el mensaje con
+una clave y entonces el texto cifrado puede almacenarse o transmitirse por
+cualquier lado (es público), mientras solo haya que \textbf{proteger la clave},
+que es mucho más chica. En los criptosistemas modernos la clave \textbf{no
+depende del tamaño del mensaje}: se pueden cifrar terabytes con una clave de
+128 bits.
+
+%======================================================================
+\subsection{Principio de Kerckhoffs}
+
+\begin{definicion}{Principio de Kerckhoffs}
+Un criptosistema debe ser \textbf{seguro incluso si todo sobre el sistema}
+(todo el algoritmo, todas las funciones), \textbf{excepto la clave}, es de
+público conocimiento.
+\end{definicion}
+
+Consecuencia para el análisis: la seguridad \textbf{no puede depender} de que
+el atacante desconozca el algoritmo o el código fuente. Hay que asumir que el
+atacante \textbf{conoce el criptosistema usado} y eventualmente el código; lo
+único secreto es la clave.
+
+\begin{ojo}
+Error clásico de V/F. La afirmación ``la seguridad solo depende de que el
+\emph{algoritmo} esté protegido'' es \textbf{FALSA} (Recup.\ 2025). Lo correcto:
+la seguridad depende \textbf{solo de la clave}, no de mantener secreto el
+algoritmo.
+\end{ojo}
+
+%======================================================================
+\subsection{Seguridad (noción informal)}
+
+Primera intuición de un alumno: ``es seguro si quien no tiene la clave no puede
+descifrar el mensaje en tiempo razonable''. El profe la refina: se pide
+\textbf{más}.
+
+\begin{definicion}{Seguridad (informal)}
+Un criptosistema es seguro si \textbf{ningún adversario puede computar
+\emph{cualquier} función del texto plano} a partir del mensaje cifrado que posee.
+Significa que no se puede recuperar:
+\begin{itemize}[nosep]
+  \item el mensaje,
+  \item parte del mensaje,
+  \item ni siquiera \textbf{el sentido} del mensaje.
+\end{itemize}
+\end{definicion}
+
+\prof{No es solamente que no lo puedas decodificar: es mucho más fuerte, no se puede extraer ningún tipo de información a partir del texto cifrado si no se tiene la clave.}
+
+Ejemplos de por qué importa ``parte'' y ``sentido'': un documento gigante cuyo
+resumen está en la primera página; o una negociación secreta donde al adversario
+le basta saber si la respuesta será \emph{positiva} o \emph{negativa} (sin
+descifrar todo) para obtener una ventaja ilegal.
+
+%======================================================================
+\subsection{Breve historia de la criptografía}
+
+\begin{center}
+\begin{tabular}{ll}
+\textbf{$\sim$2500 AC} & Egipto: sustitución (jeroglíficos no estándar). \\
+\textbf{$\sim$700--300 AC} & Escítala (Scitala): transposición con báculos. \\
+\textbf{50 AC} & César: rotación (subtipo de sustitución). \\
+\textbf{800 DC} & Primeros documentos de criptoanálisis: análisis de frecuencias. \\
+\textbf{$\sim$1500} & Sustitución \textbf{polialfabética} (un símbolo cifrado \\
+                    & representa distintos símbolos del original). \\
+\textbf{1553} & Cifrado de \textbf{Vigenère}. \\
+\textbf{1939} & Enigma / Bombe: ataques de fuerza bruta (protocomputadoras). \\
+\textbf{1949} & Shannon: \emph{Information Theory \& Cryptography}, \\
+              & inicio de la \textbf{criptografía moderna}. \\
+\end{tabular}
+\end{center}
+
+\begin{itemize}[nosep]
+  \item \textbf{Escítala}: báculo de cierto tamaño/topología; se enrolla una
+        tira de cuero y se escribe transversalmente. Para descifrar se necesita
+        el \textbf{mismo báculo}. Es \textbf{transposición}.
+  \item \textbf{César}: rotación \textbf{fija de 3} posiciones en el alfabeto
+        romano. Documentado en campañas militares.
+  \item Las dos grandes revoluciones: (1) los polialfabéticos
+        ($\sim$400 años de dominio); (2) la criptografía moderna, contemporánea
+        a la 2.ª Guerra Mundial (Shannon, teoría de la información).
+\end{itemize}
+
+%======================================================================
+\subsection{Cifrado por rotación (ROT-X / César)}
+
+Se asigna un orden a los símbolos (alfabeto, comenzando por 0). La clave $k$ es
+un número entre 1 y 26 (cantidad de letras $-1$). Cifrar = reemplazar cada letra
+por la que ocupa $k$ posiciones más adelante, de forma \textbf{cíclica} (después
+de la \texttt{z} vuelve a la \texttt{a}).
+
+$$e(\text{prueba}, 4) = \text{tvyife}$$
+
+\paragraph{Criptoanálisis.} \textbf{Debilidad: hay pocas claves.} Conociendo el
+algoritmo (Kerckhoffs) se prueban todas las claves por \textbf{fuerza bruta}:
+\begin{center}
+\begin{tabular}{lll}
+$k=1$ & $d(1,\text{tvyife})=\text{suxhed}$ & sin sentido \\
+$k=2$ & $d(2,\text{tvyife})=\text{rtwgdc}$ & sin sentido \\
+$k=3$ & $d(3,\text{tvyife})=\text{qsvfcb}$ & sin sentido \\
+$k=4$ & $d(4,\text{tvyife})=\text{prueba}$ & ¡con sentido! \\
+\end{tabular}
+\end{center}
+
+\begin{destacado}
+El ataque por \textbf{fuerza bruta siempre está disponible} para el atacante,
+incluso contra el criptosistema más complejo: dado el texto cifrado y conocido
+el algoritmo, nada impide probar todas las claves. La debilidad de ROT-X no es
+que se pueda hacer fuerza bruta, sino que las \textbf{claves son pocas}.
+\end{destacado}
+
+\begin{ojo}
+La fuerza bruta tiene un \textbf{prerrequisito}: poder \textbf{discriminar un
+descifrado válido de uno inválido}. Si el mensaje es una sola letra elegida con
+distribución uniforme, el cifrado puede ser cualquier letra y \textbf{no se
+puede saber} cuál era el original (los descifrados son todos igual de
+``válidos''). Este es el germen de la idea de secreto perfecto.
+\end{ojo}
+
+\paragraph{Redundancia y distancia de unicidad (Shannon).} Los lenguajes
+naturales tienen mucha \textbf{redundancia} (mecanismo de control de errores:
+podemos leer una frase sin vocales). La \textbf{redundancia} es la diferencia
+entre el tamaño del mensaje y la información que realmente lleva (comprimir =
+recodificar eliminando redundancia; p.\ ej.\ Huffman). La \textbf{distancia de
+unicidad} es la longitud mínima que debe tener un mensaje para que la
+probabilidad de que exista más de un descifrado con sentido sea despreciable.
+Para lenguajes naturales (español, inglés) está en el orden de los
+\textbf{4 caracteres}: por encima de ese umbral, la fuerza bruta que encuentra
+un texto con sentido suele dar el resultado correcto.
+
+%======================================================================
+\subsection{Cifrado por sustitución (monoalfabético)}
+
+Para cada símbolo del alfabeto se establece una \textbf{transformación única}
+(una permutación del alfabeto): no puede haber dos símbolos distintos que se
+transformen en lo mismo (si no, no sería invertible). Reemplaza un símbolo por
+otro (que puede ser de otro alfabeto: letras, símbolos, números).
+
+\begin{center}\ttfamily
+\begin{tabular}{l}
+k = dublcmfthijnzpxqeaosvkrwgy \\
+\ \ \ \ abcdefghijklmnopqrstuvwxyz \\[4pt]
+esto es una prueba \;$\to$\; cosx co vpd qavcud \\
+\end{tabular}
+\end{center}
+
+\paragraph{Tamaño del espacio de claves.} La clave es la permutación del
+alfabeto. Con el alfabeto español de \textbf{27 símbolos}:
+$$\#K = 27! \approx \text{número de 28 dígitos (cuatrillones).}$$
+Es un número ``bestialmente alto'': la fuerza bruta es inviable. \textbf{No}
+tiene la debilidad de ROT-X (pocas claves).
+
+\begin{examen}
+``¿Cuántas claves tiene este criptosistema?'' Para sustitución monoalfabética
+sobre un alfabeto de $n$ símbolos: $\#K = n!$ (es una \textbf{permutación}).
+Para el español, $n=27 \Rightarrow 27!$.
+\end{examen}
+
+\paragraph{Criptoanálisis: análisis de frecuencias.}
+\begin{ojo}
+\textbf{Debilidad distinta}: la sustitución \textbf{preserva las características
+estadísticas del lenguaje}. Una misma letra del plano siempre va al mismo
+símbolo cifrado, así que la letra que más aparece en el plano es la que más
+aparece en el cifrado.
+\end{ojo}
+Procedimiento (resoluble incluso por un chico, o sin conocer el idioma usando
+solo los indicadores estadísticos):
+\begin{enumerate}[nosep]
+  \item Obtener la \textbf{tabla de frecuencias} estimadas del lenguaje.
+  \item Calcular la frecuencia de cada símbolo en el texto cifrado.
+  \item Asumir que los símbolos más probables se corresponden (en español: E,
+        A, S, \dots).
+  \item Usar grupos de 2 y 3 letras comunes (\emph{el}, \emph{la}, \emph{de},
+        \emph{los}, \emph{que}\dots), reglas (\emph{q} siempre seguida de
+        \emph{u}; no hay 3 consonantes juntas), reemplazar y verificar sentido.
+\end{enumerate}
+
+\paragraph{Tabla de frecuencias del español (\%).}
+\begin{center}
+\begin{tabular}{lll}
+\multicolumn{3}{l}{\textbf{Frecuencia alta}} \\
+E 13,11 & A 10,60 & S 8,47 \\
+O 8,23 & I 7,16 & N 7,14 \\
+R 6,95 & D 5,87 & T 5,40 \\[4pt]
+\multicolumn{3}{l}{\textbf{Frecuencia media}} \\
+C 4,85 & L 4,42 & U 4,34 \\
+M 3,11 & P 2,71 & G 1,40 \\
+B 1,16 & F 1,13 & V 0,82 \\[4pt]
+\multicolumn{3}{l}{\textbf{Frecuencia baja}} \\
+Y 0,79 & Q 0,74 & H 0,60 \\
+Z 0,26 & J 0,25 & X 0,15 \\
+W 0,12 & K 0,11 & Ñ 0,10 \\
+\end{tabular}
+\end{center}
+
+\begin{destacado}
+La debilidad estadística \textbf{se traslada al mundo digital}: cifrar un MP4,
+un Word, etc., también deja estructura estadística (e incluso \emph{headers} con
+valores fijos), atacable con los mismos mecanismos. Una cosa es decir que un
+criptosistema es \textbf{débil / fácil de romper} y otra es \textbf{efectivamente
+romperlo}: cuanto más complejo el sistema, más grande el espacio de búsqueda.
+\end{destacado}
+
+\begin{ojo}
+``Es seguro porque nadie lo rompió'' es un criterio \textbf{malo}. Muchos
+criptosistemas fueron considerados buenos solo porque nadie les había dedicado
+el tiempo necesario, no por ser fundacionalmente seguros.
+\end{ojo}
+
+\paragraph{Gancho (crib / known-plaintext).} Saber que en el plano aparece una
+secuencia conocida (p.\ ej.\ un saludo fijo al inicio, o ``LACABEZA'') acelera
+mucho el ataque. Históricamente, los aliados aprovecharon que los mensajes
+alemanes empezaban casi siempre con el mismo saludo.
+
+%======================================================================
+\subsection{Cifrado de Vigenère (sustitución polialfabética)}
+
+Es una \textbf{composición de cifrados de rotación}: un mismo símbolo del plano
+puede transformarse en \textbf{distintos} símbolos cifrados. La clave es una
+secuencia de $n$ números (o letras, con A$=0$, B$=1$, \dots); cada elemento
+indica cuántas posiciones rotar la letra correspondiente. Al terminar la clave,
+se vuelve a empezar (el mensaje se divide en \textbf{bloques} del largo de la
+clave).
+
+\begin{center}\ttfamily
+\begin{tabular}{l}
+K = ECFD = 4253 \quad (long 4) \\
+esto es una prueba \\
+4253 42 534 253425 342 \dots \\
+$\to$ iuyrdgxcyofcttzhfc \\
+\end{tabular}
+\end{center}
+
+\begin{destacado}
+Vigenère \textbf{rompe las propiedades estadísticas} de la sustitución simple:
+la misma letra del plano puede dar letras cifradas distintas, y el mismo símbolo
+cifrado puede provenir de letras distintas. La letra que más aparece deja de ser
+el símbolo más frecuente del cifrado. Creado en \textbf{1553}, se lo consideró
+seguro casi \textbf{300 años}, hasta que en \textbf{1863 Friedrich Kasiski}
+publicó un método para resolverlo.
+\end{destacado}
+
+\paragraph{Criptoanálisis: Test de Kasiski (dos fases).}
+
+\textbf{Fase 1 — determinar la longitud de la clave (= tamaño de bloque).}
+Aparecen \textbf{n-gramas repetidos} cuando los mismos símbolos del plano caen
+en la misma posición dentro del bloque (se rotan igual). Entonces:
+\begin{enumerate}[nosep]
+  \item Buscar secuencias repetidas en el texto cifrado.
+  \item Calcular la \textbf{distancia} (en caracteres) entre cada par de
+        apariciones.
+  \item Esas distancias deben ser \textbf{múltiplos} del tamaño de bloque, así
+        que la longitud de la clave es el \textbf{MCD} de las distancias halladas.
+\end{enumerate}
+Ejemplo: GGMP (×3) separadas 256 y 104; YEDS (×2) separada 72; HASE (×2)
+separada 156; VSUE (×2) separada 32.
+$$\mathrm{MCD}(32, 72, 104, 156, 256) = 4.$$
+Es una prueba estadística: puede fallar si dos secuencias coinciden por
+casualidad (el MCD da 1); en ese caso se van descartando muestras de a una hasta
+que el MCD vuelva a subir.
+
+\textbf{Fase 2 — resolver cada bloque (método de coincidencia mutua).}
+Conocida la longitud (p.\ ej.\ 4), se agrupan las letras por posición:
+todas las 1.ª de cada bloque, todas las 2.ª, etc. Cada grupo está rotado por
+\textbf{una única} cantidad, así que su histograma de frecuencias se parece al
+del lenguaje. Idea de Kasiski:
+\begin{itemize}[nosep]
+  \item Al \textbf{juntar} dos grupos con rotaciones distintas, el histograma se
+        rompe.
+  \item Pero existe una rotación relativa que los \textbf{realinea}: rotando un
+        grupo respecto del otro hasta que el histograma combinado se mantenga,
+        se obtiene la \textbf{diferencia relativa de rotación} entre posiciones.
+  \item Encadenando todos los grupos, el problema se reduce a un \textbf{único
+        cifrado por rotación} (todo el mensaje desplazado por el mismo número),
+        que se resuelve probando las $\sim$26 posibilidades.
+\end{itemize}
+
+\begin{destacado}
+A partir de Vigenère, los ataques dejan de ser genéricos: \textbf{ya no hay una
+solución única} para toda la familia polialfabética. El método de Kasiski
+\textbf{explota el conocer el algoritmo de Vigenère}; cada criptosistema
+polialfabético requiere un ataque \emph{ad hoc}. (Para sustitución simple sí
+existía un algoritmo genérico.)
+\end{destacado}
+
+%======================================================================
+\subsection{Máquina Enigma (rotores)}
+
+Estado del arte en la 2.ª Guerra Mundial: criptosistema polialfabético de
+\textbf{rotores} usado por Alemania. Cada rotor es como una sustitución simple
+(entra una letra, sale otra); al rotar, el mapeo cambia. Enigma original tenía
+\textbf{3 rotores} (hubo versiones de 4):
+\begin{itemize}[nosep]
+  \item Cada vez que se tipea una letra, rota un rotor; al dar la vuelta, rota el
+        siguiente (como un cuentakilómetros).
+  \item Período de repetición $\approx 26^3$, mucho mayor que cualquier mensaje:
+        en la práctica, la secuencia \textbf{no se repetía}. Equivale a una
+        sustitución simple que \textbf{varía letra a letra}, con ``bloque'' de
+        $26^3$ en vez de los $4$ de Vigenère.
+  \item Un \textbf{plugboard} (tablero) cruzaba conexiones; un reflector hacía
+        que la señal ``rebotara'', de modo que la \textbf{misma máquina} servía
+        para cifrar y descifrar (poniendo la misma clave inicial).
+  \item La \textbf{clave} era la disposición inicial de los rotores (cambiaba
+        cada día según un cuaderno por oficial).
+\end{itemize}
+Los aliados (liderados en el criptoanálisis por \textbf{Turing}, entre otros)
+hicieron \textbf{ingeniería inversa} tras capturar una máquina y construyeron
+una computadora (Bombe) para fuerza bruta. No alcanzaba el cómputo; lo
+resolvieron usando \textbf{ganchos} (mensajes que empezaban con un saludo
+conocido) para reducir el espacio de búsqueda. \textbf{No rompieron Enigma de
+forma general}, solo ese uso; los submarinos con 4 rotores no fueron descifrados
+durante la guerra. De este esfuerzo surge prácticamente la computadora moderna
+(arquitectura de von Neumann).
+
+%======================================================================
+\subsection{Hacia la criptografía moderna}
+
+La 2.ª Guerra generó una \textbf{crisis}: no había criterio para dar fiabilidad
+de la seguridad. La definición era ``es seguro porque nadie lo rompió'', y al
+juntar gente brillante se rompieron cosas que se creían seguras. De ahí nacen
+los \textbf{tres pilares} de la criptografía moderna:
+\begin{enumerate}[nosep]
+  \item \textbf{Representaciones formales} de los criptosistemas (ya no recetas
+        algorítmicas).
+  \item Definiciones del \textbf{modelo de amenaza} (no hay una única definición
+        de ``seguro''; Enigma quizá era seguro, pero \emph{como lo usaban} no lo
+        era).
+  \item \textbf{Pruebas formales} de seguridad.
+\end{enumerate}
+Los cifrados clásicos vistos \textbf{no se usan en la práctica} (son fáciles de
+romper algorítmicamente), pero son la \textbf{base} sobre la que se construye lo
+moderno.
+
+\paragraph{Criptosistema (primera definición formal).}
+\begin{definicion}{Criptosistema (terna de algoritmos)}
+\begin{itemize}[nosep]
+  \item $\text{Gen}: () \to K$ \quad — \textbf{generador de clave}. Suele ser
+        sin parámetros; \emph{determina el espacio de claves} (cuántas y cuáles
+        son posibles).
+  \item $\text{Enc}: K \times P \to C$ \quad — \textbf{cifrado}.
+  \item $\text{Dec}: K \times C \to P$ \quad — \textbf{descifrado}.
+\end{itemize}
+\textbf{Propiedad básica (corrección):} para todo $m$ y $k$ válidos,
+$$d_k(e_k(m)) = m.$$
+\end{definicion}
+Conjuntos: $K$ (espacio de claves), $P$ o $M$ (espacio plano, todos los
+mensajes), $C$ (espacio cifrado).
+
+\begin{ojo}
+La propiedad básica es solo ``sanitaria'': la \textbf{función identidad}
+(ignorar la clave y devolver el mensaje) también la cumple. Por eso esta
+definición \textbf{no} habla todavía de seguridad — porque no hay una única
+noción de seguridad.
+\end{ojo}
+
+%======================================================================
+\subsection{Secreto perfecto (introducción)}
+
+Shannon define el primer criterio formal de seguridad: el \textbf{secreto
+perfecto}.
+
+\begin{definicion}{Secreto perfecto (Shannon)}
+Dado un criptosistema $(\text{Gen}, e, d)$, posee secreto perfecto si para
+\textbf{toda} distribución de probabilidades en $M$, cada mensaje $m$ y cada
+texto cifrado $c$ con $\Pr[C=c] > 0$:
+$$\Pr[M=m \mid C=c] = \Pr[M=m].$$
+\end{definicion}
+
+Interpretación: la probabilidad que se conoce \emph{a priori} sobre el mensaje
+\textbf{no se modifica} al conocer el texto cifrado. Conocer $c$ no aporta
+\textbf{ninguna información} sobre $m$.
+
+\prof{Es mucho más fuerte que no poder decodificar el mensaje: no podés extraer nada de información. Un criptosistema con secreto perfecto es imposible de romper, incluso por fuerza bruta.}
+
+Ejemplo (mensaje sí/no con $\Pr[\text{sí}]=0{,}8$ a priori): si el sistema tiene
+secreto perfecto, decirte el cifrado no cambia ese $0{,}8$ a $0{,}81$ ni a
+$0{,}79$.
+
+\begin{ojo}
+\textbf{Error típico de examen:} confundir ``secreto perfecto'' con ``no se
+puede romper / decodificar''. El criterio es la \textbf{definición formal de
+Shannon}, $\Pr[M=m\mid C=c]=\Pr[M=m]$, que es \textbf{más fuerte}: no se aprende
+\emph{nada}. Como consecuencia (se demuestra en la unidad 2), exige
+$$\#K \ge \#M.$$
+\end{ojo}
+
+\begin{destacado}
+\textbf{Paradoja del secreto perfecto:} como $c = e_k(m)$, las variables
+aleatorias $C$ y $M$ están \textbf{relacionadas por una función} (son
+dependientes por diseño); sin embargo, la condición de secreto perfecto pide que
+se comporten como \textbf{estadísticamente independientes}
+($\Pr[M=m\mid C=c]=\Pr[M=m]$). Queda la pregunta: ¿es una asíntota teórica
+inalcanzable, o existe una construcción que lo logra? (Se retoma en la unidad 2.)
+\end{destacado}
+
+\begin{examen}
+Esquema típico de problema con un cifrado histórico (Hill, transposición por
+columnas, Jefferson, homofónico, Vigenère):
+\begin{enumerate}[nosep]
+  \item Calcular $\#M$, $\#K$, $\#C$ (p.\ ej.\ permutaciones $\Rightarrow n!$;
+        rotación $\Rightarrow \#K = n-1$; Vigenère de largo $\ell$ sobre $n$
+        símbolos $\Rightarrow \#K = n^{\ell}$).
+  \item Verificar la condición necesaria $\#K \ge \#M$.
+  \item Demostrar o refutar secreto perfecto vía
+        $\Pr[M=m\mid C=c]=\Pr[M=m]$ (o exhibiendo $m,c$ que la violan).
+\end{enumerate}
+\end{examen}
+
+\medskip
+\noindent\textit{Lectura recomendada:} Katz \& Lindell, \emph{Introduction to
+Modern Cryptography}, Capítulo 1.
+
+\end{document}
