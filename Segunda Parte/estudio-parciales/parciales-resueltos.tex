@@ -41,6 +41,7 @@
 \usepackage{listings}
 \usepackage{caption}
 \usepackage{pifont}
+\usepackage{pdfpages}
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric,shapes.misc,shapes.symbols,arrows.meta,positioning,
                 calc,fit,backgrounds,decorations.pathmorphing,decorations.pathreplacing,
@@ -144,30 +145,32 @@ necesitás saber}, \emph{notas y conexiones}, y la \emph{resolución}. La priori
 \section*{Material fuente (enlaces)}
 \addcontentsline{toc}{section}{Material fuente (enlaces)}
 %=====================================================================
-Los PDFs viven en \texttt{./pdfs/} (carpeta portable: mové/compartí \texttt{estudio-parciales/} y
-los enlaces siguen resolviendo). Abren con el visor del sistema; el salto exacto depende del visor.
+Los informes/resúmenes y los parciales originales están \textbf{embebidos al final} de este
+documento (Apéndice). Los enlaces de abajo \textbf{saltan internamente} a la primera página de
+cada uno: funcionan en \emph{cualquier} visor —incluida Vista Previa— y el archivo es un único
+PDF portable. (Los PDFs sueltos también quedan en \texttt{./pdfs/} por si los querés aparte.)
 
 \paragraph{Informes / resúmenes por clase.}
 \begin{itemize}[leftmargin=1.4em,itemsep=1pt]
-  \item \href{file:./pdfs/clase06-politicas-control-acceso.pdf}{Clase 6 — Políticas y Control de Acceso} (informe)
-  \item \href{file:./pdfs/clase07-autenticacion.pdf}{Clase 7 — Autenticación} (informe)
-  \item \href{file:./pdfs/clase08-principios-diseno-seguridad.pdf}{Clase 8 — Principios de Diseño y Vulnerabilidades} (informe)
-  \item \href{file:./pdfs/clase09-flujo-informacion-malware.pdf}{Clase 9 — Flujo de Información y Malware} (informe)
-  \item \href{file:./pdfs/clase10-seguridad-empresa.pdf}{Clase 10 — Seguridad en la Empresa} (resumen)
-  \item \href{file:./pdfs/clase10b-pentesting.pdf}{Clase 10b — Pentesting} (resumen)
-  \item \href{file:./pdfs/clase11-proteccion-datos.pdf}{Clase 11 — Protección de Datos} (resumen)
+  \item \hyperref[src:clase6]{Clase 6 — Políticas y Control de Acceso} (informe)
+  \item \hyperref[src:clase7]{Clase 7 — Autenticación} (informe)
+  \item \hyperref[src:clase8]{Clase 8 — Principios de Diseño y Vulnerabilidades} (informe)
+  \item \hyperref[src:clase9]{Clase 9 — Flujo de Información y Malware} (informe)
+  \item \hyperref[src:clase10]{Clase 10 — Seguridad en la Empresa} (resumen)
+  \item \hyperref[src:clase10b]{Clase 10b — Pentesting} (resumen)
+  \item \hyperref[src:clase11]{Clase 11 — Protección de Datos} (resumen)
 \end{itemize}
 
 \paragraph{Parciales originales.}
-\href{file:./pdfs/parcial-2013.pdf}{2013} ·
-\href{file:./pdfs/parcial-2016.pdf}{2016} ·
-\href{file:./pdfs/parcial-2017.pdf}{2017} ·
-\href{file:./pdfs/parcial-2018Q1.pdf}{2018 Q1} ·
-\href{file:./pdfs/parcial-2023Q1.pdf}{2023 Q1} ·
-\href{file:./pdfs/recup-2023Q1.pdf}{Recup 2023 Q1} ·
-\href{file:./pdfs/parcial-2025Q1.pdf}{2025 Q1} ·
-\href{file:./pdfs/recup-2025Q1.pdf}{Recup 2025 Q1} ·
-\href{file:./pdfs/parcial-2025Q2.pdf}{2025 Q2}
+\hyperref[src:p2013]{2013} ·
+\hyperref[src:p2016]{2016} ·
+\hyperref[src:p2017]{2017} ·
+\hyperref[src:p2018]{2018 Q1} ·
+\hyperref[src:p2023]{2023 Q1} ·
+\hyperref[src:r2023]{Recup 2023 Q1} ·
+\hyperref[src:p2025q1]{2025 Q1} ·
+\hyperref[src:r2025q1]{Recup 2025 Q1} ·
+\hyperref[src:p2025q2]{2025 Q2}
 (el ``Parcial 2 -- 2015'' proviene de un \texttt{.doc}, sin PDF).
 
 \newpage
@@ -194,5 +197,35 @@ los enlaces siguen resolviendo). Abren con el visor del sistema; el salto exacto
 \input{fragments/recup-2025Q1}
 \clearpage
 \input{fragments/parcial-2025Q2}
+
+%=====================================================================
+%  Apéndice: material fuente embebido (enlaces internos -> funcionan en todo visor)
+%=====================================================================
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{Apéndice — material fuente embebido}
+\section*{Apéndice — material fuente embebido}
+A continuación van, embebidos, los informes/resúmenes citados y los parciales originales. Los
+enlaces de la sección \emph{Material fuente} saltan a la primera página de cada uno (funciona en
+cualquier visor). Nota: los enlaces \emph{internos} de cada PDF embebido no se preservan; usá el
+panel de marcadores del visor para navegarlos.
+
+\phantomsection\label{src:clase6}\includepdf[pages=-,addtotoc={1,subsection,2,{Clase 6 — Políticas y Control de Acceso (informe)},toc:c6}]{pdfs/clase06-politicas-control-acceso.pdf}
+\phantomsection\label{src:clase7}\includepdf[pages=-,addtotoc={1,subsection,2,{Clase 7 — Autenticación (informe)},toc:c7}]{pdfs/clase07-autenticacion.pdf}
+\phantomsection\label{src:clase8}\includepdf[pages=-,addtotoc={1,subsection,2,{Clase 8 — Principios de Diseño y Vulnerabilidades (informe)},toc:c8}]{pdfs/clase08-principios-diseno-seguridad.pdf}
+\phantomsection\label{src:clase9}\includepdf[pages=-,addtotoc={1,subsection,2,{Clase 9 — Flujo de Información y Malware (informe)},toc:c9}]{pdfs/clase09-flujo-informacion-malware.pdf}
+\phantomsection\label{src:clase10}\includepdf[pages=-,addtotoc={1,subsection,2,{Clase 10 — Seguridad en la Empresa (resumen)},toc:c10}]{pdfs/clase10-seguridad-empresa.pdf}
+\phantomsection\label{src:clase10b}\includepdf[pages=-,addtotoc={1,subsection,2,{Clase 10b — Pentesting (resumen)},toc:c10b}]{pdfs/clase10b-pentesting.pdf}
+\phantomsection\label{src:clase11}\includepdf[pages=-,addtotoc={1,subsection,2,{Clase 11 — Protección de Datos (resumen)},toc:c11}]{pdfs/clase11-proteccion-datos.pdf}
+
+\phantomsection\label{src:p2013}\includepdf[pages=-,addtotoc={1,subsection,2,{Parcial 2013},toc:p2013}]{pdfs/parcial-2013.pdf}
+\phantomsection\label{src:p2016}\includepdf[pages=-,addtotoc={1,subsection,2,{Parcial 2016},toc:p2016}]{pdfs/parcial-2016.pdf}
+\phantomsection\label{src:p2017}\includepdf[pages=-,addtotoc={1,subsection,2,{Parcial 2017},toc:p2017}]{pdfs/parcial-2017.pdf}
+\phantomsection\label{src:p2018}\includepdf[pages=-,addtotoc={1,subsection,2,{Parcial 2018 Q1},toc:p2018}]{pdfs/parcial-2018Q1.pdf}
+\phantomsection\label{src:p2023}\includepdf[pages=-,addtotoc={1,subsection,2,{Parcial 2023 Q1 (Primera Parte)},toc:p2023}]{pdfs/parcial-2023Q1.pdf}
+\phantomsection\label{src:r2023}\includepdf[pages=-,addtotoc={1,subsection,2,{Recuperatorio 2023 Q1},toc:r2023}]{pdfs/recup-2023Q1.pdf}
+\phantomsection\label{src:p2025q1}\includepdf[pages=-,addtotoc={1,subsection,2,{Parcial 2025 Q1},toc:p2025q1}]{pdfs/parcial-2025Q1.pdf}
+\phantomsection\label{src:r2025q1}\includepdf[pages=-,addtotoc={1,subsection,2,{Recuperatorio 2025 Q1},toc:r2025q1}]{pdfs/recup-2025Q1.pdf}
+\phantomsection\label{src:p2025q2}\includepdf[pages=-,addtotoc={1,subsection,2,{Parcial 2025 Q2},toc:p2025q2}]{pdfs/parcial-2025Q2.pdf}
 
 \end{document}
