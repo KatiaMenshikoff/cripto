@@ -115,6 +115,35 @@ A &\to B: \quad \{A \,\|\, k_s\}_{k_b} \\
 B &\to A: \quad \{r_2\}_{k_s} \\
 A &\to B: \quad \{r_2 - 1\}_{k_s}
 \end{align*}
+
+\begin{center}
+\begin{tikzpicture}[font=\small,
+  msg/.style={-{Stealth}, thick},
+  lbl/.style={midway, above, font=\scriptsize}]
+  % lifelines: A, KDC, B
+  \def\ax{0} \def\tx{5.6} \def\bx{11}
+  \def\ytop{0.4} \def\ybot{-7.2}
+  % heads
+  \node[draw, fill=blue!8, minimum width=1.1cm] (A) at (\ax,\ytop) {$A$};
+  \node[draw, fill=orange!12, minimum width=1.3cm] (T) at (\tx,\ytop) {KDC};
+  \node[draw, fill=green!10, minimum width=1.1cm] (B) at (\bx,\ytop) {$B$};
+  % lifelines
+  \draw[dashed, gray] (\ax,\ytop-0.3) -- (\ax,\ybot);
+  \draw[dashed, gray] (\tx,\ytop-0.3) -- (\tx,\ybot);
+  \draw[dashed, gray] (\bx,\ytop-0.3) -- (\bx,\ybot);
+  % messages
+  \draw[msg] (\ax,-0.7) -- (\tx,-0.7) node[lbl]{(1)\ $A \to B \,\|\, \mathbf{r_1}$};
+  \draw[msg] (\tx,-2.0) -- (\ax,-2.0) node[lbl]{(2)\ $\{A \,\|\, B \,\|\, \mathbf{r_1} \,\|\, k_s \,\|\, \{A \,\|\, k_s\}_{k_b}\}_{k_a}$};
+  \draw[msg] (\ax,-3.6) -- (\bx,-3.6) node[lbl]{(3)\ $\{A \,\|\, k_s\}_{k_b}$\quad(ticket)};
+  \draw[msg] (\bx,-5.0) -- (\ax,-5.0) node[lbl]{(4)\ $\{\mathbf{r_2}\}_{k_s}$\quad(desafío de $B$)};
+  \draw[msg] (\ax,-6.4) -- (\bx,-6.4) node[lbl]{(5)\ $\{\mathbf{r_2}-1\}_{k_s}$\quad(respuesta de $A$)};
+  % nonce annotations
+  \node[red, font=\scriptsize, anchor=west] at (\ax+0.1,-1.35) {$\mathbf{r_1}$: frescura $A\to$KDC};
+  \node[red, font=\scriptsize, anchor=east] at (\bx-0.1,-5.7) {$\mathbf{r_2}$: frescura $B\to A$};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Needham--Schroeder (2.\textsuperscript{a} aproximación). El KDC ($T$) genera la clave de sesión $k_s$; los nonces $r_1$ (rojo, mensajes 1--2) y $r_2$ (rojo, mensajes 4--5) aportan frescura y evitan replays. El mensaje (3) es el \emph{ticket} cifrado con $k_b$ que solo $B$ puede abrir.}
+
 \textbf{Por qué funciona:}
 \begin{itemize}[leftmargin=1.4em]
   \item \textbf{2.º mensaje:} cifrado con $k_a$ (compartida $A$--KDC) $\Rightarrow$
@@ -156,6 +185,28 @@ Ahora $B$ chequea que $T$ no sea viejo $\Rightarrow$ no se puede reutilizar un t
 antiguo (rompe el replay/key-reuse). Esta variante con timestamp es la idea de
 \textbf{Kerberos}.
 
+\begin{center}
+\begin{tikzpicture}[font=\small,
+  msg/.style={-{Stealth}, thick},
+  lbl/.style={midway, above, font=\scriptsize}]
+  \def\ax{0} \def\tx{5.6} \def\bx{11}
+  \def\ytop{0.4} \def\ybot{-7.2}
+  \node[draw, fill=blue!8, minimum width=1.1cm] (A) at (\ax,\ytop) {$A$};
+  \node[draw, fill=orange!12, minimum width=1.3cm] (T) at (\tx,\ytop) {KDC};
+  \node[draw, fill=green!10, minimum width=1.1cm] (B) at (\bx,\ytop) {$B$};
+  \draw[dashed, gray] (\ax,\ytop-0.3) -- (\ax,\ybot);
+  \draw[dashed, gray] (\tx,\ytop-0.3) -- (\tx,\ybot);
+  \draw[dashed, gray] (\bx,\ytop-0.3) -- (\bx,\ybot);
+  \draw[msg] (\ax,-0.7) -- (\tx,-0.7) node[lbl]{(1)\ $A \,\|\, B \,\|\, r_1$};
+  \draw[msg] (\tx,-2.0) -- (\ax,-2.0) node[lbl]{(2)\ $\{A \,\|\, B \,\|\, r_1 \,\|\, k_s \,\|\, \{A \,\|\, \mathbf{T} \,\|\, k_s\}_{k_b}\}_{k_a}$};
+  \draw[msg] (\ax,-3.6) -- (\bx,-3.6) node[lbl]{(3)\ $\{A \,\|\, \mathbf{T} \,\|\, k_s\}_{k_b}$};
+  \draw[msg] (\bx,-5.0) -- (\ax,-5.0) node[lbl]{(4)\ $\{r_2\}_{k_s}$};
+  \draw[msg] (\ax,-6.4) -- (\bx,-6.4) node[lbl]{(5)\ $\{r_2-1\}_{k_s}$};
+  \node[red, font=\scriptsize, anchor=west] at (\bx-3.0,-4.25) {$B$ verifica $\mathbf{T}$ fresco};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Variante Denning--Sacco: se agrega un \textbf{timestamp $T$} (rojo) dentro del ticket destinado a $B$ en los mensajes (2) y (3). Al recibir (3), $B$ comprueba que $T$ no sea viejo, lo que impide reutilizar un ticket/clave de sesión antiguo. Es la idea base de Kerberos.}
+
 \begin{examen}
 \textbf{Ejercicio estrella: ``analizar un protocolo'' (Ej.1 reciente).} Método para
 los handshakes tipo Needham-Schroeder (2018):
@@ -178,6 +229,29 @@ paralela} y reusando el desafío que recibió: le pide a $A$ que le firme/respon
 propio challenge y lo refleja en la sesión original. \emph{Defensa:} romper la
 simetría de los mensajes (incluir identidades/dirección, nonces distintos por
 sentido).
+
+\begin{center}
+\begin{tikzpicture}[font=\small,
+  msg/.style={-{Stealth}, thick},
+  lbl/.style={midway, above, font=\scriptsize}]
+  \def\ax{0} \def\cx{11}
+  \def\ytop{0.4} \def\ybot{-6.6}
+  \node[draw, fill=blue!8, minimum width=1.1cm] (A) at (\ax,\ytop) {$A$};
+  \node[draw, fill=red!12, minimum width=1.1cm] (C) at (\cx,\ytop) {$C$ (impostor)};
+  \draw[dashed, gray] (\ax,\ytop-0.3) -- (\ax,\ybot);
+  \draw[dashed, gray] (\cx,\ytop-0.3) -- (\cx,\ybot);
+  % session 1 (original): C se hace pasar por A frente a A
+  \draw[msg] (\cx,-0.7) -- (\ax,-0.7) node[lbl]{Sesión 1: $C$ inicia, $A$ manda desafío $\mathbf{r}$};
+  % A responds with r as challenge -- C cannot answer
+  \draw[msg, dashed] (\cx,-1.7) -- (\ax,-1.7) node[lbl, text=red]{$C$ no sabe responder $f(\mathbf{r})$\dots};
+  % session 2 parallel: C opens new session and reflects r
+  \draw[msg] (\cx,-3.1) -- (\ax,-3.1) node[lbl]{Sesión 2 (paralela): $C$ reenvía el mismo desafío $\mathbf{r}$};
+  \draw[msg] (\ax,-4.1) -- (\cx,-4.1) node[lbl]{$A$ responde $f(\mathbf{r})$ (firma su propio desafío)};
+  % C reflects answer back into session 1
+  \draw[msg] (\cx,-5.5) -- (\ax,-5.5) node[lbl, text=red]{Sesión 1: $C$ refleja $f(\mathbf{r})$ $\Rightarrow$ se autentica como ``$A$''};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Ataque por reflexión. $C$ no puede responder el desafío $r$ que le pide $A$; abre una \textbf{sesión paralela} (sesión 2), le reenvía el mismo $r$ a $A$ y obtiene $f(r)$, que luego \emph{refleja} en la sesión original. Defensa: romper la simetría (incluir identidad/dirección, nonces distintos por sentido).}
 \end{examen}
 
 \subsection{Certificados y PKI}
@@ -368,6 +442,34 @@ y simétricamente el servidor envía su ChangeCipherSpec y su Finished. El
 donde \texttt{msgs} = concatenación de todos los mensajes intercambiados hasta el
 momento.
 
+\begin{center}
+\begin{tikzpicture}[font=\small,
+  msg/.style={-{Stealth}, thick},
+  lbl/.style={midway, above, font=\scriptsize}]
+  \def\cx{0} \def\sx{11}
+  \def\ytop{0.4} \def\ybot{-9.4}
+  \node[draw, fill=blue!8, minimum width=1.4cm] (C) at (\cx,\ytop) {Cliente};
+  \node[draw, fill=orange!12, minimum width=1.4cm] (S) at (\sx,\ytop) {Servidor};
+  \draw[dashed, gray] (\cx,\ytop-0.3) -- (\cx,\ybot);
+  \draw[dashed, gray] (\sx,\ytop-0.3) -- (\sx,\ybot);
+  % part 1
+  \draw[msg] (\cx,-0.6) -- (\sx,-0.6) node[lbl]{ClientHello: $V_c \,\|\, r_1 \,\|\, S_{id} \,\|\, $Ciphers$\,\|\,$Comps};
+  \draw[msg] (\sx,-1.5) -- (\cx,-1.5) node[lbl]{ServerHello: $V \,\|\, r_2 \,\|\, S_{id} \,\|\,$Cipher$\,\|\,$Comp};
+  % part 2
+  \draw[msg] (\sx,-2.7) -- (\cx,-2.7) node[lbl]{Certificate $\{$Certificado$\}$};
+  \draw[msg] (\sx,-3.6) -- (\cx,-3.6) node[lbl]{ServerKeyExchange: $p \,\|\, \{h(r_1\|r_2\|p)\}_{k_s}$};
+  \draw[msg] (\sx,-4.5) -- (\cx,-4.5) node[lbl]{(CertificateRequest) $\,\|\,$ ServerHelloDone};
+  % part 3
+  \draw[msg] (\cx,-5.7) -- (\sx,-5.7) node[lbl]{ClientKeyExchange: $\{V \,\|\, \mathrm{PRE}_{rand}\}_{k_s}$ (RSA) / $\{g^b\}_{k_s}$ (DH)};
+  % part 4
+  \draw[msg] (\cx,-6.9) -- (\sx,-6.9) node[lbl]{ChangeCipherSpec $\,\|\,$ Finished $\{h(\text{master}\,\|\,\dots)\}$};
+  \draw[msg] (\sx,-8.1) -- (\cx,-8.1) node[lbl]{ChangeCipherSpec $\,\|\,$ Finished};
+  % application data
+  \draw[{Stealth}-{Stealth}, very thick, blue] (\cx,-9.1) -- (\sx,-9.1) node[lbl, text=blue]{Application Data (cifrado con Master Secret $K_{cs}$)};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Handshake TLS/SSL. Hello (negociación de versión, nonces $r_1,r_2$, cipher y compresión), certificado y \mbox{ServerKeyExchange} (autenticación del servidor), ClientKeyExchange (acuerdo de la clave), y ChangeCipherSpec\,+\,Finished en ambos sentidos (los Finished atan todo el handshake con un hash de \texttt{msgs}). Recién entonces fluyen los datos cifrados con el Master Secret.}
+
 \begin{examen}
 \textbf{Handshake tipo TLS/SSL (2023).} Puntos que se piden:
 \begin{itemize}[leftmargin=1.3em]
@@ -419,6 +521,24 @@ transportar una clave $K$ elegida por $A$:
 \end{enumerate}
 La seguridad está en el \textbf{DLP}. Se diferencia de DH en que \textbf{no acuerda
 una clave nueva}, sino que \textbf{transporta una clave elegida por $A$}.
+
+\begin{center}
+\begin{tikzpicture}[font=\small,
+  msg/.style={-{Stealth}, thick},
+  lbl/.style={midway, above, font=\scriptsize}]
+  \def\ax{0} \def\bx{10}
+  \def\ytop{0.4} \def\ybot{-4.6}
+  \node[draw, fill=blue!8, minimum width=1.1cm] (A) at (\ax,\ytop) {$A$ (elige $K,a$)};
+  \node[draw, fill=green!10, minimum width=1.1cm] (B) at (\bx,\ytop) {$B$ (elige $b$)};
+  \draw[dashed, gray] (\ax,\ytop-0.3) -- (\ax,\ybot);
+  \draw[dashed, gray] (\bx,\ytop-0.3) -- (\bx,\ybot);
+  \draw[msg] (\ax,-0.8) -- (\bx,-0.8) node[lbl]{(1)\ $K^{a}$};
+  \draw[msg] (\bx,-2.0) -- (\ax,-2.0) node[lbl]{(2)\ $(K^{a})^{b}=K^{ab}$};
+  \draw[msg] (\ax,-3.2) -- (\bx,-3.2) node[lbl]{(3)\ $(K^{ab})^{a^{-1}}=K^{b}$};
+  \node[anchor=east, font=\scriptsize, green!50!black] at (\bx-0.2,-4.0) {$B$: $(K^{b})^{b^{-1}}=K$};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Shamir's no-key protocol (3 pasos, sin clave previa). $A$ ``envuelve'' $K$ con su exponente $a$; $B$ agrega $b$; $A$ quita $a$ con $a^{-1}$; finalmente $B$ quita $b$ con $b^{-1}$ y obtiene $K$. La seguridad descansa en el DLP. \emph{Transporta} una clave elegida por $A$ (no la acuerda como DH).}
 \end{examen}
 
 \subsection{Secreto compartido de Shamir (umbrales / threshold)}
@@ -451,6 +571,57 @@ tipo Shannon).
 
 \paragraph{Principio.} Un polinomio de grado $t-1$ queda determinado por su evaluación
 en $t$ puntos distintos.
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=10.5cm, height=7.2cm,
+  axis lines=middle,
+  xlabel=$x$, ylabel=$f(x)$,
+  xlabel style={right}, ylabel style={above},
+  xmin=-0.6, xmax=4.2, ymin=-1, ymax=13,
+  xtick={1,2,3}, ytick={7},
+  yticklabel style={font=\footnotesize},
+  xticklabel style={font=\footnotesize},
+  samples=80, domain=-0.4:3.6,
+  clip=false]
+  % polynomio de grado t-1=2 (parabola): ejemplo f(x)=x^2 - 2x + 7
+  \addplot[thick, blue, smooth] {x^2 - 2*x + 7};
+  % sombras (puntos (x_i, f(x_i)))
+  \addplot[only marks, mark=*, mark size=2.6pt, red] coordinates {(1,6) (2,7) (3,10)};
+  \node[red, font=\scriptsize, anchor=south west] at (axis cs:1,6) {$(x_1,y_1)$};
+  \node[red, font=\scriptsize, anchor=south west] at (axis cs:2,7) {$(x_2,y_2)$};
+  \node[red, font=\scriptsize, anchor=south east] at (axis cs:3,10) {$(x_3,y_3)$};
+  % secreto S = f(0)
+  \addplot[only marks, mark=square*, mark size=2.8pt, green!50!black] coordinates {(0,7)};
+  \draw[dashed, green!50!black] (axis cs:0,0) -- (axis cs:0,7);
+  \node[green!50!black, font=\footnotesize, anchor=west] at (axis cs:0.15,8.4) {$S=f(0)$};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\diagcaption{Secreto compartido de Shamir con $t=3$: el secreto $S$ se esconde como el término independiente $f(0)$ de un polinomio de grado $t-1=2$ (una \emph{parábola}). Cada sombra es un punto $(x_i,y_i)$ sobre la curva (rojo). Con $t$ puntos cualesquiera la curva queda determinada y se recupera $S=f(0)$ (cuadrado verde sobre el eje $y$).}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=9cm, height=5.2cm,
+  axis lines=middle,
+  xlabel=$x$, ylabel=$f(x)$,
+  xlabel style={right}, ylabel style={above},
+  xmin=-0.6, xmax=4.2, ymin=-1, ymax=13,
+  xtick={1,2}, ytick=\empty,
+  xticklabel style={font=\footnotesize},
+  samples=80, domain=-0.4:3.6, clip=false]
+  % con t-1=2 puntos: infinitas parabolas pasan por ellos
+  \addplot[thick, blue, smooth] {x^2 - 2*x + 7};
+  \addplot[thick, blue!50, smooth, dashed] {-1*x^2 + 4*x + 3};
+  \addplot[thick, blue!30, smooth, dotted] {2*x^2 - 5*x + 9};
+  \addplot[only marks, mark=*, mark size=2.6pt, red] coordinates {(1,6) (2,7)};
+  \node[font=\scriptsize, anchor=north] at (axis cs:2.0,12.5) {sólo $t-1=2$ puntos};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\diagcaption{Con \textbf{menos de $t$} sombras (aquí $t-1=2$ puntos) hay \textbf{infinitas} curvas de grado $t-1$ que pasan por ellas: el secreto $f(0)$ queda totalmente indeterminado (entropía máxima, seguridad perfecta tipo Shannon).}
 
 \paragraph{Reparto (cifrado).} Sea $S$ el secreto, en $\mathbb{Z}_p$ con $p$ primo,
 $p > n$ y $p > S$.

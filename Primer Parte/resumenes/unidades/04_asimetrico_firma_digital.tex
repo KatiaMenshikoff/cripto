@@ -61,6 +61,34 @@ Propiedades de las claves (memorizar):
 \end{itemize}
 \end{destacado}
 
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  party/.style={draw, rounded corners, minimum width=2.1cm, minimum height=0.95cm, align=center, thick},
+  arrow/.style={-{Stealth}, thick},
+  key/.style={align=center, font=\scriptsize}
+]
+  % Simétrico
+  \node[party] (sa) at (0,2.4) {Emisor};
+  \node[party] (sb) at (5.2,2.4) {Receptor};
+  \draw[arrow] (sa) -- node[above]{$c=\mathrm{Enc}_k(m)$} (sb);
+  \node[key, below=2pt of sa] {clave $k$};
+  \node[key, below=2pt of sb] {misma clave $k$};
+  \node[font=\scriptsize\bfseries, above=10pt of sa.north east, xshift=1.0cm] {Simétrico (misma clave)};
+
+  % Asimétrico
+  \node[party] (aa) at (0,0) {Emisor};
+  \node[party] (ab) at (5.2,0) {Receptor};
+  \draw[arrow] (aa) -- node[above]{$c=\mathrm{Enc}_{pk_B}(m)$} (ab);
+  \node[key, below=2pt of aa, text width=2.6cm] {usa la \textbf{pública} $pk_B$ del receptor};
+  \node[key, below=2pt of ab, text width=2.6cm] {descifra con su \textbf{privada} $sk_B$};
+  \node[font=\scriptsize\bfseries, above=10pt of aa.north east, xshift=1.0cm] {Asimétrico (dos claves)};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Simétrico: emisor y receptor comparten la misma clave $k$. Asimétrico:
+el emisor cifra con la clave \emph{pública} del receptor y solo el receptor descifra
+con su clave \emph{privada}.}
+
 \paragraph{Problemas difíciles que la sustentan.} Toda esta criptografía se apoya
 en problemas matemáticos sin solución eficiente conocida:
 \begin{itemize}[leftmargin=1.4em,nosep]
@@ -144,6 +172,37 @@ La clave común (de sesión) es
 e $k_a=k_b$ porque la exponenciación sucesiva es conmutativa. Lo que viaja son
 $g^x$ y $g^y$; \textbf{$x$ nunca sale de A} y \textbf{$y$ nunca sale de B}.
 
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  arrow/.style={-{Stealth}, thick},
+  box/.style={align=center}
+]
+  % columnas
+  \node[box, font=\bfseries] (ah) at (0,3.4) {Alice};
+  \node[box, font=\bfseries] (bh) at (7,3.4) {Bob};
+  \draw[thick] (0,3.1) -- (0,-1.6);
+  \draw[thick] (7,3.1) -- (7,-1.6);
+
+  \node[box, anchor=north] (ax) at (0,3.0) {elige $x\leftarrow\mathbb{Z}_q$\\ calcula $g^x$};
+  \node[box, anchor=north] (by) at (7,3.0) {elige $y\leftarrow\mathbb{Z}_q$\\ calcula $g^y$};
+
+  \draw[arrow] (0,1.9) -- node[above]{$(G,q,g,\ g^x)$} (7,1.9);
+  \draw[arrow] (7,1.0) -- node[above]{$g^y$} (0,1.0);
+
+  \node[box, anchor=north] (ak) at (0,0.4) {$k_a=(g^y)^x$};
+  \node[box, anchor=north] (bk) at (7,0.4) {$k_b=(g^x)^y$};
+
+  \node[box, font=\bfseries] at (3.5,-0.9) {Clave común: $k_s=g^{xy}\bmod p$};
+
+  % espía
+  \node[draw, rounded corners, dashed, align=center, font=\scriptsize] (eve) at (3.5,2.0) {Espía ve\\ $g^x,\,g^y$\\ \textbf{no} obtiene $x,y,g^{xy}$ (DLP)};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Diffie-Hellman: Alice y Bob intercambian $g^x$ y $g^y$ y cada uno
+deriva la misma clave $g^{xy}$. Un espía pasivo ve $g^x$ y $g^y$ pero no puede
+recuperar $x$, $y$ ni $g^{xy}$ (problema del logaritmo discreto).}
+
 \begin{examen}
 RSA pregunta por DH casi siempre así:
 \begin{itemize}[leftmargin=1.4em,nosep]
@@ -176,6 +235,29 @@ transmisión \textbf{autenticado}. Solo es seguro frente a atacantes
 hace un ataque \textbf{Man-in-the-Middle (MiTM)} y obtiene las claves. Por eso en
 la práctica DH se complementa con \textbf{MACs o firmas digitales}.
 \end{ojo}
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  arrow/.style={-{Stealth}, thick},
+  party/.style={draw, rounded corners, minimum width=1.6cm, minimum height=0.8cm, align=center, thick}
+]
+  \node[party] (a) at (0,0) {Alice\\ \scriptsize($x$)};
+  \node[party, fill=red!10] (m) at (4,0) {Atacante\\ \scriptsize($m_1,m_2$)};
+  \node[party] (b) at (8,0) {Bob\\ \scriptsize($y$)};
+
+  \draw[arrow] (a) -- node[above]{$g^x$} (m);
+  \draw[arrow] (m) -- node[above]{$g^{m_2}$} (b);
+  \draw[arrow] (b) to[bend left=22] node[below]{$g^y$} (m);
+  \draw[arrow] (m) to[bend left=22] node[below]{$g^{m_1}$} (a);
+
+  \node[align=center, font=\scriptsize, below=1.2cm of a] {clave con atacante:\\ $g^{x m_1}$};
+  \node[align=center, font=\scriptsize, below=1.2cm of b] {clave con atacante:\\ $g^{y m_2}$};
+\end{tikzpicture}
+\end{center}
+\diagcaption{MiTM sobre DH puro (sin autenticación): el atacante intercepta y
+negocia una clave distinta con cada parte ($g^{x m_1}$ con Alice, $g^{y m_2}$ con
+Bob), descifrando y reenviando todo el tráfico.}
 
 \subsection{Criptosistema asimétrico}
 
@@ -219,6 +301,34 @@ de claves}; cifrar y descifrar son simples.
 \end{align*}
 El cálculo $m^e \bmod n$ se hace con \textbf{exponenciación rápida}, reduciendo
 módulo $n$ en cada paso, para no manejar números gigantes.
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  arrow/.style={-{Stealth}, thick},
+  rsabox/.style={draw, rounded corners, align=center, minimum height=0.85cm, thick}
+]
+  % Generación
+  \node[rsabox] (pq) at (0,0) {$p,q$ primos};
+  \node[rsabox] (n) at (2.7,0) {$N=p\cdot q$\\ $\varphi(N)=(p{-}1)(q{-}1)$};
+  \node[rsabox] (e) at (6.0,0) {$e$ con\\ $\mathrm{mcd}(e,\varphi(N))=1$};
+  \node[rsabox] (d) at (9.3,0) {$d=e^{-1}$\\ $\bmod\,\varphi(N)$};
+  \draw[arrow] (pq) -- (n);
+  \draw[arrow] (n) -- (e);
+  \draw[arrow] (e) -- (d);
+  \node[align=center, font=\scriptsize, below=4pt of n] {$pk=(N,e)$};
+  \node[align=center, font=\scriptsize, below=4pt of d] {$sk=(N,d)$};
+
+  % Cifrado / descifrado
+  \node[rsabox, fill=blue!6] (m1) at (1.0,-2.4) {$m$};
+  \node[rsabox, fill=blue!6] (c) at (5.0,-2.4) {$c=m^e\bmod N$};
+  \node[rsabox, fill=blue!6] (m2) at (9.3,-2.4) {$m=c^d\bmod N$};
+  \draw[arrow] (m1) -- node[above, font=\scriptsize]{cifra con $pk$} (c);
+  \draw[arrow] (c) -- node[above, font=\scriptsize]{descifra con $sk$} (m2);
+\end{tikzpicture}
+\end{center}
+\diagcaption{RSA: arriba la generación de claves ($p,q\to N,\varphi(N),e,d$); abajo
+cifrado $c=m^e\bmod N$ con la pública y descifrado $m=c^d\bmod N$ con la privada.}
 
 \begin{examen}
 \textbf{RSA es tema central de parcial.} Hay que saber de memoria:
@@ -331,6 +441,25 @@ la privada} y se \textbf{verifica con la pública}. Si firmáramos con la públi
 cualquiera podría firmar y se perdería la integridad.
 \end{destacado}
 
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  arrow/.style={-{Stealth}, thick},
+  party/.style={draw, rounded corners, minimum width=2.0cm, minimum height=0.9cm, align=center, thick}
+]
+  \node[party] (f) at (0,0) {Firmante};
+  \node[party] (v) at (7.5,0) {Verificador};
+  \draw[arrow] (f) -- node[above, align=center]{$(m,\ \sigma)$} (v);
+  \node[align=center, font=\scriptsize, below=4pt of f, text width=3.0cm]
+    {$\sigma=\mathrm{Sign}_{sk}\big(H(m)\big)$\\ usa su \textbf{privada} $sk$};
+  \node[align=center, font=\scriptsize, below=4pt of v, text width=3.4cm]
+    {$\mathrm{Vrfy}_{pk}(m,\sigma)\overset{?}{=}1$\\ usa la \textbf{pública} $pk$ del firmante};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Firma digital: el firmante firma $H(m)$ con su clave \emph{privada} y
+cualquiera verifica con la \emph{pública}. Es el rol inverso al cifrado, donde se
+cifra con la pública y se descifra con la privada.}
+
 \paragraph{Ventajas sobre los MACs.}
 \begin{itemize}[leftmargin=1.4em,nosep]
   \item \textbf{Públicamente verificables:} cualquiera con la clave pública verifica
@@ -432,6 +561,28 @@ resuelve la \textbf{PKI} (Public Key Infrastructure) con \textbf{certificados} y
   conoce de antemano); la CA firma el certificado del titular. Pueden encadenarse
   (CA raíz $\to$ CA intermedia $\to$ titular).
 \end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  arrow/.style={-{Stealth}, thick},
+  cert/.style={draw, rounded corners, align=center, minimum width=2.4cm, minimum height=1.0cm, thick}
+]
+  \node[cert, fill=green!8] (root) at (0,0) {\textbf{CA raíz}\\ \scriptsize confianza\\ \scriptsize preinstalada};
+  \node[cert] (inter) at (4.2,0) {\textbf{CA intermedia}\\ \scriptsize $pk$ + firma};
+  \node[cert] (site) at (8.4,0) {\textbf{Cert. del sitio}\\ \scriptsize $pk$ del titular};
+
+  \draw[arrow] (root) -- node[above, font=\scriptsize, align=center]{firma con\\ $sk_{\text{raíz}}$} (inter);
+  \draw[arrow] (inter) -- node[above, font=\scriptsize, align=center]{firma con\\ $sk_{\text{interm}}$} (site);
+
+  % validación hacia arriba
+  \draw[arrow, dashed] (site.south) to[bend left=28] node[below, font=\scriptsize]{verifica firma con $pk_{\text{interm}}$} (inter.south);
+  \draw[arrow, dashed] (inter.south) to[bend left=28] node[below, font=\scriptsize]{verifica firma con $pk_{\text{raíz}}$} (root.south);
+\end{tikzpicture}
+\end{center}
+\diagcaption{Cadena de certificados: cada nivel firma el certificado del siguiente
+con su clave privada. Validar = verificar las firmas hacia arriba hasta la CA raíz,
+en la que se confía de antemano.}
 
 \begin{examen}
 \textbf{Certificados en el parcial:}

@@ -100,6 +100,41 @@ que es mucho más chica. En los criptosistemas modernos la clave \textbf{no
 depende del tamaño del mensaje}: se pueden cifrar terabytes con una clave de
 128 bits.
 
+\begin{center}
+\begin{tikzpicture}[
+  >={Stealth[round]},
+  font=\small,
+  box/.style={draw, rounded corners=2pt, fill=black!3, minimum width=20mm, minimum height=11mm, align=center, inner sep=2pt},
+  proc/.style={draw, fill=blue!10, minimum width=14mm, minimum height=10mm, align=center},
+  key/.style={draw, fill=yellow!55, rounded corners=2pt, minimum width=9mm, minimum height=6mm}
+]
+  \node[box] (m1) {Emisor\\\scriptsize texto plano $p$};
+  \node[proc, right=10mm of m1] (enc) {$e_k$\\\scriptsize cifrar};
+  \node[box, right=14mm of enc] (c) {texto\\cifrado $c$};
+  \node[proc, right=14mm of c] (dec) {$d_k$\\\scriptsize descifrar};
+  \node[box, right=10mm of dec] (m2) {Receptor\\\scriptsize texto plano $p$};
+
+  \draw[->] (m1) -- (enc);
+  \draw[->] (enc) -- node[above,font=\scriptsize] {$c$} (c);
+  \draw[->] (c) -- (dec);
+  \draw[->] (dec) -- (m2);
+
+  % clave
+  \node[key, below=12mm of $(enc)!0.5!(dec)$] (k) {clave $k$};
+  \draw[->] (k) -| (enc);
+  \draw[->] (k) -| (dec);
+
+  % canal inseguro: recuadro punteado alrededor de c
+  \node[draw, dashed, red!70!black, rounded corners, fit=(c), inner sep=6mm, label={[red!70!black,font=\scriptsize]above:canal inseguro}] (canal) {};
+  % atacante Eve
+  \node[draw, fill=red!12, red!70!black, rounded corners=2pt, minimum width=12mm, minimum height=9mm, align=center, above=8mm of c] (eve) {Eve\\\scriptsize (espía)};
+  \draw[->, red!70!black, dotted, thick] (c) -- (eve);
+\end{tikzpicture}
+\end{center}
+\diagcaption{Modelo de comunicación cifrada: el emisor cifra con $e_k$, el cifrado $c$
+viaja por un canal inseguro donde Eve puede espiar, y el receptor recupera $p$ con $d_k$.
+La misma clave $k$ entra a cifrado y descifrado; se asume que Eve \emph{no} la tiene.}
+
 %======================================================================
 \subsection{Principio de Kerckhoffs}
 
@@ -238,6 +273,48 @@ esto es una prueba \;$\to$\; cosx co vpd qavcud \\
 \end{tabular}
 \end{center}
 
+\begin{center}
+\begin{tikzpicture}[
+  font=\ttfamily\small,
+  >={Stealth[round]},
+  cell/.style={draw, minimum size=7mm, inner sep=0pt},
+  cellc/.style={draw, minimum size=7mm, inner sep=0pt, fill=blue!10}
+]
+  % ---- SUSTITUCIÓN ----
+  \node[font=\sffamily\bfseries\small, anchor=west] at (-0.4,2.0) {Sustitución (reemplaza el símbolo)};
+  \foreach \l/\i in {H/0,O/1,L/2,A/3} {
+    \node[cell] (s\i) at (\i*0.8,1.2) {\l};
+  }
+  \foreach \l/\i in {K/0,R/1,O/2,D/3} {
+    \node[cellc] (t\i) at (\i*0.8,0.0) {\l};
+  }
+  \foreach \i in {0,1,2,3} { \draw[->] (s\i) -- (t\i); }
+  \node[font=\sffamily\scriptsize, anchor=west] at (3.5,0.6) {misma posición,};
+  \node[font=\sffamily\scriptsize, anchor=west] at (3.5,0.25) {distinto símbolo};
+
+  % ---- TRANSPOSICIÓN ----
+  \begin{scope}[yshift=-3.2cm]
+  \node[font=\sffamily\bfseries\small, anchor=west] at (-0.4,2.0) {Transposición (reordena posiciones)};
+  \foreach \l/\i in {H/0,O/1,L/2,A/3} {
+    \node[cell] (a\i) at (\i*0.8,1.2) {\l};
+  }
+  % permutación: 0->2, 1->0, 2->3, 3->1  => O A H L
+  \node[cellc] (b0) at (0*0.8,0.0) {O};
+  \node[cellc] (b1) at (1*0.8,0.0) {A};
+  \node[cellc] (b2) at (2*0.8,0.0) {H};
+  \node[cellc] (b3) at (3*0.8,0.0) {L};
+  \draw[->] (a0) -- (b2);
+  \draw[->] (a1) -- (b0);
+  \draw[->] (a2) -- (b3);
+  \draw[->] (a3) -- (b1);
+  \node[font=\sffamily\scriptsize, anchor=west] at (3.5,0.6) {mismos símbolos,};
+  \node[font=\sffamily\scriptsize, anchor=west] at (3.5,0.25) {otro orden};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+\diagcaption{Sustitución vs.\ transposición. La sustitución cambia cada símbolo por otro
+manteniendo su posición; la transposición conserva los mismos símbolos pero los reubica.}
+
 \paragraph{Tamaño del espacio de claves.} La clave es la permutación del
 alfabeto. Con el alfabeto español de \textbf{27 símbolos}:
 $$\#K = 27! \approx \text{número de 28 dígitos (cuatrillones).}$$
@@ -286,6 +363,35 @@ Z 0,26 & J 0,25 & X 0,15 \\
 W 0,12 & K 0,11 & Ñ 0,10 \\
 \end{tabular}
 \end{center}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=\linewidth, height=5.2cm,
+  ybar,
+  bar width=4pt,
+  ymin=0, ymax=14,
+  ylabel={\scriptsize frecuencia (\%)},
+  ylabel near ticks,
+  symbolic x coords={E,A,S,O,I,N,R,D,T,C,L,U,M,P,G,B,F,V,Y,Q,H,Z,J,X,W,K,Ñ},
+  xtick=data,
+  tick label style={font=\scriptsize},
+  enlarge x limits=0.03,
+  ytick={0,5,10},
+  every node near coord/.append style={font=\tiny},
+  axis lines=left,
+]
+\addplot[fill=blue!55, draw=blue!55] coordinates {
+  (E,13.11) (A,10.60) (S,8.47) (O,8.23) (I,7.16) (N,7.14) (R,6.95) (D,5.87) (T,5.40)
+  (C,4.85) (L,4.42) (U,4.34) (M,3.11) (P,2.71) (G,1.40) (B,1.16) (F,1.13) (V,0.82)
+  (Y,0.79) (Q,0.74) (H,0.60) (Z,0.26) (J,0.25) (X,0.15) (W,0.12) (K,0.11) (Ñ,0.10)
+};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\diagcaption{Frecuencias de las letras del español (\%). El perfil escalonado
+(E, A, S, O\dots\ dominantes) es lo que la sustitución monoalfabética no logra ocultar:
+el análisis de frecuencias compara este histograma con el del texto cifrado.}
 
 \begin{destacado}
 La debilidad estadística \textbf{se traslada al mundo digital}: cifrar un MP4,

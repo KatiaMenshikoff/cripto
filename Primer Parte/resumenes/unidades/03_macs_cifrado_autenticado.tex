@@ -85,6 +85,39 @@ cifrado/descifrado). La verificación es parte del diseño del MAC; en muchos ca
 recalcula la etiqueta y compara (\texttt{Mac\_k(m) == t}), pero no siempre (ver
 ejemplo del cifrado de la longitud).
 
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  box/.style={draw,rounded corners,minimum height=8mm,minimum width=13mm,align=center},
+  >={Stealth[]}]
+  % Emisor
+  \node (m) at (0,0) {$m$};
+  \node[box,fill=blue!8] (mac) at (0,-1.3) {$\mathrm{Mac}_k$};
+  \node (t) at (0,-2.6) {$t$};
+  \draw[->] (m) -- (mac);
+  \draw[->] (mac) -- (t);
+  \node[above=1pt of m] {\textbf{Emisor}};
+
+  % Canal: envia (m,t)
+  \node[draw,dashed,rounded corners,minimum width=22mm,minimum height=7mm] (canal) at (3.3,-1.3) {$(m,\,t)$};
+  \draw[->] (m) to[out=0,in=150] (canal.west);
+  \draw[->] (t) to[out=0,in=210] (canal.west);
+
+  % Receptor
+  \node[box,fill=blue!8] (vrfy) at (6.6,-1.3) {$\mathrm{Vrfy}_k$};
+  \node (out) at (9,-1.3) {$\{0,1\}$};
+  \draw[->] (canal.east) -- (vrfy);
+  \draw[->] (vrfy) -- (out) node[midway,above]{$1$/$0$};
+  \node[above=1pt of vrfy] {\textbf{Receptor}};
+
+  % clave compartida
+  \node[draw,fill=yellow!25,rounded corners] (k) at (3.3,1) {clave compartida $k$};
+  \draw[->,gray] (k) to[out=200,in=90] (mac.north);
+  \draw[->,gray] (k) to[out=340,in=90] (vrfy.north);
+\end{tikzpicture}
+\end{center}
+\diagcaption{El emisor calcula $t=\mathrm{Mac}_k(m)$ y envía $(m,t)$; el receptor corre $\mathrm{Vrfy}_k(m,t)$ y obtiene $1$ (íntegro) o $0$ (alterado). La misma clave $k$ se comparte entre ambos.}
+
 \paragraph{Integridad = detectar, no evitar.} En un canal inseguro alguien puede
 pararse en el medio; no se puede impedir la modificación. Lo que da el MAC es la
 capacidad de \textbf{detectarla} para luego decidir qué hacer (retransmitir, alertar,
@@ -210,6 +243,51 @@ intermedios y se conserva solo el cifrado del último bloque, que ``depende'' de
 los bloques anteriores por el encadenamiento. El IV se pone en cero (no estamos
 cifrando, no necesita ser aleatorio).
 
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  arrow/.style={-{Stealth}},
+  box/.style={draw,fill=blue!8,minimum height=8mm,minimum width=11mm},
+  xor/.style={draw,circle,inner sep=1pt}]
+  % bloques de mensaje
+  \node (m1) at (0,0)   {$m_1$};
+  \node (m2) at (2.6,0) {$m_2$};
+  \node (m3) at (5.2,0) {$\cdots$};
+  \node (ml) at (7.8,0) {$m_\ell$};
+  % xors
+  \node[xor] (x1) at (0,-1)   {$\oplus$};
+  \node[xor] (x2) at (2.6,-1) {$\oplus$};
+  \node[xor] (x3) at (5.2,-1) {$\oplus$};
+  \node[xor] (xl) at (7.8,-1) {$\oplus$};
+  % cajas F_k
+  \node[box] (f1) at (0,-2.1)   {$F_k$};
+  \node[box] (f2) at (2.6,-2.1) {$F_k$};
+  \node[box] (f3) at (5.2,-2.1) {$F_k$};
+  \node[box] (fl) at (7.8,-2.1) {$F_k$};
+  % IV
+  \node (iv) at (-2.2,-1) {$t_0=00\ldots0$};
+  \draw[arrow] (iv) -- (x1);
+  % entradas de mensaje
+  \draw[arrow] (m1) -- (x1);
+  \draw[arrow] (m2) -- (x2);
+  \draw[arrow] (m3) -- (x3);
+  \draw[arrow] (ml) -- (xl);
+  % xor -> F_k
+  \draw[arrow] (x1) -- (f1);
+  \draw[arrow] (x2) -- (f2);
+  \draw[arrow] (x3) -- (f3);
+  \draw[arrow] (xl) -- (fl);
+  % encadenamiento t_i hacia el siguiente xor
+  \draw[arrow] (f1) -| (2.6,-1.5) node[midway,below]{$t_1$} -- (x2);
+  \draw[arrow] (f2) -| (5.2,-1.5) node[midway,below]{$t_2$} -- (x3);
+  \draw[arrow] (f3) -| (7.8,-1.5) node[midway,below]{$t_{\ell-1}$} -- (xl);
+  % salida = tag
+  \node[draw,fill=yellow!25,rounded corners] (tag) at (10.5,-2.1) {$t=\mathrm{Mac}_k(m)$};
+  \draw[arrow] (fl) -- (tag) node[midway,above]{$t_\ell$};
+\end{tikzpicture}
+\end{center}
+\diagcaption{CBC-MAC: con $t_0=00\ldots0$ (IV en cero), cada bloque hace $t_i=F_k(t_{i-1}\oplus m_i)$. El encadenamiento hace que el \emph{último} bloque $t_\ell$ dependa de todo el mensaje; se descartan los intermedios y la salida es $t_\ell$.}
+
 \begin{examen}
 \textbf{¿Bajo qué condiciones es seguro CBC-MAC? (parcial 2016)}\\
 La construcción básica es infalsificable \textbf{SOLO si se permiten mensajes de una
@@ -309,6 +387,76 @@ Colisión & hallar cualquier par $x \neq x'$ colisionante & $\sim 2^{b/2}$ \\
 mide por su resistencia a colisiones. Hoy el mínimo práctico de salida es 160 bits
 (colisiones $> 2^{80}$).
 
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  arrow/.style={-{Stealth}},
+  msg/.style={draw,rounded corners,fill=cyan!12,minimum width=10mm,minimum height=5mm}]
+  % preimagen: comparo contra UN objetivo fijo
+  \node[font=\bfseries] at (0,1.2) {Preimagen / 2.\textsuperscript{a} preimagen};
+  \node[msg] (a1) at (-1,0.4) {$x_1$};
+  \node[msg] (a2) at (-1,-0.3) {$x_2$};
+  \node[msg] (a3) at (-1,-1.0) {$\vdots$};
+  \node[draw,fill=yellow!25,rounded corners,minimum height=5mm] (y) at (1.6,-0.3) {$y$ fijo};
+  \draw[arrow] (a1) -- (y);
+  \draw[arrow] (a2) -- (y);
+  \draw[arrow] (a3) -- (y);
+  \node[align=center] at (0.3,-1.9) {comparo c/u contra\\ \emph{un} objetivo $\Rightarrow 2^{b}$};
+
+  % colision: comparo cada nuevo contra TODOS los anteriores
+  \node[font=\bfseries] at (6.6,1.2) {Colisión (cumpleaños)};
+  \node[msg] (b1) at (5.2,0.4)  {$h(x_1)$};
+  \node[msg] (b2) at (5.2,-0.3) {$h(x_2)$};
+  \node[msg] (b3) at (5.2,-1.0) {$h(x_3)$};
+  \node[msg] (b4) at (7.8,0.05) {$h(x_4)$};
+  \draw[arrow] (b4) -- (b1);
+  \draw[arrow] (b4) -- (b2);
+  \draw[arrow] (b4) -- (b3);
+  \node[align=center] at (6.6,-1.9) {cada nuevo contra \emph{todos}\\ los previos $\Rightarrow \sqrt{2^{b}}=2^{b/2}$};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Paradoja del cumpleaños: hallar una preimagen exige acertar contra un único objetivo ($\sim 2^{b}$), pero buscar una colisión compara cada hash nuevo contra todos los ya generados, por lo que basta del orden de la raíz cuadrada del espacio ($\sim 2^{b/2}$): el nivel de seguridad efectivo cae a la mitad.}
+
+\paragraph{Modelo general iterativo (Merkle-Damgård, 1989).} La forma en que se
+construyen la mayoría de las funciones (MD5, SHA-1, SHA-2): un \textbf{preprocesamiento}
+ajusta el tamaño (padding + bloque con la longitud) y luego se aplica iterativamente una
+\textbf{función de compresión} $f$ encadenando estados $H_i$ desde $H_0=IV$. La seguridad
+de toda la función la da $f$.
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  arrow/.style={-{Stealth}},
+  f/.style={draw,fill=blue!8,minimum height=9mm,minimum width=10mm}]
+  \node (iv) at (-1.8,0) {$H_0=IV$};
+  \node[f] (f1) at (0,0)   {$f$};
+  \node[f] (f2) at (2.4,0) {$f$};
+  \node[f] (f3) at (4.8,0) {$f$};
+  \node     (d)  at (7.0,0) {$\cdots$};
+  \node[f] (ft) at (8.6,0) {$f$};
+  \node[draw,minimum height=7mm] (g) at (10.8,0) {$g$};
+  \node[draw,fill=yellow!25,rounded corners] (out) at (10.8,-1.6) {$h(x)$};
+  % encadenamiento horizontal
+  \draw[arrow] (iv) -- (f1);
+  \draw[arrow] (f1) -- (f2) node[midway,above]{$H_1$};
+  \draw[arrow] (f2) -- (f3) node[midway,above]{$H_2$};
+  \draw[arrow] (f3) -- (d);
+  \draw[arrow] (d)  -- (ft);
+  \draw[arrow] (ft) -- (g) node[midway,above]{$H_t$};
+  \draw[arrow] (g)  -- (out);
+  % bloques de mensaje entrando por arriba
+  \node (x1) at (0,1.4)   {$x_1$};
+  \node (x2) at (2.4,1.4) {$x_2$};
+  \node (x3) at (4.8,1.4) {$x_3$};
+  \node (xt) at (8.6,1.4) {$x_t$};
+  \draw[arrow] (x1) -- (f1);
+  \draw[arrow] (x2) -- (f2);
+  \draw[arrow] (x3) -- (f3);
+  \draw[arrow] (xt) -- (ft);
+\end{tikzpicture}
+\end{center}
+\diagcaption{Merkle-Damgård: el mensaje formateado $x=x_1x_2\cdots x_t$ se procesa bloque a bloque por la función de compresión $f$, encadenando $H_i$ desde $H_0=IV$; una transformación final $g$ produce la salida $h(x)=g(H_t)$.}
+
 \paragraph{Funciones en la práctica.}
 \begin{itemize}[leftmargin=1.4em,nosep]
   \item \textbf{MD5}: \emph{quebrada}, no usar (aparece en protocolos viejos).
@@ -342,6 +490,37 @@ Dada una función de hash $H$ y una clave $k$, con constantes públicas fijas
 \texttt{ipad} y \texttt{opad}:
 $$\mathrm{HMAC}_k(m) = H\big((k \oplus \texttt{opad}) \,\|\, H((k \oplus \texttt{ipad}) \,\|\, m)\big).$$
 \end{definicion}
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  arrow/.style={-{Stealth}},
+  xor/.style={draw,circle,inner sep=1pt},
+  h/.style={draw,fill=blue!8,minimum height=8mm,minimum width=12mm}]
+  % hash interno
+  \node[xor] (xi) at (0,0) {$\oplus$};
+  \node (ki) at (-1.6,0.4) {$k$};
+  \node (ipad) at (-1.6,-0.4) {\texttt{ipad}};
+  \draw[arrow] (ki) -- (xi);
+  \draw[arrow] (ipad) -- (xi);
+  \node (m) at (0,1.3) {$m$};
+  \node[h] (hin) at (1.9,0) {$H$};
+  \draw[arrow] (xi) -- (hin) node[midway,above]{$\|$};
+  \draw[arrow] (m) -| (1.4,0.5) -- (hin);
+  % hash externo
+  \node[xor] (xo) at (4.4,0) {$\oplus$};
+  \node (ko) at (4.4,1.0) {$k$};
+  \node (opad) at (4.4,-1.0) {\texttt{opad}};
+  \draw[arrow] (ko) -- (xo);
+  \draw[arrow] (opad) -- (xo);
+  \node[h] (hout) at (6.6,0) {$H$};
+  \draw[arrow] (hin) -- (hout) node[midway,above]{interno};
+  \draw[arrow] (xo) -- (hout) node[midway,above]{$\|$};
+  \node[draw,fill=yellow!25,rounded corners] (t) at (9.2,0) {$\mathrm{HMAC}_k(m)$};
+  \draw[arrow] (hout) -- (t);
+\end{tikzpicture}
+\end{center}
+\diagcaption{HMAC: hash interno $H((k\oplus\texttt{ipad})\,\|\,m)$ y luego hash externo $H((k\oplus\texttt{opad})\,\|\,(\text{interno}))$. El mensaje se procesa una sola vez (el externo solo toca la etiqueta interna), por eso es muy eficiente.}
 
 La clave concatenada como prefijo rompe la posibilidad de aprender estados
 intermedios (misma idea que en CBC-MAC). El mensaje se procesa una sola vez (el hash
@@ -386,6 +565,54 @@ formas de combinar un criptosistema con un MAC. Dos son seguras, una no:
   \item \textbf{Encrypt-then-MAC — siempre seguro:} hay \textbf{demostración general}.
   Es lo que se llama \textbf{cifrado autenticado}.
 \end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  arrow/.style={-{Stealth}},
+  enc/.style={draw,fill=blue!8,minimum height=6mm,minimum width=11mm},
+  mac/.style={draw,fill=green!10,minimum height=6mm,minimum width=11mm}]
+
+  % ---- Encrypt-and-MAC (inseguro) ----
+  \node[font=\bfseries] at (0,1.4) {Encrypt-and-MAC};
+  \node[font=\bfseries\scriptsize,red] at (0,0.95) {INSEGURO};
+  \node (m1) at (0,0.3) {$m$};
+  \node[enc] (e1) at (-1.1,-0.8) {$\mathrm{Enc}_{k_1}$};
+  \node[mac] (mc1) at (1.1,-0.8) {$\mathrm{Mac}_{k_2}$};
+  \draw[arrow] (m1) -- (e1);
+  \draw[arrow] (m1) -- (mc1);
+  \node (c1) at (-1.1,-1.8) {$c$};
+  \node (t1) at (1.1,-1.8) {$t$};
+  \draw[arrow] (e1) -- (c1);
+  \draw[arrow] (mc1) -- (t1);
+  \node[align=center,font=\scriptsize] at (0,-2.5) {salida $(c,t)$\\ $t$ puede filtrar $m$};
+
+  % ---- MAC-then-Encrypt (puede) ----
+  \node[font=\bfseries] at (5,1.4) {MAC-then-Encrypt};
+  \node[font=\bfseries\scriptsize] at (5,0.95) {puede ser seguro};
+  \node (m2) at (5,0.3) {$m$};
+  \node[mac] (mc2) at (5,-0.65) {$\mathrm{Mac}_{k_2}$};
+  \draw[arrow] (m2) -- (mc2);
+  \node[enc] (e2) at (5,-1.75) {$\mathrm{Enc}_{k_1}$};
+  \draw[arrow] (mc2) -- (e2) node[midway,right]{$m\,\|\,t$};
+  \node (c2) at (5,-2.7) {$c$};
+  \draw[arrow] (e2) -- (c2);
+
+  % ---- Encrypt-then-MAC (seguro) ----
+  \node[font=\bfseries] at (10,1.4) {Encrypt-then-MAC};
+  \node[font=\bfseries\scriptsize] at (10,0.95) {\textbf{SÍ} (cifrado autenticado)};
+  \node (m3) at (10,0.3) {$m$};
+  \node[enc] (e3) at (10,-0.65) {$\mathrm{Enc}_{k_1}$};
+  \draw[arrow] (m3) -- (e3);
+  \node[mac] (mc3) at (10,-1.75) {$\mathrm{Mac}_{k_2}$};
+  \draw[arrow] (e3) -- (mc3) node[midway,right]{$c$};
+  \node (t3) at (10,-2.7) {salida $(c,t)$};
+  \draw[arrow] (mc3) -- (t3);
+  \node[draw,rounded corners,fill=yellow!25,align=center,font=\scriptsize] at (10,-3.6)
+    {MAC sobre el cifrado $c$\\ claves $k_1\neq k_2$};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Las tres construcciones. \textbf{Encrypt-and-MAC} (en paralelo): inseguro, el tag de $m$ puede filtrar información. \textbf{MAC-then-Encrypt}: se cifra $m\|t$, puede ser seguro pero sin prueba genérica. \textbf{Encrypt-then-MAC}: se etiqueta el \emph{texto cifrado} $c$ con claves independientes $k_1\neq k_2$; siempre seguro y es el ``cifrado autenticado''.}
 
 \begin{definicion}{Cifrado autenticado (Encrypt-then-MAC)}
 Requiere un criptosistema \textbf{CPA-Secure} y un MAC \textbf{infalsificable}, con
