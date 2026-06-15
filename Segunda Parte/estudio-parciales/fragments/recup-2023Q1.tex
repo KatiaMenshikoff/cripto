@@ -24,7 +24,7 @@ $T \le P\,N/G$. Cuidado con dos cosas: (i) la ``longitud en bits'' fija el espac
 $N = 2^{\,\text{bits}}$ (no hay que elevar un alfabeto); (ii) la unidad de $T$ es segundos.
 
 \paragraph{Notas y conexiones.}
-Es el mismo despeje de los tres ejercicios resueltos del informe (Clase 7): el caso ``calcular
+Es el mismo despeje de los tres ejercicios resueltos de Clase 7: el caso ``calcular
 el tiempo'' usa $T \le P\,N/G$ y el caso ``longitud mínima'' usa $N \ge T\,G/P$ seguido de
 $L \ge \log_{\text{base}} N$. Acá la clave está dada \emph{en bits}, así que el espacio es
 directamente una potencia de $2$ y no hace falta pasar por logaritmos.
@@ -75,7 +75,7 @@ evalúa en $0$. Acá $T=3$, $N=4$, $p=7$, así que el polinomio es de grado $2$ 
 con el inverso modular).
 
 \paragraph{Notas y conexiones.}
-El informe (Clase 8) justifica la validez del esquema \emph{con entropía}: con menos de $T$
+El material de Clase 8 justifica la validez del esquema \emph{con entropía}: con menos de $T$
 sombras la entropía del secreto \textbf{no cambia} ($H(S\mid S_1)=H(S\mid S_1,S_2)=H(S)$, no hay
 flujo de información), y recién con $T$ sombras $H(S\mid S_1,S_2,S_3)=0$ (se conoce el secreto).
 Es el mismo concepto de flujo de información de la Clase 9: conocer ``demasiado poco'' no reduce
@@ -175,7 +175,7 @@ emisión física del hardware para sacar la clave es un \textbf{ataque de canal 
 (``dos caras de la misma moneda''). El (c) es la trampa de direcciones de BLP: confundir
 \emph{read-down} (lectura: dominás al objeto) con \emph{write-up} es el error clásico; aquí el
 enunciado describe correctamente la lectura. El (a) es el típico ejercicio de conflictos de ACL
-del informe (Clase 6), donde Grant-All resulta en la \emph{intersección} $\{w\}$, no en todos los
+de Clase 6, donde Grant-All resulta en la \emph{intersección} $\{w\}$, no en todos los
 permisos.
 
 \paragraph{Resolución.}
@@ -185,7 +185,7 @@ permisos.
 entradas que aplican al usuario (la suya y las de sus grupos) concedan el permiso. Es la regla
 \emph{más restrictiva}, no la que da ``todos los permisos posibles''. (Dar el permiso si
 \emph{alguna} entrada lo concede es la política de \emph{unión/permitir}, que es la otra.) En el
-ejemplo resuelto del informe, con $\mathrm{ACL}(o)=\{(G,rw),(s_1,w),(\{s_1,s_2\},wx)\}$ y
+ejemplo resuelto de Clase 6, con $\mathrm{ACL}(o)=\{(G,rw),(s_1,w),(\{s_1,s_2\},wx)\}$ y
 $s_1\in G$, Grant-All da $rw \cap w \cap wx = \{w\}$ (solo lo que está en \emph{todas}), mientras
 que la unión daría $\{r,w,x\}$.
 
