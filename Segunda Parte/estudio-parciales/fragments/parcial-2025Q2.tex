@@ -1,0 +1,387 @@
+\section{Parcial 2025 Q2}
+
+% =====================================================================
+\subsection{Ejercicio 1 --- Modelo de seguridad para Palantir (CSO)}
+% =====================================================================
+
+\begin{consigna}
+Palantir es una empresa startup que provee tecnología para control y mitigación de
+\emph{swarms} de drones (entre otras cosas). Palantir necesita rediseñar todo su sistema
+de seguridad para poder continuar trabajando con diversos ejércitos del mundo (a quienes
+provee de tecnología \emph{top secret}). Ud, Ingeniera, Ingeniero, es el nuevo CSO.
+\begin{enumerate}
+  \item[a)] Detallar en este escenario, como CSO de Palantir, qué modelo de seguridad
+  establecerían, qué políticas de control de acceso y qué reglas de seguridad.
+  \item[b)] Describir cuál es la diferencia entre modelo de seguridad, política de control
+  de acceso y reglas de seguridad.
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 6 --- Políticas y Control de Acceso (\S Política de seguridad; \S ¿Qué es un modelo
+de seguridad?; \S Bell--LaPadula; \S MAC vs.\ DAC; \S RBAC/ABAC/RuBAC).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{Modelo de seguridad:} modelo formal y lógico que define las reglas e
+  interacciones que permiten implementar un mecanismo de control de acceso; con sustento
+  matemático se demuestra que el sistema es seguro. Están especializados (confidencialidad,
+  integridad, disponibilidad) y \emph{no alcanzan por sí solos} para todo el sistema: se
+  aplican a partes.
+  \item \textbf{Bell--LaPadula} (confidencialidad militar): clasificaciones $\{$TS, S, C, U$\}$
+  con compartimentos formando un reticulado. Reglas: \emph{Read Down} (seguridad simple,
+  $\Lvl(s)\dom\Lvl(o)$), \emph{Write Up} (propiedad $\ast$, $\Lvl(o)\dom\Lvl(s)$) y
+  $\ast$-fuerte (leer+escribir $\Rightarrow$ misma clasificación). Es \textbf{control de
+  flujo}: la información ``sube'', no ``baja''.
+  \item \textbf{Política de control de acceso:} la definición de qué estados consideramos
+  seguros (una ``foto en el tiempo'' que caracteriza si el estado actual es seguro). Se
+  implementa con mecanismos \textbf{MAC} (mandatorio, basado en reglas universales del
+  sistema, p.\ ej.\ el lattice de BLP) y/o \textbf{DAC} (discrecional, basado en identidad,
+  el dueño/admin asigna permisos). Por comprensión: \textbf{RBAC} (roles), ABAC, RuBAC.
+  \item \textbf{Reglas de seguridad:} los enunciados concretos que el mecanismo evalúa
+  (las reglas de BLP, las entradas de una ACL, las reglas ordenadas tipo firewall).
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+El escenario (datos \emph{top secret}, múltiples ejércitos que no deben verse entre sí)
+es el caso canónico de \textbf{Bell--LaPadula}: confidencialidad + compartimentos
+(\emph{need-to-know}). La idea de aislar proyectos con clientes distintos
+es exactamente la motivación de los compartimentos del reticulado. BLP cubre la parte
+mandatoria; el día a día (quién accede a qué bucket/repositorio) se gestiona con DAC/RBAC,
+que tiene discrecionalidad fuerte (alguien asigna roles). Conecta con Clase 8 (separación
+de privilegios, mínimo privilegio) y Clase 10 (Defense-in-depth, ZTA).
+
+\paragraph{Resolución.}
+\textbf{a)} Como CSO de Palantir propondría:
+\begin{itemize}
+  \item \textbf{Modelo de seguridad:} \textbf{Bell--LaPadula} como núcleo, por ser un
+  modelo de \emph{confidencialidad} pensado para el ámbito militar y manejo de información
+  clasificada. Se definen niveles de clasificación (Top Secret / Secret / Confidential /
+  Unclassified) y, sobre todo, \textbf{compartimentos por cliente/proyecto} (cada ejército
+  es una categoría incomparable con las demás), formando un reticulado. Donde BLP no alcance
+  (sistemas de propósito general internos), se complementa con DAC/RBAC. Si además importa
+  la \emph{integridad} de la información de control de drones, se puede sumar Biba o
+  Clark--Wilson sobre esos componentes.
+  \item \textbf{Políticas de control de acceso:} mandatorias (MAC) para la información
+  clasificada --- las define el sistema y se aplican obligatoriamente a todos los accesos,
+  cambios de atributos e intercambios entre sujetos; y discrecionales (DAC, típicamente
+  \textbf{RBAC} por roles: analista, operador de drones, administrador, cliente militar)
+  para la gestión cotidiana. \emph{Need-to-know} entre compartimentos.
+  \item \textbf{Reglas de seguridad concretas:} las tres reglas de BLP ---
+  \emph{Read Down} ($\Lvl(s)\dom\Lvl(o)$ para leer), \emph{Write Up} ($\Lvl(o)\dom\Lvl(s)$
+  para escribir) y $\ast$-fuerte (lectura+escritura solo en la misma clasificación) ---
+  más la dominancia con compartimentos: $(L,C)\dom(L',C')\iff L'\le L \wedge C'\subseteq C$.
+  Dos clientes en compartimentos incomparables no pueden leerse ni escribirse mutuamente.
+\end{itemize}
+
+\textbf{b)} La diferencia (de lo más abstracto a lo más concreto):
+\begin{itemize}
+  \item El \textbf{modelo de seguridad} es el marco \emph{formal/matemático} (p.\ ej.\
+  Bell--LaPadula): generaliza, demuestra propiedades y dice \emph{qué} hay que garantizar,
+  sin atarse a una implementación.
+  \item La \textbf{política de control de acceso} es la \emph{definición de qué estados son
+  seguros} en este sistema concreto: a qué clasifico cada activo, qué sujetos existen, qué
+  pueden hacer --- el ``qué se permite''. Decide entre mandatorio (MAC) y discrecional (DAC).
+  \item Las \textbf{reglas de seguridad} son los enunciados concretos que el mecanismo
+  evalúa para decidir cada acceso (las reglas de BLP, las entradas de una ACL, las reglas
+  ordenadas de un firewall) --- el ``cómo se decide''.
+\end{itemize}
+En síntesis: el modelo \emph{fundamenta} la política, y la política se \emph{expresa}
+mediante reglas que el mecanismo aplica.
+
+% =====================================================================
+\subsection{Ejercicio 2 --- Opción múltiple (pentesting, ley 25.326, buffer overflow)}
+% =====================================================================
+
+\begin{consigna}
+Responder la opción más correcta.
+\begin{itemize}
+  \item ¿Cuáles son los pasos para implementar un pentesting exitoso?
+  \begin{itemize}
+    \item Recolección de información, Prueba de la seguridad, Generalización, Eliminación.
+    \item Recolección de información, Prueba formal, Generalización, Eliminación.
+    \item Recolección de información, Planteo de Hipótesis de falla, Prueba de la
+    vulnerabilidad, Generalización, Eliminación.
+    \item Planteo de Hipótesis de falla, Prueba de la vulnerabilidad, Verificación formal.
+  \end{itemize}
+  \item La ley argentina 25.326 de Protección de datos personales establece mecanismos y
+  normativa para regular
+  \begin{itemize}
+    \item El Derecho al olvido:
+    \item Las bases de datos públicas y privadas
+    \item El manejo de las cookies en los navegadores de internet.
+    \item Las historias clínicas.
+  \end{itemize}
+  \item ¿Cuál de las siguientes estrategias no tendría sentido en un ataque buffer overflow?
+  \begin{itemize}
+    \item Usar RUST
+    \item Implementar un garbage collector
+    \item Validar todos los datos de entrada.
+    \item Implementar un Stack Canary.
+  \end{itemize}
+\end{itemize}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 10b --- Pentesting (\S Metodología de hipótesis de falla); Clase 11 --- Protección
+de Datos (\S Ley 25.326); Clase 8 --- Principios de Diseño y Vulnerabilidades
+(\S CWE-787 / buffer overflow).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{Pasos del pentesting (de memoria, en orden):} Recolección de información
+  $\rightarrow$ Planteo de hipótesis de falla $\rightarrow$ Prueba (de la vulnerabilidad)
+  $\rightarrow$ Generalización $\rightarrow$ Eliminación (opcional). Equivocar el orden o
+  los pasos penaliza. Notar que es \emph{hipótesis de falla}, no ``prueba formal'': la
+  verificación formal es lo \emph{contrario} del pentesting.
+  \item \textbf{Ley 25.326 (argentina):} regula las bases de datos \textbf{públicas y
+  privadas} (hábeas data: ver/rectificar/borrar tus datos). El \textbf{Derecho al Olvido}
+  lo regula el \textbf{GDPR europeo}, NO la ley argentina. La ley no especifica tecnología.
+  \item \textbf{Buffer overflow (CWE-787, out-of-bounds write):} escribir fuera de los
+  límites del buffer; en el stack puede pisar la dirección de retorno. Estrategias de
+  defensa válidas: lenguajes que eliminan la aritmética de punteros / acceso a memoria
+  seguro (RUST, Java/C\#), \emph{stack canary}, validar la entrada. Un \textbf{garbage
+  collector} gestiona el \emph{ciclo de vida de memoria dinámica} (fugas, use-after-free),
+  no impide escrituras fuera de límite en el stack.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+La primera y la última opción son las dos ``trampas'' que el profesor remarca: confundir
+``Planteo de hipótesis de falla'' con ``prueba formal/de la seguridad'' (Clase 10b), y la
+distinción ley argentina vs.\ GDPR (Clase 11), la más preguntable de protección de datos.
+El buffer overflow conecta con Clase 8 (injection $\approx 90\%$; lenguajes ``seguros''
+que mataron familias enteras de bugs) y con el principio de \emph{validar la entrada}.
+
+\paragraph{Resolución.}
+\begin{itemize}
+  \item \textbf{Pasos del pentesting:} \textbf{``Recolección de información, Planteo de
+  Hipótesis de falla, Prueba de la vulnerabilidad, Generalización, Eliminación''} (la 3.ª
+  opción). Las otras sustituyen el paso clave por ``Prueba de la seguridad'' / ``Prueba
+  formal'' o lo reemplazan por ``Verificación formal'' (que es la técnica opuesta).
+  \item \textbf{Ley 25.326:} \textbf{``Las bases de datos públicas y privadas''}. El
+  Derecho al olvido es GDPR; cookies (consentimiento) también es más bien GDPR; las
+  historias clínicas son un caso particular (HIPAA en EE.UU.), no el objeto de la 25.326.
+  \item \textbf{Buffer overflow:} la estrategia que \textbf{no tiene sentido} es
+  \textbf{``Implementar un garbage collector''}: un GC administra memoria dinámica, no
+  evita la escritura fuera de los límites de un buffer (el desbordamiento clásico). Usar
+  RUST (acceso a memoria seguro), validar la entrada y un stack canary sí mitigan.
+\end{itemize}
+
+% =====================================================================
+\subsection{Ejercicio 3 --- Encripción homomórfica}
+% =====================================================================
+
+\begin{consigna}
+La encripción homomórfica aparece como un escenario donde es posible almacenar datos en la
+nube directamente encriptados y donde se pueden realizar operaciones de cálculo directamente
+sobre los datos, obteniendo un resultado que al desencriptarlo coincidiría con el resultado
+obtenido de la operación.
+
+Por ejemplo: $f(Enc_k(x)) = Enc_k(f(x))$
+\begin{enumerate}
+  \item[a)] Explicar qué escenario de protección de datos podría ser beneficioso este esquema.
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 11 --- Protección de Datos (\S Encripción homomórfica; \S Estados del dato:
+\emph{in-use}).
+
+\paragraph{Qué necesitás saber.}
+La encripción homomórfica permite \textbf{operar sobre los datos cifrados sin descifrarlos}:
+$f(\mathrm{Enc}_k(x)) = \mathrm{Enc}_k(f(x))$. Es decir, operar sobre el texto cifrado y
+luego descifrar da el mismo resultado que operar sobre el texto plano. Ataca el estado más
+difícil de proteger: el dato \emph{en uso} (in-use), cuando normalmente hay que descifrarlo
+para procesarlo.
+
+\paragraph{Notas y conexiones.}
+El control de acceso no alcanza para proteger datos: el dato fluye (RR.HH.\ $\to$ App $\to$
+nube). Cuando delegamos cómputo a un tercero (la nube), el problema es que para procesar hay
+que exponer el dato en claro. La homomórfica rompe ese compromiso. Conecta con los estados
+del dato (Clase 11) y con \emph{shared tenancy} / confidencialidad en la nube (Clase 9).
+
+\paragraph{Resolución.}
+El escenario beneficiado es la \textbf{computación delegada en la nube preservando la
+privacidad}: un tercero (proveedor cloud) procesa, analiza o agrega datos sensibles
+\textbf{sin verlos nunca en claro}. El cliente cifra ($\mathrm{Enc}_k(x)$), envía el cifrado,
+el servidor computa $f$ sobre el cifrado y devuelve $\mathrm{Enc}_k(f(x))$; solo el cliente,
+con su clave, descifra el resultado:
+\begin{equation*}
+\mathrm{Dec}_k\big(\mathrm{Enc}_k(f(x))\big) = f(x).
+\end{equation*}
+Ejemplos concretos: análisis estadístico/ML sobre datos médicos o financieros tercerizado a
+un proveedor que no debe acceder a los datos en claro (HIPAA, datos de salud anonimizados),
+votaciones electrónicas, o consultas a una base de datos en la nube sin revelar ni la consulta
+ni los registros. Resuelve la protección del dato \emph{en uso}, que de otro modo obligaría a
+descifrar para procesar.
+
+% =====================================================================
+\subsection{Ejercicio 4 --- Secreto compartido de Shamir}
+% =====================================================================
+
+\begin{consigna}
+Considerar un esquema de secreto compartido de Shamir $(k,n)=(3,5)$ en $\mathbb{Z}_7$, con el
+conjunto de sombras
+\begin{equation*}
+C = \{(1,2),\ (2,2),\ (3,3),\ (4,5),\ (5,1)\}.
+\end{equation*}
+\begin{enumerate}
+  \item[a)] Recuperar el secreto.
+  \item[b)] Cuál es el polinomio generador.
+  \item[c)] Considerar el anillo de polinomios $\mathbb{F}_2[x]$ y el campo de extensión
+  \begin{equation*}
+  \mathbb{F}_{2^3} \cong \mathbb{F}_2[x]/(p(x)),\qquad p(x)=x^3+x+1,
+  \end{equation*}
+  denotando $\alpha$ la clase de $x$ en $\mathbb{F}_{2^3}$ (es decir $\alpha = x \bmod p(x)$).
+  Se define un esquema de Shamir $(k,n)=(3,4)$ sobre $\mathbb{F}_{2^3}$. Las sombras
+  entregadas son
+  \begin{equation*}
+  C=\{(1,\ \alpha+1),\ (\alpha,\ 1+\alpha+\alpha^2),\ (\alpha+1,\ 1),\ (\alpha^2,\ \alpha+1)\},
+  \end{equation*}
+  donde los puntos se escriben como $(t,s_t)$ con $t\in\mathbb{F}_{2^3}$ y
+  $s_t\in\mathbb{F}_{2^3}$. Detallar por qué razón el algoritmo secreto compartido de Shamir
+  puede también plantearse de esta manera.
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 8 --- Principios de Diseño y Vulnerabilidades (\S El secreto compartido de Shamir, en
+términos de entropía); flujo de información (entropía). Mecánica: interpolación de Lagrange
+sobre un cuerpo finito.
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item En un esquema $(T,N)$ de Shamir hay $N$ sombras y se necesitan \textbf{al menos $T$}
+  para recuperar el secreto $S$. El secreto se codifica como el término independiente de un
+  polinomio de grado $T-1$; cada sombra es un punto $(x_i, p(x_i))$. Con $<T$ puntos la
+  entropía del secreto \emph{no cambia} (no hay flujo); con $\ge T$, $H(S)\to 0$.
+  \item Aquí $T=3$, así que $p$ tiene grado $2$: $p(x)=a_0+a_1x+a_2x^2$, y el secreto es
+  $S=a_0=p(0)$. Se recupera con \textbf{interpolación de Lagrange} usando 3 puntos, toda la
+  aritmética módulo $7$ (cuerpo $\mathbb{Z}_7$).
+  \item La validez del esquema (parte c) depende solo de que el conjunto de coeficientes /
+  evaluaciones viva en un \textbf{cuerpo}: lo que se necesita es poder sumar, restar,
+  multiplicar y \textbf{dividir} (existencia de inversos) para que Lagrange funcione.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+Shamir aparece en Clase 8 como ejemplo de flujo de información medido con entropía: ``con
+menos de $T$ sombras no hay flujo'' equivale a ``$H(S)$ no cambia''. Aquí se pide además la
+mecánica (Lagrange). La parte c) conecta con la Primera Parte (cuerpos finitos
+$\mathbb{F}_{2^n}$, aritmética polinomial módulo un irreducible, igual que en AES).
+
+\paragraph{Resolución.}
+
+\textbf{a) y b)} Buscamos $p(x)=a_0+a_1x+a_2x^2$ en $\mathbb{Z}_7$. Con tres sombras, por
+ejemplo $(1,2),(2,2),(3,3)$, planteamos el sistema:
+\begin{align*}
+a_0 + a_1 + a_2 &\equiv 2 \pmod 7,\\
+a_0 + 2a_1 + 4a_2 &\equiv 2 \pmod 7,\\
+a_0 + 3a_1 + 2a_2 &\equiv 3 \pmod 7.
+\end{align*}
+Resolviendo (eliminación de Gauss módulo $7$, recordando que en $\mathbb{Z}_7$ los inversos
+son $2^{-1}=4$, $3^{-1}=5$, $4^{-1}=2$, $5^{-1}=3$, $6^{-1}=6$) se obtiene
+\begin{equation*}
+a_0 = 3,\qquad a_1 = 2,\qquad a_2 = 4.
+\end{equation*}
+Luego el \textbf{polinomio generador} es
+\begin{equation*}
+\boxed{\,p(x) = 4x^2 + 2x + 3 \pmod 7\,}
+\end{equation*}
+y el \textbf{secreto} es el término independiente:
+\begin{equation*}
+\boxed{\,S = p(0) = a_0 = 3\,.}
+\end{equation*}
+\emph{Verificación} (consistencia del esquema): $p(1)=4+2+3=9\equiv 2$, $p(2)=16+4+3=23\equiv
+2$, $p(3)=36+6+3=45\equiv 3$, $p(4)=64+8+3=75\equiv 5$, $p(5)=100+10+3=113\equiv 1$
+$\pmod 7$. Las cinco sombras caen sobre el polinomio, así que el reparto es válido y
+cualquier subconjunto de $3$ sombras recupera el mismo secreto.
+
+\textbf{c)} El algoritmo de Shamir \textbf{no depende de que trabajemos en $\mathbb{Z}_p$
+con $p$ primo}: lo único que usa es que las coordenadas vivan en un \textbf{cuerpo (campo)}.
+La construcción y la recuperación se basan en la \textbf{interpolación de Lagrange}, que
+requiere sumar, restar, multiplicar y \textbf{dividir} --- y dividir solo es posible si todo
+elemento no nulo tiene inverso multiplicativo, que es justamente la propiedad que define a un
+cuerpo.
+
+$\mathbb{F}_{2^3}\cong\mathbb{F}_2[x]/(p(x))$ con $p(x)=x^3+x+1$ \textbf{irreducible} sobre
+$\mathbb{F}_2$ es un cuerpo finito de $2^3=8$ elementos (las clases
+$\{0,1,\alpha,\alpha+1,\alpha^2,\dots\}$), con suma y producto de polinomios módulo $p(x)$ y,
+por ser cuerpo, \textbf{inversos para todo elemento no nulo}. Por lo tanto:
+\begin{itemize}
+  \item Se puede definir un polinomio secreto de grado $T-1=2$ con coeficientes en
+  $\mathbb{F}_{2^3}$, evaluarlo en $N=4$ puntos distintos $t\in\mathbb{F}_{2^3}$ para generar
+  las sombras $(t,s_t)$, y
+  \item recuperar el secreto $S=p(0)$ con la misma fórmula de Lagrange, ahora con la
+  aritmética de $\mathbb{F}_{2^3}$ (los inversos se calculan módulo $p(x)$).
+\end{itemize}
+Es decir, Shamir se plantea idénticamente sobre cualquier cuerpo finito $\mathbb{F}_q$ (sea
+$q$ primo como $\mathbb{Z}_7$, o potencia de primo como $\mathbb{F}_{2^3}$); usar
+$\mathbb{F}_{2^n}$ es natural cuando los secretos son cadenas de bits, exactamente como en
+AES. \textbf{TODO:} verificar numéricamente la recuperación en $\mathbb{F}_{2^3}$ no se pide
+explícitamente; la consigna solo pide \emph{justificar por qué} es válido plantearlo así
+(la respuesta es: porque $\mathbb{F}_{2^3}$ es un cuerpo y Lagrange solo necesita un cuerpo).
+
+% =====================================================================
+\subsection{Ejercicio 5 --- ``Garantizar la seguridad'' con pentesting (Tesla)}
+% =====================================================================
+
+\begin{consigna}
+Tesla implementó un sistema de mejoramiento de la calidad de software nuevo. Su director,
+Charles Kharpaty, anunció que estarían utilizando un nuevo esquema que garantizaba la
+seguridad basado en estrictas pruebas de pentesting.
+\begin{enumerate}
+  \item[a)] Provea argumentos sólidos para deslizarle al oído de Elon para que lo despida o
+  lo promueva a CSO.
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 10b --- Pentesting (\S Limitaciones: el pentesting NO garantiza la seguridad;
+\S Verificación formal vs.\ pentesting).
+
+\paragraph{Qué necesitás saber.}
+\textbf{Gancho/trampa de parcial:} el pentesting es una buena estrategia pero \textbf{NO
+garantiza la seguridad}. ``Garantizar la seguridad es algo que no se puede hacer jamás''
+(palabras del profesor). Si un enunciado afirma que algo ``garantiza la seguridad'' es
+incorrecto, y \textbf{hay penalización si se les escapa}. Razones:
+\begin{itemize}
+  \item El pentesting prueba la \textbf{existencia} de vulnerabilidades, \textbf{nunca su
+  ausencia} (Dijkstra: el testing muestra presencia de bugs, no su ausencia). Quien sí
+  prueba ausencia es la \emph{verificación formal}, pero solo en un algoritmo/ambiente
+  acotado incluyendo todos los factores --- y \emph{tampoco} da garantía total para un
+  sistema completo.
+  \item No es sistemático: depende de la capacidad del tester para formular hipótesis.
+  \item Cada test vale para \emph{ese} sistema en \emph{ese} momento (si cambia la API/v3,
+  las pruebas quedan obsoletas).
+  \item No reemplaza un buen diseño, especificación, implementación y testing; se suma
+  \emph{después}.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+Es el mismo gancho que el Ejercicio 2 (``Prueba formal'' vs.\ hipótesis de falla) visto desde
+el lado del enunciado-trampa. Conecta con Clase 6/8 (la seguridad es un estado que se debe
+mantener; un buen diseño y los principios de Saltzer--Schroeder son la base) y con Clase 10
+(DevSecOps: el pentesting es una capa más, no la garantía).
+
+\paragraph{Resolución.}
+\textbf{Despedirlo} (o, como mínimo, corregir el anuncio). El error de fondo es la afirmación
+de que el esquema \textbf{``garantiza la seguridad''}: \emph{garantizar la seguridad es
+imposible}. Argumentos sólidos para el oído de Elon:
+\begin{enumerate}
+  \item \textbf{El pentesting nunca prueba ausencia de vulnerabilidades, solo existencia.}
+  Encontrar fallas demuestra que las hay; \emph{no} encontrarlas no demuestra que no las
+  haya (Dijkstra). Anunciar ``garantía de seguridad'' es técnicamente falso.
+  \item \textbf{No es sistemático:} su calidad depende de la habilidad del tester para
+  plantear hipótesis de falla; dos testers distintos cubren cosas distintas.
+  \item \textbf{Es válido para ese sistema en ese momento:} cualquier cambio (nueva versión,
+  nueva integración) invalida buena parte de las pruebas. No hay garantía persistente.
+  \item \textbf{No reemplaza el buen diseño:} la seguridad se construye con principios de
+  diseño, especificación, implementación cuidada y cobertura de testing; el pentesting se
+  agrega \emph{después} para comprobar, no para garantizar.
+  \item Si se quisiera la mayor garantía posible, lo más cercano sería la \textbf{verificación
+  formal} (prueba ausencia, pero solo en un dominio acotado y aun así no total), no el
+  pentesting.
+\end{enumerate}
+Conclusión: Kharpaty merece ser \textbf{despedido (o corregido) por prometer una garantía que
+no existe}; un buen CSO diría ``reducimos el riesgo y aumentamos la confianza'', nunca
+``garantizamos la seguridad''.

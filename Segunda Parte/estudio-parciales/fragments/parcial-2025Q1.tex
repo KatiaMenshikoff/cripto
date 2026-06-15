@@ -1,0 +1,239 @@
+\section{Parcial 2025 Q1}
+
+% =====================================================================
+\subsection{Ejercicio 1 — Arquitectura de 3 capas, Clark--Wilson y red plana}
+% =====================================================================
+
+\begin{consigna}
+Una aplicación de gestión de sueldos está implementada en un modelo de tres capas. El frontend, el backend y la base de datos. El backend es responsable de definir las reglas que cosas puede hacer un usuario con sus datos y protege la integridad de los mismos con un modelo Clack-Wilson.
+
+Por política de la empresa, ningún empleado debe poder ver el salario de otro empleado.
+
+Para asegurar que ningún empleado pueda acceder a los registros de otro usuario, cada usuario tiene una cuenta definida en la base de datos y la base de datos usa ROW LEVEL security.
+
+Al loguearse en la aplicación, el backend usa esas mismas credenciales para conectarse a la base de datos mientras dura la sesión del usuario.
+
+\begin{enumerate}
+  \item[a)] Si la empresa tiene una única red sin firewalls o equipos que restrinjan las comunicaciones, ¿Cuál es la principal desventaja que ve en la arquitectura original?.
+  \item[b)] Proponga dos mejoras que mantengan el cumplimiento de la política de seguridad.
+  \item[c)] Compare la arquitectura original y su propuesta. ¿Considera que su propuesta reduce el riesgo de un ataque tipo Man in the Middle efectivo?
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 6 — Políticas y Control de Acceso (\S Clark--Wilson; MAC/DAC; Row-Level Security como RBAC+RLS). Clase 8 — Principios de Diseño (\S defensa en profundidad, mediación completa, mínimo privilegio). Clase 10 — Seguridad en la Empresa (\S Defense-in-depth de 5 capas; Zero Trust; segmentación de red).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{Clark--Wilson} (Clase 6): modelo de \emph{integridad} comercial. Los datos protegidos son \textbf{CDI} (Constrained Data Items) y solo se modifican vía un \textbf{TP} (Transformation Procedure) que los lleva de un estado válido a otro; un \textbf{IVP} verifica integridad; incorpora \emph{separation of duty}. Es un modelo de \textbf{integridad}, \textbf{no} de confidencialidad: por sí solo no impide \emph{leer} el salario ajeno.
+  \item \textbf{Row-Level Security} (Clase 6): la base aplica un predicado por fila según el usuario conectado; equivale a un control de acceso a nivel registro (RBAC + reglas por contexto del usuario de BD). Funciona \emph{solo} si cada empleado se conecta con su propia identidad.
+  \item \textbf{Defense-in-depth} (Clase 10): cebolla de 5 capas (Perímetro $\to$ Red $\to$ Host $\to$ Aplicación $\to$ Datos). Una red plana sin firewalls colapsa las capas Perímetro y Red: cualquier nodo comprometido alcanza a todos.
+  \item \textbf{Mediación completa} y \textbf{mínimo privilegio} (Clase 8): todo acceso debe pasar por un mediador; cada sesión debe tener el menor privilegio posible.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+El enunciado tiene una trampa de diseño: usa Clark--Wilson (integridad) para hacer cumplir una política de \emph{confidencialidad} (``nadie ve el salario de otro''). La confidencialidad la sostiene en realidad el \textbf{Row-Level Security} + el hecho de que el backend reusa las credenciales del usuario para conectarse a la BD. Ese reúso es lo que hace funcionar la RLS (la BD sabe quién pregunta), pero al mismo tiempo \textbf{transporta las credenciales del empleado por la red en cada operación}. En una \textbf{red plana sin firewalls} (la condición del inciso a) esto es justamente lo que rompe la defensa en profundidad: no hay segmentación entre frontend, backend y BD, y las credenciales viajan por un medio observable. Esto conecta con Clase 9 (un canal sin controles permite \emph{flujo} no deseado) y con Clase 10 (Zero Trust: ``ninguna red interna es de confianza'').
+
+\paragraph{Resolución.}
+\textbf{a) Principal desventaja.} La política de confidencialidad se apoya en credenciales por usuario que el backend \emph{reenvía} a la base en cada sesión. En una única red sin firewalls ni segmentación (\emph{red plana}), esas credenciales y los datos sensibles (salarios) circulan por un medio que cualquier host comprometido puede observar o interponerse. La arquitectura viola \textbf{defensa en profundidad} (no hay capa de Perímetro ni de Red) y \textbf{mínimo privilegio} a nivel de red. Clark--Wilson protege la \emph{integridad} de los CDI pero \textbf{no} la confidencialidad ni el canal: un atacante en la red puede capturar o reusar credenciales (sniffing / replay) y acceder como otro usuario, sorteando la RLS. En resumen: \emph{toda la seguridad depende de un único secreto que viaja sin protección por un medio compartido sin controles}.
+
+\textbf{b) Dos mejoras (manteniendo la política).}
+\begin{enumerate}
+  \item \textbf{Cifrar el canal y segmentar la red.} Forzar TLS extremo a extremo (frontend$\to$backend$\to$BD) y \textbf{segmentar} en VLANs/subredes con un firewall entre capas (la BD solo acepta conexiones del backend). Esto restaura las capas de Perímetro y Red de la cebolla y aplica \emph{mediación completa} al tráfico. La RLS sigue intacta porque no cambia el modelo de identidad, solo se protege el transporte.
+  \item \textbf{No reusar las credenciales del usuario contra la BD; usar un servicio de cuenta + contexto.} El backend se conecta con una cuenta de servicio de \textbf{mínimo privilegio} y propaga la identidad del empleado como \emph{contexto} (p.\ ej.\ \texttt{SET app.user}) que alimenta la política RLS. Así la credencial del empleado nunca llega a la red de datos y se reduce la superficie de robo/replay, sin romper la política ``cada quien ve solo lo suyo''. (Alternativa válida: tokens de sesión de vida corta en lugar de reenviar la clave.)
+\end{enumerate}
+
+\textbf{c) Comparación y Man in the Middle.} En la arquitectura original, un atacante posicionado en la red plana puede interceptar el canal (MitM) y capturar/reusar las credenciales que el backend reenvía: el MitM es \textbf{efectivo}. La propuesta \textbf{sí reduce} el riesgo de un MitM efectivo: el cifrado del canal (TLS con verificación de certificado) hace que interceptar el tráfico no entregue credenciales ni datos en claro, y la segmentación reduce las posiciones desde las que un atacante puede interponerse. El MitM no se vuelve \emph{imposible} (sigue dependiendo de la correcta validación de certificados y de no tener una CA comprometida), pero deja de ser \emph{efectivo} con bajo esfuerzo: pasamos de ``cualquier nodo de la red lee todo'' a ``hay que romper TLS y además estar en el segmento correcto''. Es defensa en profundidad: ninguna capa garantiza la seguridad por sí sola, pero juntas elevan el costo del ataque.
+
+% =====================================================================
+\subsection{Ejercicio 2 — Múltiple choice (DevOps, tolerancia a fallas, CSRF)}
+% =====================================================================
+
+\begin{consigna}
+Responder la opción más correcta.
+
+\medskip\noindent ¿Cuál de los siguientes NO es un componente del modelo de DevOps?
+\begin{itemize}
+  \item Seguridad de la Información
+  \item Desarrollo de Software
+  \item QA, Control de Calidad del Software
+  \item Operaciones de IT
+\end{itemize}
+
+\medskip\noindent ¿Cuál de los siguientes esquemas provee tolerancia a fallas en sistemas de almacenamiento?
+\begin{itemize}
+  \item Balanceo de Carga
+  \item Sistema RAID
+  \item Clustering
+  \item Pares HA
+\end{itemize}
+
+\medskip\noindent ¿Cuál de las siguientes estrategias no tendría sentido en un ataque CSRF?
+\begin{itemize}
+  \item Verificar si la información extra del request fue generada de manera legítima.
+  \item Evitar que los request puedan realizarse por GET.
+  \item Banear la IP de quien dispara el request.
+  \item Concientizar a los usuarios sobre el phishing y el cuidado al clickear en enlaces.
+\end{itemize}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 10 — Seguridad en la Empresa (\S DevSecOps / DevOps; disponibilidad y tolerancia a fallas). Clase 8 — Principios de Diseño + Vulnerabilidades (\S OWASP; injection/confused-deputy).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{DevOps} (Clase 10): une \textbf{Dev}elopment y \textbf{Op}erations bajo un mismo objetivo (``you build it, you run it''). \textbf{DevSecOps} le suma \textbf{Sec}urity (Shift Left). Los componentes del modelo son Desarrollo, Operaciones de IT y (en DevSecOps) Seguridad de la Información.
+  \item \textbf{Disponibilidad} (Clase 8: ``el primer requisito de seguridad es que el sistema esté disponible''): RAID = redundancia \emph{dentro del almacenamiento} (varios discos, tolera la pérdida de uno); balanceo de carga, clustering y pares HA dan disponibilidad de \emph{cómputo/servicio}, no de almacenamiento.
+  \item \textbf{CSRF} (Cross-Site Request Forgery, OWASP/CWE-352): el atacante hace que la víctima \emph{autenticada} dispare una petición no intencionada (confused deputy). Mitigaciones reales: \textbf{tokens anti-CSRF} (info extra en el request, validada como legítima), no usar \textbf{GET} para acciones que cambian estado, \texttt{SameSite} cookies, verificar \texttt{Origin}/\texttt{Referer}.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+Las tres preguntas apuntan a distinguir un concepto de sus vecinos. En CSRF la trampa es separar mitigaciones \emph{efectivas} (propias del mecanismo HTTP) de medidas que aplican a \emph{otros} ataques: banear la IP no sirve porque el request lo dispara el \textbf{navegador de la propia víctima} (su IP es legítima), y concientizar contra phishing apunta a otra clase de ataque (Clase 8: ingeniería social), no al CSRF en sí. Esto se conecta con Clase 8 (taxonomía de vulnerabilidades, principio de mediación completa) y con la idea de que cada control mitiga una amenaza específica.
+
+\paragraph{Resolución.}
+\begin{itemize}
+  \item \textbf{NO es componente de DevOps:} \emph{QA, Control de Calidad del Software}. DevOps = Desarrollo + Operaciones de IT; DevSecOps añade Seguridad de la Información. QA se absorbe en los pipelines automatizados, no figura como pata del modelo. (Las otras tres son componentes de DevSecOps.)
+  \item \textbf{Tolerancia a fallas en almacenamiento:} \emph{Sistema RAID}. Es el único orientado a \textbf{almacenamiento} (redundancia de discos). Balanceo de carga, clustering y pares HA dan alta disponibilidad de servicio/cómputo, no del medio de almacenamiento.
+  \item \textbf{Estrategia que NO tiene sentido en CSRF:} \emph{Banear la IP de quien dispara el request}. El request lo lanza el navegador de la víctima legítima, así que su IP no es un indicador de ataque y banearla castiga al usuario real. Las otras tres sí son razonables: validar info extra del request = token anti-CSRF; evitar GET para acciones con efectos; y concientizar reduce el clic en enlaces maliciosos que inician el CSRF. (Si el examen pide \emph{la única} sin sentido, es banear la IP; \emph{concientizar} es la mitigación más débil/indirecta pero no carece de sentido.)
+\end{itemize}
+
+% =====================================================================
+\subsection{Ejercicio 3 — Fórmula de Anderson, salt y autenticación multicanal}
+% =====================================================================
+
+\begin{consigna}
+José Del Río, un cryptobro, afirma que si un atacante puede probar $10^4$ passwords por segundo, y las passwords están compuestas por símbolos en [a-zA-Z0-9], entonces las passwords deberían tener 5 símbolos y 5 bits de SALT para que la probabilidad de adivinarlas en el lapso de un año sea menor a $0{,}5$.
+
+\begin{enumerate}
+  \item[a)] Explicar si esta afirmación es correcta o no y probar por qué.
+  \item[b)] José viene recargado y plantea que va a implementar un sistema de autenticación multicanal donde además el segundo canal por SMS se va a poder utilizar para recuperar el password. Comentar que eventual problema tiene esta estrategia y qué aspecto de autenticación multicanal no cumple.
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 7 — Autenticación (\S fórmula de Anderson $P=TG/N$; salting; MFA / multicanal; recuperación de cuenta).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{Fórmula de Anderson} (Clase 7): $P = \dfrac{T\,G}{N}$, con $P$ probabilidad de adivinar, $T$ tiempo de ataque, $G$ pruebas/seg, $N$ tamaño del espacio. Despeje útil: $N \ge \dfrac{T\,G}{P}$ y luego $L \ge \log_{\text{base}} N$.
+  \item Alfabeto \texttt{[a-zA-Z0-9]} $= 26+26+10 = 62$ símbolos $\Rightarrow N = 62^{L}$.
+  \item \textbf{Salt} (Clase 7): perturbación por usuario, $f(a)=x\,\|\,f'(a,x)$. \textbf{No agranda el espacio de búsqueda de un ataque dirigido a un único usuario}; lo que hace es \textbf{impedir la paralelización} (rainbow tables, atacar a todos a la vez) porque dos claves iguales ya no dan el mismo hash. Para un ataque online contra \emph{una} cuenta, el salt no cambia $N$.
+  \item \textbf{Multicanal / MFA} (Clase 7): los factores/canales deben ser de \textbf{distinta naturaleza} e \textbf{independientes}; comprometer uno no debe comprometer al otro. El segundo canal sirve para \emph{verificar}, no para \emph{recuperar} el primer factor.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+Es un ejercicio análogo a los tres resueltos de Anderson en Clase 7 (donde se calculó $T\approx 6$ días para $N=10^{10}$ y $L\ge 9$ para alfanumérico con $G=10^5$). Acá hay dos errores que detectar: (1) el dimensionamiento del espacio, y (2) la creencia de que ``sumar bits de salt'' reduce la probabilidad de adivinar una clave concreta. El inciso b) conecta con la advertencia de Clase 7 sobre que el celular concentra ``algo que tengo'' + ``algo que soy'' y, sobre todo, con que usar el canal de verificación como canal de \emph{recuperación} colapsa la independencia de factores (cae en el patrón de la cuenta que se recupera con un solo factor robado).
+
+\paragraph{Resolución.}
+\textbf{a) La afirmación es INCORRECTA.} Con $L=5$ y alfabeto de 62 símbolos:
+\begin{equation*}
+  N = 62^{5} = 916\,132\,832 \approx 9{,}16\times10^{8}.
+\end{equation*}
+En un año, con $G=10^4$ pruebas/seg, el atacante realiza
+\begin{equation*}
+  T\,G = (365\cdot24\cdot3600)\cdot10^{4} = 3{,}15\times10^{7}\cdot10^{4} \approx 3{,}15\times10^{11}\ \text{pruebas}.
+\end{equation*}
+Aplicando Anderson:
+\begin{equation*}
+  P = \frac{T\,G}{N} = \frac{3{,}15\times10^{11}}{9{,}16\times10^{8}} \approx 344 \gg 0{,}5.
+\end{equation*}
+Es decir, el atacante recorre el espacio entero unas $344$ veces en un año: la clave se adivina prácticamente con certeza, muy lejos de $P<0{,}5$. La longitud mínima real para $P<0{,}5$ surge de
+\begin{equation*}
+  N \ge \frac{T\,G}{P} = \frac{3{,}15\times10^{11}}{0{,}5} \approx 6{,}3\times10^{11},
+  \qquad L \ge \log_{62}\!\bigl(6{,}3\times10^{11}\bigr) \approx 6{,}58 \;\Rightarrow\; \boxed{L \ge 7}.
+\end{equation*}
+\textbf{Además, los ``5 bits de SALT'' son irrelevantes para esta cuenta}: el salt no agranda el espacio de búsqueda de un ataque dirigido a una clave concreta (solo impide precomputar/paralelizar entre usuarios). No aporta nada a la probabilidad de adivinar \emph{esta} password. Conclusión: hacen falta al menos 7 símbolos (no 5), y el salt no es lo que baja $P$.
+
+\textbf{b) Problema del SMS como canal de recuperación.} Un sistema multicanal/MFA exige que los canales sean \textbf{independientes y de distinta naturaleza}, de modo que comprometer uno no comprometa al otro. Si el \textbf{mismo} segundo canal (SMS) que se usa como segundo factor se habilita además para \textbf{recuperar el password}, entonces apoderarse del canal SMS (SIM swapping, intercepción SS7, robo/clonado del celular) permite (i) recibir el código del segundo factor y (ii) resetear el primer factor: el atacante obtiene \textbf{ambos} con un único asset comprometido. Se \textbf{rompe la independencia de factores}: lo que debía requerir comprometer dos cosas distintas pasa a requerir una sola. El aspecto de autenticación multicanal que no se cumple es precisamente la \textbf{separación/independencia de los factores} (el segundo canal deja de ser un factor adicional y se vuelve un \emph{único punto de falla}). Es el mismo riesgo que la nota de Clase 7 sobre el celular que concentra dos factores.
+
+% =====================================================================
+\subsection{Ejercicio 4 — Secreto compartido de Shamir y entropía}
+% =====================================================================
+
+\begin{consigna}
+Considerar un esquema de secreto compartido de Shamir $(k,n)=(3,4)$ en $\mathbb{Z}_7$, con el conjunto de sombras $C=\{(1,6),(2,1),(3,0),(4,3)\}$.
+
+\begin{enumerate}
+  \item[a)] Recuperar el secreto.
+  \item[b)] ¿Cuál es el polinomio generador?
+  \item[c)] Analizar el esquema desde la perspectiva del análisis de entropía y flujo de información.
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 9 — Flujo de Información y Malware (\S entropía de Shannon; definición formal de flujo de información). Clase 8 — Principios de Diseño (\S secreto de Shamir demostrado con entropía; validez de un esquema $(T,N)$).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{Shamir $(k,n)$:} el secreto es $S=f(0)$ de un polinomio de grado $k-1$; con $(3,4)$ el grado es $2$, $f(x)=a_2x^2+a_1x+a_0\pmod 7$ y $S=a_0$. Hacen falta \textbf{al menos $k=3$} sombras para reconstruirlo (interpolación de Lagrange o sistema de ecuaciones en $\mathbb{Z}_7$).
+  \item \textbf{Entropía y flujo} (Clase 9 / Clase 8): hay flujo de información de $x$ a $y$ si la incertidumbre sobre $x$ \emph{baja} al observar $y$. La \textbf{validez de un esquema $(T,N)$ vía entropía} (Clase 8): con menos de $T$ sombras la entropía del secreto \textbf{no cambia} ($H(S\mid \text{sombras}) = H(S)$, no hay flujo); con $T$ o más, $H\to 0$ (se recupera).
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+La parte c) es exactamente la ``demostración con entropía'' que aparece en Clase 8 para validar un esquema de Shamir, apoyada en la definición formal de flujo de Clase 9. Es el cruce canónico entre secreto compartido y teoría de la información: el esquema es \emph{seguro} precisamente porque, por debajo del umbral $k$, no hay flujo de información hacia el adversario.
+
+\paragraph{Resolución.}
+\textbf{a) y b) Reconstrucción.} Trabajamos en $\mathbb{Z}_7$. Tomamos tres sombras, $(1,6),(2,1),(3,0)$, y resolvemos $f(x)=a_2x^2+a_1x+a_0$:
+\begin{align*}
+  a_2 + a_1 + a_0 &\equiv 6 \pmod 7 \\
+  4a_2 + 2a_1 + a_0 &\equiv 1 \pmod 7 \\
+  9a_2 + 3a_1 + a_0 \equiv 2a_2 + 3a_1 + a_0 &\equiv 0 \pmod 7
+\end{align*}
+Resolviendo el sistema módulo $7$ se obtiene
+\begin{equation*}
+  a_2 = 2,\quad a_1 = 3,\quad a_0 = 1
+  \qquad\Longrightarrow\qquad \boxed{f(x) = 2x^2 + 3x + 1 \pmod 7}.
+\end{equation*}
+El \textbf{secreto} es $S = f(0) = a_0 = \boxed{1}$. \emph{Verificación de consistencia con la cuarta sombra:} $f(4) = 2\cdot16 + 3\cdot4 + 1 = 32+12+1 = 45 \equiv 3 \pmod 7$, que coincide con $(4,3)$: las cuatro sombras pertenecen al mismo polinomio (esquema consistente, $n=4$ sombras sobre un polinomio de grado $2$).
+
+\textbf{c) Análisis por entropía y flujo de información.} Sea $S$ la variable aleatoria del secreto sobre $\mathbb{Z}_7$ (a priori uniforme, $H(S)=\log_2 7 \approx 2{,}807$ bits). El esquema $(3,4)$ es válido sii con menos de $k=3$ sombras \textbf{no hay flujo} hacia el adversario:
+\begin{align*}
+  H(S \mid S_1) &= H(S) \quad\text{(1 sombra: no reduce incertidumbre)}\\
+  H(S \mid S_1,S_2) &= H(S) \quad\text{(2 sombras: tampoco)}\\
+  H(S \mid S_1,S_2,S_3) &= 0 \quad\;\;\text{(3 sombras: el secreto queda determinado)}.
+\end{align*}
+La razón: con $\le 2$ puntos hay exactamente $7$ polinomios de grado $2$ (uno por cada valor posible de $a_0$) que pasan por ellos, así que cada valor de $S$ sigue siendo equiprobable y la entropía condicional iguala a la incondicional: \textbf{no hay flujo de información} (la condición de Clase 9 $H(S\mid \text{obs}) < H(S)$ \emph{no} se cumple). Al llegar a $k=3$ sombras el polinomio queda unívocamente determinado, $H\to 0$: \emph{ahí} ocurre el flujo y se revela $S$. Esto demuestra formalmente que el esquema es seguro hasta el umbral y reconstruible a partir de él.
+
+% =====================================================================
+\subsection{Ejercicio 5 — Modelado de control de acceso para una organización (roles y datos)}
+% =====================================================================
+
+\begin{consigna}
+Para controlar el avance del deep fake, la ONU establece una organización internacional que se va a encargar de escrutiñar las redes sociales y medios masivos para producir contenido serio que aporte una mirada objetiva sobre las noticias falsas que circulan. Asumiendo que son los CSO de esta incipiente organización, estructurar y modelar como podría ser el esquema para administrar permisos del sistema interno para el manejo de las publicaciones. Asignar los roles que crean pertinentes y sus competencias.
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 6 — Políticas y Control de Acceso (\S RBAC; matriz de accesos; separación de tareas; MAC/DAC). Clase 11 — Protección de Datos (\S Data Roles: Trustee / Steward / Custodian / User). Clase 8 — Principios de Diseño (\S mínimo privilegio; separación de privilegios; mediación completa). Clase 6 — Clark--Wilson (\S separation of duty).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{RBAC} (Clase 6): asignar permisos a \textbf{roles} y roles a usuarios; escala mejor que la matriz de accesos directa porque el cuello de botella humano (quién llena la matriz) se reduce. Tiene discrecionalidad fuerte (alguien asigna los roles).
+  \item \textbf{Separación de tareas / separation of duty} (Clase 6 Clark--Wilson y Clase 8 principio 6): quien produce/edita un contenido no debería ser quien lo aprueba/publica (oposición de intereses, anti-fraude/anti-manipulación).
+  \item \textbf{Data Roles} (Clase 11): jerarquía de gobernanza del dato — \textbf{Trustee} (estratégico, legal/cabinet-level) $\to$ \textbf{Steward} (aprueba accesos) $\to$ \textbf{Custodian} (otorga acceso técnico) $\to$ \textbf{User} (accede). Dominio más chico cuanto más baja la jerarquía.
+  \item \textbf{Principios} (Clase 8): mínimo privilegio (cada rol con lo justo), mediación completa (todo paso de un estado a otro de la publicación pasa por un control), fail-safe defaults (por defecto, sin permiso).
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+El ejercicio es abierto (``estructurar y modelar''): se evalúa que apliques RBAC con \textbf{separación de tareas} sobre el flujo editorial de una publicación, citando los principios de diseño y, opcionalmente, la jerarquía de Data Roles de Clase 11 para la gobernanza. El gancho es el mismo de Clark--Wilson llevado a un dominio editorial: el ``CDI'' es la publicación, el ``TP'' es el flujo de aprobación, y quien edita no puede ser quien aprueba.
+
+\paragraph{Resolución.}
+Proponemos un esquema \textbf{RBAC} con \textbf{separación de tareas} sobre el ciclo de vida de una publicación, gobernado por la jerarquía de Data Roles (Clase 11) y respetando mínimo privilegio (Clase 8).
+
+\emph{Ciclo de vida de la publicación (estados):} \texttt{Borrador} $\to$ \texttt{En revisión} $\to$ \texttt{Verificado} $\to$ \texttt{Publicado} (con posible \texttt{Rechazado}/\texttt{Retractado}). Cada transición es un punto de mediación completa (análogo a un TP de Clark--Wilson: solo ciertos roles llevan la publicación de un estado válido a otro).
+
+\emph{Roles y competencias (RBAC):}
+\begin{itemize}
+  \item \textbf{Analista / Investigador} (crea): redacta borradores y recopila evidencia. Permisos: crear/editar publicaciones propias en estado \texttt{Borrador}; enviar a revisión. \emph{No} puede aprobar ni publicar.
+  \item \textbf{Fact-checker / Verificador} (verifica): contrasta fuentes y marca la publicación como \texttt{Verificado} o \texttt{Rechazado}. \emph{Separación de tareas}: no puede ser el mismo que la redactó (oposición de intereses, anti-manipulación).
+  \item \textbf{Editor / Aprobador} (publica): aprueba y publica el contenido verificado. \emph{No} edita el cuerpo (para no introducir sesgo tras la verificación).
+  \item \textbf{Auditor / Compliance} (controla): acceso de \emph{solo lectura} a todo el historial y a la bitácora (log inmutable de quién hizo qué). Verifica integridad del proceso (rol IVP).
+  \item \textbf{Administrador de acceso (Custodian)} y \textbf{Data Steward}: el Steward aprueba qué roles existen y quién los recibe; el Custodian los otorga técnicamente. Por encima, un \textbf{Data Trustee} (nivel CSO/legal) define la política internacional. \emph{Ningún} usuario operativo administra sus propios permisos.
+\end{itemize}
+
+\emph{Decisiones de diseño justificadas:}
+\begin{itemize}
+  \item \textbf{Separación de tareas} entre crear, verificar y publicar (Clase 6/8): impide que una sola persona introduzca y publique desinformación; es el control central dado el dominio (deep fakes / noticias falsas).
+  \item \textbf{Mínimo privilegio} y \textbf{fail-safe defaults} (Clase 8): cada rol solo accede a lo necesario; por defecto, sin permiso.
+  \item \textbf{Mediación completa} + \textbf{bitácora} (Clark--Wilson, journal): toda transición de estado pasa por un control y queda registrada para auditoría/no repudio.
+  \item \textbf{RBAC} sobre matriz directa: escala a una organización internacional grande y permite revisar permisos por rol, no usuario a usuario.
+\end{itemize}

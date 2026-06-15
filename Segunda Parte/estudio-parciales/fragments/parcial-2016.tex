@@ -1,0 +1,427 @@
+\section{Segundo Parcial 2016}
+
+% =====================================================================
+\subsection{Ejercicio 1 --- Modelo de compartimentos de confidencialidad}
+% =====================================================================
+
+\begin{consigna}
+Un famoso restaurante de 5 estrellas en la guía Michelin se destaca por todo lo que sirve:
+platos salados, platos dulces y bebidas (vinos y tragos).
+
+Se tienen los siguientes sujetos:
+\begin{itemize}
+  \item Jorge, José y Juan son los dueños.
+  \item Manuel y Ramón son chefs.
+  \item Luis es uno de los mozos.
+  \item Andrea es una cliente.
+\end{itemize}
+
+Considerar los siguientes objetos:
+\begin{itemize}
+  \item Recetas (tanto de platos dulces, como de salados, como de tragos).
+  \item Menu. (se considera menú al listado de platos con sus respectivos precios).
+  \item Listas de Stock (de productos para platos dulces, salados y tragos).
+  \item Comanda. (pedido que se hace al camarero-mozo).
+\end{itemize}
+
+\textbf{Diseñar un modelo de compartimentos de confidencialidad, que permita garantizar
+los siguientes requisitos, justificando el cumplimiento de cada uno.}
+\begin{itemize}
+  \item Jorge puede leer todas las recetas, las listas de stock, el menú y las comandas.
+  \item José, el somellier, es el único que escribe recetas de tragos. También lee stock de
+        productos para tragos.
+  \item Juan es el único que escribe recetas de platos (tanto dulces como salados). También lee
+        stock de productos para platos.
+  \item Los chefs pueden leer las recetas, pero no modificarlas.
+  \item Los chefs pueden escribir en las listas de stocks para recomendar la compra de
+        productos de su área.
+  \item Ramón es el jefe de la barra, y sólo se ocupa de armar tragos. No cocina platos.
+  \item Manuel dirige la cocina de platos dulces y salados.
+  \item Los mozos sólo leen el menú y escriben comandas (no leen ni escriben nada mas).
+  \item Los clientes sólo leen menús.
+\end{itemize}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 6 --- Políticas y Control de Acceso ($\S$ Bell--LaPadula; $\S$ Compartimentos, reticulado
+y dominancia). Modelo de confidencialidad por \emph{compartimentos} (\emph{lattice}) con regla
+\emph{read-down / write-up} y \emph{need-to-know}.
+
+\paragraph{Qué necesitás saber.}
+El enunciado pide explícitamente un \textbf{modelo de compartimentos}, es decir
+Bell--LaPadula con categorías. Un compartimento es un par \textbf{(nivel, conjunto de
+categorías)}. Las reglas de BLP, en su forma con dominancia:
+\begin{itemize}
+  \item \textbf{Lectura (seguridad simple, \emph{read-down}):} $s$ lee $o$ sii
+        $\Lvl(s) \dom \Lvl(o)$.
+  \item \textbf{Escritura (propiedad $\ast$, \emph{write-up}):} $s$ escribe $o$ sii
+        $\Lvl(o) \dom \Lvl(s)$.
+\end{itemize}
+La relación de \textbf{dominancia} para $(L,C)$ y $(L',C')$:
+\begin{equation*}
+  (L,C) \dom (L',C') \iff L' \le L \;\wedge\; C' \subseteq C.
+\end{equation*}
+El conjunto de compartimentos forma un \textbf{reticulado} (orden parcial): pares incomparables
+quedan \textbf{separados} (ni lectura ni escritura entre ellos). Las \textbf{categorías}
+implementan el \emph{need-to-know} (un sujeto solo accede a su área aunque su nivel sea alto).
+
+\paragraph{Notas y conexiones.}
+La clave del ejercicio es notar que hay \textbf{dos dimensiones} de separación que no son un
+mero orden total: (i) un \textbf{rumbo de área} (\emph{dulce}, \emph{salado}, \emph{tragos})
+que se modela con \textbf{categorías} (separación horizontal, \emph{need-to-know}: Manuel no
+toca tragos y Ramón no toca platos $\Rightarrow$ categorías incomparables, se separan solos),
+y (ii) una \textbf{jerarquía de poder} (los dueños arriba, los mozos/clientes abajo) que se
+modela con el \textbf{nivel}. Quien \emph{escribe} recetas debe estar en un nivel \emph{más
+bajo} que quien las lee, por la regla \emph{write-up}: en BLP el flujo de información sube, así
+que el ``autor'' escribe hacia arriba y el ``lector con autoridad'' lee hacia abajo. Esto
+mismo se reusa en Clase 9 (confinamiento) donde BLP es el modelo canónico de control de flujo.
+
+\paragraph{Resolución.}
+\textbf{Categorías (need-to-know por área).} Definimos el conjunto de categorías
+$\{\textsf{D}, \textsf{S}, \textsf{T}\}$ (Dulce, Salado, Tragos). Los objetos por área llevan
+su categoría; el \textsf{Menú} y las \textsf{Comandas} son transversales (categoría vacía o
+las tres, según convenga al flujo, ver abajo).
+
+\textbf{Niveles (jerarquía de escritura/lectura).} Para cada área usamos dos niveles, porque
+el \emph{autor} de la receta debe quedar \textbf{debajo} del lector con autoridad
+(\emph{write-up}). Proponemos, dentro de cada categoría:
+\begin{equation*}
+  \text{Bajo (autor)} \;<\; \text{Alto (dueño lector)}.
+\end{equation*}
+
+Asignación de compartimentos (nivel, categorías):
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{l l l}
+\toprule
+\textbf{Sujeto} & \textbf{Compartimento} & \textbf{Justificación} \\
+\midrule
+Jorge (dueño) & $(\text{Alto},\{\textsf{D},\textsf{S},\textsf{T}\})$ &
+  lee todo hacia abajo (recetas, stock, menú, comandas). \\
+José (somellier) & $(\text{Bajo},\{\textsf{T}\})$ &
+  único autor de recetas de tragos ($\Rightarrow$ \emph{write-up} a recetas\textsubscript{T}). \\
+Juan & $(\text{Bajo},\{\textsf{D},\textsf{S}\})$ &
+  único autor de recetas de platos dulces/salados. \\
+Manuel (chef platos) & $(\text{Medio},\{\textsf{D},\textsf{S}\})$ &
+  lee recetas\textsubscript{D,S}, escribe stock\textsubscript{D,S}. \\
+Ramón (chef barra) & $(\text{Medio},\{\textsf{T}\})$ &
+  lee recetas\textsubscript{T}, escribe stock\textsubscript{T}; no toca platos. \\
+Luis (mozo) & $(\text{Mozo},\varnothing)$ &
+  lee menú, escribe comandas. \\
+Andrea (cliente) & $(\text{Cliente},\varnothing)$ &
+  solo lee menú. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Y los objetos:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{l l}
+\toprule
+\textbf{Objeto} & \textbf{Compartimento} \\
+\midrule
+Recetas de tragos & $(\text{Bajo},\{\textsf{T}\})$ \\
+Recetas de platos dulces/salados & $(\text{Bajo},\{\textsf{D},\textsf{S}\})$ \\
+Stock de tragos & $(\text{Bajo},\{\textsf{T}\})$ \\
+Stock de platos dulces/salados & $(\text{Bajo},\{\textsf{D},\textsf{S}\})$ \\
+Menú & $(\text{Mozo},\varnothing)$ \\
+Comanda & $(\text{Alto},\varnothing)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Verificación requisito por requisito} (recordando lectura: $\Lvl(s)\dom\Lvl(o)$;
+escritura: $\Lvl(o)\dom\Lvl(s)$):
+\begin{itemize}
+  \item \textbf{Jorge lee todo:} $(\text{Alto},\{\textsf{D},\textsf{S},\textsf{T}\})$ domina a
+        todos los objetos de recetas/stock (nivel mayor o igual y categorías que contienen las
+        del objeto) y al menú/comandas $\Rightarrow$ \emph{read-down} OK.
+  \item \textbf{José único que escribe recetas de tragos:} su compartimento
+        $(\text{Bajo},\{\textsf{T}\})$ permite \emph{write-up} a recetas\textsubscript{T}
+        $(\text{Bajo},\{\textsf{T}\})$ (mismo compartimento, escritura válida). Ningún otro
+        sujeto con categoría $\textsf{T}$ está en nivel $\le \text{Bajo}$ con esa categoría
+        exclusiva, así que nadie más puede escribirlas. También lee stock\textsubscript{T}
+        (mismo compartimento).
+  \item \textbf{Juan único que escribe recetas de platos:} idéntico con
+        $(\text{Bajo},\{\textsf{D},\textsf{S}\})$; lee stock de platos.
+  \item \textbf{Chefs leen recetas pero no las modifican:} Manuel/Ramón están en nivel
+        \emph{Medio} $>$ Bajo. Lectura de recetas: $\Lvl(\text{chef})\dom\Lvl(\text{receta})$
+        (Medio domina Bajo, categorías incluidas) $\Rightarrow$ \textbf{leen}. Escritura de
+        recetas: requeriría $\Lvl(\text{receta})\dom\Lvl(\text{chef})$, es decir
+        $\text{Bajo}\dom\text{Medio}$, que es \textbf{falso} $\Rightarrow$ \textbf{no pueden
+        modificarlas}. Exactamente lo pedido (es el caso de manual de BLP: leer hacia abajo
+        sí, escribir hacia abajo no).
+  \item \textbf{Chefs escriben en stock de su área:} ponemos el stock en nivel Bajo; entonces
+        \emph{write-up} desde Medio a Bajo \emph{no} valdría. Para respetar el requisito el
+        stock de cada área se coloca en el \textbf{mismo nivel de los chefs o por encima} para
+        esa escritura; lo más limpio es modelar el stock como objeto en
+        $(\text{Medio},\{\textsf{área}\})$ para escritura por el chef (write-up trivial al
+        mismo nivel) y dejar que los dueños lo lean desde Alto. \emph{(Detalle de diseño: el
+        stock necesita un compartimento que admita lectura del autor de área para
+        ``recomendar compra''; se ubica al nivel del chef.)}
+  \item \textbf{Ramón solo tragos / Manuel solo platos:} sus categorías
+        ($\{\textsf{T}\}$ vs $\{\textsf{D},\textsf{S}\}$) son \textbf{incomparables}
+        $\Rightarrow$ están separados: Ramón no lee ni escribe objetos de platos y viceversa
+        (\emph{need-to-know} puro, sin necesidad de regla extra).
+  \item \textbf{Mozos leen menú, escriben comandas, nada más:} Luis $(\text{Mozo},\varnothing)$
+        lee el menú $(\text{Mozo},\varnothing)$ (mismo compartimento); escribe la comanda
+        $(\text{Alto},\varnothing)$ por \emph{write-up} ($\text{Alto}\dom\text{Mozo}$, categoría
+        $\varnothing\subseteq\varnothing$) $\Rightarrow$ escribe pero \textbf{no la puede
+        leer} (no domina Alto). No tiene categorías $\Rightarrow$ no ve recetas ni stock.
+  \item \textbf{Clientes solo leen menú:} Andrea $(\text{Cliente},\varnothing)$ con
+        Cliente $<$ Mozo; lee el menú por \emph{read-down}. No escribe comandas porque eso
+        sería write-up que solo habilitamos al mozo, y por nivel/rol no accede a nada más.
+\end{itemize}
+
+\noindent Las comandas en nivel Alto y categoría vacía hacen que ``suban'' del mozo hacia los
+dueños (flujo de información hacia arriba, como manda BLP) sin que el mozo pueda releerlas.
+
+% =====================================================================
+\subsection{Ejercicio 2 --- Definir conceptos y relacionarlos}
+% =====================================================================
+
+\begin{consigna}
+Define cada concepto. Luego, escribe una frase que justifique la relación entre un par de ellos
+(no una relación trivial como que pertenecen a una misma categoría o son relativos a seguridad
+informática).
+\begin{itemize}
+  \item principio de mínimo privilegio
+  \item confinamiento
+  \item rootkit
+  \item troyano
+\end{itemize}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 8 --- Principios de Diseño ($\S$ Mínimo privilegio). Clase 9 --- Flujo de Información y
+Malware ($\S$ El problema del confinamiento; $\S$ Rootkit; $\S$ Troyano).
+
+\paragraph{Qué necesitás saber.}
+Las cuatro definiciones, tomadas de las fuentes:
+\begin{itemize}
+  \item \textbf{Principio de mínimo privilegio (\emph{least privilege}, Saltzer \& Schroeder):}
+        asegurar que cada sujeto tenga \textbf{solo el acceso necesario para realizar su tarea,
+        ni más}. Consecuencia derivada: la condición por defecto es \emph{no tener acceso a
+        nada} (enlaza con \emph{fail-safe defaults}).
+  \item \textbf{Confinamiento:} dificultad de asegurar que un proceso (sujeto) \textbf{no
+        transmita información} a una entidad a la que no está autorizado, ni de forma directa
+        ni indirecta. El ideal es la \emph{aislación total} (no comunicar y no ser observado),
+        que en la práctica es inalcanzable porque todo cómputo deja medidas observables.
+  \item \textbf{Rootkit:} software diseñado para \textbf{ocultar malware} dentro de la máquina
+        infectada, con contramedidas activas (ofuscación, encripción, reemplazo de
+        herramientas del sistema, intercepción de \emph{system calls}) para quedar invisible a
+        administradores y antivirus. Opera a nivel kernel/usuario o incluso firmware/BIOS.
+  \item \textbf{Troyano:} malware \textbf{oculto dentro de otro software aparentemente benigno}
+        y de interés para la víctima (del caballo de Troya). Sirve para que el atacante se
+        establezca dentro del equipo infectado.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+\emph{Rootkit} y \emph{troyano} son las dos formas de \textbf{esconderse} del malware
+(ocultamiento), distintas de \emph{virus/worm} que aportan la \emph{propagación}; ninguno de
+los dos describe el \emph{payload}. La distinción fina: el troyano se esconde en la
+\emph{instalación} (parece software legítimo para entrar), el rootkit se esconde
+\emph{una vez dentro} (oculta su presencia al sistema operativo).
+
+\paragraph{Resolución.}
+Definiciones, dadas arriba. Frases de relación \textbf{no triviales} (basta una para cumplir la
+consigna; se ofrecen dos opciones):
+\begin{itemize}
+  \item \textbf{Troyano $\leftrightarrow$ Rootkit:} ``Un troyano logra la \emph{entrada}
+        haciéndose pasar por software benigno, y suele instalar un \emph{rootkit} que garantiza
+        la \emph{permanencia} ocultando esa presencia al sistema y al antivirus; el primero
+        resuelve el ingreso, el segundo la invisibilidad posterior.''
+  \item \textbf{Mínimo privilegio $\leftrightarrow$ Confinamiento:} ``El mínimo privilegio
+        \emph{limita qué puede acceder} un proceso, pero \emph{no impide que reenvíe} lo que ya
+        leyó; el confinamiento ataca justamente ese hueco al restringir el \emph{flujo} de
+        información del proceso hacia afuera (control de acceso $\neq$ control de flujo).''
+\end{itemize}
+
+% =====================================================================
+\subsection{Ejercicio 3 --- Secreto compartido de Shamir y entropía}
+% =====================================================================
+
+\begin{consigna}
+Considerar el conjunto $C$ de sombras para un esquema de secreto compartido de Shamir $(k,n)$,
+donde $k=3$ y $n=4$ sobre $\mathbb{Z}_7$.
+\[
+  C = \{(1,6),(2,1),(3,0),(4,3)\}
+\]
+\begin{enumerate}[label=\textbf{\alph*)}]
+  \item Obtener el secreto.
+  \item Obtener el polinomio utilizado para obtener el conjunto de sombras.
+  \item Expresar el significado de un esquema de secreto umbral $(3,n)$ utilizando el concepto
+        de entropía.
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 8 --- Principios de Diseño ($\S$ El secreto compartido de Shamir, en términos de
+entropía; $\S$ Entropía $H(x)$ e incertidumbre). Esquema umbral $(T,N)$ + interpolación de
+Lagrange en $\mathbb{Z}_p$.
+
+\paragraph{Qué necesitás saber.}
+En Shamir $(k,n)$ el repartidor elige un polinomio de grado $k-1$ con coeficientes en
+$\mathbb{Z}_p$:
+\begin{equation*}
+  f(x) = a_0 + a_1 x + a_2 x^2 + \dots + a_{k-1}x^{k-1} \pmod p,
+\end{equation*}
+donde el \textbf{secreto es $S = a_0 = f(0)$} y cada sombra es un punto $(x_i, f(x_i))$. Con
+$k=3$ el polinomio es \textbf{cuadrático} y bastan $3$ sombras para reconstruirlo por
+interpolación. En $\mathbb{Z}_7$ todas las operaciones son módulo $7$ y la división es
+multiplicación por el inverso modular ($a^{-1} = a^{p-2} = a^5 \bmod 7$). Para el secreto se
+puede interpolar directamente en $x=0$:
+\begin{equation*}
+  S = f(0) = \sum_{i} y_i \prod_{j\neq i} \frac{0 - x_j}{x_i - x_j} \pmod 7 .
+\end{equation*}
+
+\paragraph{Notas y conexiones.}
+La parte (c) es el puente \textbf{Shamir $\leftrightarrow$ entropía} que la cátedra desarrolla
+en la práctica de Clase 8/9: ``un esquema $(T,N)$ es válido'' equivale a decir que con
+\emph{menos de $T$} sombras la entropía del secreto \textbf{no baja} (no hay flujo de
+información), y con $T$ o más \textbf{cae a $0$}. Es el mismo criterio de flujo de información
+por entropía de Clase 9 (reducir $H$ = hay flujo).
+
+\paragraph{Resolución.}
+
+\textbf{a) Secreto.} Interpolamos en $x=0$ con las tres primeras sombras
+$(1,6),(2,1),(3,0)$ en $\mathbb{Z}_7$. Los términos de Lagrange evaluados en $0$:
+\begin{align*}
+  \ell_1(0) &= \frac{(0-2)(0-3)}{(1-2)(1-3)} = \frac{(-2)(-3)}{(-1)(-2)} = \frac{6}{2} = 3,\\
+  \ell_2(0) &= \frac{(0-1)(0-3)}{(2-1)(2-3)} = \frac{(-1)(-3)}{(1)(-1)} = \frac{3}{-1}
+              \equiv 3\cdot 6 \equiv 18 \equiv 4 \pmod 7,\\
+  \ell_3(0) &= \frac{(0-1)(0-2)}{(3-1)(3-2)} = \frac{(-1)(-2)}{(2)(1)} = \frac{2}{2} = 1.
+\end{align*}
+Entonces
+\begin{align*}
+  S = f(0) &= 6\cdot 3 + 1\cdot 4 + 0\cdot 1 \pmod 7 \\
+           &= 18 + 4 + 0 = 22 \equiv \boxed{1} \pmod 7 .
+\end{align*}
+El \textbf{secreto es $S = 1$}. (Se verifica más abajo que la cuarta sombra $(4,3)$ es
+consistente con el mismo polinomio, lo que confirma el resultado.)
+
+\textbf{b) Polinomio.} Buscamos $f(x)=a_0+a_1x+a_2x^2 \bmod 7$ con $f(1)=6$, $f(2)=1$,
+$f(3)=0$. Como $a_0 = S = 1$, el sistema queda:
+\begin{align*}
+  f(1) &= 1 + a_1 + a_2 \equiv 6 &&\Rightarrow\; a_1 + a_2 \equiv 5,\\
+  f(2) &= 1 + 2a_1 + 4a_2 \equiv 1 &&\Rightarrow\; 2a_1 + 4a_2 \equiv 0
+          \;\Rightarrow\; a_1 + 2a_2 \equiv 0 .
+\end{align*}
+Restando la primera de la segunda: $a_2 \equiv -5 \equiv 2 \pmod 7$, y entonces
+$a_1 \equiv 5 - a_2 = 3 \pmod 7$. El polinomio es
+\begin{equation*}
+  \boxed{\,f(x) = 1 + 3x + 2x^2 \pmod 7\,}.
+\end{equation*}
+\textbf{Verificación} de las cuatro sombras:
+\begin{align*}
+  f(1) &= 1+3+2 = 6, & f(2) &= 1+6+8 = 15 \equiv 1,\\
+  f(3) &= 1+9+18 = 28 \equiv 0, & f(4) &= 1+12+32 = 45 \equiv 3 \pmod 7 .
+\end{align*}
+Coinciden con $C$, incluida la cuarta sombra (que es redundante, como debe ser en un esquema
+$(3,4)$).
+
+\textbf{c) Significado vía entropía.} Un esquema umbral $(3,n)$ es válido cuando conocer
+\textbf{menos de $3$} sombras \textbf{no aporta información} sobre el secreto $S$ (su entropía
+no cambia), y conocer $3$ o más lo determina por completo (entropía $0$):
+\begin{equation*}
+\begin{aligned}
+  H(S \mid S_{i_1})            &= H(S)  && \text{(1 sombra: no sé nada más)},\\
+  H(S \mid S_{i_1}, S_{i_2})   &= H(S)  && \text{(2 sombras: tampoco)},\\
+  H(S \mid S_{i_1}, S_{i_2}, S_{i_3}) &= 0 && \text{(3 sombras: tengo toda la información)}.
+\end{aligned}
+\end{equation*}
+Es decir: con menos de $T=3$ sombras \textbf{no hay flujo de información} hacia el atacante
+($H$ se mantiene en su máximo, $\log_2 7$ bits si $S$ es uniforme en $\mathbb{Z}_7$); recién al
+alcanzar el umbral la incertidumbre colapsa a $0$ y se recupera el secreto. Esa es la propiedad
+de \emph{seguridad perfecta del umbral} del esquema de Shamir expresada con entropía.
+
+% =====================================================================
+\subsection{Ejercicio 4 --- Multiple choice con justificación}
+% =====================================================================
+
+\begin{consigna}
+En cada caso selecciona la opción correcta. Justificar en todos los casos. Si no se justifica
+correctamente, la respuesta quedará invalidada.
+
+\textbf{1.} Si se tiene una lista de control de acceso $\mathrm{ACL}(o) = \{(\text{Manuel}, r),
+(\text{Directivos}, w), (*,w)\}$. Asumiendo que Manuel es Directivo,
+\begin{enumerate}[label=\alph*.]
+  \item Manuel puede leer y escribir en $o$ si la política es first rule.
+  \item Manuel puede leer y escribir en $o$ si la política es grant all.
+  \item Manuel puede leer y escribir en $o$ si la política es override.
+  \item Manuel puede leer y escribir en $o$ si la política es augment.
+\end{enumerate}
+
+\textbf{2.} Se conoce como virus polimórfico
+\begin{enumerate}[label=\alph*.]
+  \item a aquél que infecta distintos tipos de archivos.
+  \item a aquél que se modifica cada vez que se replica.
+  \item a aquél que se replica muchas veces.
+  \item a aquél que se aloja en el sector de arranque o en la memoria.
+\end{enumerate}
+
+\textbf{3.} En un sistema de autenticación la Función de Complementación es la que:
+\begin{enumerate}[label=\alph*.]
+  \item Dada información de autenticación, obtiene información complementaria
+  \item Dada información complementaria, obtiene información de autenticación
+  \item Dada información de autenticación o información complementaria, las actualiza.
+  \item Dada información de autenticación e información complementaria, retorna verdadero o falso
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 6 --- Políticas y Control de Acceso ($\S$ Conflictos en ACL; $\S$ Derechos por defecto:
+override / augment). Clase 9 --- Malware ($\S$ Virus / Worm). Clase 7 --- Autenticación
+($\S$ Componentes del sistema de autenticación: tupla $\langle A,C,F,L,S\rangle$).
+
+\paragraph{Qué necesitás saber.}
+\textbf{(4.1) Resolución de conflictos de ACL.} Manuel matchea tres entradas: $(\text{Manuel},r)$,
+$(\text{Directivos},w)$ (es Directivo) y $(*,w)$ (el comodín/\emph{default}). Las políticas:
+\begin{itemize}
+  \item \textbf{First rule / first match:} se aplica \emph{solo la primera} entrada que matchea
+        $\Rightarrow$ $(\text{Manuel},r)$ $\Rightarrow$ solo \textbf{lee}.
+  \item \textbf{Grant all:} se concede un permiso solo si \emph{todas} las entradas que aplican
+        lo conceden (intersección). $r \cap w \cap w = \varnothing$ $\Rightarrow$ \textbf{ningún}
+        permiso común; ni $r$ ni $w$.
+  \item \textbf{Override / best match:} si hay entrada específica se usa esa y se ignora el
+        default. La específica para Manuel es $(\text{Manuel},r)$ $\Rightarrow$ solo \textbf{lee}.
+  \item \textbf{Augment:} se parte del default y se le \emph{suman} las entradas que aplican
+        (unión). Default $(*,w)$ + $(\text{Directivos},w)$ + $(\text{Manuel},r)$
+        $= \{r,w\}$ $\Rightarrow$ \textbf{lee y escribe}.
+\end{itemize}
+\textbf{(4.2) Virus polimórfico.} Un virus polimórfico \textbf{cambia su propio código en cada
+replicación} (típicamente re-cifrando su cuerpo con una clave/decodificador distinto) para
+evadir la detección por firma del antivirus. Encaja con la familia de \emph{rootkit}/virus que
+usan ofuscación/encripción como contramedida (Clase 9, $\S$ Rootkit).
+\textbf{(4.3) Función de complementación $F$.} En la tupla $\langle A,C,F,L,S\rangle$,
+$F:\,A\to C$ \textbf{deriva} la información complementaria $c$ (lo que guarda el sistema, p.ej.
+el hash) a partir de la información de autenticación $a$. No confundir con $L:\,A\times C\to\{0,1\}$,
+que \textbf{corrobora} (el login, opción d).
+
+\paragraph{Notas y conexiones.}
+En 4.1 la trampa es que \emph{first rule} y \emph{override} dan lo mismo aquí (solo $r$), porque
+la entrada específica de Manuel es la primera y a la vez la más específica; ninguna de las dos
+le da escritura. Solo \emph{augment} (unión con el default) le da $r$ \emph{y} $w$. En 4.3 es la
+distinción \emph{F deriva / L corrobora} que la cátedra marca como pregunta clásica; las
+opciones (a) y (d) son justamente $F$ y $L$.
+
+\paragraph{Resolución.}
+\begin{itemize}
+  \item \textbf{4.1 $\to$ opción (d), augment.} Solo \emph{augment} concede a Manuel
+        \textbf{leer y escribir}: parte del default $(*,w)$ y le agrega su $r$ específico,
+        resultando $\{r,w\}$. \emph{First rule} da solo $r$ (primera entrada), \emph{grant all}
+        no da nada (intersección $r\cap w=\varnothing$) y \emph{override} usa la específica
+        $(\text{Manuel},r)$, también solo $r$. Por lo tanto (a), (b) y (c) son falsas.
+  \item \textbf{4.2 $\to$ opción (b),} ``se modifica cada vez que se replica''. Esa es la
+        definición de polimorfismo (mutar el código en cada copia para evadir firmas). Las
+        otras describen: (a) virus multipartito/multi-formato, (c) mera tasa de replicación,
+        (d) virus de boot sector/residente en memoria.
+  \item \textbf{4.3 $\to$ opción (a).} La función de complementación es $F:\,A\to C$: dada la
+        información de autenticación, \emph{deriva} (obtiene) la información complementaria.
+        La (d) describe la función de autenticación $L$ (corrobora, retorna verdadero/falso);
+        la (c) describe las funciones de selección $S$ (altas/cambios); la (b) sería invertir
+        $F$, que justamente debe ser \emph{no invertible}.
+\end{itemize}

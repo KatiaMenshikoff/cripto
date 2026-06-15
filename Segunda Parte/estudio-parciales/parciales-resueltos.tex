@@ -1,0 +1,198 @@
+% !TEX program = pdflatex
+%=====================================================================
+%  Criptografía y Seguridad — ITBA · Segunda Parte
+%  Parciales resueltos (mapeo ejercicio → temas + resolución)
+%  Documento maestro: preámbulo + \input de cada fragmento.
+%=====================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla,es-noshorthands]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{geometry}
+\geometry{a4paper,margin=2.4cm,headheight=24pt}
+
+\usepackage{xcolor}
+%---- Paleta ITBA ----
+\definecolor{itbaCyan}{HTML}{6EC6D9}
+\definecolor{itbaCyanDark}{HTML}{2E8B9E}
+\definecolor{itbaBlue}{HTML}{AEDCEA}
+\definecolor{boxBlue}{HTML}{BBD4F0}
+\definecolor{slideGray}{HTML}{ECECEC}
+\definecolor{practGreen}{HTML}{4F8A3D}
+\definecolor{practGreenL}{HTML}{E2EFD9}
+\definecolor{attackRed}{HTML}{C0392B}
+\definecolor{codeBg}{HTML}{F5F5F5}
+
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{pifont}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,shapes.misc,shapes.symbols,arrows.meta,positioning,
+                calc,fit,backgrounds,decorations.pathmorphing,decorations.pathreplacing,
+                decorations.markings,shadows.blur,chains,matrix}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=itbaCyanDark,urlcolor=itbaCyanDark,
+            citecolor=itbaCyanDark,linktoc=all,
+            pdftitle={Parciales resueltos - Cripto Segunda Parte},
+            pdfauthor={Criptografia y Seguridad - ITBA}}
+
+%---- Encabezados ----
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\textsc{Criptografía y Seguridad — ITBA}}
+\rhead{\small Parciales resueltos · Segunda Parte}
+\cfoot{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+%---- Títulos de sección con barra de color ----
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{itbaCyanDark}}
+  {\thesection}{0.6em}{}
+  [\vspace{-0.4em}{\color{itbaCyan}\titlerule[2pt]}]
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{itbaCyanDark}}
+  {\thesubsection}{0.6em}{}
+
+%---- Estilo de código ----
+\lstdefinestyle{code}{
+  basicstyle=\ttfamily\footnotesize, backgroundcolor=\color{codeBg},
+  keywordstyle=\color{itbaCyanDark}\bfseries, commentstyle=\color{practGreen}\itshape,
+  stringstyle=\color{attackRed}, breaklines=true, frame=single,
+  rulecolor=\color{black!30}, showstringspaces=false, columns=fullflexible, tabsize=2,
+  xleftmargin=10pt, framexleftmargin=8pt}
+\lstset{style=code}
+
+%=====================================================================
+%  Entorno requerido por los fragmentos: consigna textual del parcial
+%=====================================================================
+\newtcolorbox{consigna}{
+  breakable, enhanced, colback=slideGray, colframe=black!55, boxrule=0.6pt, arc=2pt,
+  left=8pt,right=8pt,top=6pt,bottom=6pt, fonttitle=\bfseries, coltitle=white,
+  title={Consigna (textual)}}
+
+% Cajas auxiliares (por si algún fragmento las usa)
+\newtcolorbox{defbox}[1]{enhanced,breakable,colback=itbaBlue!25,colframe=itbaCyanDark,
+  boxrule=1pt,arc=2pt,fonttitle=\bfseries,coltitle=white,title={#1}}
+\newtcolorbox{warnbox}[1]{enhanced,breakable,colback=attackRed!8,colframe=attackRed,
+  boxrule=1pt,arc=2pt,fonttitle=\bfseries,coltitle=white,title={#1}}
+\newtcolorbox{practbox}[1]{enhanced,breakable,colback=practGreenL,colframe=practGreen,
+  boxrule=1pt,arc=2pt,fonttitle=\bfseries,coltitle=white,title={#1}}
+
+%---- Macros de control de acceso usadas por los fragmentos ----
+\newcommand{\dom}{\ensuremath{\succeq}}        % relación de dominancia
+\newcommand{\Lvl}{\ensuremath{\mathrm{L}}}     % nivel de seguridad L(·)
+\newcommand{\il}{\ensuremath{\mathrm{i}}}      % nivel de integridad i(·)
+\providecommand{\cmark}{\ding{51}}
+\providecommand{\xmark}{\ding{55}}
+
+%=====================================================================
+\begin{document}
+%=====================================================================
+
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+{\Huge\bfseries\color{itbaCyanDark} Parciales Resueltos}\\[0.4cm]
+{\LARGE Criptografía y Seguridad — Segunda Parte}\\[0.3cm]
+{\large Mapeo ejercicio → temas + resolución, con \emph{retrieval} sobre los informes}\\[1.2cm]
+{\normalsize Instituto Tecnológico de Buenos Aires (ITBA)}
+\vfill
+{\footnotesize\itshape Generado a partir de los parciales en \texttt{parciales/} y los informes
+(\texttt{informes-pina/}) / resúmenes (\texttt{resumenes/unidades/}), siguiendo el índice de temas.}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+%=====================================================================
+\section*{Cómo está armado}
+\addcontentsline{toc}{section}{Cómo está armado}
+%=====================================================================
+Cada parcial es una \textbf{sección}; cada ejercicio, una \textbf{subsección} con: la
+\emph{consigna textual}, los \emph{temas} que toca (referidos como ``Clase X — Tema''), \emph{qué
+necesitás saber}, \emph{notas y conexiones}, y la \emph{resolución}. La prioridad de fuentes es
+\textbf{informe sobre resumen}; las Clases 10/10b/11 solo tienen resumen.
+
+\medskip
+\noindent\textbf{Notas de cobertura:}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Parcial 2023 Q1} es en realidad de la \emph{Primera Parte} (criptografía pura):
+        se transcribe y mapea, pero la mayoría de sus ejercicios queda fuera del alcance de la
+        Segunda Parte (marcados con \texttt{TODO: Primera Parte}).
+  \item El archivo ``Segundo Parcial 2017'' trae internamente el encabezado ``Parcial 2 -- 2015'';
+        se conservó el rótulo del archivo y se dejó la observación en su sección.
+  \item En los Shamir, la reconstrucción por interpolación de Lagrange no está en las fuentes del
+        curso (que cubren Shamir \emph{vía entropía}); el cálculo numérico se hizo y verificó aparte.
+\end{itemize}
+
+%=====================================================================
+\section*{Material fuente (enlaces)}
+\addcontentsline{toc}{section}{Material fuente (enlaces)}
+%=====================================================================
+Los PDFs viven en \texttt{./pdfs/} (carpeta portable: mové/compartí \texttt{estudio-parciales/} y
+los enlaces siguen resolviendo). Abren con el visor del sistema; el salto exacto depende del visor.
+
+\paragraph{Informes / resúmenes por clase.}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \href{file:./pdfs/clase06-politicas-control-acceso.pdf}{Clase 6 — Políticas y Control de Acceso} (informe)
+  \item \href{file:./pdfs/clase07-autenticacion.pdf}{Clase 7 — Autenticación} (informe)
+  \item \href{file:./pdfs/clase08-principios-diseno-seguridad.pdf}{Clase 8 — Principios de Diseño y Vulnerabilidades} (informe)
+  \item \href{file:./pdfs/clase09-flujo-informacion-malware.pdf}{Clase 9 — Flujo de Información y Malware} (informe)
+  \item \href{file:./pdfs/clase10-seguridad-empresa.pdf}{Clase 10 — Seguridad en la Empresa} (resumen)
+  \item \href{file:./pdfs/clase10b-pentesting.pdf}{Clase 10b — Pentesting} (resumen)
+  \item \href{file:./pdfs/clase11-proteccion-datos.pdf}{Clase 11 — Protección de Datos} (resumen)
+\end{itemize}
+
+\paragraph{Parciales originales.}
+\href{file:./pdfs/parcial-2013.pdf}{2013} ·
+\href{file:./pdfs/parcial-2016.pdf}{2016} ·
+\href{file:./pdfs/parcial-2017.pdf}{2017} ·
+\href{file:./pdfs/parcial-2018Q1.pdf}{2018 Q1} ·
+\href{file:./pdfs/parcial-2023Q1.pdf}{2023 Q1} ·
+\href{file:./pdfs/recup-2023Q1.pdf}{Recup 2023 Q1} ·
+\href{file:./pdfs/parcial-2025Q1.pdf}{2025 Q1} ·
+\href{file:./pdfs/recup-2025Q1.pdf}{Recup 2025 Q1} ·
+\href{file:./pdfs/parcial-2025Q2.pdf}{2025 Q2}
+(el ``Parcial 2 -- 2015'' proviene de un \texttt{.doc}, sin PDF).
+
+\newpage
+
+%=====================================================================
+%  Fragmentos (orden cronológico)
+%=====================================================================
+\input{fragments/parcial-2013}
+\clearpage
+\input{fragments/parcial-2015}
+\clearpage
+\input{fragments/parcial-2016}
+\clearpage
+\input{fragments/parcial-2017}
+\clearpage
+\input{fragments/parcial-2018Q1}
+\clearpage
+\input{fragments/parcial-2023Q1}
+\clearpage
+\input{fragments/recup-2023Q1}
+\clearpage
+\input{fragments/parcial-2025Q1}
+\clearpage
+\input{fragments/recup-2025Q1}
+\clearpage
+\input{fragments/parcial-2025Q2}
+
+\end{document}

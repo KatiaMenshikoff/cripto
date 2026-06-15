@@ -1,0 +1,435 @@
+\section{Parcial 2018 Q1}
+
+% =====================================================================
+\subsection{Ejercicio 1 — Secreto compartido de Shamir}
+% =====================================================================
+
+\begin{consigna}
+Considerar un esquema de secreto compartido de Shamir $(3,3)$ en $\mathbb{Z}_{11}$, con el
+conjunto de sombras $C = \{(1,2),(2,6),(3,5)\}$.
+\begin{enumerate}[label=\alph*)]
+  \item Recuperar el secreto.
+  \item Se desea, manteniendo las sombras existentes, repartir más sombras que permitan
+        recuperar el secreto.
+        \begin{enumerate}[label=\roman*.]
+          \item Generar una.
+          \item ¿Cuántas distintas se pueden generar?
+        \end{enumerate}
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.} Clase 8 — Principios de Diseño y Vulnerabilidades (\S Secreto compartido de
+Shamir en términos de entropía); base de \emph{flujo de información} (Clase 9 — Flujo de
+Información y Malware, \S Entropía).
+
+\paragraph{Qué necesitás saber.} Un esquema $(T,N)$ de Shamir reparte el secreto $S$ entre
+$N$ sombras de modo que se necesitan \textbf{al menos $T$} para reconstruirlo, y con menos de
+$T$ la entropía del secreto \emph{no cambia} (no hay flujo de información). El esquema se
+construye con un polinomio de grado $T-1$ sobre un cuerpo finito $\mathbb{Z}_p$:
+\begin{equation*}
+  f(x) = a_0 + a_1 x + a_2 x^2 + \dots + a_{T-1} x^{T-1} \pmod{p},
+\end{equation*}
+donde el secreto es el término independiente $S = a_0 = f(0)$ y cada sombra es un par
+$(x_i,\, y_i=f(x_i))$. Con $T$ puntos, el polinomio queda unívocamente determinado (un
+polinomio de grado $T-1$ se fija con $T$ puntos), y se recupera $S=f(0)$ por
+\textbf{interpolación de Lagrange}:
+\begin{equation*}
+  f(0) = \sum_{j} y_j \prod_{m \neq j} \frac{0 - x_m}{x_j - x_m} \pmod{p}.
+\end{equation*}
+
+\paragraph{Notas y conexiones.} La validez del esquema se demuestra con entropía
+(Clase 8): $H(S\mid S_1)=H(S)$, $H(S\mid S_1,S_2)=H(S)$ (con $<T$ sombras no hay flujo) y
+$H(S\mid S_1,S_2,S_3)=0$ (con $T$ sombras la incertidumbre cae a $0$ y el secreto queda
+determinado). Aquí $T=N=3$: hacen falta las tres sombras, ninguna sombra propia revela nada del
+secreto. Toda la aritmética es \textbf{módulo $p=11$} (cuerpo finito), incluidos los inversos
+multiplicativos para dividir.
+
+\paragraph{Resolución.}
+\textbf{a) Recuperar el secreto.} Polinomio de grado $T-1=2$. Interpolación de Lagrange en
+$x=0$ con los puntos $(1,2),(2,6),(3,5)$ sobre $\mathbb{Z}_{11}$. Los coeficientes de Lagrange
+en $0$ son:
+\begin{align*}
+  \ell_1(0) &= \frac{(0-2)(0-3)}{(1-2)(1-3)} = \frac{6}{2} = 3, \\
+  \ell_2(0) &= \frac{(0-1)(0-3)}{(2-1)(2-3)} = \frac{3}{-1} = -3 \equiv 8, \\
+  \ell_3(0) &= \frac{(0-1)(0-2)}{(3-1)(3-2)} = \frac{2}{2} = 1.
+\end{align*}
+Entonces
+\begin{equation*}
+  S = f(0) = 2\cdot 3 + 6\cdot 8 + 5\cdot 1 = 6 + 48 + 5 = 59 \equiv 4 \pmod{11}.
+\end{equation*}
+\fbox{$S = 4$.} (Verificación reconstruyendo el polinomio completo: $f(x)=4+6x+3x^2 \bmod 11$,
+que en efecto da $f(1)=13\equiv2$, $f(2)=28\equiv6$, $f(3)=49\equiv5$.)
+
+\medskip
+\textbf{b.i) Generar una sombra nueva.} Manteniendo las sombras existentes hay que usar
+\textbf{el mismo polinomio} $f(x)=4+6x+3x^2 \bmod 11$ y evaluarlo en un $x$ no usado todavía
+(y distinto de $0$, que es el secreto mismo). Por ejemplo, en $x=4$:
+\begin{equation*}
+  f(4) = 4 + 6\cdot4 + 3\cdot16 = 4 + 24 + 48 = 76 \equiv 10 \pmod{11}.
+\end{equation*}
+Una sombra nueva válida es $\boxed{(4,\,10)}$. Cualquier subconjunto de $3$ sombras (viejas o
+nuevas) reconstruye $S=4$.
+
+\medskip
+\textbf{b.ii) ¿Cuántas distintas se pueden generar?} Las sombras se identifican por su
+abscisa $x \in \mathbb{Z}_{11}$. Quedan excluidas $x=0$ (es $f(0)=S$, no es una sombra: la
+revelaría) y las tres ya repartidas $x\in\{1,2,3\}$. Restan
+\begin{equation*}
+  11 - 1 - 3 = \boxed{7} \quad\text{sombras nuevas distintas } (x \in \{4,5,6,7,8,9,10\}),
+\end{equation*}
+con valores $f(4)=10,\ f(5)=10,\ f(6)=5,\ f(7)=6,\ f(8)=2,\ f(9)=4,\ f(10)=1$. El cuerpo
+$\mathbb{Z}_{11}$ acota el total de identificadores posibles a $10$ (sin contar el $0$), de los
+cuales $3$ ya están usados.
+
+% =====================================================================
+\subsection{Ejercicio 2 — Verdadero o falso (control de acceso, OIDC, inyección)}
+% =====================================================================
+
+\begin{consigna}
+Responder verdadero o falso, justificando o corrigiendo como fuere apropiado:
+\begin{enumerate}[label=\alph*)]
+  \item Para permitir que usuarios anónimos accedan a un sistema, en vez de utilizar una lista
+        de capacidades CAP, es más práctico implementar una lista de control de accesos ACL.
+  \item OpenID Connect permite que mediante un password se pueda autorizar a un usuario a
+        loguearse en el sistema.
+  \item Una de las defensas más recomendadas para evitar ataques de SQL injection es escapar
+        los datos ingresados por el usuario (como las comillas).
+  \item XSS es un aprovechamiento malicioso de la confianza que un sitio web tiene en la sesión
+        que estableció con el browser del usuario.
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.} Clase 6 — Políticas y Control de Acceso (\S ACL vs.\ capability lists);
+Clase 7 — Autenticación (\S Autenticación $\neq$ Autorización, OAuth2/OIDC/SAML);
+Clase 8 — Principios de Diseño y Vulnerabilidades (\S Catálogo de vulnerabilidades:
+CWE-89 SQLi, CWE-79 XSS; CSRF).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{ACL vs.\ capability:} la matriz de accesos tiene sujetos en las filas y objetos
+        en las columnas. La \textbf{ACL} es una \emph{columna} (por objeto: lista de
+        $(sujeto, permisos)$); la \textbf{capability list} es una \emph{fila} (por sujeto: qué
+        puede hacer ese sujeto en cada objeto).
+  \item \textbf{OAuth2 = autorización; OIDC = autenticación} (capa de identidad sobre OAuth2,
+        \emph{quién} sos); \textbf{SAML} = intercambio IdP$\leftrightarrow$SP. Autenticación
+        ($\neq$) Autorización.
+  \item \textbf{SQLi (CWE-89):} input no controlado que ejecuta SQL; mitigación canónica
+        \emph{prepared statements / parametrizar}; escapar es paliativo. \textbf{XSS (CWE-79):}
+        inyectar JS vía un input que se renderiza como HTML y lo ejecuta \emph{la víctima}.
+\end{itemize}
+
+\paragraph{Notas y conexiones.} El enunciado d) describe en realidad \textbf{CSRF}
+(\emph{Cross-Site Request Forgery}), no XSS: CSRF abusa de la confianza del \emph{sitio} en la
+sesión/cookies del usuario (el sitio confía en el browser autenticado); XSS abusa de la
+confianza del \emph{usuario} en el sitio (el browser ejecuta script malicioso servido por el
+sitio). Es la confusión clásica que buscan en el parcial. Inyección (mezclar datos con código)
+es $\sim$90\% de las vulnerabilidades (Clase 8).
+
+\paragraph{Resolución.}
+\textbf{a) FALSO.} Está al revés. La ACL lista, \emph{por objeto}, los pares
+$(sujeto,permisos)$: requiere \textbf{identificar} a cada sujeto, justo lo que no se tiene con
+usuarios anónimos. Para acceso anónimo conviene la \textbf{capability}: el usuario presenta una
+credencial/token (la capacidad) que \emph{en sí misma} habilita el acceso, sin que el sistema
+deba conocer su identidad ni tenerlo enumerado en la lista del objeto. (Además, las capabilities
+son el modelo dual, más cómodo en sistemas distribuidos.)
+
+\medskip
+\textbf{b) FALSO.} Mezcla dos cosas. \textbf{OpenID Connect autentica}, no autoriza: es la capa
+de \emph{autenticación} sobre OAuth2 (saber \emph{quién} es el usuario, ``login con Google''),
+y justamente su gracia es \textbf{no} manejar el password en el sistema relyente, sino delegarlo
+al IdP. El que \emph{autoriza} (delega acceso a recursos) es \textbf{OAuth2}. Corrección:
+``OpenID Connect permite \emph{autenticar} a un usuario delegando el login en un IdP, sin que el
+sistema maneje su password''.
+
+\medskip
+\textbf{c) VERDADERO} (con matiz). Escapar/sanitizar la entrada (las comillas, etc.) evita que
+el input rompa la sintaxis SQL, así que es una defensa recomendada. \textbf{Pero la defensa
+canónica y más robusta son los \emph{prepared statements} (parametrizar)}, que separan
+estructuralmente el código SQL de los datos y no dependen de acertar todos los caracteres a
+escapar. Escapar correctamente es difícil y propenso a errores; parametrizar lo resuelve de
+raíz.
+
+\medskip
+\textbf{d) FALSO.} Eso describe \textbf{CSRF}, no XSS. CSRF explota la confianza del
+\emph{servidor} en la sesión ya autenticada del usuario (sus cookies viajan automáticamente).
+\textbf{XSS} (CWE-79) es lo inverso: el atacante inyecta script en un input que el sitio
+renderiza como HTML, y ese script se ejecuta en el browser de \emph{la víctima} explotando la
+confianza del \emph{usuario} en el sitio. Corrección: ``XSS es la inyección de código (JS) que
+el sitio renderiza y ejecuta en el browser de la víctima; se mitiga escapando/sanitizando toda
+la salida''.
+
+% =====================================================================
+\subsection{Ejercicio 3 — Política de integridad sobre un retículo (Biba)}
+% =====================================================================
+
+\begin{consigna}
+Un sistema simple implementa una política de seguridad que hace uso del siguiente retículo:
+\begin{center}
+\begin{tikzpicture}[font=\small,>=Stealth,node distance=10mm]
+  \node (ceo) at (0,2) {CEO};
+  \node (g1)  at (-1.8,0.6) {Gerente1};
+  \node (g2)  at (1.8,0.6)  {Gerente2};
+  \node (emp) at (0,-0.8) {Empleado};
+  \draw[->] (g1) -- (ceo);
+  \draw[->] (g2) -- (ceo);
+  \draw[->] (emp) -- (g1);
+  \draw[->] (emp) -- (g2);
+\end{tikzpicture}
+\end{center}
+\begin{enumerate}[label=\alph*)]
+  \item Sabiendo que $i(\text{Gerente1}) \le i(\text{CEO})$, etc.\ (es decir, las flechas
+        indican el flujo de información en términos de una relación de dominancia), indicar:
+        \begin{enumerate}[label=\roman*.]
+          \item De qué política se trata.
+          \item Cuáles y en qué consisten (definir) las principales propiedades que busca hacer
+                cumplir esta política. Teniendo éstas en cuenta, ¿qué pueden hacer los usuarios
+                en base al modo de acceso \texttt{w} (\texttt{write}, escritura)?
+        \end{enumerate}
+  \item Si se invierte la relación (el sentido de las flechas), ¿qué política se estaría
+        modelando? Compararla brevemente con la política del punto anterior.
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.} Clase 6 — Políticas y Control de Acceso (\S Modelo Biba (integridad);
+\S Compartimentos, reticulado y dominancia; Bell--LaPadula).
+
+\paragraph{Qué necesitás saber.} La etiqueta usada es $i(\cdot)$, un \textbf{nivel de
+integridad}: a mayor nivel, mayor confianza. Eso es \textbf{Biba} (integridad), el inverso de
+Bell--LaPadula (confidencialidad). En un \textbf{retículo} (orden parcial), una flecha
+$A \to B$ con $i(A)\le i(B)$ indica que $B$ \textbf{domina} a $A$ y que la información fluye
+``hacia arriba'' siguiendo la flecha. Reglas de \textbf{Biba estricto}:
+\begin{align*}
+  \textbf{Escritura (Write Down):}\quad & s \text{ puede modificar } o \iff i(s) \ge i(o), \\
+  \textbf{Lectura (Read Up):}\quad      & s \text{ puede observar } o \iff i(o) \ge i(s).
+\end{align*}
+Mnemotecnia: \emph{read up, write down}; la información ``baja'' de nivel. Intuición: ``uno es
+tan confiable como las fuentes que usa'' — leo de niveles iguales o más confiables y escribo a
+niveles iguales o menos confiables, para no contaminar datos de mayor integridad.
+
+\paragraph{Notas y conexiones.} Aquí los niveles van $i(\text{Empleado}) \le
+i(\text{Gerente1}), i(\text{Gerente2}) \le i(\text{CEO})$, con Gerente1 y Gerente2
+\emph{incomparables} entre sí (es un orden parcial, no total: no hay camino entre ellos $\Rightarrow$
+ni lectura ni escritura entre las dos ramas). El CEO es el nivel de \emph{mayor integridad/
+confianza}; el Empleado el menor. Invertir las flechas cambia el objetivo de \textbf{integridad}
+a \textbf{confidencialidad}: es la dualidad Biba$\leftrightarrow$Bell--LaPadula.
+
+\paragraph{Resolución.}
+\textbf{a.i) Política.} Es una política de \textbf{integridad}: el modelo \textbf{Biba}. La
+etiqueta $i(\cdot)$ es nivel de integridad (confianza) y las flechas son la relación de
+\textbf{dominancia} ($i(\text{Gerente1})\le i(\text{CEO})$, etc.).
+
+\medskip
+\textbf{a.ii) Propiedades y qué se puede escribir.} Las dos reglas principales de Biba
+(estricto) son:
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{No Write Up (Write Down):} un sujeto $s$ puede escribir en un objeto $o$ solo
+        si $i(s) \ge i(o)$. Impide que información de baja confianza contamine objetos de alta
+        integridad.
+  \item \textbf{No Read Down (Read Up):} un sujeto $s$ puede leer un objeto $o$ solo si
+        $i(o) \ge i(s)$. Impide que un sujeto de alta integridad se ``ensucie'' leyendo datos
+        poco confiables.
+\end{itemize}
+En base al modo de acceso \texttt{w}, cada usuario \textbf{escribe hacia abajo o a su mismo
+nivel} (nunca hacia arriba). Concretamente, siguiendo el retículo:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item El \textbf{CEO} (máxima integridad) puede escribir objetos de CEO, Gerente1, Gerente2 y
+        Empleado (todos los de su nivel o inferior).
+  \item Un \textbf{Gerente} puede escribir objetos de su propio nivel y del Empleado, pero
+        \textbf{no} del CEO (no write up) ni del otro gerente (incomparables).
+  \item El \textbf{Empleado} (mínima integridad) solo puede escribir objetos de nivel Empleado;
+        no puede escribir nada de los gerentes ni del CEO.
+\end{itemize}
+Las flechas marcan la dirección permitida del \emph{flujo} (write up está prohibido), de modo
+que la información de menor confianza nunca sube a contaminar la de mayor confianza.
+
+\medskip
+\textbf{b) Invertir las flechas.} Si se invierte la relación, el modelo pasa a hacer cumplir
+\textbf{confidencialidad}: es \textbf{Bell--LaPadula}, el dual de Biba. Allí la etiqueta es un
+nivel de \emph{secreto/clasificación} y las reglas se invierten: \textbf{No Read Up} (seguridad
+simple: leer hacia abajo, $L(s)\ge L(o)$) y \textbf{No Write Down} (propiedad $\star$: escribir
+hacia arriba, $L(o)\ge L(s)$). Comparación: Biba protege la \emph{integridad} (la info ``baja'',
+write-down/read-up, para no corromper lo confiable); Bell--LaPadula protege la
+\emph{confidencialidad} (la info ``sube'', write-up/read-down, para no filtrar lo secreto). Son
+estructuralmente inversos: ambos son control de \emph{flujo} sobre el mismo tipo de retículo,
+pero con las direcciones de lectura/escritura intercambiadas.
+
+% =====================================================================
+\subsection{Ejercicio 4 — Entropía en audio WAV y esteganografía}
+% =====================================================================
+
+\begin{consigna}
+En el formato de audio WAV de 32 bits, el muestreo del audio se almacena en un arreglo de
+\texttt{floats} (es decir, cada muestra ocupa 4 bytes).\footnote{Los números de punto flotante
+reservan valores para representar NaNs y otros valores especiales (como infinito). Ignorar esto
+y asumir que todos los valores son posibles.}
+\begin{enumerate}[label=\alph*)]
+  \item Dado una muestra (un elemento de 4 bytes) del audio, calcular la entropía máxima en bits
+        del mismo. Dar un ejemplo de un audio donde la entropía de sus muestras sea mínima.
+  \item Dados archivos con 512000 muestras, se desea usar este formato para implementar un
+        esquema de esteganografía, y ocultar información. La información se oculta cada 100
+        muestras, es decir en el \texttt{float} número 100, 200, etc., permitiendo ocultar un
+        máximo de 20480 bytes ($5120 \times 4$). La información es texto plano formado por el
+        espacio en blanco y por mayúsculas y minúsculas del alfabeto inglés (exclusivamente). Si
+        el secreto es menor a 20480 bytes, se lo paddea con espacios en blanco.
+        Demostrar mediante cálculos de entropía, qué característica distintiva tendrían los bytes
+        de audios esteganografiados con respecto a los no alterados.
+  \item Postular de manera práctica cómo podrían usar este método para identificar cuáles bytes
+        son alterados.
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.} Clase 9 — Flujo de Información y Malware (\S Entropía de Shannon: máximo y
+mínimo; canales encubiertos / esteganografía); Clase 8 — Principios de Diseño y Vulnerabilidades
+(\S Fórmulas de entropía).
+
+\paragraph{Qué necesitás saber.} Entropía de Shannon $H(X) = -\sum_i p(x_i)\,\log_2 p(x_i)$,
+medida en bits. \textbf{Máxima} con distribución \emph{uniforme} sobre $n$ valores:
+$H_{\max} = \log_2 n$. \textbf{Mínima} ($=0$) cuando un valor tiene $p=1$ (certeza: evento
+único). Esteganografía $=$ ocultar información dentro de otro medio: es un \textbf{canal
+encubierto} de almacenamiento. La clave del ejercicio: el alfabeto del secreto (espacio + 26
+mayúsculas + 26 minúsculas $= 53$ símbolos) es \emph{mucho} más chico que el de un byte/float
+arbitrario, así que las muestras alteradas tienen \textbf{mucha menos entropía}.
+
+\paragraph{Notas y conexiones.} Reducir la entropía de un conjunto de bytes respecto del audio
+original es exactamente la firma de un \textbf{flujo de información} oculto (Clase 9): el medio
+``audio'' transporta información para la que no fue diseñado (canal encubierto), y medir su
+entropía permite \emph{detectar} la anomalía. Es el mismo principio que el caso del disipador
+que filtra bits de la clave: una vía no diseñada que baja la entropía.
+
+\paragraph{Resolución.}
+\textbf{a) Entropía máxima de una muestra.} Una muestra son $4$ bytes $= 32$ bits, es decir
+$n = 2^{32}$ valores posibles. La entropía es máxima con todos equiprobables
+($p = 1/2^{32}$):
+\begin{equation*}
+  H_{\max} = \log_2 2^{32} = \boxed{32 \text{ bits}}.
+\end{equation*}
+\textbf{Audio de entropía mínima:} un audio en el que todas las muestras valen \emph{lo mismo}
+(p.\ ej.\ silencio total, todas las muestras $=0$, o un tono constante). Entonces un único valor
+tiene $p=1$ y
+\begin{equation*}
+  H = -1 \cdot \log_2 1 = 0 \text{ bits} \quad (\text{certeza, no hay incertidumbre}).
+\end{equation*}
+
+\medskip
+\textbf{b) Característica distintiva de los bytes esteganografiados.} En las muestras alteradas
+(los floats $100, 200, \dots$) ya no se guarda un valor de audio arbitrario sino un carácter del
+secreto. El alfabeto es: espacio en blanco $+$ $26$ mayúsculas $+$ $26$ minúsculas $= 53$
+símbolos posibles. Si los suponemos equiprobables, cada \emph{símbolo} oculto aporta a lo sumo
+\begin{equation*}
+  H_{\text{secreto}} = \log_2 53 \approx 5{,}73 \text{ bits},
+\end{equation*}
+frente a los $32$ bits de una muestra de audio sin alterar. Más aún, el padding con espacios en
+blanco \textbf{baja todavía más} la entropía efectiva (muchas muestras repiten el mismo carácter
+``espacio'', acercándose a $p=1$ y por lo tanto a $H \to 0$). Conclusión:
+\begin{equation*}
+  H_{\text{muestras alteradas}} \;\le\; \log_2 53 \approx 5{,}73 \text{ bits}
+  \;\;\ll\;\; H_{\text{muestras originales}} \le 32 \text{ bits}.
+\end{equation*}
+\textbf{La característica distintiva es una entropía mucho menor} en los bytes que cargan el
+secreto: solo toman $53$ valores (y aún menos por el padding), mientras que el audio real ocupa
+un rango amplio del espacio de $2^{32}$ valores. Esa caída de entropía \emph{es} la huella del
+flujo de información oculto (canal encubierto).
+
+\medskip
+\textbf{c) Identificar prácticamente los bytes alterados.} Recorrer el arreglo de muestras y
+\textbf{medir la entropía (o la diversidad de valores) por bloques}, comparando las posiciones
+periódicas con el resto:
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item Calcular la distribución/entropía de las muestras en las posiciones $100,200,300,\dots$
+        (cada $100$) y compararla con la del resto del audio. Las posiciones del secreto
+        mostrarán entropía marcadamente menor y un conjunto de valores restringido a $\le 53$
+        patrones (coincidentes con códigos de letras/espacio).
+  \item Equivalentemente, buscar las muestras cuyos $4$ bytes decodifican a caracteres ASCII
+        imprimibles del subconjunto $\{$espacio, A--Z, a--z$\}$: en un audio genuino los floats
+        rara vez caen exactamente en esos $53$ valores, y mucho menos de forma \emph{periódica}
+        cada $100$ muestras.
+  \item La \textbf{periodicidad} (cada $100$ muestras) más la \textbf{baja entropía} en esas
+        posiciones delatan el esquema; un atacante/analista que sospeche del método mide la
+        entropía de las posiciones candidatas y confirma la presencia del mensaje oculto.
+\end{itemize}
+
+% =====================================================================
+\subsection{Ejercicio 5 — Opción correcta (DMZ, Von Neumann/inyección, Muralla China)}
+% =====================================================================
+
+\begin{consigna}
+Elegir la opción correcta y justificar los falsos en una oración.
+
+\textbf{1- En una DMZ se localizan}
+\begin{enumerate}[label=(\alph*)]
+  \item Los servidores de bases de datos con información sensible que se desea resguardar.
+  \item Las claves de acceso para encriptar y desencriptar información sensible aprovechando que
+        es una zona militar.
+  \item Los servidores Web y de Email que requieren recibir y enviar información e interactuar
+        con la red externa.
+\end{enumerate}
+
+\textbf{2- El sistema operativo iOS rompe con el modelo de Von Neumann donde los datos y el
+código de ejecución se encuentran en el mismo espacio de memoria al ejecutar un programa. ¿Qué
+tipo de vulnerabilidad estaría involucrada?}
+\begin{enumerate}[label=(\alph*)]
+  \item Soluciona un típico problema de inyección de código que podría estar en los datos.
+  \item Permite resolver problemas de buffer overflow.
+  \item Evita problemas de CSRF.
+\end{enumerate}
+
+\textbf{3- El modelo de Seguridad de Muralla China es adecuado para}
+\begin{enumerate}[label=(\alph*)]
+  \item Compartimentalizar las incumbencias para evitar situaciones de perdida de integridad en
+        la información de los COIs.
+  \item Compartimentalizar las incumbencias para evitar situaciones de perdida de
+        confidencialidad en la información de los CDs.
+  \item Compartimentalizar las incumbencias para evitar situaciones de conflicto de interes.
+  \item Compartimentalizar las incumbencias para evitar situaciones de confidencialidad en los
+        Company Datasets.
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.} Clase 10 — Seguridad en la Empresa (\S Defense-in-depth, DMZ);
+Clase 8 — Principios de Diseño y Vulnerabilidades (\S inyección de código; Von Neumann /
+datos $=$ código; CSRF); Clase 6 — Políticas y Control de Acceso (\S Chinese Wall / Muralla
+China).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{DMZ:} zona \emph{expuesta} entre el firewall externo y el interno; aloja los
+        servicios que \emph{deben} hablar con la red externa (Web, Email, DNS público), no los
+        datos sensibles (esos van en la capa más interna, ``Datos'').
+  \item \textbf{Von Neumann / inyección:} cuando datos y código comparten el mismo espacio de
+        memoria, datos provistos por el usuario pueden terminar \emph{ejecutándose} como código
+        $\Rightarrow$ inyección de código (la raíz del $\sim$90\% de las vulnerabilidades).
+        Separar el canal de datos del de control elimina esa clase de ataque.
+  \item \textbf{Muralla China (Chinese Wall):} modelo de \textbf{conflicto de interés}; objetos
+        agrupados en clases de conflicto (COI), y dentro datasets de compañías (CD). Quien
+        accedió a una compañía de un COI no puede acceder a una competidora del mismo COI.
+\end{itemize}
+
+\paragraph{Notas y conexiones.} El punto 2 es el principio de \emph{mecanismos exclusivos /
+separación de canales} (Clase 8): el problema de fondo de toda inyección (SQLi, XSS, command
+injection y hasta el prompt injection en LLMs) es mezclar el canal de \emph{datos} con el de
+\emph{control}. La DMZ (punto 1) es la capa de perímetro/red de Defense-in-depth (Clase 10).
+
+\paragraph{Resolución.}
+\textbf{1) Correcta: (c).} En la DMZ se ubican los servidores Web y de Email, que por su función
+deben interactuar con la red externa, manteniéndolos aislados de la red interna. \emph{Falsos:}
+(a) los servidores de bases de datos con información sensible van en la capa \textbf{interna}
+(``Datos''), no en la zona expuesta; (b) las claves sensibles jamás se guardan en la zona más
+expuesta de la red (``DMZ'' es ``zona desmilitarizada'', un nombre, no implica resguardo
+reforzado; al contrario, es la zona más expuesta).
+
+\medskip
+\textbf{2) Correcta: (a).} Separar el código del espacio de datos (no ejecutar lo que está en la
+región de datos, \emph{p.\ ej.}\ con W$\oplus$X / DEP) soluciona problemas de \textbf{inyección
+de código} que podría venir en los datos. \emph{Falsos:} (b) no ``resuelve'' los buffer overflow
+en sí (el overflow puede seguir corrompiendo memoria/datos y causar crashes), solo evita que el
+contenido inyectado se \emph{ejecute}; (c) CSRF es un ataque de confianza de sesión en la web,
+no tiene relación con el modelo de memoria de Von Neumann.
+
+\medskip
+\textbf{3) Correcta: (c).} La Muralla China es un modelo de \textbf{conflicto de interés}: busca
+evitar precisamente las situaciones de conflicto de interés (que un mismo sujeto acceda a datos
+de empresas competidoras del mismo COI). \emph{Falsos:} (a) no es un modelo de integridad —no
+protege integridad de los COI— sino de confidencialidad orientada a conflicto de interés; (b) y
+(d) no apunta a ``perder/preservar confidencialidad de los CD'' como objetivo en sí, sino a
+impedir el \emph{conflicto de interés}; aislar competidores es el medio, evitar el conflicto de
+interés es el fin.

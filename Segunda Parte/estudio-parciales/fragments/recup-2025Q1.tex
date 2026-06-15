@@ -1,0 +1,303 @@
+\section{Recuperatorio 2025 Q1}
+
+% Fuente: Recup.2025Q1.2.pdf — Criptografía y Seguridad 2025 (72.44), Recuperatorio 2,
+% 26 de junio de 2025. Cuatro ejercicios de 2.5 puntos c/u; condición de aprobación: acumular 6 puntos.
+
+%======================================================================
+\subsection{Ejercicio 1 — Secreto compartido de Shamir $(3,3)$ en $\mathbb{Z}_{11}$}
+%======================================================================
+
+\begin{consigna}
+Considerar un esquema de secreto compartido de Shamir $(3,3)$ en $\mathbb{Z}_{11}$, con el
+conjunto de sombras $C = \{(1,2),(2,5),(3,5)\}$.
+\begin{enumerate}
+  \item[a)] Recuperar el secreto.
+  \item[b)] ¿Cuál es el polinomio generador?
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 8 — Principios de Diseño y Vulnerabilidades (\S El secreto compartido de Shamir, en
+términos de entropía); base matemática de interpolación de Lagrange en un cuerpo finito
+$\mathbb{Z}_p$. Cruce con Clase 9 — Flujo de Información (la validez del esquema se justifica
+con entropía).
+
+\paragraph{Qué necesitás saber.}
+En un esquema $(T,N)$ de Shamir el secreto $S$ se codifica como el término independiente
+$f(0)$ de un polinomio de grado $T-1$ sobre $\mathbb{Z}_p$, y cada sombra es un punto
+$(x_i, f(x_i))$. Con \textbf{al menos $T$} sombras se reconstruye el polinomio (y por ende
+$S$) por \textbf{interpolación de Lagrange}; con menos de $T$, la entropía del secreto no
+cambia y no hay flujo de información (esa es la demostración de validez del esquema en
+Clase 8). Acá $T=3$ y tenemos exactamente $3$ sombras, así que el polinomio de grado $2$
+queda determinado de forma única. \textbf{Todas las operaciones son módulo $11$}: las
+divisiones se hacen con inverso multiplicativo (por Fermat, $a^{-1}\equiv a^{p-2}$, o por
+inspección, ya que $p=11$ es primo).
+
+\paragraph{Notas y conexiones.}
+Shamir aparece en Clase 8 como ejemplo de flujo de información: ``con menos de $T$ sombras
+no hay flujo'' equivale a $H(S\mid S_1)=H(S\mid S_1,S_2)=H(S)$ y $H(S\mid S_1,S_2,S_3)=0$.
+La parte de cálculo (recuperar el secreto y el polinomio) es interpolación de Lagrange en
+$\mathbb{Z}_p$, la misma maquinaria que en la Primera Parte. El secreto es $f(0)$, no una de
+las sombras.
+
+\paragraph{Resolución.}
+\textbf{Inversos en $\mathbb{Z}_{11}$ que se usan:} $2^{-1}\equiv 6$, $(-1)^{-1}\equiv 10$,
+$(-2)^{-1}\equiv 5$ (porque $2\cdot 6=12\equiv 1$, etc.).
+
+\medskip
+\textbf{(a) Recuperar el secreto.} El secreto es $S=f(0)$. Por Lagrange,
+\begin{equation*}
+  f(0) \;=\; \sum_{i=1}^{3} y_i \, L_i(0), \qquad
+  L_i(0) = \prod_{j\neq i} \frac{0-x_j}{x_i-x_j} \pmod{11}.
+\end{equation*}
+Con los puntos $(x_1,y_1)=(1,2)$, $(x_2,y_2)=(2,5)$, $(x_3,y_3)=(3,5)$:
+\begin{align*}
+  L_1(0) &= \frac{(0-2)(0-3)}{(1-2)(1-3)} = \frac{(-2)(-3)}{(-1)(-2)} = \frac{6}{2} \equiv 6\cdot 6 \equiv 36 \equiv 3, \\
+  L_2(0) &= \frac{(0-1)(0-3)}{(2-1)(2-3)} = \frac{(-1)(-3)}{(1)(-1)} = \frac{3}{-1} \equiv 3\cdot 10 \equiv 30 \equiv 8, \\
+  L_3(0) &= \frac{(0-1)(0-2)}{(3-1)(3-2)} = \frac{(-1)(-2)}{(2)(1)} = \frac{2}{2} \equiv 1.
+\end{align*}
+Entonces
+\begin{equation*}
+  S = f(0) = 2\cdot 3 + 5\cdot 8 + 5\cdot 1 = 6 + 40 + 5 = 51 \equiv \boxed{7} \pmod{11}.
+\end{equation*}
+
+\medskip
+\textbf{(b) Polinomio generador.} Como $T=3$, $f(x)=a_2 x^2 + a_1 x + a_0$ con $a_0=S=7$.
+Planteando el sistema con las tres sombras (mod $11$):
+\begin{align*}
+  f(1) &= a_2 + a_1 + 7 \equiv 2 &&\Rightarrow\quad a_2 + a_1 \equiv -5 \equiv 6, \\
+  f(2) &= 4a_2 + 2a_1 + 7 \equiv 5 &&\Rightarrow\quad 4a_2 + 2a_1 \equiv -2 \equiv 9, \\
+  f(3) &= 9a_2 + 3a_1 + 7 \equiv 5 &&\Rightarrow\quad 9a_2 + 3a_1 \equiv -2 \equiv 9.
+\end{align*}
+De la primera, $a_1 \equiv 6 - a_2$. Sustituyendo en la segunda:
+$4a_2 + 2(6-a_2) = 2a_2 + 12 \equiv 9 \Rightarrow 2a_2 \equiv -3 \equiv 8 \Rightarrow
+a_2 \equiv 8\cdot 6 \equiv 48 \equiv 4$. Luego $a_1 \equiv 6-4 = 2$. Verificación con la
+tercera: $9\cdot 4 + 3\cdot 2 = 36+6=42 \equiv 9$ \checkmark. Por lo tanto
+\begin{equation*}
+  \boxed{\,f(x) = 4x^2 + 2x + 7 \pmod{11}\,}
+\end{equation*}
+(chequeo: $f(1)=13\equiv 2$, $f(2)=27\equiv 5$, $f(3)=49\equiv 5$ \checkmark).
+
+%======================================================================
+\subsection{Ejercicio 2 — Verdadero/Falso (corregir una palabra)}
+%======================================================================
+
+\begin{consigna}
+Determinar si los siguientes enunciados son verdaderos o falsos, corrigiendo una única
+palabra en los falsos que haga verdadera la oración.
+\begin{enumerate}
+  \item[a)] Un WAF es un modelo que no sólo realiza un análisis de tráfico sino que también
+            analiza el intercambio de información de los protocolos a nivel aplicación.
+  \item[b)] Los diferentes modelos de seguridad se encargan de mantener la confidencialidad,
+            la integridad y/o la autenticidad de la información y los sistemas.
+  \item[c)] En el modelo de seguridad Biba Low-watermark la escritura se permite a objetos de
+            niveles inferiores mientras que la lectura es irrestricta.
+  \item[d)] Construir software de calidad es garantía para la seguridad de una aplicación.
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+(a) Clase 10 — Seguridad en la Empresa (\S Defense-in-depth, WAF); (b) Clase 6 — Políticas y
+Control de Acceso (\S Modelos de seguridad) cruzado con Clase 8 (CIA/disponibilidad);
+(c) Clase 6 — Políticas y Control de Acceso (\S Modelo Biba, variantes Ring-Policy y
+Low-Watermark); (d) Clase 10b — Pentesting / Clase 8 — Principios de Diseño (``nada garantiza
+la seguridad'').
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{WAF (Web Application Firewall):} ``un firewall pero para el tráfico de una
+        aplicación web'', opera en la \textbf{capa de aplicación} e inspecciona el
+        intercambio de los protocolos a ese nivel (Clase 10).
+  \item \textbf{Modelos de seguridad:} están \emph{especializados} en
+        \textbf{confidencialidad} (Bell--LaPadula), \textbf{integridad} (Biba, Clark--Wilson)
+        \emph{e incluso disponibilidad}. La tríada es \textbf{C-I-A}
+        (Confidencialidad, Integridad, Disponibilidad), \emph{no} ``autenticidad''.
+  \item \textbf{Biba — variantes:} \emph{Ring-Policy} = write-down ($\il(s)\ge\il(o)$) +
+        \textbf{lectura irrestricta}. \emph{Low-Watermark} = write-down + lectura libre
+        \textbf{pero} al leer el sujeto se reclasifica $\il(s)=\min(\il(s),\il(o))$. La frase
+        ``lectura irrestricta'' (sin reclasificación) describe \textbf{Ring-Policy}.
+  \item \textbf{Garantizar la seguridad} es imposible (Clase 10b): ni el pentesting ni el
+        ``buen diseño'' la garantizan; sólo la favorecen.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+Los V/F de esta materia suelen mezclar una afirmación correcta con \emph{una sola} palabra
+cambiada. Dos trampas recurrentes están acá: la tríada \textbf{CIA} (la ``A'' es
+\emph{disponibilidad}, no autenticidad) y el verbo \textbf{garantizar} (gancho clásico de la
+Clase 10b: ``garantizar la seguridad es algo que no se puede hacer jamás''). En (c) hay que
+distinguir las tres variantes de Biba: el rasgo propio de Low-Watermark es la
+\emph{reclasificación dinámica} al leer; la lectura ``irrestricta a secas'' es de Ring-Policy.
+
+\paragraph{Resolución.}
+\begin{itemize}
+  \item[a)] \textbf{VERDADERO.} El WAF analiza el tráfico de los protocolos a nivel
+            aplicación (capa de aplicación). \emph{(Matiz: técnicamente es un mecanismo, no un
+            ``modelo''; pero la oración es correcta en su contenido, así que se toma como
+            verdadera.)}
+  \item[b)] \textbf{FALSO.} Palabra a corregir: \textbf{``autenticidad'' $\rightarrow$
+            ``disponibilidad''}. Los modelos de seguridad mantienen \textbf{confidencialidad,
+            integridad y/o disponibilidad} (tríada CIA).
+  \item[c)] \textbf{FALSO.} Palabra a corregir: \textbf{``Low-watermark'' $\rightarrow$
+            ``Ring-Policy''}. Write-down con \emph{lectura irrestricta} es Biba
+            \textbf{Ring-Policy}; en Low-Watermark la lectura baja el nivel de integridad del
+            sujeto a $\min(\il(s),\il(o))$.
+  \item[d)] \textbf{FALSO.} Palabra a corregir: \textbf{``garantía'' $\rightarrow$ ``ayuda''}
+            (o ``no es garantía''). Construir software de calidad \emph{favorece} la seguridad,
+            pero \textbf{nada la garantiza}.
+\end{itemize}
+
+%======================================================================
+\subsection{Ejercicio 3 — One-time-pad y pérdida de información (entropía)}
+%======================================================================
+
+\begin{consigna}
+Demostrar con un cálculo de ejemplo utilizando entropía si en el one-time-pad hay perdida de
+información de $m$ a $c$, para una clave y mensaje de longitud 10.
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 9 — Flujo de Información y Malware (\S Entropía de Shannon, entropía condicional,
+definición formal de flujo de información). Cruce con la noción de \emph{secreto perfecto}
+(One-Time-Pad) de la Primera Parte.
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{Entropía de Shannon:} $H(X) = -\sum_i p(x_i)\lg p(x_i)$ (en bits). Máxima con
+        distribución uniforme ($H=\lg n$), mínima ($=0$) con evento único.
+  \item \textbf{Entropía condicional:} $H(X\mid Y) = \sum_j p(y_j)\,H(X\mid Y=y_j)$.
+  \item \textbf{Flujo de información de $m$ a $c$:} hay flujo si $H(m\mid c) < H(m)$ — es
+        decir, observar $c$ \emph{reduce} la incertidumbre sobre $m$. Si $H(m\mid c)=H(m)$,
+        \textbf{no hay flujo / no hay pérdida de información}: $c$ no revela nada de $m$.
+  \item \textbf{OTP:} $c = m \oplus k$ con $k$ \textbf{aleatoria, uniforme, del mismo largo
+        que $m$ y usada una sola vez}. Es la condición de \emph{secreto perfecto} de Shannon.
+        Cuidado: $\text{OTP} =$ \emph{One-Time-Pad}, no confundir con OTP de contraseñas.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+``Pérdida de información de $m$ a $c$'' significa que parte de la información del mensaje
+\emph{se filtra} al cifrado, lo que en el marco de la Clase 9 es exactamente un \emph{flujo de
+información} de $m$ hacia $c$. El criterio es el mismo que se usa para ``verificar que una
+función de cifrado no revele información de la clave'': comparar $H(m)$ con $H(m\mid c)$.
+La meta del OTP (secreto perfecto) es justamente que \textbf{no} haya flujo: $H(m\mid c)=H(m)$.
+
+\paragraph{Resolución.}
+Modelemos un alfabeto binario por posición (el argumento se replica por las $10$ posiciones).
+Sea cada bit de mensaje $m_i$ con distribución arbitraria, y cada bit de clave $k_i$
+\textbf{uniforme} ($p(k_i{=}0)=p(k_i{=}1)=\tfrac12$), independiente del mensaje. El cifrado es
+$c_i = m_i \oplus k_i$.
+
+\medskip
+\textbf{Paso 1 — la clave uniformiza el cifrado.} Para cualquier valor fijo de $m_i$,
+\begin{equation*}
+  p(c_i{=}0) = p(k_i{=}m_i) = \tfrac12, \qquad p(c_i{=}1) = \tfrac12,
+\end{equation*}
+así que cada bit de $c$ es uniforme: $H(c_i)=1$ bit, y para los $10$ bits
+$H(C)=10$ bits (máxima).
+
+\medskip
+\textbf{Paso 2 — el cifrado no informa sobre el mensaje.} Tomemos un ejemplo concreto con
+$p(m_i{=}0)=0.5$ (mensaje también incierto). Antes de ver $c$:
+\begin{equation*}
+  H(m_i) = -\tfrac12\lg\tfrac12 - \tfrac12\lg\tfrac12 = 1 \text{ bit}.
+\end{equation*}
+Conociendo $c_i$, como $m_i = c_i \oplus k_i$ y $k_i$ es uniforme e independiente, dado
+cualquier $c_i$ se tiene $p(m_i{=}0\mid c_i)=p(m_i{=}1\mid c_i)=\tfrac12$, de modo que
+\begin{equation*}
+  H(m_i \mid c_i) = -\tfrac12\lg\tfrac12 - \tfrac12\lg\tfrac12 = 1 \text{ bit} = H(m_i).
+\end{equation*}
+Para el mensaje completo de longitud $10$ (bits independientes):
+\begin{equation*}
+  H(M) = \sum_{i=1}^{10} H(m_i) = 10 \text{ bits}, \qquad
+  H(M \mid C) = \sum_{i=1}^{10} H(m_i \mid c_i) = 10 \text{ bits}.
+\end{equation*}
+
+\medskip
+\textbf{Conclusión.} Como $H(M\mid C) = H(M)$ (la incertidumbre sobre el mensaje
+\textbf{no disminuye} al observar el cifrado), \textbf{no hay flujo de información de $m$ a
+$c$}, es decir \textbf{no hay pérdida de información}: el OTP no filtra nada del mensaje hacia
+el cifrado (secreto perfecto). Si en cambio $H(M\mid C) < H(M)$ habría flujo y por lo tanto
+pérdida; eso ocurre, por ejemplo, si la clave \emph{no} es uniforme o se reutiliza (deja de
+ser un OTP válido). \emph{(Si el enunciado interpreta ``pérdida'' como información del mensaje
+que el OTP destruye/oculta, la respuesta es la misma cuenta: $H(M\mid C)=H(M)$ implica que el
+canal $m\to c$ no transmite información sobre $m$.)}
+
+%======================================================================
+\subsection{Ejercicio 4 — Fórmula de Anderson y almacenamiento con SHA-256}
+%======================================================================
+
+\begin{consigna}
+Un modelo de amenazas opera bajo el supuesto que un atacante puede probar $10^5$ contraseñas
+por segundo. Si las contraseñas se toman de un alfabeto de 96 caracteres, y se desea que el
+atacante tenga $\tfrac{1}{100}$ de probabilidad de éxito a lo largo de 365 días.
+\begin{enumerate}
+  \item[a)] Hallar la longitud mínima de una contraseña que cumpla con lo pedido.
+  \item[b)] ¿Es válido almacenar esas contraseñas en una base de datos con SHA-256? ¿Por qué?
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 7 — Autenticación (\S Fórmula de Anderson $P=TG/N$; \S Almacenamiento seguro: Salting y
+PBKDF2). Cruce con Clase 9 (costo de cómputo del atacante).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{Fórmula de Anderson:} $P = \dfrac{T\cdot G}{N}$, con $P$ = probabilidad de
+        adivinar, $T$ = tiempo del ataque, $G$ = pruebas/segundo, $N$ = tamaño del espacio de
+        claves. Despejando la longitud: $N=A^{L}\ge \dfrac{T\,G}{P}$, luego
+        $L \ge \log_A\!\left(\dfrac{TG}{P}\right)$ y se redondea \textbf{hacia arriba}.
+  \item \textbf{Unidades:} pasar los $365$ días a segundos ($365\cdot 24\cdot 3600 =
+        31\,536\,000$ s).
+  \item \textbf{Almacenamiento:} guardar claves requiere una función \textbf{costosa a
+        propósito} con \textbf{salting} (PBKDF2/bcrypt/scrypt, $\ge 100$ ms por evaluación).
+        SHA-256 es un hash de \textbf{propósito general muy rápido}, sin salt ni costo: el
+        valor $G=10^5$/s es justamente la consecuencia de un hash rápido $\Rightarrow$ no es
+        un esquema de almacenamiento adecuado.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+El ejercicio es el ``Ejercicio 3'' del informe de Clase 7 (despejar la longitud mínima),
+ahora con $A=96$, $G=10^5$, $P=1/100$ y $T=365$ días. La parte (b) conecta con el porqué de
+$G$: con un hash rápido como SHA-256 un atacante que roba la base prueba muchísimas claves por
+segundo y puede paralelizar; salting + función costosa (PBKDF2) frenan la paralelización y
+suben el costo por intento.
+
+\paragraph{Resolución.}
+\textbf{(a) Longitud mínima.} Pasamos el tiempo a segundos:
+\begin{equation*}
+  T = 365 \cdot 24 \cdot 3600 = 31\,536\,000 \text{ s}.
+\end{equation*}
+Por Anderson, exigir $P \le \tfrac{1}{100}$ equivale a
+\begin{equation*}
+  P = \frac{T\,G}{N} \le \frac{1}{100}
+  \;\Longrightarrow\;
+  N \ge \frac{T\,G}{P} = \frac{31\,536\,000 \cdot 10^{5}}{1/100}
+       = 3.1536\times10^{14}.
+\end{equation*}
+Como $N = 96^{L}$:
+\begin{equation*}
+  96^{L} \ge 3.1536\times10^{14}
+  \;\Longrightarrow\;
+  L \ge \log_{96}\!\bigl(3.1536\times10^{14}\bigr) \approx 7.31.
+\end{equation*}
+Redondeando hacia arriba, $\boxed{L \ge 8}$. Verificación:
+$96^{7} \approx 7.51\times10^{13} < N$ (insuficiente) y
+$96^{8} \approx 7.21\times10^{15} \ge N$ (cumple) — con $L=8$,
+$P = \dfrac{31\,536\,000\cdot 10^{5}}{96^{8}} \approx 4.4\times10^{-4} < \tfrac{1}{100}$.
+
+\medskip
+\textbf{(b) ¿SHA-256 para almacenarlas?} \textbf{No es válido (o al menos no es buena
+práctica).} Razones:
+\begin{itemize}
+  \item SHA-256 es un hash de propósito general \textbf{diseñado para ser rápido}; eso es lo
+        contrario de lo que se quiere para almacenar claves. El propio supuesto del enunciado
+        ($G=10^5$/s, y en GPU mucho más) es consecuencia de usar un hash rápido: el cálculo de
+        (a) sólo ``aguanta'' por la longitud, no por el almacenamiento.
+  \item SHA-256 ``a secas'' \textbf{no tiene salt}: dos usuarios con la misma clave producen
+        el mismo $c$, y el ataque se \textbf{paraleliza} (precómputo, rainbow tables, ataque
+        simultáneo a todas las cuentas).
+  \item Lo correcto es usar una \textbf{función de derivación costosa con salting} —
+        \textbf{PBKDF2}, bcrypt o scrypt ($\ge 100$ ms por evaluación)— que reduce
+        drásticamente $G$ (de $10^5$/s a unas pocas por segundo) y, con salt por usuario,
+        impide la paralelización. \emph{(SHA-256 puede usarse como PRF \emph{dentro} de
+        PBKDF2-HMAC-SHA256, pero no como mecanismo de almacenamiento por sí solo.)}
+\end{itemize}

@@ -1,0 +1,374 @@
+\section{Segundo Parcial 2017}
+
+% NOTA: el encabezado del PDF dice ``Parcial 2 -- 2015''; se conserva el rótulo
+% asignado por la consigna (``Segundo Parcial 2017'').
+
+\subsection{Ejercicio 1 — Modelo de compartimentos de confidencialidad (Bell--LaPadula)}
+
+\begin{consigna}
+Un famoso restaurante de 5 estrellas en la guía Michelin se destaca por todo lo que sirve: platos salados, platos dulces y bebidas (vinos y tragos).
+
+Se tienen los siguientes sujetos:
+\begin{itemize}
+  \item Jorge, José y Juan son los dueños.
+  \item Manuel y Ramón son chefs.
+  \item Luis es uno de los mozos.
+  \item Andrea es una cliente.
+\end{itemize}
+Considerar los siguientes objetos:
+\begin{itemize}
+  \item Recetas (tanto de platos dulces, como de salados, como de tragos).
+  \item Menu. (se considera menú al listado de platos con sus respectivos precios).
+  \item Listas de Stock (de productos para platos dulces, salados y tragos).
+  \item Comanda. (pedido que se hace al camarero-mozo).
+\end{itemize}
+Diseñar un modelo de compartimentos de confidencialidad, que permita garantizar los siguientes requisitos, justificando el cumplimiento de cada uno.
+\begin{itemize}
+  \item Jorge puede leer todas las recetas, las listas de stock, el menú y las comandas.
+  \item José, el somellier, es el único que escribe recetas de tragos. También lee stock de productos para tragos.
+  \item Juan es el único que escribe recetas de platos (tanto dulces como salados). También lee stock de productos para platos.
+  \item Los chefs pueden leer las recetas, pero no modificarlas.
+  \item Los chefs pueden escribir en las listas de stocks para recomendar la compra de productos de su área.
+  \item Ramón es el jefe de la barra, y sólo se ocupa de armar tragos. No cocina platos.
+  \item Manuel dirige la cocina de platos dulces y salados.
+  \item Los mozos sólo leen el menú y escriben comandas (no leen ni escriben nada mas).
+  \item Los clientes sólo leen menús.
+\end{itemize}
+\end{consigna}
+
+\paragraph{Temas.} Clase 6 — Políticas y Control de Acceso: Bell--LaPadula con
+\emph{compartimentos}, relación de dominancia, reticulado, \emph{need-to-know}, reglas
+\emph{read-down / write-up} (\S Compartimentos, reticulado y dominancia).
+
+\paragraph{Qué necesitás saber.} Bell--LaPadula es un modelo de \textbf{confidencialidad}.
+Un nivel de seguridad es un par $(L,C)$: una \textbf{clasificación} $L$ (orden total) y un
+conjunto de \textbf{categorías/compartimentos} $C$. La relación de dominancia es
+\begin{equation}
+  (L,C) \succeq (L',C') \iff L' \le L \;\wedge\; C' \subseteq C .
+\end{equation}
+Las reglas de acceso:
+\begin{itemize}
+  \item \textbf{Seguridad simple (read-down):} $s$ lee $o$ si $L(s) \succeq L(o)$.
+  \item \textbf{Propiedad $\ast$ (write-up):} $s$ escribe $o$ si $L(o) \succeq L(s)$.
+\end{itemize}
+Como aquí todos los requisitos pesan sobre \emph{quién accede a qué área} (tragos, platos
+dulces, salados) y no sobre jerarquías de confianza, el problema se resuelve casi por
+completo con \textbf{categorías} (need-to-know): un mismo nivel base y compartimentos por
+área. Pares incomparables (ninguna $C$ es subconjunto de la otra) quedan
+\textbf{efectivamente separados} (ni lectura ni escritura).
+
+\paragraph{Notas y conexiones.} El enunciado pide ``compartimentos de confidencialidad'',
+que es exactamente la extensión por categorías de Bell--LaPadula. Cuidado con la dirección:
+para que un mozo \emph{escriba} una comanda que un dueño \emph{lee}, la comanda debe estar en
+un nivel que el mozo domine al escribir (write-up) y el dueño domine al leer (read-down) — es
+el patrón clásico ``el de abajo escribe hacia arriba, el de arriba lee hacia abajo''. Invertir
+read-down/write-up es el error que más penaliza (Clase 6, \S Bell--LaPadula).
+
+\paragraph{Resolución.} Usamos dos clasificaciones, \textbf{Alta} (dueños/dirección) $>$
+\textbf{Baja} (resto), y categorías por área:
+\[
+  \mathcal{C} = \{\,\textsf{tragos},\ \textsf{dulces},\ \textsf{salados},\ \textsf{operación}\,\},
+\]
+donde \textsf{operación} agrupa lo público del salón (menú y comandas). Asignación de
+niveles a \textbf{objetos}:
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{ll}
+\toprule
+Objeto & Nivel $(L,C)$\\
+\midrule
+Receta de tragos            & $(\text{Alta},\{\textsf{tragos}\})$\\
+Receta dulces / salados     & $(\text{Alta},\{\textsf{dulces}\})$ / $(\text{Alta},\{\textsf{salados}\})$\\
+Stock de tragos             & $(\text{Baja},\{\textsf{tragos}\})$\\
+Stock dulces / salados      & $(\text{Baja},\{\textsf{dulces}\})$ / $(\text{Baja},\{\textsf{salados}\})$\\
+Menú                        & $(\text{Baja},\{\textsf{operación}\})$\\
+Comanda                     & $(\text{Baja},\{\textsf{operación}\})$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Niveles de \textbf{sujetos} y verificación (recordando read-down para leer, write-up para
+escribir):
+\begin{itemize}
+  \item \textbf{Jorge (dueño, supervisor):} $(\text{Alta},\{\textsf{tragos},\textsf{dulces},\textsf{salados},\textsf{operación}\})$.
+        Domina todas las recetas, stocks, menú y comandas $\Rightarrow$ \emph{lee} todo
+        (read-down). Cumple ``puede leer todas las recetas, stocks, menú y comandas''.
+  \item \textbf{José (somellier, escribe recetas de tragos):} para \emph{escribir} la receta
+        de tragos $(\text{Alta},\{\textsf{tragos}\})$ necesita $L(o)\succeq L(s)$, así que
+        $L(s)=\text{Baja}$ o $\text{Alta}$ con $C \subseteq \{\textsf{tragos}\}$. Tomamos
+        $(\text{Baja},\{\textsf{tragos}\})$: escribe receta de tragos (write-up, Alta domina a
+        Baja) y \emph{lee} stock de tragos $(\text{Baja},\{\textsf{tragos}\})$ (mismo nivel,
+        read-down). Es el único con categoría \textsf{tragos} y permiso de escritura de receta
+        $\Rightarrow$ ``único que escribe recetas de tragos''.
+  \item \textbf{Juan (escribe recetas de platos dulces y salados):}
+        $(\text{Baja},\{\textsf{dulces},\textsf{salados}\})$: escribe ambas recetas (write-up) y
+        lee ambos stocks. Único con esas categorías y escritura de receta.
+  \item \textbf{Ramón (chef, jefe de barra — solo tragos):}
+        $(\text{Baja},\{\textsf{tragos}\})$ pero \textbf{sin} derecho de escritura sobre la
+        receta (la escritura de receta es exclusiva de José). Por dominancia \emph{podría}
+        leer la receta de tragos (read-down: $(\text{Baja},\{\textsf{tragos}\})$ no domina
+        $(\text{Alta},\{\textsf{tragos}\})$ \dots\ ver abajo) y \emph{escribir} en el stock de
+        tragos (mismo nivel) $\Rightarrow$ ``escribe en stock para recomendar compras de su
+        área''. No cocina platos: no tiene \textsf{dulces}/\textsf{salados}.
+  \item \textbf{Manuel (chef, dirige cocina de dulces y salados):}
+        $(\text{Baja},\{\textsf{dulces},\textsf{salados}\})$, lee recetas y escribe en los
+        stocks de ambas áreas.
+  \item \textbf{Luis y los mozos:} $(\text{Baja},\{\textsf{operación}\})$. \emph{Leen} menú
+        (mismo nivel) y \emph{escriben} comandas. No tienen categorías de área $\Rightarrow$
+        incomparables con recetas/stocks: ni leen ni escriben nada más.
+  \item \textbf{Andrea y los clientes:} $(\text{Baja},\{\textsf{operación}\})$ con permiso de
+        \emph{solo lectura} del menú (sin escritura de comanda, que es del mozo).
+\end{itemize}
+
+\textbf{Ajuste de niveles (lectura de recetas por chefs).} ``Los chefs pueden leer las recetas
+pero no modificarlas'': leer exige $L(s)\succeq L(o)$. Para que Ramón/Manuel
+\emph{lean} las recetas, las recetas deben estar a un nivel \emph{dominado por} los chefs, o
+bien las recetas y los chefs comparten clasificación. La forma limpia es colocar las
+\textbf{recetas en el mismo nivel base} que el escritor y darle al lector la misma categoría:
+\begin{align*}
+  \text{Receta tragos} &: (\text{Baja},\{\textsf{tragos}\}) \\
+  \text{Ramón} &: (\text{Baja},\{\textsf{tragos}\}) \;\Rightarrow\; \text{lee (mismo nivel)},
+\end{align*}
+y la \textbf{exclusividad de escritura} de la receta (solo José/Juan) se garantiza con la
+\textbf{ACL del objeto} (DAC), no con Bell--LaPadula: BLP dice quién \emph{puede} por flujo,
+y la ACL restringe quién \emph{tiene} el permiso de escritura. Así un chef con
+$(\text{Baja},\{\textsf{tragos}\})$ lee la receta (read-down/mismo nivel) pero no figura en la
+ACL de escritura $\Rightarrow$ no la modifica. La separación efectiva entre áreas (un chef de
+dulces no ve nada de tragos) la da que \textsf{dulces} y \textsf{tragos} son
+\textbf{incomparables} en el reticulado.
+
+\medskip
+\textbf{Resumen del reticulado de categorías} (need-to-know): cada sujeto sólo recibe las
+categorías de su área; Jorge las tiene todas (lee todo); mozos y clientes sólo
+\textsf{operación}. La confidencialidad pedida se cumple porque los compartimentos
+incomparables están separados y la escritura exclusiva se cierra con la ACL.
+
+% ---------------------------------------------------------------------------
+\subsection{Ejercicio 2 — Verdadero/Falso justificado (pentesting, Anderson, STRIDE)}
+
+\begin{consigna}
+Indica en cada caso si la afirmación es verdadera o falsa. Justificar en todos los casos. Si no se justifica correctamente, la respuesta quedará invalidada.
+\begin{enumerate}[label=\alph*)]
+  \item En las pruebas de pentesting siempre se intenta explotar las vulnerabilidades encontradas.
+  \item Si un atacante puede probar $10^4$ passwords por segundo, y las passwords están compuestas por símbolos en [a-zA-Z0-9], entonces las passwords deberían tener 5 símbolos y 5 bits de SALT para que la probabilidad de adivinarlas en el lapso de un año sea menor a 0,5.
+  \item STRIDE forma parte del método de Modelado de Amenazas de Microsoft.
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.} (a) Clase 10b — Pentesting (metodología, explotar como último recurso).
+(b) Clase 7 — Autenticación (fórmula de Anderson $P=TG/N$, salting). (c) Clase 8 —
+Principios de Diseño y Vulnerabilidades (Threat Modeling de Microsoft, STRIDE).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{Pentesting:} explotar es el \textbf{último recurso}, no algo que se haga
+        siempre; a menudo basta con analizar documentación o comportamiento, y la prueba debe
+        ser lo \emph{menos intrusiva posible} (Clase 10b, \S Metodología de hipótesis de falla).
+  \item \textbf{Anderson:} $P = \dfrac{T\cdot G}{N}$ con $P$ prob.\ de adivinar, $T$ tiempo,
+        $G$ pruebas/seg, $N$ espacio de claves. El \textbf{salt no agranda} el espacio de
+        claves $N$ que un atacante recorre para \emph{una} cuenta: sólo impide
+        \textbf{paralelizar} el ataque entre cuentas. No entra en la cuenta de $P$ por cuenta.
+  \item \textbf{STRIDE:} es el modelo de 6 categorías (Spoofing, Tampering, Repudiation,
+        Information disclosure, DoS, Elevation of privilege) que Microsoft usa dentro de su
+        Threat Modeling, cruzándolo con el DFD (Clase 8, \S STRIDE).
+\end{itemize}
+
+\paragraph{Notas y conexiones.} El ítem (b) es la trampa típica de Anderson: hay que
+\emph{calcular} y comparar, y entender que ``bits de salt'' no afectan $P$ para una sola
+cuenta. El alfabeto [a-zA-Z0-9] tiene $26+26+10 = 62$ símbolos.
+
+\paragraph{Resolución.}
+
+\textbf{(a) FALSO.} En pentesting \textbf{no} siempre se explota: explotar es el
+\emph{último recurso} y el menos eficiente. Muchas veces alcanza con analizar documentación,
+configuración o comportamiento del sistema para confirmar la vulnerabilidad; además el test
+debe ser lo menos intrusivo posible (explotar puede provocar un DoS) y siempre repetible y
+concluyente (Clase 10b — Pentesting, \S Metodología de hipótesis de falla).
+
+\medskip
+\textbf{(b) FALSO.} Con $N = 62^{L}$, $G = 10^{4}$/s y $T = 1$ año
+$= 365\cdot24\cdot3600 = 3.1536\times10^{7}$ s, pedimos $P<0.5$:
+\begin{equation}
+  P = \frac{T\,G}{N} < 0.5
+  \;\Longrightarrow\; N > \frac{T\,G}{0.5}
+  = \frac{3.1536\times10^{7}\cdot 10^{4}}{0.5}
+  = 6.31\times10^{11}.
+\end{equation}
+Con $L=5$: $N = 62^{5} = 9.16\times10^{8}$, que es \textbf{mucho menor} que $6.31\times10^{11}$,
+luego
+\begin{equation}
+  P = \frac{3.1536\times10^{11}}{9.16\times10^{8}} \approx 344 \gg 0.5
+\end{equation}
+(es decir, se adivina con certeza en mucho menos de un año). La longitud mínima necesaria es
+\begin{equation*}
+  L \ge \log_{62}\!\bigl(6.31\times10^{11}\bigr) \approx 6.6 \;\Rightarrow\; L \ge 7,
+\end{equation*}
+no $5$. Además, los \textbf{bits de SALT no cambian} esta cuenta: el salt no aumenta el espacio
+$N$ que el atacante recorre para una cuenta dada; sólo evita reutilizar el cómputo \emph{entre}
+cuentas (no se paraleliza el ataque). Por ambos motivos la afirmación es falsa (Clase 7 —
+Autenticación, \S Fórmula de Anderson y \S Salting).
+
+\medskip
+\textbf{(c) VERDADERO.} STRIDE es precisamente el modelo de clasificación de amenazas (6
+categorías: Spoofing, Tampering, Repudiation, Information disclosure, Denial of service,
+Elevation of privilege) que forma parte del método de \textbf{Threat Modeling} creado por
+Microsoft, donde se cruza cada categoría con los elementos del DFD (Clase 8 — Principios de
+Diseño y Vulnerabilidades, \S STRIDE).
+
+% ---------------------------------------------------------------------------
+\subsection{Ejercicio 3 — Secreto compartido de Shamir y entropía}
+
+\begin{consigna}
+Considerar el conjunto $C$ de sombras para un esquema de secreto compartido de Shamir $(k,n)$, donde $k=3$ y $n=4$ sobre $\mathbb{Z}_7$.
+\[
+  C = \{(1,6),(2,1),(3,0),(4,3)\}
+\]
+\begin{enumerate}[label=\alph*)]
+  \item Obtener el secreto.
+  \item Obtener el polinomio utilizado para obtener el conjunto de sombras.
+  \item Expresar el significado de un esquema de secreto umbral $(3,n)$ utilizando el concepto de entropía.
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.} Clase 8 — Principios de Diseño y Vulnerabilidades: \emph{secreto compartido
+de Shamir en términos de entropía} (\S El secreto compartido de Shamir); reconstrucción por
+interpolación polinómica (Primera Parte / criptografía). Clase 9 — Flujo de Información:
+entropía de Shannon (\S Entropía como medida de información).
+
+\paragraph{Qué necesitás saber.} En Shamir $(k,n)$ el secreto es $f(0)=a_0$ de un polinomio
+de grado $k-1$ sobre un cuerpo finito. Con $k=3$ el polinomio es
+$f(x)=a_0+a_1x+a_2x^2 \pmod 7$. Con $k$ sombras se reconstruye resolviendo el sistema lineal
+(o por interpolación de Lagrange). La validez del esquema se expresa con \textbf{entropía}:
+con menos de $k$ sombras la entropía del secreto \textbf{no cambia} (no hay flujo de
+información); con $k$ o más, cae a $0$ (Clase 8, \S El secreto compartido de Shamir).
+
+\paragraph{Notas y conexiones.} Esto conecta la criptografía de la Primera Parte
+(reconstrucción polinómica) con el marco de \emph{flujo de información} de la Segunda:
+``revelar el secreto'' equivale a $H(S)\to 0$. Toda la aritmética es módulo $7$.
+
+\paragraph{Resolución.}
+
+\textbf{(b) Polinomio.} Buscamos $f(x)=a_0+a_1x+a_2x^2 \bmod 7$ que pase por
+$(1,6),(2,1),(3,0)$:
+\begin{align*}
+  a_0 + a_1 + a_2 &\equiv 6 \pmod 7 \\
+  a_0 + 2a_1 + 4a_2 &\equiv 1 \pmod 7 \\
+  a_0 + 3a_1 + 9a_2 \equiv a_0 + 3a_1 + 2a_2 &\equiv 0 \pmod 7
+\end{align*}
+Restando la 1.\textsuperscript{a} a la 2.\textsuperscript{a} y a la 3.\textsuperscript{a}:
+\begin{align*}
+  a_1 + 3a_2 &\equiv -5 \equiv 2 \pmod 7 \\
+  2a_1 + a_2 &\equiv -6 \equiv 1 \pmod 7
+\end{align*}
+De la primera $a_1 \equiv 2 - 3a_2$. Sustituyendo en la segunda:
+$2(2-3a_2)+a_2 = 4 - 5a_2 \equiv 1 \Rightarrow -5a_2 \equiv -3 \Rightarrow 5a_2 \equiv 3$.
+Como $5^{-1}\equiv 3 \pmod 7$ (pues $5\cdot3=15\equiv1$), $a_2 \equiv 3\cdot3 = 9 \equiv 2$.
+Entonces $a_1 \equiv 2 - 3\cdot2 = -4 \equiv 3$ y $a_0 \equiv 6 - 3 - 2 = 1$. Por lo tanto
+\begin{equation}
+  \boxed{\,f(x) = 1 + 3x + 2x^2 \pmod 7\,}.
+\end{equation}
+\emph{Verificación} con la 4.\textsuperscript{a} sombra $(4,3)$:
+$f(4)=1+12+32=45\equiv 45-42 = 3 \pmod 7$ \checkmark.
+
+\medskip
+\textbf{(a) Secreto.} El secreto es el término independiente:
+\begin{equation}
+  S = f(0) = a_0 = \boxed{1}.
+\end{equation}
+
+\medskip
+\textbf{(c) Significado vía entropía.} Un esquema umbral $(3,n)$ significa que se necesitan
+\textbf{al menos $3$ sombras} para recuperar el secreto $S$, y que con \emph{menos} de $3$ no
+se obtiene \textbf{ninguna} información sobre $S$. En términos de entropía, llamando $S_i$ a
+las sombras:
+\begin{align*}
+  H(S \mid S_{i_1}) &= H(S) && \text{(1 sombra: la incertidumbre no baja)}\\
+  H(S \mid S_{i_1}, S_{i_2}) &= H(S) && \text{(2 sombras: tampoco hay flujo)}\\
+  H(S \mid S_{i_1}, S_{i_2}, S_{i_3}) &= 0 && \text{(3 sombras: $S$ queda determinado)}
+\end{align*}
+Es decir: con menos de $3$ sombras \textbf{no hay flujo de información} ($H(S)$ se mantiene
+constante), y al alcanzar el umbral $H(S)\to 0$ (certeza). Esa es la definición de que el
+esquema es válido/seguro (Clase 8 — Principios de Diseño y Vulnerabilidades, \S El secreto
+compartido de Shamir; Clase 9 — Flujo de Información, \S Entropía).
+
+% ---------------------------------------------------------------------------
+\subsection{Ejercicio 4 — Multiple choice (resolución de conflictos en ACL y DMZ)}
+
+\begin{consigna}
+En cada caso selecciona la opción correcta. Justificar en todos los casos. Si no se justifica correctamente, la respuesta quedará invalidada.
+\begin{enumerate}
+  \item Si se tiene una lista de control de acceso $\mathrm{ACL}(o) = \{(\text{Manuel}, r), (\text{Directivos}, w), (\ast, w)\}$. Asumiendo que Manuel es Directivo,
+    \begin{enumerate}[label=\alph*.]
+      \item Manuel puede leer y escribir en $o$ si la política es first rule.
+      \item Manuel puede leer y escribir en $o$ si la política es grant all.
+      \item Manuel puede leer y escribir en $o$ si la política es override.
+      \item Manuel puede leer y escribir en $o$ si la política es augment.
+    \end{enumerate}
+  \item En una red bien diseñada, la zona demilitarizada (DMZ) nunca debería contener:
+    \begin{enumerate}[label=\alph*.]
+      \item Servidores de email.
+      \item Servidores de DNS.
+      \item Servidores de subred de desarrollo.
+      \item Servidores de Web Proxy.
+    \end{enumerate}
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.} (4.1) Clase 6 — Políticas y Control de Acceso: resolución de conflictos en
+ACL (first rule, grant all, override/best-match, augment) (\S Conflictos en ACL, \S Derechos
+por defecto). (4.2) Clase 10 — Seguridad en la Empresa: Defense-in-depth y DMZ (\S DMZ).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{Conflictos de ACL} cuando $s$ matchea varias entradas (Clase 6):
+    \begin{itemize}
+      \item \textbf{Permitir (unión):} otorga la unión de los permisos.
+      \item \textbf{Grant All (intersección):} deniega si \emph{alguna} entrada deniega
+            $\Rightarrow$ sólo los permisos que \emph{todas} otorgan.
+      \item \textbf{First rule / first match:} aplica la \emph{primera} entrada que matchea.
+      \item \textbf{Override / best match:} usa la entrada \emph{más específica}.
+      \item \textbf{Augment:} parte del \emph{default} ($\ast$) y le \emph{agrega} las
+            entradas explícitas.
+    \end{itemize}
+  \item \textbf{DMZ:} zona expuesta entre el firewall externo y el interno; aloja los
+        servicios que deben ser accesibles desde Internet (web, correo, DNS, proxy). Lo
+        \emph{interno} (LAN, bases de datos internas, entornos de desarrollo) \textbf{nunca}
+        va en la DMZ (Clase 10, \S DMZ).
+\end{itemize}
+
+\paragraph{Notas y conexiones.} Manuel matchea las tres entradas: $(\text{Manuel},r)$ por
+nombre, $(\text{Directivos},w)$ por grupo y $(\ast,w)$ por default. El resultado ``$r$ y $w$''
+depende de la política. Esto es el ejercicio resuelto análogo de Clase 6 (\S Conflictos en
+ACL).
+
+\paragraph{Resolución.}
+
+\textbf{(4.1) Correcta: d) augment.}
+Manuel coincide con las tres entradas. Sus permisos según cada política:
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{>{\bfseries}l l l}
+\toprule
+Política & Cómo resuelve & Permisos de Manuel\\
+\midrule
+First rule & primera entrada $(\text{Manuel},r)$ & solo $r$ \;(no)\\
+Grant all (intersección) & $r \cap w \cap w$ & $\varnothing$ \;(no)\\
+Override / best match & entrada más específica $(\text{Manuel},r)$ & solo $r$ \;(no)\\
+Augment & default $\ast{:}w$ $+$ específicas $r,w$ & $r$ y $w$ \;(si)\\
+\bottomrule
+\end{tabular}
+\end{center}
+Sólo con \textbf{augment} (default $+$ entradas explícitas: $w$ del $\ast$, más $r$ de Manuel y
+$w$ de Directivos) Manuel obtiene \textbf{lectura y escritura}. Con first rule y con override
+queda sólo $r$ (la entrada más específica/primera es $(\text{Manuel},r)$), y con grant all la
+intersección de $\{r\},\{w\},\{w\}$ es vacía. Por lo tanto la opción correcta es \textbf{d)}
+(Clase 6 — Políticas y Control de Acceso, \S Conflictos en ACL / \S Derechos por defecto).
+
+\medskip
+\textbf{(4.2) Correcta: c) servidores de subred de desarrollo.}
+La DMZ es la zona \emph{expuesta} hacia Internet y aloja servicios públicos: servidores web,
+de correo (email), de DNS y de Web Proxy son todos servicios de cara al exterior que sí van en
+la DMZ. Una \textbf{subred de desarrollo} es un recurso \emph{interno} (código, entornos no
+endurecidos, datos de prueba) que debe quedar detrás del firewall interno, en la LAN, nunca en
+una zona expuesta. Exponerla violaría la segmentación de Defense-in-depth. Por eso la DMZ
+nunca debería contenerla (Clase 10 — Seguridad en la Empresa, \S DMZ).

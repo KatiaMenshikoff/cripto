@@ -1,0 +1,279 @@
+\section{Parcial 2023 Q1}
+
+\paragraph{Aviso de alcance.} Este parcial (Criptografía y Seguridad 2023, 72.44 — ``Parcial 1'')
+es un \textbf{parcial de la Primera Parte} de la materia: protocolos de establecimiento de clave,
+modos de operación de cifradores en bloque (CTR/CBC), confusión/difusión, seguridad CPA de un
+cifrador afín, Diffie--Hellman y MAC-then-encrypt. Casi nada de su contenido cae dentro del
+índice de la \emph{Segunda Parte} (Clases 6--11). Para honrar el contrato se transcriben las
+consignas verbatim y se mapea cada ejercicio; donde el tema queda \emph{fuera del alcance} de
+las Clases 6--11 se marca explícitamente con \textbf{TODO} (corresponde a material de la Primera
+Parte, no cubierto por las fuentes I6--I9 / U5--U7). Los únicos puntos con conexión genuina a la
+Segunda Parte son el protocolo del Ejercicio~1 (challenge--response / nonces / claves de sesión,
+\emph{Clase 7}) y un ítem del Ejercicio~5 (resistencia a preimágenes del hash como función de
+derivación $F$, \emph{Clase 7}).
+
+% =====================================================================
+\subsection{Ejercicio 1 — Protocolo de establecimiento de clave de sesión}
+
+\begin{consigna}
+Dado el siguiente protocolo:
+\begin{align*}
+(1.1)\quad & C \to S : C, C\#, N_C \\
+(1.2)\quad & C \leftarrow S : S, S\#, N_S, \mathit{Cert}(S, \mathit{Sgn}_{kS}(S)) \\
+(1.3)\quad & C \to S : E_{K_0}(kS), N \\
+(1.4)\quad & C \to S : E_{Kcs}(\mathit{finished}, \mathit{MAC}_{k1}(\mathit{timestamp})) \\
+(1.5)\quad & C \leftarrow S : E_{Kcs}(\mathit{finished}, \mathit{MAC}_{k1}(\mathit{timestamp})) \\
+(1.6)\quad & C \to S : E_{Kcs}(\mathit{data}) \\
+(1.7)\quad & C \leftarrow S : E_{Kcs}(\mathit{data})
+\end{align*}
+con
+\[
+k1 = H(K_0, N_C, N_S), \qquad Kcs = H(N, k1),
+\]
+donde $E(\cdot)$ es un esquema de cifrado simétrico y $\mathit{Sgn}(\cdot)$ es un esquema de firma digital.
+\begin{enumerate}
+\item[a)] ¿Qué tipo de protocolo sería, qué es lo que el protocolo intenta construir?
+\item[b)] ¿Cuál es el propósito de los mensajes (1.4) y (1.5)?
+\item[c)] ¿Por qué se deriva la clave $Kcs$ y no se usa en cambio la clave $K_0$?
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 7 — Autenticación (challenge--response, nonces, derivación de claves de sesión, certificados/firma);
+con cruce a Primera Parte (handshake tipo TLS, intercambio de clave). El detalle criptográfico
+del handshake (negociación TLS) es \textbf{TODO: Primera Parte, fuera del índice Clases 6--11}.
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+\item \textbf{Challenge--response (Clase 7, \S Challenge--Response).} Se valida que una parte
+      \emph{conoce} un secreto \textbf{sin transmitirlo}: $B$ envía un challenge aleatorio $r$ y
+      $A$ responde $f(k,r)$ sobre su clave $k$ y $r$, sin enviar $k$. Los \textbf{nonces}
+      ($N_C$, $N_S$, $N$) cumplen ese rol de valor fresco que garantiza \emph{frescura} y evita
+      \emph{replay}.
+\item \textbf{Certificado + firma (Clase 7, factor ``algo que tengo''/identidad federada).} El
+      $\mathit{Cert}(S,\mathit{Sgn}_{kS}(S))$ autentica al servidor: el cliente verifica la firma
+      contra una CA conocida (\emph{Check Certificate}). Esto da \textbf{autenticación de servidor}.
+\item \textbf{Derivación de claves.} Una clave de sesión efímera debe derivarse de material fresco
+      aportado por \emph{ambas} partes ($N_C$, $N_S$, $N$) mediante un hash, de modo que ninguna
+      sesión reutilice la misma clave y un compromiso futuro no afecte sesiones pasadas.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+El esqueleto es el de un handshake tipo TLS/SSL: (1.1)--(1.2) intercambian identidades, nonces y
+el certificado del servidor; (1.3) transporta material de clave bajo una clave pública/maestra
+$K_0$; (1.4)--(1.5) son los mensajes \emph{finished} que cierran y verifican el handshake; (1.6)--(1.7)
+ya van cifrados con la clave de sesión $Kcs$. Esto entronca con \emph{challenge--response} y con
+\emph{passkeys} (Clase 7): la idea de probar conocimiento de un secreto / autenticar sin exponer el
+secreto. El uso de un \textbf{MAC} sobre el \emph{timestamp} conecta con la discusión de
+integridad+autenticación de mensajes (ver Ej.~5a). La mecánica criptográfica fina (cifrado híbrido,
+negociación de suites) es \textbf{TODO: Primera Parte}.
+
+\paragraph{Resolución.}
+\textbf{a)} Es un \textbf{protocolo de establecimiento/intercambio de clave de sesión con
+autenticación de servidor} (un handshake estilo TLS/SSL). Lo que intenta construir es un
+\textbf{canal seguro}: una clave de sesión simétrica fresca ($Kcs$) compartida entre $C$ y $S$,
+con el servidor autenticado mediante su certificado firmado ($\mathit{Sgn}_{kS}$), sobre la cual
+luego se cifran los datos (1.6)--(1.7).
+
+\textbf{b)} Los mensajes (1.4) y (1.5) son los \emph{finished}: \textbf{confirman que el handshake
+terminó correctamente y que ambas partes derivaron la misma clave}. Al ir cifrados con $Kcs$ y
+llevar un $\mathit{MAC}_{k1}(\mathit{timestamp})$, prueban (i) que cada lado posee efectivamente
+$Kcs$ y $k1$ —es decir, que vieron los mismos nonces—, (ii) \textbf{integridad} del handshake
+(un MITM que haya alterado mensajes previos no podrá producir un MAC válido), y (iii)
+\textbf{frescura} vía el timestamp (anti-replay). Es un \emph{key-confirmation step}.
+
+\textbf{c)} Se deriva $Kcs = H(N, k1)$ con $k1 = H(K_0, N_C, N_S)$ en lugar de usar $K_0$
+directamente porque:
+\begin{itemize}
+\item $K_0$ es material maestro/de transporte (asociado a la clave pública del servidor): usarlo
+      como clave de sesión filtraría su valor en cada mensaje cifrado y comprometería \emph{todas}
+      las sesiones si se rompe una.
+\item $Kcs$ incorpora \textbf{aportes frescos de ambas partes} ($N_C$, $N_S$, $N$): así cada
+      sesión tiene clave distinta (no hay reutilización), un atacante que capture tráfico de una
+      sesión no puede derivar las otras, y se obtiene independencia entre sesiones
+      (la idea de \emph{clave de un solo uso por sesión}, Clase 7 — \S OTP/claves de sesión).
+\item La función de hash actúa como \textbf{KDF}: mezcla el secreto compartido con los nonces de
+      forma no invertible, de modo que observar $Kcs$ no revela $K_0$ ni $k1$.
+\end{itemize}
+
+% =====================================================================
+\subsection{Ejercicio 2 — Modo CTR sin primitiva inversa, y CBC}
+
+\begin{consigna}
+\textbf{2-} Una propuesta de un cifrador en bloque usando modo CTR usa una primitiva de
+encripción $E(\cdot)$ que no admite una primitiva de desencripción inversa.
+\begin{enumerate}
+\item[(a)] ¿Es este un sistema de encripción válido? Explicar.
+\item[(b)] ¿Cómo se utiliza el nonce en dicho sistema?
+\item[(c)] ¿Cuál es la ventaja de este sistema en términos de procesamiento?
+\end{enumerate}
+
+En un esquema de encripción en bloques CBC de longitud $n$ un mensaje $M_1 M_2 \ldots M_n$ se
+cifra como un bloque de longitud $n{+}1$, $C_0 C_1 C_2 \ldots C_n$.
+\begin{align*}
+C_0 &= IV \\
+C_k &= E_k(M_k \oplus C_{k-1})
+\end{align*}
+\begin{enumerate}
+\item[(a)] ¿Cómo se ve afectada la desencripción si el primer bloque $C_0$ es eliminado del texto cifrado?
+\item[(b)] ¿Cómo se ve afectada la desencripción si el último bloque $C_n$ es eliminado del texto cifrado?
+\item[(c)] Teniendo el texto cifrado ya generado como se especificó con anterioridad, ¿cómo puede un usuario legítimo agregar un texto de bloque $M_0$ específico al principio del mensaje plano original agregando bloques $C_k$ adicionales en cualquier ubicación del texto cifrado?
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Primera Parte — modos de operación de cifradores en bloque (CTR, CBC), nonces/IV, maleabilidad.
+\textbf{TODO: fuera del índice Clases 6--11.} (Único roce con la Segunda Parte: el modo CTR
+usando solo $E(\cdot)$ es la misma estructura del \emph{keystream} / one-time-pad que se menciona
+en Clase 7 al advertir ``OTP $\ne$ One Time Pad'', pero el ejercicio se resuelve con teoría de
+modos de la Primera Parte.)
+
+\paragraph{Qué necesitás saber.}
+\textbf{TODO: Primera Parte (modos CTR y CBC).} No hay material en I6--I9 / U5--U7 que cubra
+este desarrollo; resolver con los apuntes de la Primera Parte.
+
+\paragraph{Notas y conexiones.}
+La intuición de que CTR solo necesita $E(\cdot)$ (porque cifra y descifra haciendo XOR contra el
+mismo keystream $E_k(\text{nonce}\,\|\,\text{contador})$) conecta con la idea de \emph{flujo} y
+con la advertencia de Clase 7 de no confundir un cifrador de flujo/OTP con el One Time Pad teórico.
+El resto es propio de la Primera Parte.
+
+\paragraph{Resolución.}
+\textbf{TODO: Primera Parte.} Esbozo orientativo (no fundamentado en las fuentes de la Segunda
+Parte): en CTR el cifrado es $C_i = M_i \oplus E_k(\text{nonce}\,\|\,i)$ y el descifrado
+$M_i = C_i \oplus E_k(\text{nonce}\,\|\,i)$, por lo que \emph{nunca} se necesita $E^{-1}$ → sí es
+válido, el nonce garantiza keystreams distintos por mensaje, y permite paralelizar/precomputar.
+Para CBC: quitar $C_0=IV$ corrompe solo $M_1$; quitar $C_n$ solo pierde $M_n$; y la maleabilidad
+del XOR permite prefijar un bloque elegido. La justificación completa pertenece a la Primera Parte.
+
+% =====================================================================
+\subsection{Ejercicio 3 — Base64 como ``cifrado''; confusión y difusión; (no)linealidad}
+
+\begin{consigna}
+\textbf{3-} El banco de Estander usa base64 como sistema de encripción simétrica.
+\begin{enumerate}
+\item[a)] ¿Puede este considerarse un sistema de encripción válido? Explicar.
+\item[b)] El CSO dice que su sistema ofrece confusión y difusión. ¿Qué significa?
+\item[c)] El además insiste en que el sistema no es lineal. ¿Qué significa que un criptosistema simétrico sea no lineal? De un ejemplo de otro criptosistema lineal.
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Primera Parte — codificación vs.\ cifrado, propiedades de Shannon (confusión/difusión), linealidad
+de un criptosistema. \textbf{TODO: fuera del índice Clases 6--11.}
+
+\paragraph{Qué necesitás saber.}
+\textbf{TODO: Primera Parte.} (Roce conceptual con Clase 8 — Diseño abierto / Kerckhoffs: base64
+no es secreto y no depende de ninguna clave, por lo que ``seguridad'' aquí sería puro
+\emph{security-by-obscurity}, que el principio de \emph{diseño abierto} rechaza.)
+
+\paragraph{Notas y conexiones.}
+Que base64 no sea cifrado (no hay clave, es reversible por cualquiera) puede enmarcarse, desde la
+Segunda Parte, en el principio de \textbf{diseño abierto} de Saltzer \& Schroeder (Clase 8): la
+seguridad no puede descansar en ocultar el mecanismo. Confusión/difusión y linealidad son teoría
+de la Primera Parte.
+
+\paragraph{Resolución.}
+\textbf{TODO: Primera Parte.} Orientativo: (a) No es cifrado, es \emph{codificación} sin clave →
+inválido como esquema de encripción. (b) Confusión = relación compleja entre clave y texto cifrado;
+difusión = una pequeña variación del plano altera muchos bits del cifrado. (c) No linealidad =
+$E(x\oplus y)\neq E(x)\oplus E(y)$; un ejemplo de cifrador lineal es el cifrado de Vigenère / un
+cifrado afín o de desplazamiento. Desarrollo completo: Primera Parte.
+
+% =====================================================================
+\subsection{Ejercicio 4 — Cifrador afín y seguridad CPA}
+
+\begin{consigna}
+\textbf{4-} Dado el siguiente criptosistema $\Pi = (\mathsf{Gen}, \mathsf{Enc}, \mathsf{Dec})$.
+Para $p \in \mathbb{Z}$ y $a,b,r \in \mathbb{Z}_p$, siendo la clave $k=(a,b)$ y siendo
+$r \leftarrow \mathit{random}$
+\begin{align*}
+c &= E_k(m) = (r,\ ar + b + m)_{(p)} \\
+m &= D_k(c) = (-ar - b + c)_{(p)}
+\end{align*}
+donde $(\cdot)_{(p)}$ implica que opera con aritmética modular.
+\begin{enumerate}
+\item[a)] Considerar una variante del criptosistema donde $r$ en lugar de ser aleatorio toma el valor $r = (a+b)_{(p)}$. ¿Es este criptosistema seguro contra ataque de texto cifrado elegido? Demostrar mediante un experimento $\mathrm{PrivK}^{\mathrm{CPA}}_{\mathcal{A},\Pi}$.
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Primera Parte — seguridad CPA, experimento $\mathrm{PrivK}^{\mathrm{CPA}}_{\mathcal{A},\Pi}$,
+nonce/aleatoriedad en cifrado probabilístico. \textbf{TODO: fuera del índice Clases 6--11.}
+
+\paragraph{Qué necesitás saber.}
+\textbf{TODO: Primera Parte.} El experimento de indistinguibilidad bajo texto plano elegido y la
+necesidad de un $r$ \emph{fresco/aleatorio} para que el cifrado sea probabilístico no están
+cubiertos por las fuentes de la Segunda Parte.
+
+\paragraph{Notas y conexiones.}
+La idea de que reusar un valor que debía ser aleatorio (aquí $r=a+b$, fijo dada la clave) rompe la
+seguridad es la misma intuición que en Clase 7 con los nonces / claves de un solo uso: un valor
+fresco no debe volverse predecible. Pero la demostración formal es Primera Parte.
+
+\paragraph{Resolución.}
+\textbf{TODO: Primera Parte.} Orientativo: con $r=(a+b)_{(p)}$ fijo dada la clave, el cifrado deja
+de ser probabilístico — dos cifrados del mismo $m$ producen el mismo $c$ —, lo que permite a
+$\mathcal{A}$ distinguir en el experimento CPA (cifra $m_0,m_1$, pide el reto y compara). La
+construcción del experimento y la cota de ventaja corresponden a la Primera Parte.
+
+% =====================================================================
+\subsection{Ejercicio 5 — Verdadero/Falso (MAC, hash, Diffie--Hellman, reversibilidad)}
+
+\begin{consigna}
+\textbf{5-} Verdadero o Falso. Si es falso, corrija la sentencia para que sea verdadera e
+identifique el cambio realizado.
+\begin{enumerate}
+\item[a)] Para proveer privacidad e integridad, lo correcto es primero Cifrar $m$ con $k_1$ para obtener $c$ y al mismo tiempo obtener el MAC con la clave $k_2$ de $m$ para obtener $t$. Tanto $m$ como $t$ se deben transmitir en forma conjunta. Las claves $k_1$ y $k_2$ pueden ser iguales.
+\item[b)] La seguridad de las funciones de hash se establece como el nivel de resistencia a preimagenes donde dado un $y$ hallar $x/h(x)=y$.
+\item[c)] El algoritmo de Diffie-Hellman permite que Alice le envíe una clave de sesión a Bob por un canal inseguro.
+\item[d)] En los cifrados en bloque independientemente del modo de operación se requiere que BCE Block Cipher Encryption ó PRF Psuedo Random Function siempre sea reversible.
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Mayormente Primera Parte (MAC-then-encrypt vs encrypt-then-MAC, Diffie--Hellman, reversibilidad de
+la primitiva de bloque). \textbf{Ítem (b)} sí conecta con Clase 7 — Autenticación: la resistencia
+a preimágenes es justo la propiedad que hace de un hash una buena función de derivación $F$ (no
+invertible). El resto: \textbf{TODO: Primera Parte.}
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+\item \textbf{(b) — Clase 7 (\S Tupla $\langle A,C,F,L,S\rangle$ y almacenamiento de claves).} La
+      función $F$ \emph{deriva} la información complementaria a partir de la de autenticación
+      ($A\to C$, ``calculá el hash de la contraseña'') y \textbf{no debe ser invertible}: el
+      sistema guarda $c=H(a)$ y un atacante con $c$ no debe poder recuperar $a$. Eso es
+      exactamente \emph{resistencia a preimágenes}. Por eso los hashes de claves se eligen
+      \textbf{costosos a propósito} (PBKDF2/bcrypt/scrypt) y con \emph{salt}.
+\item \textbf{(a), (c), (d) — TODO: Primera Parte} (orden cifrado/MAC, propiedades de
+      Diffie--Hellman, reversibilidad de la primitiva por modo).
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+El ítem (b) es el puente más limpio con la Segunda Parte: la propiedad ``dado $y=h(x)$ es inviable
+hallar $x$'' es la que sostiene el almacenamiento de contraseñas como hash (Clase 7) — distinto de
+la \emph{resistencia a colisiones}, que es otra de las propiedades de un hash. El ítem (a) toca la
+combinación cifrado+MAC que también aparece en el handshake del Ej.~1 (mensajes \emph{finished}).
+
+\paragraph{Resolución.}
+\textbf{a) Falso (Primera Parte).} Lo que se transmite junto al texto debe ser \emph{el cifrado}
+$c$ y su MAC, no el plano $m$; el esquema robusto es \emph{Encrypt-then-MAC} (MAC sobre $c$,
+no sobre $m$) y las claves $k_1,k_2$ deben ser \textbf{independientes} (no iguales). Corrección:
+``\dots se debe obtener el MAC sobre $c$ con $k_2$; se transmiten $c$ y $t$ juntos; $k_1\neq k_2$''.
+(Fundamentación detallada: \textbf{TODO: Primera Parte}.)
+
+\textbf{b) Verdadero (con matiz, Clase 7 — Autenticación).} La resistencia a \emph{preimágenes}
+—dado $y$, es inviable hallar $x$ tal que $h(x)=y$— es una de las propiedades de seguridad de un
+hash, y es precisamente la que se usa para que la función de derivación $F$ del almacenamiento de
+claves no sea invertible (Clase 7). Matiz: la seguridad de un hash \emph{no} se reduce solo a
+preimágenes; también exige \emph{segunda preimagen} y \emph{resistencia a colisiones}.
+
+\textbf{c) Falso (Primera Parte).} Diffie--Hellman \textbf{no transporta} una clave elegida por
+Alice; permite que ambas partes \emph{acuerden/deriven} una clave de sesión común sobre un canal
+inseguro (key agreement), sin que ninguna la ``envíe''. Corrección: ``\dots permite que Alice y
+Bob \emph{acuerden} una clave de sesión \dots''. (\textbf{TODO: Primera Parte}.)
+
+\textbf{d) Falso (Primera Parte).} No siempre se requiere que la primitiva sea reversible: en modos
+como CTR/OFB/CFB solo se usa $E(\cdot)$ (o una PRF) en sentido directo, y el descifrado se hace por
+XOR contra el keystream (ver Ej.~2). Corrección: ``\dots \emph{no} en todos los modos se requiere
+que la primitiva sea reversible''. (\textbf{TODO: Primera Parte}.)

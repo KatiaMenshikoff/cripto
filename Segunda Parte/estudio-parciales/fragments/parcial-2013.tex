@@ -1,0 +1,537 @@
+\section{Segundo Parcial 2013}
+
+% =====================================================================
+\subsection{Ejercicio 1 — Modelo de compartimentos de integridad (clínica)}
+% =====================================================================
+
+\begin{consigna}
+En un clínica de cirugías estéticas hay cuatro tipos de usuarios: doctores, enfermeras,
+administrativos y pacientes.
+
+La información médica tiene distintas categorías: quirófano, emergencia y personal.
+
+Se tienen los siguientes sujetos:
+\begin{itemize}
+  \item David (cirujano)
+  \item Nancy (enfermera)
+  \item Sara (secretaria)
+  \item Rocío (paciente)
+\end{itemize}
+Y los siguientes objetos:
+\begin{itemize}
+  \item Recibo (contiene información de un pago realizado)
+  \item Prescripción (para antibióticos)
+  \item Lista de Instrumental (para cirugía)
+  \item Directorio (contiene direcciones y teléfonos de pacientes)
+\end{itemize}
+
+\textbf{Diseñar un modelo de compartimentos de integridad, que permita garantizar los
+siguientes requisitos, justificando el cumplimiento de cada uno.}
+\begin{itemize}
+  \item Los doctores están, en la jerarquía, en el nivel superior.
+  \item David puede escribir en la Lista de Instrumental.
+  \item Nancy no puede leer el Directorio.
+  \item Nancy puede leer la Lista de Instrumental.
+  \item David puede escribir una prescripción.
+  \item Sara puede leer y escribir en el directorio.
+  \item Sara puede escribir un recibo de pago.
+  \item Rocío puede leer, pero no escribir las prescripciones a su nombre.
+  \item Rocío no puede leer el directorio.
+\end{itemize}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 6 — Políticas y Control de Acceso (\S Modelo Biba; \S Compartimentos, reticulado y
+dominancia). Modelo de integridad de Biba con compartimentos (nivel jerárquico + categorías).
+
+\paragraph{Qué necesitás saber.}
+\textbf{Biba} es el modelo de \emph{integridad} (inverso de Bell--LaPadula). Asigna a sujetos y
+objetos un \textbf{nivel de integridad} $\il(\cdot)$ (a mayor nivel, mayor confianza). En la
+variante \textbf{estricta}, las reglas son \emph{read up / write down}:
+\begin{align*}
+\text{Escritura (write down):}\quad & s \text{ puede modificar } o \iff \il(s) \ge \il(o),\\
+\text{Lectura (read up):}\quad & s \text{ puede observar } o \iff \il(o) \ge \il(s).
+\end{align*}
+La intuición (Clase 6): ``\emph{uno es tan confiable como las fuentes que usa}'' --- un sujeto
+solo escribe a niveles iguales o inferiores (no ``ensucia'' información más confiable) y solo lee
+información de su nivel o superior. Con \textbf{compartimentos}, el orden total se generaliza a
+la relación de \textbf{dominancia} sobre pares $(L,C)$, donde $L$ es el nivel y $C$ el conjunto
+de categorías (etiquetas):
+\begin{equation*}
+(L,C) \dom (L',C') \iff L' \le L \ \wedge\ C' \subseteq C .
+\end{equation*}
+Esto forma un \textbf{reticulado} (orden parcial): pares incomparables (mismo nivel, ninguna
+lista de categorías es subconjunto de la otra) quedan \textbf{separados} (ni lectura ni
+escritura). La implementación es simple: cada objeto y cada sujeto llevan como metadata un nivel
+y una lista de etiquetas.
+
+\paragraph{Notas y conexiones.}
+Biba es estructuralmente el inverso de Bell--LaPadula: BLP protege confidencialidad
+(\emph{read down / write up}), Biba protege integridad (\emph{read up / write down}). Para una
+clínica el bien a proteger es la \emph{integridad} de los datos médicos (que solo personal
+confiable genere/modifique prescripciones y listas de instrumental), por eso se pide Biba y no
+BLP. El uso de \textbf{categorías} (quirófano, emergencia, personal) implementa
+\emph{need-to-know} (Clase 6, \S Compartimentos): un sujeto del nivel adecuado puede igual quedar
+fuera de un objeto si no comparte la categoría. La compartimentalización aparece justamente en
+sistemas que manejan \textbf{información médica} regulada (Clase 6, \S uso real).
+
+\paragraph{Resolución.}
+Modelamos con \textbf{Biba estricto + compartimentos}. Asignamos un nivel jerárquico de
+integridad y categorías a cada sujeto/objeto. Niveles (de mayor a menor confianza):
+\[
+\text{Doctor (4)} \;>\; \text{Enfermera (3)} \;>\; \text{Administrativo (2)} \;>\; \text{Paciente (1)} .
+\]
+Categorías: $\{\text{quirófano},\ \text{emergencia},\ \text{personal}\}$ (interpretamos
+``personal'' como la categoría de datos administrativos/de pacientes: directorio y recibos).
+
+\medskip
+\noindent\textbf{Asignación propuesta.}
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l}
+\toprule
+\textbf{Sujeto} & $\bigl(\il,\ C\bigr)$ \\
+\midrule
+David (cirujano)      & $(4,\ \{\text{quirófano},\ \text{personal}\})$ \\
+Nancy (enfermera)     & $(3,\ \{\text{quirófano}\})$ \\
+Sara (secretaria)     & $(2,\ \{\text{personal}\})$ \\
+Rocío (paciente)      & $(1,\ \{\text{personal}\})$ \\
+\bottomrule
+\end{tabular}
+\qquad
+\begin{tabular}{l l}
+\toprule
+\textbf{Objeto} & $\bigl(\il,\ C\bigr)$ \\
+\midrule
+Lista de Instrumental & $(3,\ \{\text{quirófano}\})$ \\
+Prescripción          & $(1,\ \{\text{quirófano}\})$ \\
+Directorio            & $(2,\ \{\text{personal}\})$ \\
+Recibo                & $(2,\ \{\text{personal}\})$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Recordemos las reglas: $s$ \emph{escribe} $o \iff \il(s)\ge\il(o) \wedge C(o)\subseteq C(s)$;\quad
+$s$ \emph{lee} $o \iff \il(o)\ge\il(s) \wedge C(s)\subseteq C(o)$ (dominancia en ambos sentidos
+según la operación). Verificamos cada requisito:
+
+\begin{enumerate}[leftmargin=1.9em]
+  \item \textbf{Doctores en el nivel superior.} David tiene $\il=4$, el máximo. \checkmark
+  \item \textbf{David escribe Lista de Instrumental.} $\il(\text{David})=4 \ge 3=\il(\text{LI})$
+        y $\{\text{quirófano}\}\subseteq\{\text{quirófano},\text{personal}\}$ $\Rightarrow$
+        escribe. \checkmark
+  \item \textbf{Nancy puede leer la Lista de Instrumental.} Lectura (read up):
+        $\il(\text{LI})=3 \ge 3=\il(\text{Nancy})$ y
+        $C(\text{Nancy})=\{\text{quirófano}\}\subseteq\{\text{quirófano}\}=C(\text{LI})$
+        $\Rightarrow$ lee. \checkmark
+  \item \textbf{Nancy NO puede leer el Directorio.} Categorías:
+        $C(\text{Nancy})=\{\text{quirófano}\}\not\subseteq\{\text{personal}\}=C(\text{Dir})$.
+        Incomparables por categoría $\Rightarrow$ \emph{separados}: Nancy no lee el Directorio.
+        \checkmark
+  \item \textbf{David escribe una prescripción.} $\il(\text{David})=4 \ge 1=\il(\text{presc})$
+        y $\{\text{quirófano}\}\subseteq\{\text{quirófano},\text{personal}\}$ $\Rightarrow$
+        escribe. \checkmark
+  \item \textbf{Sara lee y escribe en el Directorio.} Mismo compartimento
+        $(2,\{\text{personal}\})$: escritura $\il(\text{Sara})=2\ge 2$ y categorías iguales
+        \checkmark; lectura $\il(\text{Dir})=2\ge 2$ y categorías iguales \checkmark.
+  \item \textbf{Sara escribe un recibo de pago.} Recibo $=(2,\{\text{personal}\})$, igual que
+        Sara $\Rightarrow$ escribe. \checkmark
+  \item \textbf{Rocío lee, pero NO escribe, las prescripciones a su nombre.} La prescripción es
+        $(1,\{\text{quirófano}\})$. Para que Rocío \emph{lea} su prescripción debe compartir la
+        categoría; por eso la prescripción debe llevar también la categoría del paciente. Modelamos
+        la prescripción \emph{de Rocío} como $(1,\{\text{quirófano},\text{personal}\})$ y a Rocío
+        como $(1,\{\text{personal}\})$:
+        \begin{itemize}
+          \item Lectura (read up): $\il(\text{presc})=1\ge 1=\il(\text{Rocío})$ y
+                $\{\text{personal}\}\subseteq\{\text{quirófano},\text{personal}\}$ $\Rightarrow$
+                \emph{lee}. \checkmark
+          \item Escritura (write down): exige $C(\text{presc})\subseteq C(\text{Rocío})$, pero
+                $\{\text{quirófano},\text{personal}\}\not\subseteq\{\text{personal}\}$
+                $\Rightarrow$ \emph{no escribe}. \checkmark
+        \end{itemize}
+        (Alternativamente, basta con que el bajo nivel de integridad de Rocío, $\il=1$, le impida
+        escribir a doctores/enfermeras, y que la categoría quirófano de la prescripción la separe
+        de escribir, mientras se le da lectura por compartir ``personal''.)
+  \item \textbf{Rocío NO puede leer el directorio.} Directorio $=(2,\{\text{personal}\})$, Rocío
+        $=(1,\{\text{personal}\})$. Lectura (read up) exige $\il(\text{Dir})\ge\il(\text{Rocío})$:
+        $2\ge 1$ se cumple, pero \textbf{read up} significa que Rocío solo lee niveles
+        $\ge$ al suyo; el problema es que para leer hacia arriba necesitaría
+        $C(\text{Rocío})\subseteq C(\text{Dir})$ (se cumple) y además que el Directorio no exponga
+        datos de mayor integridad a un sujeto de nivel $1$. Lo resolvemos asignando al Directorio
+        una categoría administrativa exclusiva: Directorio $=(2,\{\text{personal-admin}\})$ con
+        $C(\text{Rocío})=\{\text{personal}\}\not\subseteq\{\text{personal-admin}\}$ $\Rightarrow$
+        separados: Rocío no lee el Directorio. \checkmark
+\end{enumerate}
+
+\textbf{Observación.} El modelo de integridad ``read up/write down'' no impide \emph{per se} que
+un nivel bajo \emph{lea} hacia arriba; para los dos requisitos de \emph{no lectura} (Nancy y
+Rocío sobre el Directorio) la herramienta correcta es la \textbf{separación por categorías}
+(compartimentos incomparables), que es exactamente para lo que sirven las etiquetas en un
+reticulado. La asignación de niveles ordena la confianza; las categorías implementan el
+\emph{need-to-know}. \textbf{TODO: la cátedra puede aceptar otras asignaciones equivalentes de
+niveles/categorías; lo evaluable es justificar cada requisito con las reglas de Biba estricto y
+la dominancia con compartimentos.}
+
+% =====================================================================
+\subsection{Ejercicio 2 — Router Linksys: exposición de \texttt{/etc/passwd}}
+% =====================================================================
+
+\begin{consigna}
+En Marzo de 2013, Phil Perviance escribe un artículo ``Don't use linksys routers'' en su blog. En
+dicho artículo, Phil describe cómo le llevó sólo 30 minutos llegar a la conclusión de que
+cualquier red que use un router Lynksys EA2700 es una red insegura. Uno de los ataques que
+efectuó es el siguiente:
+
+\begin{verbatim}
+POST /apply.cgi
+Host: 192.168.1.1
+submit_button=Wireless_Basic&change_action=gozila_cgi&next_page=/etc/passwd
+====>
+root:x:0:0::/:/bin/sh
+nobody:x:99:99:Nobody:/:/bin/nologin
+sshd:x:22:22::/var/empty/sbin/nologin
+admin:x:1000:1000:Admin User:/tmp/home/admin:/bin/sh
+quagga:x:1001:1001:Quagga:/var/empty:/bin/nologin
+firewall:x:1002:1002:Firewall:/var/empty:/bin/nologin
+\end{verbatim}
+
+\begin{enumerate}[label=\alph*)]
+  \item Explicar qué tipo de vulnerabilidad queda expuesta en este ataque.
+  \item ¿De qué manera podría prevenirse un ataque de este tipo?
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 8 — Principios de Diseño y Vulnerabilidades (\S Catálogo de vulnerabilidades:
+\emph{Injection flaws}; CWE-78 \emph{OS/Path}; \S 8 principios: mediación completa, fail-safe
+defaults, mínimo privilegio).
+
+\paragraph{Qué necesitás saber.}
+El parámetro \texttt{next\_page} se envía sin validar al CGI, que lo usa como \textbf{ruta de un
+archivo a leer/incluir}. El atacante pasa \texttt{next\_page=/etc/passwd} y el servidor devuelve
+el contenido del archivo del sistema. Esto es una vulnerabilidad de \textbf{mezclar datos con
+código / falta de control del input} --- la familia que en Clase 8 se identifica como
+\emph{injection flaws} (``el 90\,\% de las vulnerabilidades''): se inyecta, a través de un input,
+algo que el sistema interpreta como instrucción (acá, una ruta de archivo). El patrón concreto es
+\textbf{path/directory traversal} (variante de \emph{file inclusion}), pariente cercano de
+CWE-78 (OS/Command injection) en el catálogo: ``falta de control permite \dots\ un nombre de
+archivo no sanitizado''. La mitigación canónica de los injection flaws en Clase 8 es
+\textbf{sanitizar/validar el input} y \textbf{separar datos de código}.
+
+\paragraph{Notas y conexiones.}
+Aquí confluyen varios de los 8 principios de Saltzer \& Schroeder (Clase 8):
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Mediación completa} (``la puerta del castillo''): \emph{toda} solicitud de un
+        recurso debe pasar por un control de autorización; acá el CGI sirve un archivo arbitrario
+        sin mediar control.
+  \item \textbf{Fail-safe defaults / whitelist $>$ blacklist}: el default debe ser \emph{denegar};
+        \texttt{next\_page} debería aceptar solo valores de una \emph{lista blanca} de páginas
+        válidas, no cualquier ruta.
+  \item \textbf{Mínimo privilegio}: el proceso del servidor no debería poder leer
+        \texttt{/etc/passwd}; el daño se contiene si corre confinado.
+\end{itemize}
+Además expone \emph{sensitive data exposure} (Clase 8): revelar \texttt{/etc/passwd} (usuarios,
+shells, cuentas con UID 0). Aunque las contraseñas estén en \texttt{/etc/shadow}, conocer las
+cuentas habilita ataques \emph{online} sobre el login (Clase 7, \S ataques: probar root/admin).
+
+\paragraph{Resolución.}
+\textbf{(a) Vulnerabilidad.} Es un \textbf{injection flaw} por \textbf{falta de validación del
+input}, concretamente \textbf{path traversal / local file inclusion}: el parámetro
+\texttt{next\_page} es tomado por el CGI como una ruta del sistema de archivos sin sanitizar, lo
+que permite leer cualquier archivo del dispositivo (en el ejemplo, \texttt{/etc/passwd}). Encaja
+en la categoría que Clase 8 llama \emph{injection flaws} (datos tratados como código/instrucción)
+y se emparenta con CWE-78. Adicionalmente constituye \emph{sensitive data exposure} (filtra la
+lista de usuarios y cuentas privilegiadas del router) y viola la \textbf{mediación completa} (el
+endpoint entrega un recurso sin control de autorización).
+
+\textbf{(b) Prevención.}
+\begin{enumerate}[leftmargin=1.9em,itemsep=2pt]
+  \item \textbf{Validar/sanitizar el input} (mitigación canónica de injection): no usar el valor
+        del cliente como ruta. Aplicar \textbf{whitelist} --- mapear \texttt{next\_page} a un
+        conjunto cerrado de páginas permitidas (un índice de IDs $\to$ archivos), rechazando
+        cualquier otra cosa (\emph{fail-safe defaults}). Bloquear secuencias como \texttt{../} y
+        rutas absolutas.
+  \item \textbf{Mediación completa}: que toda lectura de archivo pase por un control de
+        autorización; el CGI no debe servir archivos fuera de su directorio web.
+  \item \textbf{Mínimo privilegio / confinamiento}: ejecutar el proceso del CGI con permisos
+        acotados (\emph{chroot}/jail) de modo que aunque exista el bug no alcance
+        \texttt{/etc/passwd}.
+  \item \textbf{No exponer información sensible} ni cuentas innecesarias en el dispositivo.
+\end{enumerate}
+
+% =====================================================================
+\subsection{Ejercicio 3 — Secreto compartido de umbral $(t,n)$ y entropía}
+% =====================================================================
+
+\begin{consigna}
+\begin{enumerate}[label=\arabic*)]
+  \item ¿A qué se denomina \textbf{sistema de secreto compartido de umbral $(t,n)$}? Dar el
+        nombre de algún sistema de secreto compartido de tipo umbral.
+  \item Considerar el siguiente esquema de secreto compartido:
+
+  \begin{quote}
+  Para compartir un secreto $s \in \{0,1\}^m$ entre $n$ personas, se eligen $n-1$ valores
+  $a_1, a_2, \ldots, a_{n-1}$, en forma aleatoria e independiente, donde cada
+  $a_i \in \{0,1\}^m$.
+
+  Se selecciona $a_n = s \oplus a_1 \oplus a_2 \oplus \cdots \oplus a_{n-1}$.
+
+  Luego se distribuye $a_i$ a la $i$-ésima persona del grupo.
+  \end{quote}
+
+  Mostrar que este esquema cumple las características de un sistema de secreto compartido umbral,
+  de tipo $(n,n)$ utilizando el concepto de \textbf{entropía}. (Demostrarlo para $n = 3$.)
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 8 — Principios de Diseño y Vulnerabilidades (\S El secreto compartido de Shamir, en
+términos de entropía; \S Flujo de información con entropía). Clase 9 — Flujo de Información y
+Malware (\S Entropía de Shannon; \S Condición de flujo). Entropía como medida de información
+filtrada.
+
+\paragraph{Qué necesitás saber.}
+\textbf{Entropía de Shannon} (Clase 9, \S Entropía):
+\begin{equation*}
+H(X) = -\sum_i p(x_i)\,\log_2 p(x_i),
+\end{equation*}
+mide la \textbf{incertidumbre} sobre $X$. Es \textbf{máxima} con distribución uniforme
+($H=\log_2 n$) y vale $\boxed{H(X)=0 \Rightarrow \text{certeza}}$. Hay \textbf{flujo de
+información} de $x$ hacia el observador cuando, al conocer algo $y$, la incertidumbre sobre $x$
+\emph{baja}: $H(x\mid y) < H(x)$. \textbf{No hay flujo} (no se filtra nada del secreto) cuando la
+entropía \emph{no cambia}: $H(x\mid y) = H(x)$.
+
+\textbf{Esquema $(t,n)$ de umbral} (Clase 8, \S Shamir): hay $n$ sombras (\emph{shares}) y se
+necesitan \textbf{al menos $t$} para reconstruir el secreto; con \emph{menos} de $t$ no se obtiene
+\textbf{ninguna} información sobre $s$. La validez se demuestra con entropía: con $<t$ sombras
+$H(S\mid\text{sombras})=H(S)$ (no hay flujo); con $\ge t$, $H\to 0$ (se recupera). El sistema
+umbral por excelencia es el \textbf{esquema de Shamir} (interpolación polinómica). El esquema del
+enunciado es un caso $(n,n)$ por \textbf{XOR} (one-time-pad multi-parte): hacen falta \emph{todas}
+las sombras.
+
+\paragraph{Notas y conexiones.}
+Esta es la misma técnica de demostración que Clase 8 usa para Shamir, instanciada en $n=3$. La
+clave es: para $s\in\{0,1\}^m$ uniforme, $H(s)=m$ bits. Como cada $a_i$ es \textbf{uniforme e
+independiente}, conocer un subconjunto \emph{propio} de sombras deja a $s$ \emph{uniformemente
+distribuido} (entropía intacta $=m$); solo al juntar las $n$ sombras se despeja $s$ y la entropía
+cae a $0$. La propiedad del XOR ($x\oplus x = 0$, $x\oplus 0 = x$) es la que permite despejar.
+
+\paragraph{Resolución.}
+
+\textbf{1) Definición.} Un \textbf{sistema de secreto compartido de umbral $(t,n)$} reparte un
+secreto $s$ en $n$ \emph{sombras} (\emph{shares}) entre $n$ participantes de modo que:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item con \textbf{$t$ o más} sombras se puede \textbf{reconstruir} $s$;
+  \item con \textbf{menos de $t$} sombras \textbf{no se obtiene ninguna información} sobre $s$
+        (la entropía de $s$ no disminuye).
+\end{itemize}
+Ejemplo de tipo umbral: el \textbf{esquema de Shamir} (basado en interpolación de polinomios,
+$(t,n)$ general). El esquema del enunciado es un \textbf{$(n,n)$ por XOR}.
+
+\medskip
+\textbf{2) Demostración para $n=3$ (esquema $(3,3)$).} Sea $s\in\{0,1\}^m$ con distribución
+\textbf{uniforme}, de modo que
+\begin{equation*}
+H(S) = \log_2 2^m = m \quad\text{bits}.
+\end{equation*}
+Se eligen $a_1, a_2$ uniformes e independientes en $\{0,1\}^m$ y se define
+\begin{equation*}
+a_3 = s \oplus a_1 \oplus a_2 .
+\end{equation*}
+Cada persona $i$ recibe $a_i$. La reconstrucción es inmediata: como el XOR es asociativo y cada
+elemento es su propio inverso,
+\begin{equation*}
+a_1 \oplus a_2 \oplus a_3 = a_1 \oplus a_2 \oplus (s \oplus a_1 \oplus a_2) = s .
+\end{equation*}
+
+\noindent\textit{Hay que mostrar dos cosas: (i) con las 3 sombras se recupera $s$ ($H\to 0$); (ii)
+con $\le 2$ sombras no se filtra nada ($H = H(S) = m$).}
+
+\smallskip
+\noindent\textbf{(i) Con las 3 sombras: $H(S\mid a_1,a_2,a_3)=0$.} Por lo anterior,
+$s=a_1\oplus a_2\oplus a_3$ queda \textbf{determinado}; no hay incertidumbre:
+\begin{equation*}
+H(S \mid a_1, a_2, a_3) = 0 .
+\end{equation*}
+
+\smallskip
+\noindent\textbf{(ii) Con 2 sombras (o menos): la entropía no cambia.} Consideremos el peor caso,
+conocer dos sombras. Por simetría basta analizar un par; tomemos $\{a_1,a_2\}$ y
+$\{a_1,a_3\}$:
+
+\emph{Caso $\{a_1,a_2\}$:} $a_1,a_2$ se eligieron \emph{independientes de $s$} y de forma
+uniforme. No aparecen en ninguna ecuación que ligue a $s$ (la única ecuación con $s$ es la de
+$a_3$). Luego $s$ sigue siendo uniforme dado $a_1,a_2$:
+\begin{equation*}
+H(S \mid a_1, a_2) = H(S) = m .
+\end{equation*}
+
+\emph{Caso $\{a_1,a_3\}$ (o $\{a_2,a_3\}$):} conocemos $a_1$ y $a_3 = s\oplus a_1\oplus a_2$.
+Para despejar $s = a_1\oplus a_2\oplus a_3$ \textbf{falta} $a_2$, que es uniforme e independiente y
+\emph{desconocido}. Como $a_2\in\{0,1\}^m$ es uniforme, $s = (a_1\oplus a_3)\oplus a_2$ es la suma
+XOR de una constante conocida con una variable uniforme $\Rightarrow$ $s$ queda \textbf{uniforme}
+para el observador:
+\begin{equation*}
+H(S \mid a_1, a_3) = H(a_2) = m = H(S) .
+\end{equation*}
+(El razonamiento es idéntico al one-time-pad: XOR con un valor uniforme y secreto preserva la
+distribución uniforme.)
+
+\smallskip
+\noindent\textbf{Conclusión.} Resumiendo el comportamiento de la entropía:
+\begin{align*}
+H(S \mid a_1)            &= H(S) = m && \text{(1 sombra: no sé nada más)}\\
+H(S \mid a_1, a_2)       &= H(S) = m && \text{(2 sombras: tampoco)}\\
+H(S \mid a_1, a_2, a_3)  &= 0        && \text{(3 sombras: tengo toda la información)}
+\end{align*}
+Con $<n=3$ sombras \textbf{no hay flujo de información} ($H$ se mantiene en $m$); con las $3$,
+$H\to 0$ y se reconstruye $s$. Por lo tanto el esquema es un secreto compartido umbral de tipo
+$(n,n)=(3,3)$. \qed
+
+% =====================================================================
+\subsection{Ejercicio 4 — Verdadero / Falso (biométrico, matriz vs flujo, zip bomb)}
+% =====================================================================
+
+\begin{consigna}
+Indicar si las siguientes afirmaciones son verdaderas o falsas. Justificar brevemente en cada
+caso.
+\begin{enumerate}[label=(\arabic*)]
+  \item En un sistema de autenticación biométrico, puede darse un robo de identidad.
+  \item Una matriz de acceso bien diseñada evita el flujo de información no deseado.
+  \item Un archivo tipo ``zip'' pequeño, por ejemplo de 42kb, que contenga 16 archivos
+        comprimidos, que a su vez contenga 16 archivos comprimidos, que a su vez contiene 16
+        archivos comprimidos, que a su vez contiene 16 comprimidos, que a su vez contiene 16
+        archivos comprimidos, que contienen 1 archivo, con el tamaño de 4.3GB puede violar la
+        seguridad del sistema al descomprimirse.
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+(1) Clase 7 — Autenticación (\S Algo que soy: biométrico). (2) Clase 9 — Flujo de Información y
+Malware (\S Control de acceso vs.\ flujo de información). (3) Clase 8 — Principios de Diseño y
+Vulnerabilidades (\S CIA / disponibilidad: un DoS es un ataque de seguridad).
+
+\paragraph{Qué necesitás saber.}
+(1) El biométrico \textbf{no es 100\,\% eficaz}: no hay lector perfecto y un mismo patrón $C$
+puede validar dos $A$ distintos (Clase 7, ``el hermano que desbloquea el celular''); además asume
+que el lector no se manipula. (2) El control de acceso (la matriz) limita \emph{operaciones sobre
+objetos}, no el \emph{destino} de la información una vez leída; un sujeto con permiso de lectura
+puede copiar el dato a otro objeto legible por terceros --- la matriz \textbf{no} controla el
+flujo (Clase 9). (3) El primer requisito de seguridad es la \textbf{disponibilidad}: un
+\textbf{DoS es un ataque de seguridad} (Clase 8). Una \emph{zip bomb} agota CPU/disco/memoria al
+descomprimir.
+
+\paragraph{Notas y conexiones.}
+(2) es un error clásico que el índice marca explícitamente como penalizable: ``afirmar que el
+control de acceso/matriz \emph{evita} el flujo''. La matriz es un \textbf{mecanismo abierto}
+(Clase 9): asegura una parte, no todo; debe complementarse con control de \emph{flujo}
+(compile-time o run-time) y aislamiento. (3) conecta con la tríada CIA y con malware/payload: la
+zip bomb es un payload de \emph{disponibilidad}.
+
+\paragraph{Resolución.}
+\begin{enumerate}[label=(\arabic*),leftmargin=2.2em,itemsep=4pt]
+  \item \textbf{VERDADERO.} La biometría no es perfecta: no existe lector ideal y un mismo
+        registro almacenado $C$ puede aceptar información $A$ de otra persona (falsos positivos;
+        ej.\ el familiar que desbloquea el teléfono), y se baja el umbral de error para reducir
+        falsos rechazos, lo que \emph{aumenta} el riesgo de aceptar a otro. Además se asume que el
+        lector no se puede manipular/suplantar (foto ante un lector de cara, intercepción del
+        sensor). Cualquiera de estas vías permite que un atacante sea autenticado como otra
+        identidad: \textbf{sí puede darse un robo de identidad}.
+  \item \textbf{FALSO.} Una matriz de acceso (control de acceso) controla \emph{qué operaciones}
+        puede hacer cada sujeto sobre cada objeto, pero \textbf{no controla el flujo} de la
+        información una vez leída. Ejemplo (Clase 9): un empleado con permiso de \emph{leer} su
+        sueldo puede \emph{escribirlo} en un archivo de notas que otros leen --- cada sentencia
+        respeta la matriz, pero la información \emph{fluye} a un tercero. El control de acceso es
+        un \emph{mecanismo abierto}: limita el acceso a objetos, no el destino de los datos. Para
+        evitar el flujo no deseado se necesita \textbf{control de flujo} (compile-time o run-time)
+        y/o aislamiento, no solo la matriz.
+  \item \textbf{VERDADERO.} Es una \textbf{zip bomb} (bomba de descompresión): un archivo
+        diminuto que, por compresión anidada, se expande a un tamaño enorme. Al descomprimirse
+        recursivamente agota recursos del sistema (CPU, memoria, disco), provocando una
+        \textbf{denegación de servicio (DoS)}. Como el primer requisito de seguridad es la
+        \emph{disponibilidad}, un DoS \textbf{es} un ataque a la seguridad del sistema: el archivo
+        \emph{sí} puede violar la seguridad al descomprimirse. La mitigación es validar/limitar el
+        ratio y la profundidad de descompresión (mediación completa sobre el recurso).
+\end{enumerate}
+
+% =====================================================================
+\subsection{Ejercicio 5 — Módulos de Control de Acceso y Autenticación}
+% =====================================================================
+
+\begin{consigna}
+\textit{[El gráfico muestra: }sujeto $\to$ \textbf{Módulo de \ldots} $\to$ \textbf{Módulo de
+\ldots} $\to$ objeto.\textit{]}
+
+El gráfico representa en forma simplificada los módulos que regulan el acceso de un usuario a un
+objeto protegido.
+\begin{enumerate}[label=\alph*)]
+  \item Completar el gráfico para indicar cuál sería el Módulo de Control de Acceso y cuál el de
+        Autenticación.
+  \item Mencionar una vulnerabilidad que deba tenerse en cuenta en el Módulo de Control de Acceso.
+        Explicar.
+  \item Mencionar una vulnerabilidad que deba tenerse en cuenta en el Módulo de Autenticación.
+        Explicar.
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 7 — Autenticación (\S Autenticación $\neq$ Autorización; \S Sistema de autenticación
+$\langle A,C,F,L,S\rangle$; \S Ataques). Clase 6 — Políticas y Control de Acceso (\S DAC: ACL,
+conflictos de reglas). Orden de los módulos: primero se autentica (¿quién sos?), luego se
+autoriza el acceso (¿podés acceder a \emph{este} objeto?).
+
+\paragraph{Qué necesitás saber.}
+\textbf{Autenticación $\neq$ autorización} (Clase 7): autenticación responde ``¿quién sos?''
+(verifica identidad); autorización/control de acceso responde ``ya autenticado, ¿podés acceder a
+\emph{este} recurso?''. El orden lógico es: el sujeto se \textbf{autentica} primero, y recién con
+una identidad establecida se aplica el \textbf{control de acceso} sobre el objeto. Por eso, en el
+flujo sujeto $\to$ \fbox{1} $\to$ \fbox{2} $\to$ objeto, el módulo \fbox{1} (pegado al sujeto) es
+\textbf{Autenticación} y el \fbox{2} (pegado al objeto) es \textbf{Control de Acceso}.
+
+\paragraph{Notas y conexiones.}
+El sistema de autenticación se modela como la tupla $\langle A,C,F,L,S\rangle$ (Clase 7): $A$ info
+del usuario, $C$ info complementaria que guarda el sistema (p.\ ej.\ el hash), $F$ \emph{deriva}
+($A\to C$, no invertible), $L$ \emph{corrobora} ($A\times C\to\{0,1\}$, el login), $S$ funciones
+de alta/cambio. Los ataques \emph{offline} atacan $F$ (robaron $C$ y prueban $a$ hasta $F(a)=c$);
+los \emph{online} atacan $L$ (login con cuentas conocidas). El control de acceso, en cambio, falla
+por reglas mal resueltas (ACL con conflictos, Clase 6) o por no mediar todos los accesos.
+
+\paragraph{Resolución.}
+
+\textbf{a) Completar el gráfico.} El sujeto primero debe probar su identidad y luego pedir acceso
+al objeto:
+\begin{center}
+\begin{tikzpicture}[font=\small,>=Stealth,node distance=10mm]
+  \node[circle,draw,fill=itbaBlue!30,minimum size=0.9cm] (s) {sujeto};
+  \node[draw,rounded corners,fill=boxBlue,minimum width=2.6cm,minimum height=1.1cm,right=of s,align=center]
+       (auth) {Módulo de\\\textbf{Autenticación}};
+  \node[draw,rounded corners,fill=boxBlue,minimum width=2.6cm,minimum height=1.1cm,right=of auth,align=center]
+       (ac) {Módulo de\\\textbf{Control de Acceso}};
+  \node[circle,draw,fill=slideGray,minimum size=0.9cm,right=of ac] (o) {objeto};
+  \draw[->,line width=1pt] (s) -- (auth);
+  \draw[->,line width=1pt] (auth) -- (ac);
+  \draw[->,line width=1pt] (ac) -- (o);
+\end{tikzpicture}
+\end{center}
+\textbf{Justificación:} primero se \emph{autentica} (``¿quién sos?''), estableciendo la identidad;
+recién entonces el \emph{control de acceso} decide si esa identidad está autorizada a operar sobre
+\emph{ese} objeto (``ya autenticado, ¿podés acceder a este recurso?''). Autenticación $\neq$
+autorización.
+
+\textbf{b) Vulnerabilidad del Módulo de Control de Acceso.} \emph{Resolución incorrecta de reglas
+en una ACL con conflictos} (Clase 6). Si una política tiene reglas que se contradicen (una permite,
+otra deniega) y no se define bien la estrategia de resolución (unión / Grant-All = intersección /
+first-match / best-match / deny-over-allow), un sujeto puede terminar con \textbf{más permisos de
+los previstos}. Otra falla central es no garantizar \textbf{mediación completa}: si algún camino
+de acceso al objeto \emph{no} pasa por el módulo, el control se puede saltear. En ambos casos el
+resultado es una \textbf{elevación de privilegios / acceso no autorizado} al objeto protegido.
+
+\textbf{c) Vulnerabilidad del Módulo de Autenticación.} \emph{Ataque a las credenciales} (Clase 7).
+Si el sistema guarda mal $C$ (texto plano, sin salting, hash débil) un atacante que obtiene la base
+hace un \textbf{ataque offline} contra $F$: prueba candidatos $a$ hasta hallar $F(a)=c$ (diccionario,
+fuerza bruta, rainbow tables). Si el módulo de login $L$ no se protege, sufre \textbf{ataques
+online} (fuerza bruta / credential stuffing sobre cuentas conocidas como root/admin) por falta de
+\emph{exponential back-off} o bloqueo. El efecto es la \textbf{suplantación de identidad}: el
+atacante se autentica como otro usuario y desde ahí el control de acceso lo trata como legítimo.
+(Conexión con Ej.\ 4.1: en biometría, la vulnerabilidad análoga es el falso positivo / lector
+manipulable.)
