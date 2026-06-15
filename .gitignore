@@ -1,2 +1,39 @@
 CLAUDE.md
 
+# macOS
+.DS_Store
+
+# LaTeX — artefactos de compilación
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.nav
+*.snm
+*.vrb
+*.idx
+*.ilg
+*.ind
+*.glo
+*.gls
+*.acn
+*.acr
+*.alg
+*.xdv
+*.figlist
+*.makefile
+*.figlist-*
+*-impresion.pdf
+
+# wrappers temporales de compilación de resúmenes
+**/_toc_*.tex
+**/_toc_*.pdf
