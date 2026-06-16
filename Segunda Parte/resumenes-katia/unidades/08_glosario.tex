@@ -1,0 +1,346 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+\section{Glosario}
+
+Lista de definiciones rápidas de las unidades 01--07 (control de acceso, autenticación, principios de diseño, flujo de información y malware, seguridad en la empresa, pentesting y protección de datos). Pensado para memorizar términos ``enciclopédicos'' que caen en multiple-choice.
+
+\begin{destacado}
+\textbf{†} = término que aparece en parciales pero \emph{no} se desarrolla en las clases 06--11; se da una \textbf{definición de referencia} estándar.
+\end{destacado}
+
+\newcommand{\gloss}[1]{\subsection*{#1}}
+
+%======================================================================
+\gloss{A}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{ABAC (Attribute-Based Access Control)}] control de acceso discrecional por comprensión que agrupa permisos según \textbf{atributos} del sujeto/objeto/contexto, en lugar de roles fijos.
+  \item[\textbf{ACL (Access Control List)}] representación compacta de la matriz de acceso \textbf{por columna (objeto)}: para cada objeto, lista de pares (sujeto, acción) permitidos. Para usuarios \textbf{anónimos} conviene ACL sobre Capabilities (no hay a quién asociar la capability).
+  \item[\textbf{Aislación total}] modelo ideal de confinamiento: un proceso no puede comunicarse con otros ni ser observado. Da máxima seguridad pero le quita toda utilidad al sistema.
+  \item[\textbf{Amenaza (Threat)}] cualquier elemento que pueda afectar la C/I/D de un sistema; son las \emph{ganas} de atacar. Distinta de la vulnerabilidad (el bug técnico) y del exploit (el programa que la aprovecha).
+  \item[\textbf{Anonimización}] operar sobre datos (ej.\ historias clínicas) sin saber a quién pertenecen. Surge con HIPAA.
+  \item[\textbf{API Gateway}] capa delante de las APIs; control por reglas (MAC) sobre URL, dominio, headers, método, y por contexto (req/seg, ancho de banda).
+  \item[\textbf{Authorization code / Access token / Refresh token (OAuth2)}] el authorization code se intercambia por un access token (vida corta); el refresh token (uso único) renueva el access token y sostiene la sesión.
+  \item[\textbf{Autenticación}] asociar una \textbf{identidad} (entidad externa) a un \textbf{principal} (representación interna); la realiza el \emph{autenticador}. Responde ``¿quién sos?'' (distinto del control de acceso, ``¿qué podés?'').
+  \item[\textbf{AWS (control de acceso)}] combina policies asociadas al \textbf{Principal} (MAC, las pone el administrador) y policies asociadas al \textbf{Recurso} (DAC, las pone quien crea el recurso, ej.\ S3 bucket policy).
+\end{description}
+
+%======================================================================
+\gloss{B}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{Balanceo de carga †}] distribución del tráfico/peticiones entre varios servidores para evitar saturación y mejorar disponibilidad y rendimiento.
+  \item[\textbf{BAS (Breach and Attack Simulation)}] herramientas que evalúan las defensas simulando de forma recurrente las TTP (tácticas, técnicas y procedimientos) de un atacante real; mide capacidad de detección y respuesta.
+  \item[\textbf{Bell-LaPadula (BLP)}] modelo MAC de \textbf{confidencialidad} con niveles ordenados. Reglas: \textbf{no read up} (CSS / ss-property) y \textbf{no write down} (*-property). Resumen: \textbf{READ DOWN, WRITE UP}. Garantiza control de flujo de información (con demostración formal).
+  \item[\textbf{Biba}] modelo MAC de \textbf{integridad}, espejo de BLP: \textbf{no read down}, \textbf{no write up}. Resumen: \textbf{READ UP, WRITE DOWN}. Intuición: ``uno es tan confiable como sus fuentes''.
+  \item[\textbf{Biba Low-Watermark}] variante \textbf{dinámica} de Biba: lectura libre, pero al leer un objeto el sujeto \textbf{baja su nivel al mínimo} entre el suyo y el del objeto.
+  \item[\textbf{Biometría}] factor ``algo que soy'' (huella, cara, retina, voz). \textbf{No} es 100\% eficaz: hay falsos positivos (rasgos parecidos) y el lector puede manipularse; por eso sí puede haber robo de identidad biométrico.
+  \item[\textbf{Blacklist / Whitelist}] lista de excluidos vs.\ lista de permitidos. Por fail-safe defaults, las \textbf{whitelists} (marcar quién puede) son mejores que las blacklists.
+  \item[\textbf{Botnet}] red de bots/máquinas ``zombi'' a la escucha de un \textbf{C\&C (Command \& Control)} distribuido y descentralizado; se usan para DDoS, minería, spam, robo de credenciales. Ej.\ Srizbi (2008).
+  \item[\textbf{Buffer overflow (CWE-787, Out-of-bounds Write)}] escritura en memoria fuera de los límites del buffer. Peligro mayor: si está en el \textbf{stack}, se pisa la \textbf{dirección de retorno} para saltar a código inyectado (shellcode). Ninguna contramedida es 100\% efectiva.
+  \item[\textbf{BYOK / HYOK / CMK / SMK}] esquemas de gestión de claves en la nube: \emph{Bring Your Own Keys}, \emph{Hold Your Own Keys} (cliente posee las privadas), \emph{Customer Managed Keys} (cliente decide rotación pero no accede a las privadas), \emph{Service Managed Keys} (el proveedor decide rotación; máxima eficiencia, mínimo control).
+\end{description}
+
+%======================================================================
+\gloss{C}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{Canal encubierto (covert channel)}] vía de comunicación \textbf{no diseñada} para transmitir datos, usada para enviar información oculta evadiendo controles. Tipos: de \emph{temporización} (timing) y de \emph{almacenamiento} (storage). Es el \emph{medio}.
+  \item[\textbf{Canal lateral, ataque de (side-channel)}] explota \textbf{emisiones físicas/temporales} del hardware (tiempo, consumo, EM, sonido) para extraer info sensible, típicamente la \textbf{clave}. Es \emph{explotar} un canal encubierto (la otra cara de la moneda). Ej.\ Spectre, Meltdown, Rowhammer.
+  \item[\textbf{Capabilities (CAP)}] representación de la matriz de acceso \textbf{por fila (sujeto)}: a cada sujeto, a qué objetos puede y con qué acciones. Necesita identidad/token, por eso \emph{no} sirve para usuarios anónimos.
+  \item[\textbf{Captcha}] prueba para distinguir humano de bot; cada vez más vulnerada por IA, ofrecida como servicio.
+  \item[\textbf{CDM (Continuous Diagnostics and Mitigation)}] fuente de ZTA que informa al motor de políticas el estado del activo que pide acceso (antivirus, updates); puede desactivar el recurso si no cumple.
+  \item[\textbf{Challenge-Response}] autenticación remota sin enviar la clave: el servidor manda un \textbf{challenge} (nonce $r$), el cliente responde $f(k,r)$. El nonce evita reutilizar respuestas capturadas (replay).
+  \item[\textbf{Chinese Wall / Muralla China}] modelo de \textbf{conflicto de interés}: objetos agrupados en clases COI con datasets de compañías (CD). Tras acceder a una compañía de una clase, no se puede acceder a una competidora de la misma clase.
+  \item[\textbf{chroot}] sandbox simple de Unix: lanza un proceso con una vista ``encajonada'' del filesystem (un directorio como raíz).
+  \item[\textbf{CIA / CID (tríada)}] Confidencialidad (quién no puede acceder), Integridad (quién puede modificar), Disponibilidad (acceso cuando se requiera). Disponibilidad es dinámica/temporal.
+  \item[\textbf{CIEM (Cloud Infrastructure Entitlement Management)}] herramienta cloud que audita \textbf{permisos} de los sujetos comparando uso real vs.\ permisos otorgados (busca permisos excesivos).
+  \item[\textbf{CIS Controls}] framework de 18 controles que guía qué tener en cuenta en seguridad.
+  \item[\textbf{CISO (Chief Information Security Officer)}] responsable de velar por la seguridad de la información de la empresa, con implicancias legales ante incidentes.
+  \item[\textbf{Clark-Wilson}] modelo de \textbf{integridad} con arbitración: datos \textbf{CDI} (restringidos) modificables solo vía \textbf{TP} (Transformation Procedure), validados por un \textbf{IVP} (Integrity Verification Process), con \textbf{separación de tareas}. Base del concepto kernel space / user space.
+  \item[\textbf{Clustering †}] agrupación de varios servidores que actúan como un único sistema lógico para escalar y dar tolerancia a fallos.
+  \item[\textbf{CNAPP / CSPM / CWPP}] plataformas de seguridad cloud: \emph{CSPM} (postura/configuración, estático), \emph{CWPP} (protege workloads en ejecución, comportamiento), \emph{CNAPP} (integra ambos, proactivo + reactivo).
+  \item[\textbf{Compartimento}] par $(\text{nivel}, \{\text{etiquetas}\})$ en BLP/Biba. Las etiquetas implementan el \textbf{need-to-know}.
+  \item[\textbf{Confinamiento (problema del)}] dificultad de asegurar que un proceso no transmita información (directa o indirecta) a quien no debe. Técnicamente se materializa con sandboxing/aislación; es ``mínimo privilegio'' aplicado.
+  \item[\textbf{Contenedor (Docker)}] aislamiento liviano que usa \texttt{namespaces} + \texttt{cgroups} y \textbf{comparte el kernel} del host (a diferencia de la VM, que trae kernel propio). Liviano pero comparte más recursos.
+  \item[\textbf{Contexto (reglas basadas en)}] datos del acceso (hora, geolocalización, dispositivo, etc.) que detectan anomalías; nicho: prevención de fraude. En Zero-Trust lo evalúa el \emph{Policy Engine}.
+  \item[\textbf{Control de acceso}] mecanismo que regula quién accede a qué recurso y bajo qué condiciones. Controla el acceso \emph{puntual}; \textbf{no} controla el flujo de información.
+  \item[\textbf{CSRF (Cross-Site Request Forgery)}] el atacante hace que el browser de la víctima dispare una petición no deseada a un sitio donde está autenticada (con su cookie). Defensa real: \textbf{token/nonce anti-CSRF} (da frescura, evita replay); también forzar POST. \textbf{Banear la IP NO sirve}.
+  \item[\textbf{CVE (Common Vulnerabilities and Exposures)}] registro centralizado de \emph{vulnerabilidades} de software (formato \texttt{CVE-AAAA-NNNNN}). Lo coordina MITRE. Ej.\ Log4j, Heartbleed.
+  \item[\textbf{CWE (Common Weakness Enumeration)}] registro de \emph{debilidades} de software que dan lugar a vulnerabilidades; MITRE publica un Top 25 (ej.\ CWE-787 buffer overflow, CWE-79 XSS, CWE-89 SQLi).
+\end{description}
+
+%======================================================================
+\gloss{D}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{DAC (Discretionary Access Control)}] los permisos los asigna \textbf{a discreción} el dueño del objeto o un administrador (no el sistema). Típico de file systems, object storage.
+  \item[\textbf{Data Roles (Trustee / Steward / Custodian / User)}] jerarquía del dato: Trustee (responsable legal), Steward (\emph{aprueba} accesos), Custodian (\emph{otorga} acceso), User (accede/usa). Al bajar, el dominio es más chico.
+  \item[\textbf{Dato personal}] todo lo que permite \textbf{identificar a una persona} solo por ese dato (nombre, documento, mail, domicilio). Los \textbf{sensibles} (ej.\ sueldo) no se quieren divulgar.
+  \item[\textbf{Defensa en profundidad (Defense-in-Depth)}] \textbf{encadenar controles} independientes en capas (modelo ``cebolla''): si uno falla, otro compensa; el atacante debe romper todas. Capas: Perímetro, Red, Host, Aplicación, Datos.
+  \item[\textbf{DEK (Data Encryption Key)}] clave que \textbf{cifra los datos}; a su vez es cifrada por la KEK (esquema KEK-DEK / envelope encryption).
+  \item[\textbf{Deny over Allow}] política de resolución: cualquier regla que deniegue tiene precedencia (todas deben permitir, si no se deniega). En Windows, \textbf{Deny precede a Allow}.
+  \item[\textbf{DevOps}] metodología que une Dev y Ops (``you build it, you run it''). \textbf{NO} incluye seguridad de forma nativa.
+  \item[\textbf{DevSecOps}] DevOps + el equipo de \textbf{seguridad} integrado en cada etapa. Propone el \textbf{Shift Left}: meter la seguridad lo más temprano posible.
+  \item[\textbf{DFD (Data Flow Diagram)}] modelo de procesos, entidades externas, flujos y almacenes de datos, con \textbf{límites de confianza}; se cruza con STRIDE para hallar amenazas.
+  \item[\textbf{DLP (Data Loss Prevention)}] herramienta \textbf{detectiva} (no preventiva ni correctiva) que clasifica/inventaria datos y alerta cuando falla una política (ej.\ exfiltración, cifrado tipo ransomware).
+  \item[\textbf{DMZ (zona desmilitarizada)}] zona de red \textbf{expuesta} hacia Internet (ej.\ servidor web, correo) entre el firewall externo y el interno; aísla los servicios públicos de la LAN.
+  \item[\textbf{DNS / ICMP Tunneling}] canal encubierto que exfiltra datos codificándolos en consultas DNS (subdominios), aprovechando que los firewalls suelen dejar pasar DNS.
+  \item[\textbf{Dominancia}] $A$ domina a $B$ si $\text{nivel}(A)\ge\text{nivel}(B)$ \textbf{y} $\text{etiquetas}(B)\subseteq\text{etiquetas}(A)$. Genera un retículo (orden parcial): hay compartimentos no comparables.
+  \item[\textbf{DRP (Disaster Recovery Plan)}] plan documentado de recuperación ante desastre; a veces se exige (Banco Central) pero no se ejecuta por costo (riesgo \emph{aceptado}).
+\end{description}
+
+%======================================================================
+\gloss{E}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{EKE (Encrypted Key Exchange)}] challenge-response sobre un \textbf{canal encriptado}: el atacante no puede saber si una clave capturada es correcta.
+  \item[\textbf{Encripción homomórfica}] esquema que permite \textbf{operar sobre datos cifrados sin descifrarlos}: $f(\mathrm{Enc}_k(x))=\mathrm{Enc}_k(f(x))$. Habilita cómputo en la nube preservando la privacidad (el tercero nunca ve el dato en claro).
+  \item[\textbf{Entropía $H(X)$}] $H(X)=-\sum p(x_i)\log p(x_i)$ (bits). Mide \textbf{incertidumbre}. Mínimo $0$ (algún $p=1$); máximo $\log n$ (uniforme). Una \textbf{reducción de entropía es flujo de información}.
+  \item[\textbf{EOL (End Of Life)}] software fuera de soporte, sin parches de seguridad; muy ``jugoso'' para pentestear.
+  \item[\textbf{Ethical hacking}] ejecutar técnicas de atacante de forma \textbf{ética y controlada} para probar los controles, intentando violar la política de seguridad.
+  \item[\textbf{Exploit}] programa/script que aprovecha una vulnerabilidad para generar la brecha.
+  \item[\textbf{Exponential back-off}] prevención contra fuerza bruta online: tras cada fallo de login se aumenta exponencialmente el tiempo de reintento.
+\end{description}
+
+%======================================================================
+\gloss{F}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{Factores de autenticación}] algo que \textbf{conozco} (clave), \textbf{tengo} (token), \textbf{soy} (biometría), y el \textbf{contexto}. A más factores independientes, más confianza.
+  \item[\textbf{Fail-safe defaults (fallar seguro)}] por default \textbf{no se deja entrar a nadie}; ante una falla, moverse a un estado seguro (rechazar el pedido). Lo que se penaliza al fallar seguro es la \emph{funcionalidad}.
+  \item[\textbf{FIPS (niveles 1--4)}] norma de dispositivos físicos (HSM, tokens); en nivel 4, ante amenaza física el dispositivo destruye la clave (anti-tampering).
+  \item[\textbf{Firewall}] filtra tráfico de red según reglas (perímetro). Distinto del \textbf{WAF}, que filtra tráfico de una aplicación web.
+  \item[\textbf{First match}] política de resolución: las reglas tienen orden; gana la \textbf{primera} que hace match.
+  \item[\textbf{Best match}] política de resolución: gana la regla \textbf{más específica}.
+  \item[\textbf{Flujo de información (control de)}] estudia cómo la información \emph{se mueve} y se copia. Hay flujo de $x$ a $y$ si $H(x_s\mid y_t)$ baja respecto de $H(x_s\mid y_s)$ (si $y$ ya existía) o de $H(x_s)$ (si $y$ se crea).
+  \item[\textbf{Fórmula de Anderson}] $P=\dfrac{T\,G}{N}$: $P$ prob.\ de adivinar, $G$ pruebas/seg, $T$ tiempo, $N$ espacio de claves ($N=\text{alfabeto}^{\text{longitud}}$, o $2^{\text{bits}}$). Pasar todo a la misma unidad; redondear longitud hacia arriba.
+  \item[\textbf{Función de autenticación ($L$)}] $L: A\times C\to\{0,1\}$; \emph{corrobora} si un par (info de autenticación, info complementaria) es válido. Es la atacada \textbf{online} (login).
+  \item[\textbf{Función de complementación ($F$)}] $F: A\to C$; \emph{deriva} la info complementaria $C$ a partir de la info de autenticación $A$ (ej.\ $C=h(A)$). Es la atacada \textbf{offline}. No confundir con $L$.
+\end{description}
+
+%======================================================================
+\gloss{G}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{GDPR (2018)}] regulación europea de datos personales. La más conocida; aplica aun con sistema en Argentina si hay usuarios/infra en la UE. Exige \textbf{consentimiento explícito} (banners de cookies) y regula el \textbf{Derecho al Olvido}.
+  \item[\textbf{Gobernanza de seguridad}] conjunto de procesos, políticas, procedimientos, controles, roles y responsabilidades para gestionar y mitigar riesgos. Debe \textbf{alinearse con el negocio}.
+  \item[\textbf{Grant-all}] política de resolución: alcanza con que \textbf{una} regla permita para otorgar el acceso.
+  \item[\textbf{Gusano (Worm)}] malware cuyo rasgo es \textbf{propagarse}/auto-replicarse; su ``misión'' es multiplicarse y ocupar recursos (asociado a DoS). Ej.\ Melissa, SQL Slammer.
+\end{description}
+
+%======================================================================
+\gloss{H}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{HA — Pares de Alta Disponibilidad †}] dos (o más) nodos redundantes donde, si el activo falla, el de respaldo toma el servicio (failover) para minimizar el tiempo de caída.
+  \item[\textbf{Hábeas data}] derecho por el cual sos dueño de tus datos: podés verlos, rectificarlos o pedir su borrado. Distinto del \emph{hábeas corpus} (libertad física).
+  \item[\textbf{Hardening}] ``jardinizar'' un host: dejarlo inmutable, solo con el software permitido, reduciendo la superficie de ataque.
+  \item[\textbf{Hash (almacenamiento de claves)}] guardar una \textbf{prueba} de que se conoce el secreto sin guardar el secreto. La clave del usuario nunca se almacena. Un hash rápido (ej.\ SHA-256 solo) no alcanza: falta salt y lentitud.
+  \item[\textbf{Hipervisor}] capa que emula hardware para correr VMs. \emph{Bare-metal} (KVM, ESXi, Hyper-V) o \emph{hosted} (VirtualBox).
+  \item[\textbf{HIPAA (1996)}] regulación de EE.UU.\ para datos de salud (PHI/PII). Introduce la anonimización. Retención: 6 años desde el último uso.
+  \item[\textbf{Honeypot}] ``bote de miel'': red/ambiente ``boba'' a donde se deriva al atacante detectado para entretenerlo, rastrearlo y que no llegue a lo importante.
+  \item[\textbf{HOTP (RFC 4226)}] OTP basado en HMAC y un \textbf{contador} que se incrementa por uso (requiere sincronización / look-ahead). $\text{HOTP}(K,C)=\text{Truncate}(\text{HMAC-SHA1}(K,C))$.
+  \item[\textbf{HSM (Hardware Security Module)}] dispositivo/chip \textbf{anti-tampering} que guarda claves y ofrece cifrado/descifrado \textbf{sin exponer la clave} (``la clave nunca sale de ahí''). Usado en PCI, tokens, banca.
+\end{description}
+
+%======================================================================
+\gloss{I}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{IaC (Infraestructura como Código)}] definir la configuración de infra de forma reproducible (ej.\ Terraform); permite análisis estático que detecta configuraciones inseguras.
+  \item[\textbf{Identidad del sujeto}] lo que identifica unívocamente al sujeto en el universo de sujetos; requisito para autenticar (ej.\ SID en Windows, UID en \texttt{/etc/passwd}).
+  \item[\textbf{IDS (Intrusion Detection System)}] sistema que \textbf{detecta} intrusiones (por firmas o anomalías) y \textbf{alerta}. No bloquea.
+  \item[\textbf{IPS (Intrusion Prevention System)}] sistema que \textbf{previene}/\textbf{bloquea} intrusiones. Diferencia clave: IDS detecta/alerta, IPS previene/bloquea.
+  \item[\textbf{Información complementaria ($C$)}] lo que el sistema almacena por principal (ej.\ el hash de la clave). Deseable que de $C$ \textbf{no se pueda volver} a $A$.
+  \item[\textbf{Ingeniería social}] explotar la \textbf{pata humana} (``cuento del tío'', phishing); suele ser más fácil vulnerar a las personas que a los sistemas.
+  \item[\textbf{Injection flaws}] cualquier inyección de código (SQLi, XSS, OS command, etc.). Según el profe, $\sim$90\% de las vulnerabilidades caen acá.
+  \item[\textbf{Insider threat}] persona interna que incumple las reglas para hacer daño/fraude.
+\end{description}
+
+%======================================================================
+\gloss{K}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{KEK (Key Encryption Key)}] clave que \textbf{cifra la DEK}. Permite \textbf{rotar la KEK sin re-encriptar los datos} (la DEK no cambia).
+  \item[\textbf{Kerckhoffs (principio de)}] la seguridad debe residir en la \textbf{clave}, no en mantener el algoritmo oculto. Base del principio de diseño abierto (no ``seguridad por oscuridad'').
+  \item[\textbf{Kernel space / User space}] separación de memoria protegida (kernel) vs.\ no privilegiada (usuario); materializa la arbitración de Clark-Wilson (un syscall valida antes de operar en el espacio protegido).
+  \item[\textbf{Keystore}] software que guarda todas las claves cifradas con una clave \textbf{máster}.
+\end{description}
+
+%======================================================================
+\gloss{L}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{Ley 25.326 (Protección de Datos Personales)}] ley argentina; protege datos personales en archivos \textbf{públicos o privados} (Art.\ 1) y exige medidas de seguridad/confidencialidad (Art.\ 9). \textbf{No especifica tecnología} (sigue vigente). Habilita el hábeas data. El \textbf{Derecho al Olvido NO lo regula} (eso es GDPR).
+  \item[\textbf{Límite de confianza (trust boundary)}] línea de un DFD donde cambia el nivel de confianza; los datos que la cruzan deben validarse.
+  \item[\textbf{Log4Shell (Log4j, CVE-2021-44228)}] vulnerabilidad crítica de ejecución remota en una librería de logging muy usada; muchas empresas no sabían que la usaban. Impulsó el SBOM.
+  \item[\textbf{Loop unrolling}] técnica de verificación: desenrollar un ciclo un número fijo de veces (los problemas estructurales suelen aparecer en pocas iteraciones).
+\end{description}
+
+%======================================================================
+\gloss{M}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{MAC (Mandatory Access Control)}] control \textbf{obligatorio} y universal sobre todos los accesos, aplicado por el sistema. BLP y Biba son MAC. (No confundir con MAC criptográfico.)
+  \item[\textbf{Malware}] software diseñado \textbf{exclusivamente} con fin malicioso (dañar, evadir controles, exfiltrar). Un ataque suele combinar varios tipos.
+  \item[\textbf{Man-in-the-Middle (MitM) †}] el atacante se interpone en una comunicación entre dos partes, interceptando o alterando los mensajes mientras ambas creen hablar directamente. Se mitiga con cifrado autenticado y verificación de certificados.
+  \item[\textbf{Matriz de acceso}] matriz sujetos (filas) $\times$ objetos (columnas); cada celda lista acciones permitidas. Solo controla acceso directo; \textbf{una matriz bien diseñada NO evita el flujo de información} (eso requiere MAC tipo BLP).
+  \item[\textbf{Mediación completa (Complete mediation)}] un control debe aplicar a \textbf{todas} las interacciones (``la puerta del castillo''); nada por fuera.
+  \item[\textbf{Mecanismos exclusivos}] un mecanismo de seguridad no debe compartir recursos/algoritmos/hardware con otra cosa; reutilizar (ej.\ un flag para dos fines) genera vulnerabilidades.
+  \item[\textbf{MFA (Multifactor)}] requerir 2+ factores de \textbf{distinto tipo}. Más seguro porque obliga a comprometer canales independientes; pierde sentido si los factores están \textbf{entrelazados} (ej.\ recuperar la clave por el 2.º canal, o ambos en el mismo celular).
+  \item[\textbf{Mínimo privilegio (Least privilege)}] dar a cada sujeto solo los permisos mínimos necesarios; por default, \textbf{no tener acceso a nada}.
+  \item[\textbf{MITRE}] organización detrás de CVE y CWE (catálogos de vulnerabilidades y debilidades).
+  \item[\textbf{Modelo / Política / Reglas}] el profe insiste: \textbf{Modelo} (marco formal, ej.\ BLP) / \textbf{Política} (qué estados son seguros, ej.\ ``no read up'') / \textbf{Reglas} (las ACL/RuBAC concretas).
+  \item[\textbf{Modelo de seguridad}] marco formal y lógico que define qué estados son seguros y las reglas para implementar un control de acceso; suelen ser especializados (confidencialidad, integridad).
+\end{description}
+
+%======================================================================
+\gloss{N}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{NAC (Network Access Control)}] define si un dispositivo puede conectarse a la red (por IP, MAC, firmware, credenciales).
+  \item[\textbf{namespaces / cgroups (Linux)}] \texttt{namespaces} aíslan procesos/usuarios/red/FS; \texttt{cgroups} limitan CPU/memoria/red. Base del sandboxing y de los contenedores.
+  \item[\textbf{Need-to-know}] solo se accede a lo estrictamente necesario, aunque se tenga el nivel; se implementa con las etiquetas/categorías de los compartimentos.
+  \item[\textbf{NIST 800-207}] estándar de referencia para \textbf{Zero Trust Architecture}.
+  \item[\textbf{nmap}] herramienta que escanea puertos/interfaces y mapea la topología de red (discovery). Mal usada puede tirar abajo la red (afecta disponibilidad).
+  \item[\textbf{No repudio}] propiedad de no poder negar haber hecho algo. \textbf{Un MAC criptográfico NO da no-repudio} (clave compartida); lo da una firma digital. STRIDE: la viola \emph{Repudiation}.
+  \item[\textbf{Nonce}] valor aleatorio de un solo uso que da \textbf{frescura} y evita replay (challenge-response, token anti-CSRF).
+\end{description}
+
+%======================================================================
+\gloss{O}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{OAuth 2.0}] estándar de \textbf{autorización} para acceder a recursos en nombre del usuario \textbf{sin compartir credenciales}, mediante tokens temporales y \textbf{scopes} (DAC). Es el ``entrar con tu cuenta de Google''.
+  \item[\textbf{OpenID Connect}] capa de \textbf{autenticación} sobre OAuth2. OAuth2 da autorización (acceso a recursos); OIDC dice \emph{quién sos} (federated login).
+  \item[\textbf{OPA (Open Policy Agent)}] framework que \textbf{desacopla} la política del control: recibe una query JSON y devuelve una decisión, evaluando una política escrita en \textbf{Rego} contra datos contextuales.
+  \item[\textbf{OS Command Injection (CWE-78)}] inyección que ejecuta comandos del SO por falta de sanitización (ej.\ nombre de archivo con \texttt{; rm -fr}); genera backdoors.
+  \item[\textbf{OSSTMM}] Open Source Security Testing Methodology Manual; metodología de referencia para pentesting.
+  \item[\textbf{OTP (One Time Password)}] clave de un solo uso. \textbf{No confundir con One Time Pad.} Variantes: HOTP (contador) y TOTP (tiempo). La fuerza bruta sigue siendo posible $\Rightarrow$ requiere throttling.
+  \item[\textbf{OWASP}] organización enfocada en seguridad de aplicaciones web; publica el \textbf{Top 10} (web, Cloud, LLM) y la metodología de Threat Modeling.
+\end{description}
+
+%======================================================================
+\gloss{P}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{PAM (Privileged Access Management)}] práctica para proteger \textbf{cuentas privilegiadas} (separarlas de la cuenta de trabajo, MFA, rotación, inventario, monitoreo). Son lo que más buscan los atacantes.
+  \item[\textbf{Path / Directory Traversal}] leer archivos fuera del directorio esperado (ej.\ \texttt{next\_page=/etc/passwd}, router Linksys 2013).
+  \item[\textbf{Passkey}] autenticación moderna tipo challenge-response: el servidor manda un challenge, el cliente lo firma con una clave protegida por biometría/PIN; no se envía dato secreto (clave pública/privada de fondo).
+  \item[\textbf{PBKDF2 (PKCS 5 v2.0)}] función de derivación \textbf{lenta} con salt y \textbf{rondas} configurables ($c$); encarece el cómputo al atacante (a más rondas, más caro) sin afectar al sistema, que la corre una vez.
+  \item[\textbf{PCI-DSS}] estándar de seguridad de tarjetas de crédito. \textbf{Acotó qué datos proteger} según criticidad (``Blue Print'') e introdujo la \textbf{tokenización}.
+  \item[\textbf{PDP / PEP (Zero Trust)}] \emph{Policy Decision Point} (Policy Engine + Policy Administrator) decide; \emph{Policy Enforcement Point} aplica y separa la zona Untrusted (Subject) de la Trusted (Resource).
+  \item[\textbf{Pentesting (Penetration Test)}] prueba que asume la \textbf{existencia} de vulnerabilidades e intenta llevar el sistema de un estado seguro a uno inseguro. Prueba la \textbf{presencia}, nunca la \textbf{ausencia}; \textbf{no garantiza la seguridad}. Tipos: caja \textbf{negra} (sin info), \textbf{blanca} (info total), \textbf{gris} (parcial), \textbf{double blind} (el atacado tampoco sabe).
+  \item[\textbf{Phishing}] engaño (mail/web falsos) para que la víctima entregue credenciales o datos; forma de ingeniería social.
+  \item[\textbf{Pivoting}] usar un punto de acceso \textbf{comprometido} para continuar el ataque (ej.\ desde el firewall hacia la red interna); reinyecta info a la fase de recolección (ciclo).
+  \item[\textbf{PKI (Public Key Infrastructure)}] genera y registra certificados de sujetos/recursos/servicios. (Un certificado contiene la \textbf{clave pública} del titular, firmada por la CA; no la privada de la CA.)
+  \item[\textbf{Policy Engine (Zero Trust)}] entidad externa que evalúa todas las condiciones de contexto para decidir un acceso.
+  \item[\textbf{PostgreSQL (control de acceso)}] basado en \textbf{roles} (rol con propiedad \texttt{LOGIN}); el creador es \textbf{owner} (DAC). \emph{Row Level Security} da need-to-know por registro.
+  \item[\textbf{Prepared statements}] defensa contra SQLi: la query se arma con \textbf{parámetros} separados del comando (los datos no se interpretan como código).
+  \item[\textbf{Principal}] representación interna del sistema de una entidad externa (ej.\ ``Usuario1''); a él se le asocia la identidad al autenticar.
+  \item[\textbf{Principio de tranquilidad}] limitación de BLP: asume que las clasificaciones \textbf{no cambian} en el tiempo (falso en la práctica; se complementa con reclasificación / Clark-Wilson).
+  \item[\textbf{Principios de Saltzer \& Schroeder (1975)}] mínimo privilegio, fail-safe defaults, economía de mecanismo (simplicidad), mediación completa, diseño abierto, separación de privilegios, mecanismos exclusivos (defensa en profundidad) y aceptación psicológica.
+  \item[\textbf{Purple Team}] enfoque colaborativo que combina Red Team (ofensivo) y Blue Team (defensivo).
+\end{description}
+
+%======================================================================
+\gloss{R}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{RAID †}] \emph{Redundant Array of Independent Disks}: combinar varios discos para tolerancia a fallos (redundancia/espejado) y/o rendimiento. Aporta disponibilidad, no es un backup.
+  \item[\textbf{Ransomware}] malware que cifra (o exfiltra) la información de la víctima y pide \textbf{rescate} (cripto). Ej.\ CryptoLocker, WannaCry.
+  \item[\textbf{RASP (Runtime Application Self Protection)}] herramienta que controla en ejecución que los binarios del sistema no cambien.
+  \item[\textbf{RBAC (Role-Based Access Control)}] control discrecional por comprensión que agrupa permisos en \textbf{roles} asignados a sujetos. Algunos libros lo llaman MAC, pero la asignación suele ser discrecional.
+  \item[\textbf{Recovery codes}] códigos de un solo uso para recuperar la cuenta si se pierde el dispositivo del segundo factor.
+  \item[\textbf{Red Team / Blue Team}] Red (ofensivo: pentesting, ingeniería social) vs.\ Blue (defensivo: firewalls, IDS, parches, respuesta).
+  \item[\textbf{Retículo (Lattice)}] conjunto de orden \textbf{parcial} de compartimentos según dominancia: no todos son comparables (los no comparables quedan separados). Diagrama de Hasse.
+  \item[\textbf{Riesgo (gestión de)}] Riesgo $\approx$ Amenaza $\times$ Vulnerabilidad $\times$ Asset. Tratamiento: evitar, reducir/mitigar, transferir, compensar o aceptar (documentando).
+  \item[\textbf{Rootkit}] malware que se \textbf{oculta} con contramedidas activas (intercepta syscalls para no aparecer en \texttt{ps}); persiste a nivel kernel/usuario o en BIOS/bootloader. No es propagación, es ocultamiento/persistencia.
+  \item[\textbf{RuBAC (Rule-Based Access Control)}] control por comprensión con una \textbf{lista ordenada de reglas} (Principal, Objeto, Acceso, Permitido/Bloqueado) más una política de resolución.
+\end{description}
+
+%======================================================================
+\gloss{S}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{Salt (salting)}] perturbación aleatoria distinta por cuenta embebida en el hash. \textbf{NO} agranda el espacio de claves; \textbf{SÍ} penaliza al atacante offline (multiplica su costo por $2^{\text{bits de salt}}$, no puede paralelizar) y evita que claves iguales den el mismo hash.
+  \item[\textbf{Sandboxing}] aislamiento en ejecución que \textbf{arbitra} las interacciones del proceso con su entorno (más liviano que una VM). Ej.\ chroot, namespaces.
+  \item[\textbf{SAST / DAST / SCA}] tests de seguridad: \emph{SAST} (estático, sin ejecutar), \emph{DAST} (dinámico, app en ejecución), \emph{SCA} (analiza dependencias/librerías, incluso transitivas).
+  \item[\textbf{SBOM (Software Bill of Materials)}] inventario formal y legible por máquina de los componentes/dependencias del software; permite saber qué usa cada app ante un incidente (resurge con Log4Shell).
+  \item[\textbf{Scope (OAuth2)}] permisos específicos que la app solicita; el token se limita a ellos. El control de acceso lo determina el dueño del recurso (DAC).
+  \item[\textbf{SELinux}] control \textbf{adicional al DAC} basado en reglas y \emph{contextos}; permite restringir hasta dos procesos root entre sí. Usado en hardening.
+  \item[\textbf{Separación de privilegios (Separation of duty)}] una tarea crítica no queda bajo un solo sujeto; control por \textbf{oposición de intereses}. Quien modifica no es quien verifica.
+  \item[\textbf{Shift Left}] mover los controles de seguridad lo más temprano posible en el pipeline (DevSecOps); cuanto antes se detecta, más barato de resolver.
+  \item[\textbf{SIEM (Security Information and Event Management)}] recolecta y \textbf{correlaciona} eventos de seguridad para detectar anomalías y generar alertas.
+  \item[\textbf{SoC / IoT Security}] escenario desfavorable: chips físicamente expuestos, debug accesible, wireless, escala y tampering. Se recomienda HSM embebido.
+  \item[\textbf{SOX (2002)}] \emph{Sarbanes-Oxley}, ley de EE.UU.\ para empresas que cotizan en bolsa; exige transparencia. Retención de auditoría: 7 años.
+  \item[\textbf{Spyware}] malware que \textbf{recolecta información} del usuario y suele establecer un covert channel/túnel para exfiltrarla.
+  \item[\textbf{SQL Injection (CWE-89)}] inyección que ejecuta SQL en la BD por falta de control de entrada (los datos se interpretan como comando). Defensa: prepared statements / parametrizar.
+  \item[\textbf{Squid Web Proxy}] proxy web con reglas ordenadas (mal llamado ACL) tipo \textbf{MAC} que filtran por dominio/protocolo/URL/headers (blacklists).
+  \item[\textbf{SSO (Single Sign-On)}] \textbf{delegar la autenticación} a un sistema externo de confianza (federated login); el usuario loguea una vez. Ej.\ Active Directory (ADFS), OpenID Connect.
+  \item[\textbf{Step-up authentication}] pedir un factor adicional \textbf{solo ante anomalías} (contexto extraño, geolocalización), para balancear seguridad y usabilidad.
+  \item[\textbf{STRIDE (Microsoft)}] taxonomía de 6 amenazas y la propiedad que violan: \textbf{S}poofing (autenticación), \textbf{T}ampering (integridad), \textbf{R}epudiation (no repudio), \textbf{I}nformation Disclosure (confidencialidad), \textbf{D}enial of Service (disponibilidad), \textbf{E}levation of Privilege (autorización).
+  \item[\textbf{Sujeto / Objeto / Acceso}] sujeto (origen del estímulo: persona, proceso), objeto (destino: recurso, dato), acceso (forma de interactuar: leer, escribir, ejecutar\dots).
+\end{description}
+
+%======================================================================
+\gloss{T}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{Threat Modeling (Modelado de amenazas)}] técnica de ingeniería (Microsoft/OWASP) para identificar amenazas, ataques, vulnerabilidades y contramedidas sobre la superficie de ataque; proceso continuo (ver STRIDE/DFD).
+  \item[\textbf{Threat Intelligence}] fuentes internas/externas sobre CVEs, firmas, IPs comprometidas, botnets (ej.\ VirusTotal).
+  \item[\textbf{Throttling}] limitar la tasa de intentos del lado del servidor (clave en OTP, ya que la fuerza bruta sigue siendo posible).
+  \item[\textbf{TME / TME-MK (Intel)}] cifrado de \textbf{memoria} en hardware (AES-XTS en la CPU): \emph{TME} una sola clave; \emph{TME-MK} múltiples claves (un KeyID por VM, vía VT-x).
+  \item[\textbf{Tokenización}] reemplazar un dato crítico (ej.\ tarjeta) por un \textbf{token} sin valor por sí solo; los datos reales viven en una base ultra-protegida. Aporte de PCI-DSS.
+  \item[\textbf{TOTP (RFC 6238)}] OTP basado en \textbf{tiempo}: $T=(\text{unix time}-T_0)/X$ (X$\approx$30 s); no requiere contador. El más usado (Google Authenticator). Usa drift-window y throttling.
+  \item[\textbf{Traffic shaping}] análisis de la \emph{forma} de las tramas (sin ver el contenido) por parte del proveedor; ejemplo de canal de temporización.
+  \item[\textbf{Troyano}] malware \textbf{oculto dentro de software aparentemente benigno} que el usuario ejecuta. Describe cómo llega/se esconde, no el payload. Ej.\ PC-Write (1986).
+  \item[\textbf{Trilema usabilidad/performance/seguridad}] la seguridad siempre es un balance; aumentar una penaliza otra (``bueno, bonito y barato'').
+\end{description}
+
+%======================================================================
+\gloss{U}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{Unix/Linux file system}] \textbf{DAC}: permisos \texttt{rwx} en 3 secciones (usuario/grupo/otros); \texttt{umask} quita permisos a archivos nuevos. Es ``engañosamente simple''.
+  \item[\textbf{Use After Free (CWE-416)}] usar un puntero a memoria ya liberada (free); puede dar valores raros, crash o ejecución de código.
+\end{description}
+
+%======================================================================
+\gloss{V}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{Verificación formal}] comprobar \textbf{matemáticamente} (precondiciones $\to$ operaciones $\to$ poscondiciones) que un sistema cumple sus restricciones. \textbf{SÍ prueba la ausencia} de vulnerabilidades, pero solo en un algoritmo/ambiente acotado e incluyendo todos los factores; es costosísima.
+  \item[\textbf{Virtualización (VM)}] entorno de ejecución sintético aislado; cada VM tiene \textbf{kernel propio} $\Rightarrow$ aislamiento fuerte pero pesado (vs.\ contenedor, que comparte kernel).
+  \item[\textbf{Virus}] malware cuyo rasgo es \textbf{propagarse}; suele tener replicación + payload (ejecución). Junto al gusano describe la propagación, no qué hace adentro.
+  \item[\textbf{Von Neumann (arquitectura)}] datos y código viven en el \textbf{mismo espacio de memoria}, lo que \textbf{habilita la inyección de código} (canal de control mezclado con canal de datos del usuario; análogo al prompt injection en LLMs).
+  \item[\textbf{Vulnerabilidad}] debilidad de un activo que permite un acceso no autorizado; el \textbf{canal de ejecución} de la maldad. Técnicamente, un bug que se disfraza de feature.
+\end{description}
+
+%======================================================================
+\gloss{W}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{WAF (Web Application Firewall)}] firewall en la capa de \textbf{aplicación}: filtra el tráfico de una aplicación web (distinto del firewall de perímetro, que filtra tráfico de red).
+  \item[\textbf{Windows file system}] DAC con dueño, grupos y permisos heredados que \textbf{persisten a la creación}; calcula permisos efectivos. \textbf{Deny precede a Allow}; reglas locales sobre heredadas.
+\end{description}
+
+%======================================================================
+\gloss{X}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{XSS (Cross-Site Scripting, CWE-79)}] inyección de código (JS) que termina \textbf{ejecutado por el browser de la víctima}; aprovecha la confianza del sitio y permite \textbf{robar la sesión}. Defensa: escapar/sanitizar la salida (escape on output).
+  \item[\textbf{XXE (XML External Entities)}] abuso de XML que carga esquemas desde una URL para escanear la red interna visible por el servidor.
+\end{description}
+
+%======================================================================
+\gloss{Z}
+%======================================================================
+\begin{description}[leftmargin=0pt, style=unboxed, itemsep=1pt, parsep=0pt]
+  \item[\textbf{Zero-day}] vulnerabilidad/exploit aún no conocido por el fabricante (no hay prevención); alto valor en mercado negro/gris.
+  \item[\textbf{Zero Trust Architecture (ZTA, NIST 800-207)}] asume amenazas internas y externas \textbf{en todo momento}: \textbf{Never Trust, Always Verify, Assume Breach}. La intranet ya no es de confianza; cada componente verifica. Fácil de implementar mal si no se monitorea.
+  \item[\textbf{Zip bomb †}] archivo comprimido pequeño que al descomprimirse se expande a un tamaño enorme, agotando recursos (ataque de disponibilidad/DoS).
+\end{description}
+
+\end{document}
