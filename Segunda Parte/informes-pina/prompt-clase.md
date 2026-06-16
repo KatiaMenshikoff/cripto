@@ -75,6 +75,7 @@ de Criptografía y Seguridad, integrando **parte teórica y práctica**.
 
 | Clase | Tema | Estado |
 |-------|------|--------|
+| 6 | Políticas de seguridad y Control de acceso | ✅ hecho — `clase06-politicas-control-acceso/` |
 | 7 | Autenticación | ✅ hecho — `clase07-autenticacion/` |
 | 8 | Principios de Diseño de Seguridad y Flujo de Información | ✅ hecho — `clase08-principios-diseno-seguridad/` |
 | 9 | Flujo de Información y Malware / Seguridad en aplicaciones (CWE Top 25) | ✅ hecho — `clase09-flujo-informacion-malware/` |

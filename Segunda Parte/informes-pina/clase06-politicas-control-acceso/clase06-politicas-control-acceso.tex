@@ -1,0 +1,1551 @@
+% !TEX program = pdflatex
+%=====================================================================
+%  Criptografía y Seguridad - ITBA
+%  Clase 6 — Políticas de seguridad y Control de acceso
+%  Apunte integral: teoría + práctica
+%=====================================================================
+\documentclass[11pt,a4paper]{article}
+
+%---------------------------------------------------------------------
+%  Paquetes
+%---------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla,es-noshorthands]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{geometry}
+\geometry{a4paper,margin=2.4cm,headheight=22pt}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{caption}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,shapes.misc,shapes.symbols,arrows.meta,positioning,calc,
+                fit,backgrounds,decorations.pathmorphing,decorations.pathreplacing,
+                shadows.blur,chains,matrix}
+
+%---------------------------------------------------------------------
+%  Paleta de color (inspirada en las diapositivas de la cátedra)
+%---------------------------------------------------------------------
+\definecolor{itbaCyan}{HTML}{6EC6D9}
+\definecolor{itbaCyanDark}{HTML}{2E8B9E}
+\definecolor{itbaBlue}{HTML}{AEDCEA}
+\definecolor{boxBlue}{HTML}{BBD4F0}
+\definecolor{slideGray}{HTML}{ECECEC}
+\definecolor{practGreen}{HTML}{4F8A3D}
+\definecolor{practGreenL}{HTML}{E2EFD9}
+\definecolor{attackRed}{HTML}{C0392B}
+\definecolor{codeBg}{HTML}{F5F5F5}
+% niveles de clasificación (estilo slides Bell-LaPadula / Biba)
+\definecolor{lvlTS}{HTML}{E74C3C}
+\definecolor{lvlS}{HTML}{F39C12}
+\definecolor{lvlC}{HTML}{5DADE2}
+\definecolor{lvlU}{HTML}{58D68D}
+% MAC verde / DAC amarillo (resaltados de la práctica)
+\definecolor{macGreen}{HTML}{2ECC71}
+\definecolor{dacYellow}{HTML}{F7DC6F}
+
+%---------------------------------------------------------------------
+%  Hipervínculos
+%---------------------------------------------------------------------
+\hypersetup{
+  colorlinks=true,
+  linkcolor=itbaCyanDark,
+  urlcolor=itbaCyanDark,
+  citecolor=itbaCyanDark,
+  pdftitle={Clase 6 - Politicas y Control de acceso},
+  pdfauthor={Criptografia y Seguridad - ITBA}
+}
+
+%---------------------------------------------------------------------
+%  Encabezados y pies
+%---------------------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\textsc{Criptografía y Seguridad — ITBA}}
+\rhead{\small Clase 6 · Políticas y Control de acceso}
+\cfoot{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{itbaCyanDark}\leaders\hrule height \headrulewidth\hfill}}
+
+%---------------------------------------------------------------------
+%  Títulos de sección con barra de color (estilo diapositiva)
+%---------------------------------------------------------------------
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{itbaCyanDark}}
+  {\thesection}{0.6em}{}
+  [\vspace{-0.4em}{\color{itbaCyan}\titlerule[2pt]}]
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{itbaCyanDark}}
+  {\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{black}}
+  {\thesubsubsection}{0.6em}{}
+
+%---------------------------------------------------------------------
+%  Cajas reutilizables
+%---------------------------------------------------------------------
+% Caja "diapositiva" (recuadro gris de las slides)
+\newtcolorbox{slidebox}[1][]{
+  enhanced, colback=slideGray, colframe=black!55, boxrule=0.5pt,
+  arc=1pt, left=6pt,right=6pt,top=4pt,bottom=4pt, #1}
+
+% Caja de definición
+\newtcolorbox{defbox}[1]{
+  enhanced, breakable, colback=itbaBlue!25, colframe=itbaCyanDark,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+% Caja de nota práctica
+\newtcolorbox{practbox}[1]{
+  enhanced, breakable, colback=practGreenL, colframe=practGreen,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+% Caja de atención / ataque
+\newtcolorbox{warnbox}[1]{
+  enhanced, breakable, colback=attackRed!8, colframe=attackRed,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+% Caja de anécdota / aclaración del profe
+\newtcolorbox{anecbox}[1]{
+  enhanced, breakable, colback=boxBlue!25, colframe=itbaCyan!80!black,
+  boxrule=0.8pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries\itshape, coltitle=black, title={#1}}
+
+%---------------------------------------------------------------------
+%  Estilo de código
+%---------------------------------------------------------------------
+\lstdefinestyle{code}{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{codeBg},
+  keywordstyle=\color{itbaCyanDark}\bfseries,
+  commentstyle=\color{practGreen}\itshape,
+  stringstyle=\color{attackRed},
+  breaklines=true, frame=single, rulecolor=\color{black!30},
+  showstringspaces=false, columns=fullflexible, tabsize=2,
+  xleftmargin=10pt, framexleftmargin=8pt}
+
+%---------------------------------------------------------------------
+%  Macros matemáticos
+%---------------------------------------------------------------------
+\newcommand{\Sset}{\mathcal{S}}
+\newcommand{\Oset}{\mathcal{O}}
+\newcommand{\Rset}{\mathcal{R}}
+\newcommand{\dom}{\mathrel{\mathbf{dom}}}        % relación de dominancia
+\newcommand{\il}{\mathrm{il}}                     % integrity level
+\newcommand{\Lvl}{L}                              % security level
+\newcommand{\highlight}[2]{\colorbox{#1}{\strut #2}}
+
+%=====================================================================
+\begin{document}
+%=====================================================================
+
+%---------------------------------------------------------------------
+%  Portada
+%---------------------------------------------------------------------
+\begin{titlepage}
+\centering
+\vspace*{1.2cm}
+
+\begin{tikzpicture}
+  \node[rounded corners=2pt, fill=itbaCyan, text=black, inner sep=14pt,
+        minimum width=0.8\textwidth, align=center] (t)
+        {\Huge\bfseries Criptografía y Seguridad};
+\end{tikzpicture}
+
+\vspace{0.6cm}
+{\LARGE Seguridad en sistemas y aplicaciones}\\[0.25cm]
+{\Huge\bfseries\color{itbaCyanDark} Políticas de seguridad\\[2pt] y Control de acceso}
+
+\vspace{0.8cm}
+
+% Ilustración: bóveda / caja fuerte (recreación del icono de portada)
+\begin{tikzpicture}[scale=1.0]
+  \fill[black!12] (-3.2,-2.4) rectangle (3.2,2.8);
+  \draw[line width=2pt, black!55] (-3.2,-2.4) rectangle (3.2,2.8);
+  \fill[itbaCyanDark!75] (-2.4,-2.0) rectangle (2.4,2.4);
+  \draw[line width=3pt, black!70] (-2.4,-2.0) rectangle (2.4,2.4);
+  \draw[line width=1.2pt, itbaCyan] (-2.0,-1.6) rectangle (2.0,2.0);
+  \draw[line width=2pt, black!70] (0,-2.0) -- (0,2.4);
+  \foreach \a in {0,45,...,315}{
+    \draw[line width=2pt, black!70] (-1.1,0.2) -- ++(\a:0.6);
+  }
+  \draw[line width=2.5pt, black!70] (-1.1,0.2) circle (0.42);
+  \fill[itbaCyan] (-1.1,0.2) circle (0.16);
+  \draw[line width=2.5pt, black!70] (1.1,0.2) circle (0.42);
+  \fill[itbaCyan] (1.1,0.2) circle (0.16);
+  \foreach \y in {-1.2,-0.4,0.8,1.6}{
+     \fill[black!70] (-2.2,\y) circle (0.07);
+     \fill[black!70] (2.2,\y) circle (0.07);
+  }
+\end{tikzpicture}
+
+\vfill
+{\large Apunte integral — Teoría + Práctica}\\[0.2cm]
+{\normalsize Clase 6 \quad·\quad Capítulos 4--8, \emph{Computer Security: Art and Science} (M.~Bishop)}\\[0.4cm]
+{\small Instituto Tecnológico de Buenos Aires (ITBA)}
+
+\vspace{0.6cm}
+{\footnotesize\itshape Documento elaborado a partir de la transcripción de la clase teórica
+(Prof.\ Pablo Abad) y de las diapositivas oficiales de la teórica y de la práctica.}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+%=====================================================================
+\section{Definiendo seguridad en aplicaciones}
+%=====================================================================
+
+En criptografía aprendimos algo fundamental: \textbf{no hay una única definición de
+seguridad}. Para una misma función criptográfica podía haber distintas pruebas, y cada prueba
+era, en el fondo, \emph{una definición distinta de seguridad}. Al pasar de funciones
+matemáticas a \textbf{sistemas dinámicos}, ocurre lo mismo: la seguridad depende del contexto
+(aplicación, servicio, empresa).
+
+\begin{defbox}{Política de seguridad — la definición operativa}
+Existe una definición genérica para sistemas complejos: si pudiésemos clasificar todos los
+\textbf{estados} de un sistema en \emph{seguros} e \emph{inseguros}, entonces
+\begin{center}\itshape
+un sistema es seguro mientras sus estados queden dentro de la política de seguridad,\\
+es decir, mientras transicione únicamente entre estados que consideramos seguros.
+\end{center}
+La \textbf{política de seguridad} es, literalmente, \emph{la definición de qué estados de un
+sistema vamos a considerar seguros} frente al resto.
+\end{defbox}
+
+Esta definición es más teórica que práctica —si modelamos una aplicación como una máquina de
+estados, la cantidad de estados es \emph{abismalmente grande} y difícil de clasificar—, pero
+aporta dos conceptos muy poderosos que sí aplican siempre:
+
+\begin{enumerate}[leftmargin=1.6em,itemsep=2pt]
+  \item Necesitamos una forma de \textbf{caracterizar}, sacando ``una foto en el tiempo'',
+        si el estado actual del sistema es seguro o no. \emph{Eso es la política de seguridad.}
+  \item Un sistema que pasa \textbf{eventualmente} a un estado inseguro \textbf{deja de ser
+        seguro}, \emph{aunque después vuelva} a un estado que consideremos seguro.
+\end{enumerate}
+
+% ---- Diagrama: estados seguros / inseguros (recreación slide 2) ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth]
+  % región "política de seguridad"
+  \draw[thick,black!55,fill=itbaBlue!18] plot[smooth cycle] coordinates
+        {(-3.4,0) (-2.8,1.5) (-1,1.9) (1.2,1.7) (1.9,0.4) (1.1,-1.4) (-1.2,-1.8) (-3,-1.1)};
+  \node[font=\scriptsize\itshape,black!60] at (-2.2,1.55) {estados seguros};
+
+  % nodos seguros (azules)
+  \node[circle,draw=black,line width=1.4pt,fill=lvlC,minimum size=0.42cm] (a) at (-2.3,0.3) {};
+  \node[circle,draw,fill=lvlC,minimum size=0.38cm] (b) at (-0.9,1.0) {};
+  \node[circle,draw,fill=lvlC,minimum size=0.38cm] (c) at (-0.5,-0.2) {};
+  \node[circle,draw,fill=lvlC,minimum size=0.38cm] (d) at (-1.6,-1.1) {};
+  \node[circle,draw,fill=lvlC,minimum size=0.38cm] (e) at (1.0,0.5) {};
+  % nodos inseguros (rojos)
+  \node[circle,draw,fill=lvlTS,minimum size=0.38cm] (f) at (3.0,1.0) {};
+  \node[circle,draw,fill=lvlTS,minimum size=0.38cm] (g) at (3.4,-0.6) {};
+  \node[circle,draw,fill=lvlTS,minimum size=0.38cm] (h) at (4.5,-1.3) {};
+  \node[circle,draw,fill=lvlTS,minimum size=0.38cm] (i) at (1.4,-1.6) {};
+  \node[font=\scriptsize\itshape,attackRed] at (3.9,1.0) {estados inseguros};
+
+  \draw[black!70] (a)--(b) (a)--(c) (a)--(d) (c)--(d) (c)--(e) (b)--(e);
+  \draw[dashed,black!55] (e)--(f) (e)--(i) (d)--(i);
+  \draw[black!70] (f)--(g) (g)--(h) (i)--(g);
+\end{tikzpicture}
+\caption{Mientras el sistema transita por estados \emph{dentro} de la región (azules), es
+seguro. Si una transición lo lleva a un estado inseguro (rojo), deja de ser seguro.
+\textit{(Recreación de la diapositiva 2.)}}
+\end{figure}
+
+\begin{anecbox}{El costo de volver a un estado seguro}
+El punto~2 tiene enorme importancia en seguridad defensiva. Si a un servidor se le
+\textbf{comprometió la seguridad}, las buenas prácticas dicen que habría que ``prenderle
+fuego y traer uno nuevo'' (o, sin tanto drama físico, \textbf{reinstalarlo}). Es muy difícil,
+una vez comprometida, volver a un estado del que se tenga garantía. Por eso trabajar en
+seguridad requiere cierto \emph{mindset} de adaptabilidad y resiliencia: como en criptografía,
+no se puede bajar la probabilidad de incidente a cero, y cuando hay un incidente el costo de
+recuperación es altísimo.
+\end{anecbox}
+
+\subsection{La tríada CIA}
+La seguridad puede enfocarse desde varios lados. En criptografía vimos
+\textbf{confidencialidad} y \textbf{integridad}; el espectro completo incorpora un tercer
+servicio, la \textbf{disponibilidad}. A estos tres se los conoce como la \textbf{tríada CIA}
+(\emph{Confidentiality, Integrity, Availability}).
+
+\begin{defbox}{Tríada CIA}
+\begin{itemize}[leftmargin=1.5em,itemsep=2pt]
+  \item \textbf{Confidencialidad}: atañe a la \emph{diseminación} de la información. Hay
+        información que debe ser accesible a cierto grupo y no a otro. (\emph{Guardar la
+        información en secreto: acceso solo a los autorizados.})
+  \item \textbf{Integridad}: tiene que ver con relaciones de \emph{confianza}. Necesito poder
+        certificar la calidad de algo: que una transacción ocurrió, que los datos son
+        correctos, o que el \emph{origen} es quien dice ser. Se distingue la
+        \textbf{integridad de datos} de la \textbf{integridad de origen}.
+  \item \textbf{Disponibilidad}: capacidad de acceder a la información o ejecutar una acción
+        \emph{en el momento} en que se la necesita. Involucra \textbf{temporalidad}, es más
+        dinámica y por eso no se estudia tanto en criptografía (que es estática).
+\end{itemize}
+\end{defbox}
+
+% ---- Diagrama de la tríada (recreación slide 3 - diagrama de Venn) ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small]
+  \begin{scope}[blend group=multiply]
+    \fill[itbaCyanDark!70]  (0,0.9)   circle (1.6);
+    \fill[itbaCyanDark!45]  (-1.0,-0.7) circle (1.6);
+    \fill[itbaCyan!75]      (1.0,-0.7)  circle (1.6);
+  \end{scope}
+  \node[white,font=\bfseries,align=center] at (0,1.5) {Confiden-\\cialidad};
+  \node[white,font=\bfseries] at (-1.6,-1.1) {Integridad};
+  \node[white,font=\bfseries] at (1.6,-1.1) {Disponib.};
+  \node[font=\scriptsize\bfseries,white] at (0,-0.15) {C·I·A};
+\end{tikzpicture}
+\caption{La tríada CIA. La seguridad de un activo se preserva sosteniendo las tres
+propiedades. \textit{(Recreación de la diapositiva 3.)}}
+\end{figure}
+
+%=====================================================================
+\section{Conceptos de control de acceso}
+%=====================================================================
+
+Para construir teoría sobre seguridad se introducen tres conceptos básicos, engañosamente
+simples, que son la base de todo:
+
+\begin{defbox}{Sujeto, Objeto y Acceso}
+\begin{description}[leftmargin=2.0em,style=nextline,itemsep=2pt]
+  \item[Sujeto] La entidad que es \emph{origen} de algún estímulo: ejecuta acciones sobre
+        otras entidades. Pueden ser personas, servicios, aplicaciones, servidores.
+  \item[Objeto] El \emph{destino} de esos estímulos. Generalmente recursos: datos, servicios,
+        bases de datos, tablas, programas, archivos.
+  \item[Acceso] Las \emph{formas de interacción} entre un sujeto y un objeto (las operaciones
+        posibles: leer, escribir, borrar, mover, ejecutar, \dots).
+\end{description}
+\end{defbox}
+
+% ---- Diagrama sujeto-objeto-acceso (recreación slide 5) ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth]
+  \node[circle,draw,fill=itbaBlue,minimum size=0.9cm] (s) at (0,0) {};
+  \node[font=\scriptsize] at (0,-0.85) {\textbf{Sujeto}};
+  \node[draw,fill=black!12,minimum width=0.9cm,minimum height=0.9cm] (o) at (4,0) {};
+  \node[font=\scriptsize] at (4,-0.85) {\textbf{Objeto}};
+  \draw[->,line width=1.2pt] (s) -- (o);
+  \draw[->,attackRed,line width=1.2pt,bend left=40] (2.7,0.9) to (2.0,0.18);
+  \node[attackRed,font=\scriptsize\bfseries] at (2.0,1.15) {Acceso};
+\end{tikzpicture}
+\caption{Un sujeto interactúa con un objeto mediante un acceso. \textit{(Recreación de la
+diapositiva 5.)}}
+\end{figure}
+
+\begin{practbox}{El ejemplo de siempre: Linux}
+En Linux (paradigma Unix) el esquema es directo: los \textbf{usuarios} son los sujetos, los
+\textbf{archivos} son los objetos (``todo es un archivo'') y los \textbf{permisos} son los
+accesos que rigen qué operaciones se pueden hacer. Es un modelo \emph{engañosamente simple}:
+todos interactuamos con uno así, pero esconde mucha complejidad (lo retomamos en la
+sección de ejemplos).
+\end{practbox}
+
+\subsection{La tríada desde el punto de vista de los accesos}
+La importancia de la tríada \emph{sujeto–objeto–acceso} es que permite reducir los tres
+servicios de seguridad a una mínima expresión modelable:
+
+\begin{slidebox}
+\centering\itshape Las políticas de seguridad se implementan controlando cómo los sujetos
+acceden a los objetos.
+\end{slidebox}
+
+\begin{itemize}[leftmargin=1.5em,itemsep=2pt]
+  \item \textbf{Confidencialidad}: existen \underline{sujetos} que \underline{NO pueden
+        acceder} a ciertos \underline{objetos}.
+  \item \textbf{Integridad}: existen \underline{objetos} que \underline{solo pueden ser
+        modificados} por ciertos \underline{sujetos confiables}.
+  \item \textbf{Disponibilidad}: existen \underline{objetos} que pueden ser
+        \underline{accedidos} por ciertos \underline{sujetos} cuando lo requieran.
+\end{itemize}
+
+\subsection{Identidad del sujeto}
+\textbf{La identidad es lo que identifica unívocamente al sujeto} dentro del universo de
+posibles sujetos. Es un \emph{requerimiento para la autenticación} (tema de la clase
+siguiente). Ejemplos: en Windows/Active Directory el \texttt{SID}
+(\texttt{S-1-5-21-\dots}) y el \texttt{DistinguishedName}; en Linux el \texttt{UID} (la
+primera columna numérica de \texttt{/etc/passwd}, p.\ ej.\ \texttt{root:x:0:0:\dots}).
+
+%=====================================================================
+\section{Políticas vs.\ Mecanismos}
+%=====================================================================
+
+\begin{practbox}{Distinción clave (clase práctica)}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\raggedright\arraybackslash}p{6.4cm} >{\raggedright\arraybackslash}p{6.4cm}}
+\toprule
+{\color{attackRed}\bfseries Políticas} & {\color{itbaCyanDark}\bfseries Mecanismos}\\
+\midrule
+Definen \textbf{qué acciones son seguras} (permitidas) y \textbf{qué acciones son inseguras}
+(prohibidas). &
+Procedimiento, herramienta o método para \textbf{garantizar el cumplimiento} de la política.\\
+\bottomrule
+\end{tabular}
+\end{center}
+\medskip
+Los mecanismos cumplen tres funciones complementarias:
+\begin{center}
+\begin{tikzpicture}[font=\small,>=Stealth,node distance=6mm]
+  \node[draw,rounded corners,fill=boxBlue!40] (p) {Mecanismo};
+  \node[draw,rounded corners,fill=practGreenL,below left=8mm and 6mm of p] (prev) {Prevenir};
+  \node[draw,rounded corners,fill=practGreenL,below=10mm of p] (det) {Detectar};
+  \node[draw,rounded corners,fill=practGreenL,below right=8mm and 6mm of p] (rec) {Recuperar};
+  \draw[->] (p)--(prev); \draw[->] (p)--(det); \draw[->] (p)--(rec);
+\end{tikzpicture}
+\end{center}
+\end{practbox}
+
+\noindent En síntesis: la \textbf{política} dice qué se considera seguro; el
+\textbf{mecanismo} es el cómo se hace cumplir.
+
+%=====================================================================
+\section{Modelos de seguridad}
+%=====================================================================
+
+Tenemos la idea de sujeto–objeto y la de servicios (confidencialidad, etc.), pero ante un
+problema práctico necesitamos resolver \emph{cómo} definir qué estados son seguros.
+
+\begin{defbox}{¿Qué es un modelo de seguridad?}
+Un \textbf{modelo de seguridad} es un \textbf{modelo formal y lógico} que define las
+\textbf{reglas e interacciones} que permiten implementar un mecanismo de control de acceso.
+A través de una sustentación formal (matemática) se demuestra que el sistema es seguro.
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Están \textbf{especializados}: hay modelos de \emph{confidencialidad}, de
+        \emph{integridad}, e incluso de \emph{disponibilidad}.
+  \item Son \textbf{generalizaciones} que ya sabemos que funcionan: evitan
+        \emph{reinventar la rueda} y razonar a un nivel más alto (analogía: el modelo es a un
+        lenguaje de alto nivel lo que la solución artesanal es al ensamblador).
+  \item \textbf{No alcanzan por sí solos} en un sistema real: se aplican a \emph{partes} del
+        sistema.
+\end{itemize}
+\end{defbox}
+
+Hay muchísimos modelos, pero dos o tres dominan el escenario y conviene conocerlos:
+\textbf{Bell--LaPadula} (confidencialidad), \textbf{Biba} (integridad) y
+\textbf{Clark--Wilson} (integridad en entornos comerciales).
+
+%=====================================================================
+\section{Modelo Bell--LaPadula (confidencialidad)}
+%=====================================================================
+
+Bell y LaPadula (investigadores de IBM) diseñaron este modelo, célebre por ser el
+\textbf{primer modelo de políticas de confidencialidad aprobado para uso en organismos
+gubernamentales de EE.UU.} y el primero \emph{público} utilizable en ambientes civiles
+(análogo, en su impacto, a lo que fue DES). Está pensado para el \textbf{ámbito militar},
+focalizado en proteger la \textbf{confidencialidad}.
+
+\begin{defbox}{Objetivo y elementos}
+\textbf{Objetivo:} prevenir el \emph{acceso no autorizado} a la información; las
+modificaciones no autorizadas son \emph{secundarias}. Combina \highlight{macGreen}{acceso
+mandatorio} y \highlight{dacYellow}{acceso discrecional}. Elementos:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Sujetos y Objetos.
+  \item Modos de acceso $=\{\underline{r}\text{ead}, \underline{w}\text{rite},\dots\}$.
+  \item Clasificación de seguridad $=\{\text{TS}, \text{S}, \text{C}, \text{U}\dots\}$
+        (\emph{Top Secret, Secret, Confidential, Unclassified}).
+  \item Niveles de seguridad $=$ Clasificación $\times$ Categoría (reticulado / \emph{lattice}).
+\end{itemize}
+La información \textbf{debe clasificarse} según su nivel de confidencialidad, y todos los
+sujetos deben tener un \textbf{nivel de acceso} definido, con los mismos posibles niveles que
+la información.
+\end{defbox}
+
+% ---- Diagrama: niveles (recreación slide 11) ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,node distance=3mm]
+  \node[draw,rounded corners,fill=lvlTS,minimum width=3.2cm,minimum height=0.8cm,text=white,font=\bfseries] (ts) {Top Secret};
+  \node[draw,rounded corners,fill=lvlS,minimum width=3.2cm,minimum height=0.8cm,below=of ts] (s) {Secret};
+  \node[draw,rounded corners,fill=lvlC,minimum width=3.2cm,minimum height=0.8cm,below=of s] (c) {Confidential};
+  \node[draw,rounded corners,fill=lvlU,minimum width=3.2cm,minimum height=0.8cm,below=of c] (u) {Unclassified};
+  \draw[<->,line width=1.2pt,itbaCyanDark] (4.4,-2.45) -- node[right,font=\scriptsize,align=left]{mayor\\ nivel} (4.4,0.45);
+\end{tikzpicture}
+\caption{Niveles de clasificación del modelo original. \textit{(Recreación de la
+diapositiva 11.)}}
+\end{figure}
+
+\subsection{Reglas (principios)}
+El modelo tiene dos reglas, más una tercera que sintetiza a las dos. Para enunciarlas
+con generalidad usamos la \textbf{relación de dominancia} $\dom$ y notamos $\Lvl(s)$ y
+$\Lvl(o)$ los niveles del sujeto $s$ y del objeto $o$.
+
+\begin{defbox}{Las tres reglas de Bell--LaPadula}
+\begin{enumerate}[leftmargin=1.7em,itemsep=4pt]
+  \item \textbf{Condición de seguridad simple — \emph{Read Down}.} El sujeto $s$ puede
+        \emph{leer} el objeto $o$ si y solo si
+        \[ \Lvl(s) \dom \Lvl(o) \quad\text{y } s \text{ tiene permiso para leer } o. \]
+        Un sujeto puede leer objetos de su nivel \emph{hacia abajo}.
+  \item \textbf{Propiedad $\ast$ (estrella) — \emph{Write Up}.} El sujeto $s$ puede
+        \emph{escribir} el objeto $o$ si y solo si
+        \[ \Lvl(o) \dom \Lvl(s) \quad\text{y } s \text{ tiene permiso para escribir } o. \]
+        Un sujeto solo puede escribir hacia su nivel \emph{o más arriba}.
+  \item \textbf{Propiedad estrella fuerte (síntesis).} Si un sujeto necesita
+        \emph{leer y escribir} el mismo objeto, solo podrá hacerlo con objetos de su
+        \textbf{misma clasificación} (es lo único que satisface ambas reglas a la vez).
+\end{enumerate}
+\textbf{Regla mnemotécnica:} \emph{Read down, Write up.} Pensar ``escritura'' y ``lectura''
+como operaciones que \emph{cambian} o \emph{no cambian} el estado: leer puede ser ver
+contenido, metadata, tamaño o existencia; escribir puede ser modificar, borrar, agregar.
+\end{defbox}
+
+% ---- Diagrama: read down / write up (recreación slides 12 / práctica) ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth]
+  % flecha de flujo de información
+  \draw[->,line width=6pt,black!15] (7.6,-2.2) -- node[right=3pt,black!55,font=\scriptsize]{Flujo Info} (7.6,2.2);
+  % Read down
+  \node[circle,draw,fill=itbaBlue,minimum size=0.7cm] (sr) at (0,1.2) {};
+  \node[draw,fill=black!10,minimum size=0.55cm] (or1) at (3,2.0) {};
+  \node[draw,fill=black!10,minimum size=0.55cm] (or2) at (3,0.4) {};
+  \draw[<-,line width=1pt] (sr) -- node[above,font=\scriptsize]{r} (or1);
+  \draw[<-,line width=1pt] (sr) -- node[below,font=\scriptsize]{r} (or2);
+  \node[font=\scriptsize\bfseries,itbaCyanDark] at (1.5,2.6) {Read Down: $L(s)\dom L(o)$};
+  % Write up
+  \node[circle,draw,fill=itbaBlue,minimum size=0.7cm] (sw) at (0,-1.6) {};
+  \node[draw,fill=black!10,minimum size=0.55cm] (ow1) at (3,-0.8) {};
+  \node[draw,fill=black!10,minimum size=0.55cm] (ow2) at (3,-2.4) {};
+  \draw[->,line width=1pt] (sw) -- node[above,font=\scriptsize]{w} (ow1);
+  \draw[->,line width=1pt] (sw) -- node[below,font=\scriptsize]{w} (ow2);
+  \node[font=\scriptsize\bfseries,itbaCyanDark] at (1.5,-3.0) {Write Up: $L(o)\dom L(s)$};
+\end{tikzpicture}
+\caption{Un sujeto lee hacia abajo y escribe hacia arriba; la información ``sube''.
+\textit{(Recreación de las diapositivas de teórica y práctica.)}}
+\end{figure}
+
+\begin{anecbox}{¿Por qué la regla de escritura? El control de \emph{flujo} de información}
+La primera regla resuelve el \textbf{acceso directo}: si clasifico un documento como
+\emph{Top Secret} y solo yo y mi socio somos TS, nadie más debería leerlo. Pero supongamos
+que la escritura fuese libre. Abro el documento en un editor que, por las dudas, guarda una
+\emph{copia temporal} en otro directorio. Ese nuevo archivo tiene la misma información pero
+\emph{otras reglas}: ¿quién garantiza que no lo lea alguien que no debe? La primera regla
+sola no impide que alguien con acceso ``vuelque'' la información en otro lado. La
+\textbf{regla de cierre (\emph{write up})} ataca eso: si tenés acceso a información muy
+sensible, \emph{no podés escribir hacia niveles más bajos}, porque estarías filtrándola.
+Bell--LaPadula no garantiza confidencialidad estática, sino un \textbf{control de flujo de
+información}: hay demostraciones formales (sobre máquinas de Turing, en el libro de Bishop)
+de que \emph{no existe ningún camino} por el que la información ``baje'' de nivel.
+\end{anecbox}
+
+\begin{anecbox}{El extremo: el Proyecto Manhattan}
+El modelo es \textbf{muy estricto}: ``si accediste a este tipo de información, ya no podés
+hablar con el resto de los mortales''. Esto importa en inteligencia militar, donde una fuga
+puede costar vidas. Incluso \emph{sin querer}, quien conoce información de alto nivel puede
+filtrarla parcialmente (una respuesta tangencial, un gesto). La aplicación de esta regla llevó
+a que, durante el desarrollo de la bomba atómica, EE.UU.\ \textbf{aislara físicamente a los
+científicos del Proyecto Manhattan en un pueblo entero} junto con sus familias, para que no
+interactuaran con gente fuera del proyecto: estaban aplicando Bell--LaPadula.
+\end{anecbox}
+
+\begin{warnbox}{Limitación: el principio de tranquilidad}
+El mayor problema de Bell--LaPadula es el \textbf{principio de tranquilidad}: asume que la
+clasificación de sujetos y objetos \emph{no cambia con el tiempo}. Pero en la realidad sí
+cambia: los empleados ascienden o son despedidos, y la información hoy confidencial puede ser
+pública en unos meses. Las implementaciones reales agregan \textbf{mecanismos al costado para
+reclasificar}. Un síntoma típico: los \emph{emails} de gente de organismos gubernamentales
+llevan al pie una leyenda de \emph{desclasificación} (``\emph{declassified for use at
+unclassified level}''), porque según las reglas estrictas un sujeto con acceso \emph{secret}
+no debería poder interactuar en foros abiertos. El modelo \textbf{Clark--Wilson} se usa como
+complemento para arbitrar estas transiciones.
+\end{warnbox}
+
+\subsection{Compartimentos, reticulado y dominancia}
+Solo cuatro niveles son demasiado simples para una organización real. El modelo agrega una
+\textbf{lista de etiquetas} (categorías) que se asignan a sujetos y objetos; un
+\textbf{nivel + lista de etiquetas} forma un \textbf{compartimento}. Esto implementa el
+concepto de \textbf{\emph{need-to-know}}: \emph{un general a cargo de criptografía no tiene
+por qué conocer los secretos de los misiles, sin importar su nivel de acceso}.
+
+\begin{defbox}{Relación de dominancia}
+Con compartimentos, el ``mayor/menor'' se generaliza a la relación de \textbf{dominancia}.
+Para niveles $(L,C)$ y $(L',C')$ —donde $C$ es el conjunto de etiquetas (categorías)—:
+\[
+  (L,C) \dom (L',C') \iff L' \le L \;\;\wedge\;\; C' \subseteq C.
+\]
+Las reglas quedan: $s$ puede \emph{leer} $o$ si $L(s)\dom L(o)$, y puede \emph{escribir} $o$
+si $L(o)\dom L(s)$. Ejemplos:
+\[
+  (\text{TS},\{\text{nuclear}\}) \dom (\text{S},\{\text{nuclear}\}), \qquad
+  (\text{S},\{\text{nuclear}\}) \dom (\text{S},\varnothing),
+\]
+\[
+  (\text{TS},\{\text{nuclear},\text{crypto}\}) \dom (\text{TS},\{\text{nuclear}\}).
+\]
+\end{defbox}
+
+Esto forma un \textbf{reticulado} (\emph{lattice}), un \textbf{conjunto de orden parcial}:
+no todos los pares se pueden ordenar. Por ejemplo, $(\text{S},\{\text{nuclear}\})$ y
+$(\text{S},\{\text{crypto}\})$ \emph{no} se dominan en ningún sentido (mismo nivel, pero
+ninguna lista de etiquetas es subconjunto de la otra) $\Rightarrow$ están
+\textbf{efectivamente separados}: ni lectura ni escritura entre ellos.
+
+% ---- Diagrama: reticulado (recreación slide 13) ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\scriptsize,>=Stealth,every node/.style={align=center}]
+  \node[draw,rounded corners,fill=boxBlue!40] (top) at (0,3)
+       {(Top Secret,\\ \{nuclear, crypto\})};
+  \node[draw,rounded corners,fill=boxBlue!25] (tn) at (-4,1.5) {(Top Secret,\\ \{nuclear\})};
+  \node[draw,rounded corners,fill=boxBlue!25] (snc) at (0,1.5) {(Secret,\\ \{nuclear, crypto\})};
+  \node[draw,rounded corners,fill=boxBlue!25] (tc) at (4,1.5) {(Top Secret,\\ \{crypto\})};
+  \node[draw,rounded corners,fill=boxBlue!15] (sn) at (-4,-0.2) {(Secret,\\ \{nuclear\})};
+  \node[draw,rounded corners,fill=boxBlue!15] (t0) at (0,-0.2) {(Top Secret,\\ \{\})};
+  \node[draw,rounded corners,fill=boxBlue!15] (sc) at (4,-0.2) {(Secret,\\ \{crypto\})};
+  \node[draw,rounded corners,fill=slideGray] (bot) at (0,-1.7) {(Secret, \{\})};
+  \draw (top)--(tn) (top)--(snc) (top)--(tc);
+  \draw (tn)--(sn) (tc)--(sc);
+  \draw[dashed] (tn)--(t0) (snc)--(t0) (tc)--(t0);
+  \draw (sn)--(bot) (t0)--(bot) (sc)--(bot);
+\end{tikzpicture}
+\caption{Reticulado (orden parcial) de compartimentos. Arriba domina a abajo; ramas sin
+camino no se dominan. \textit{(Recreación de la diapositiva 13.)}}
+\end{figure}
+
+\begin{practbox}{Implementación y uso real}
+La implementación es \textbf{simple}: por cada objeto se guarda como metadata un \emph{nivel}
+y una \emph{lista de etiquetas}; por cada sujeto (usuario), lo mismo. Resolver una operación
+es aplicar las dos reglas. Por su rigidez, \textbf{rara vez se aplica a todo un sistema}: se
+reserva para lo muy crítico. Caso típico en empresas: separar por etiquetas
+\emph{finanzas / producción / marketing}, con gente que accede solo a una y gente que accede a
+varias. La compartimentalización tipo Bell--LaPadula aparece, p.\ ej., en sistemas que manejan
+\textbf{información médica} sujetos a regulación.
+\end{practbox}
+
+%=====================================================================
+\section{Modelo Biba (integridad)}
+%=====================================================================
+
+Biba desarrolló una \textbf{familia de unos 7 modelos} (en conjunto, ``modelo Biba''). Es
+famoso por ser el primer modelo público que \emph{no} buscaba confidencialidad sino proteger
+la \textbf{integridad} de la información. Tiene importancia en sistemas \textbf{documentales}
+o de \textbf{evidencia}, donde se necesitan garantías fuertes de \emph{procedencia} y de
+\emph{no adulteración}: registros contables/financieros que hay que retener, sistemas
+judiciales, etc.
+
+\begin{defbox}{Objetivo y elementos}
+\textbf{Objetivo:} preservar los datos y su \textbf{integridad}. Identifica las maneras
+\emph{autorizadas} en que la información puede ser alterada y \emph{quiénes} están autorizados
+a hacerlo. Elementos: Sujetos, Objetos, Modos de acceso $\{r,w,\dots\}$ y
+\textbf{niveles de integridad} $\il(\cdot)$, donde \emph{a mayor nivel, mayor confianza}.
+\end{defbox}
+
+Los niveles suelen interpretarse mejor por \emph{calidad/confianza} que por
+\emph{secreto}: \emph{no confiable, poco confiable, confiable, muy confiable, fidedigna}.
+Es estructuralmente \textbf{el inverso} de Bell--LaPadula en cuanto a reglas.
+
+\begin{anecbox}{Una persona es tan confiable como las fuentes que usa}
+La intuición del modelo: para considerar confiable a un sujeto, necesito que la información
+en la que basa lo que hace o dice (lo que \emph{lee}) sea de \emph{ese nivel o más alto}. Y la
+información que un sujeto \emph{genera} (escribe) será tan buena como el valor que le atribuyo
+a ese sujeto: nunca mayor. De ahí salen las dos reglas.
+\end{anecbox}
+
+\subsection{Variante 1: Biba estricto}
+\begin{defbox}{Reglas de Biba estricto}
+\begin{enumerate}[leftmargin=1.7em,itemsep=3pt]
+  \item \textbf{Escritura — \emph{Write Down}.} $s$ puede \emph{modificar} $o$ si y solo si
+        \[ \il(s) \ge \il(o). \]
+  \item \textbf{Lectura — \emph{Read Up}.} $s$ puede \emph{observar} $o$ si y solo si
+        \[ \il(o) \ge \il(s). \]
+\end{enumerate}
+\textbf{Regla mnemotécnica:} \emph{Read up, Write down} (la información ``baja'' de nivel).
+\end{defbox}
+
+% ---- Diagrama Biba estricto ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth]
+  \draw[->,line width=6pt,black!15] (7.6,2.2) -- node[right=3pt,black!55,font=\scriptsize]{Flujo Info} (7.6,-2.2);
+  % Write down
+  \node[circle,draw,fill=itbaBlue,minimum size=0.7cm] (sw) at (0,1.4) {};
+  \node[draw,fill=black!10,minimum size=0.55cm] (ow1) at (3,2.0) {};
+  \node[draw,fill=black!10,minimum size=0.55cm] (ow2) at (3,0.6) {};
+  \draw[->,line width=1pt] (sw) -- node[above,font=\scriptsize]{w} (ow1);
+  \draw[->,line width=1pt] (sw) -- node[below,font=\scriptsize]{w} (ow2);
+  \node[font=\scriptsize\bfseries,itbaCyanDark] at (1.5,2.7) {Write Down: $\il(s)\ge\il(o)$};
+  % Read up
+  \node[circle,draw,fill=itbaBlue,minimum size=0.7cm] (sr) at (0,-1.6) {};
+  \node[draw,fill=black!10,minimum size=0.55cm] (or1) at (3,-0.8) {};
+  \node[draw,fill=black!10,minimum size=0.55cm] (or2) at (3,-2.4) {};
+  \draw[<-,line width=1pt] (sr) -- node[above,font=\scriptsize]{r} (or1);
+  \draw[<-,line width=1pt] (sr) -- node[below,font=\scriptsize]{r} (or2);
+  \node[font=\scriptsize\bfseries,itbaCyanDark] at (1.5,-3.0) {Read Up: $\il(o)\ge\il(s)$};
+\end{tikzpicture}
+\caption{Biba estricto: se lee hacia arriba y se escribe hacia abajo. \textit{(Recreación de
+las diapositivas de práctica.)}}
+\end{figure}
+
+\begin{practbox}{Usos del modelo estricto}
+Se usa en el \textbf{curado de información}: muchos diarios lo aplican ``sin saberlo'' al
+sanitizar y verificar información para generar artículos confiables. También aplica si el
+\textbf{sujeto es un programa} y los \textbf{objetos son datos}: un sistema cerrado bien
+clasificado evita que un programa poco robusto procese datos de mala calidad (p.\ ej.\ sin
+protección contra inyección SQL). \emph{Filosofía detrás del aviso del SO:} cuando bajás un
+ejecutable de Internet, el sistema te advierte ``viene de una fuente dudosa, ¿seguro querés
+correrlo?''; si lo bajás del App Store, no pregunta nada. Está clasificando la confianza del
+archivo por su origen: es una aplicación de la idea de Biba.
+\end{practbox}
+
+\subsection{Variante 2: Biba Ring-Policy}
+\begin{defbox}{Reglas de Biba Ring-Policy}
+\begin{enumerate}[leftmargin=1.7em,itemsep=3pt]
+  \item \textbf{Escritura — \emph{Write Down}:} igual que el estricto, $\il(s)\ge\il(o)$.
+  \item \textbf{Lectura:} \emph{cualquier} sujeto $s$ puede leer \emph{cualquier} objeto $o$
+        (no se restringe la lectura).
+\end{enumerate}
+\end{defbox}
+
+\subsection{Variante 3: Biba Low-Watermark}
+Refleja cierto \textbf{dinamismo} (a diferencia de los estáticos). Filosofía: \emph{uno es
+tan confiable como la información que usa}.
+
+\begin{defbox}{Regla de Biba Low-Watermark}
+\begin{enumerate}[leftmargin=1.7em,itemsep=3pt]
+  \item \textbf{Escritura — \emph{Write Down}:} $\il(s)\ge\il(o)$.
+  \item \textbf{Lectura:} cualquier sujeto puede leer cualquier objeto, \textbf{pero} al
+        hacerlo su nivel de integridad se \emph{reclasifica al mínimo}:
+        \[ \text{si } s \text{ lee } o:\qquad \il(s) = \min\bigl(\il(s),\, \il(o)\bigr). \]
+\end{enumerate}
+\end{defbox}
+
+\begin{anecbox}{Sistemas ``adaptativos''}
+Si el sistema me considera muy íntegro y en algún momento interactúo con algo de baja
+integridad, mi nivel \textbf{baja automáticamente}: tendré que volver a pedir permiso o
+revalidarme para recuperar el nivel anterior. Esta es la base de muchos sistemas que hoy se
+venden como \emph{adaptativos / personalizados}: según las interacciones, van cambiando el
+nivel de confianza del sujeto.
+\end{anecbox}
+
+%=====================================================================
+\section{Modelo Clark--Wilson (integridad comercial)}
+%=====================================================================
+
+Creado por David D.~Clark y David R.~Wilson, es un modelo de \textbf{integridad} más acotado
+y simple, pero introduce un concepto clave para los \textbf{sistemas operativos}. Está pensado
+para escenarios donde conviven, al mismo tiempo, \textbf{información y usuarios confiables y no
+confiables}.
+
+\begin{defbox}{Objetivo y elementos}
+\textbf{Objetivo:} integridad, especialmente en \textbf{entornos comerciales}. Elementos:
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Sujetos} y \textbf{Objetos}, y estos últimos se dividen en:
+    \begin{itemize}[leftmargin=1.2em,itemsep=1pt]
+      \item \textbf{CDI} (\emph{Constrained Data Items}): datos restringidos / protegidos.
+      \item \textbf{UDI} (\emph{Unconstrained Data Items}): datos no restringidos.
+    \end{itemize}
+  \item \textbf{Procedimientos} (administran accesos y permisos):
+    \begin{itemize}[leftmargin=1.2em,itemsep=1pt]
+      \item \textbf{TP} (\emph{Transformation Procedure}): cambia los ítems de un estado
+            válido (consistente) a otro estado válido.
+      \item \textbf{IVP} (\emph{Integrity Verification Procedure}): verifica que los ítems
+            estén en un estado válido.
+    \end{itemize}
+\end{itemize}
+\end{defbox}
+
+\begin{slidebox}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item Un usuario \textbf{no puede modificar un CDI en forma directa}: debe hacerlo a través
+        de un \textbf{TP}.
+  \item Un usuario \textbf{sí} puede acceder a datos \textbf{UDI} sin un TP.
+  \item Es responsabilidad de los TP \textbf{validar la integridad} de la información.
+  \item Incorpora \textbf{\emph{separation of duty}} (separación de tareas): \emph{quien
+        modifica los datos no puede ser el mismo que verifica la integridad}.
+\end{itemize}
+\end{slidebox}
+
+% ---- Diagrama Clark-Wilson (recreación slide práctica usuario/CDI/UDI) ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth,node distance=10mm]
+  \node[circle,draw,fill=itbaBlue,minimum size=0.8cm] (u) at (0,0) {};
+  \node[font=\scriptsize] at (0,-0.8) {Sujeto};
+  \node[draw,fill=boxBlue!50,minimum width=1.6cm,minimum height=1cm] (prog) at (4,0.4) {IVP/TP};
+  \node[font=\scriptsize] at (4,-0.45) {Programa};
+  \node[draw,cylinder,shape border rotate=90,fill=lvlS!40,aspect=0.35,
+        minimum width=1.6cm,minimum height=1.1cm] (cdi) at (8,0.4) {CDI};
+  \node[draw,cylinder,shape border rotate=90,fill=lvlU!50,aspect=0.35,
+        minimum width=1.6cm,minimum height=1.1cm] (udi) at (4,-2.4) {UDI};
+  \draw[<->,line width=1pt] (u) -- (prog);
+  \draw[<->,line width=1pt] (prog) -- node[above,font=\scriptsize]{TP} (cdi);
+  \draw[->,line width=1pt,practGreen] (u) -- (udi);
+  \draw[dashed,attackRed,line width=1pt] (u) to[bend right=35] (cdi);
+  \node[attackRed,font=\scriptsize\bfseries] at (4,2.0) {$\varnothing$ (prohibido el acceso directo a CDI)};
+  \draw[attackRed,line width=1pt] (3.4,1.7) -- (4.6,1.7);
+\end{tikzpicture}
+\caption{El sujeto modifica un CDI \emph{solo} a través de un TP (con verificación IVP); a los
+UDI accede directamente. \textit{(Recreación de la diapositiva de práctica.)}}
+\end{figure}
+
+\subsection{Reglas formales (clase práctica)}
+Las reglas se dividen en dos grupos:
+
+\begin{practbox}{1. Reglas de Certificación (CR) — discrecionales, las aplica el Administrador}
+\begin{description}[leftmargin=2.6em,style=nextline,itemsep=2pt,font=\bfseries]
+  \item[C1 (Certificación)] Los IVP aseguran que los CDI están en un estado válido.
+  \item[C2 (Validez)] Un TP toma un estado válido y lo lleva a otro estado válido,
+        sobre un conjunto certificado $\{TP_i, (CDI_a, CDI_b, \dots)\}$.
+  \item[C3 (Separación de tareas)] Las \emph{relaciones certificadas} que asocian un conjunto
+        de CDI con un TP cumplen la separación de tareas.
+  \item[C4 (Journal certification)] En un CDI tipo bitácora, los TP guardan información para
+        reconstruir la operación.
+  \item[C5 (Validación de UDI)] Los TP validan los UDI: o convierten el UDI en un CDI válido,
+        o el UDI es rechazado.
+\end{description}
+\end{practbox}
+
+\begin{practbox}{2. Reglas de Aplicación (ER) — mandatorias, las aplica el Sistema}
+\begin{description}[leftmargin=2.6em,style=nextline,itemsep=2pt,font=\bfseries]
+  \item[E1 (Aplicación de validez)] El sistema mantiene la lista de relaciones certificadas:
+        $TP_f$ opera sobre $CDI_o \iff (f,o)\in C$.
+  \item[E2 (Aplicación de separación)] El sistema mantiene la lista de relaciones permitidas
+        $(UserID, TP_i, \{CDI_a,\dots\})$.
+  \item[E3 (Identificación de usuarios)] El sistema debe \emph{autenticar} a quien intenta
+        ejecutar el TP.
+  \item[E4 (Cambios)] Las autorizaciones solo las puede cambiar el administrador
+        (\emph{security officer}).
+\end{description}
+\end{practbox}
+
+% ---- Diagrama Clark-Wilson formal (recreación slide formal) ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\scriptsize,>=Stealth,node distance=8mm]
+  \node[font=\bfseries] (users) at (0,2.4) {USERS};
+  \node[draw,fill=boxBlue!50,minimum width=1.3cm,minimum height=0.9cm] (tp) at (0,0.8) {TP};
+  \node[draw,signal,signal to=east,fill=lvlS!40] (udi) at (-3.2,0.8) {UDI};
+  \node[draw,starburst,fill=lvlS!30,inner sep=1pt,minimum size=0.9cm] (ivp) at (0,-1.0) {IVP};
+  \node[draw,circle,fill=lvlU!40,minimum size=0.8cm] (cdia) at (3.4,2.0) {$CDI_a$};
+  \node[draw,circle,fill=lvlU!40,minimum size=0.8cm] (cdib) at (3.4,0.8) {$CDI_b$};
+  \node[draw,circle,fill=lvlU!40,minimum size=0.8cm] (log) at (3.4,-0.5) {Log};
+  \node[draw,circle,fill=lvlU!40,minimum size=0.8cm] (cdin) at (3.4,-1.7) {$CDI_n$};
+  \draw[->] (users) -- node[left,font=\tiny]{C3} (tp);
+  \draw[->] (udi) -- node[above,font=\tiny]{C5} (tp);
+  \draw[->] (tp) -- node[above,font=\tiny]{C2} (cdia);
+  \draw[->] (tp) -- node[above,font=\tiny]{C2} (cdib);
+  \draw[->] (tp) -- node[above,font=\tiny]{C4} (log);
+  \draw[<-] (ivp) -- node[below,font=\tiny]{C1} (cdin);
+  \node[font=\scriptsize\itshape,black!60] at (3.4,-2.6) {System in valid state};
+\end{tikzpicture}
+\caption{Reglas de certificación: el TP lleva los CDI de un estado válido a otro, el IVP los
+verifica, los UDI se validan y todo queda registrado. \textit{(Recreación de la diapositiva
+``Clark--Wilson (Formal)''.)}}
+\end{figure}
+
+\begin{anecbox}{De los bancos al kernel: separation of duty en acción}
+El modelo se aplica también a sistemas \emph{no} informáticos. Es la base del
+\textbf{principio de separación de privilegios}. En un banco, al abrir una cuenta de empresa
+se arma un \emph{registro de firmas}: por debajo de cierto monto bastan ciertas firmas; por
+encima se exige una firma más. Para procesar una transacción siempre hay \emph{dos partes}: una
+\textbf{verifica} las firmas y otra, \textbf{distinta}, \textbf{ejecuta} la transacción
+—aunque todo sea automático—.\medskip
+
+\noindent En sistemas operativos, esta idea derivó en la separación
+\textbf{\emph{user space} / \emph{kernel space}}: el \emph{kernel space} es un ambiente de alta
+confianza (puede saltarse todos los controles: acceso directo al disco, etc.); el resto corre
+como \emph{no confiable} en \emph{user space}. ¿Cómo se cruza de uno a otro? Con las
+\textbf{\emph{syscalls}} (llamadas al sistema): el usuario arma un \emph{dataset} describiendo
+qué quiere (``abrir tal archivo para lectura, con tal \emph{file descriptor}\dots'') y dispara
+la syscall. Un proceso \textbf{transforma} (TP) esa información llevándola a la zona del
+kernel, otro \textbf{verifica} su integridad (IVP) (que el \emph{file descriptor} sea un
+número positivo, etc.) y, recién entonces, un programa privilegiado ejecuta. Es una aplicación
+directa de Clark--Wilson para proteger la integridad del sistema operativo.
+\end{anecbox}
+
+%=====================================================================
+\section{Más allá de los modelos teóricos}
+%=====================================================================
+
+Los tres modelos vistos son \textbf{teóricos}: en la práctica \emph{no se aplican
+directamente} a un sistema completo, pero son la base de muchas implementaciones. Es raro
+encontrar el nombre explícito de Bell--LaPadula / Biba / Clark--Wilson, porque mucha gente
+aplica la idea sin saber el nombre. Aun así, conviene saber dónde aparecen:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{>{\bfseries}p{3.4cm} p{9.6cm}}
+\toprule
+Modelo & ¿Qué sistemas se basan en él? \\
+\midrule
+Bell--LaPadula & La organización por \emph{compartimentos} aparece en sistemas que manejan
+\textbf{información médica} (sujetos a regulación).\\
+Biba & Sistemas de \emph{clasificación y archivo} de información para \textbf{medios de prensa,
+legajos judiciales o declaraciones fiscales}.\\
+Clark--Wilson & El concepto de \textbf{\emph{kernel space} / \emph{user space}} de muchos
+\textbf{sistemas operativos} (p.\ ej.\ Unix).\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{practbox}{Lectura recomendada sobre los modelos (papers originales)}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \texttt{Bell76.pdf} — documento original del modelo Bell--LaPadula.
+  \item \texttt{Biba75.pdf} — documento original del modelo Biba.
+  \item \texttt{A\_Comparison\_of\_commercial\_and\_military.pdf} — documento original del
+        modelo Clark--Wilson.
+\end{itemize}
+\end{practbox}
+
+%=====================================================================
+\section{Mecanismos de control de acceso: MAC vs.\ DAC}
+%=====================================================================
+
+\begin{slidebox}
+\centering El \textbf{control de acceso} es un mecanismo de seguridad que \textbf{regula
+quién (sujeto) puede acceder a qué (objeto) y bajo qué condiciones}.
+\end{slidebox}
+
+\medskip
+Los modelos suelen ser muy restrictivos, así que rara vez cubren todo un sistema; en el resto
+necesitamos manejar el control de acceso con dos grandes familias:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\raggedright\arraybackslash}p{6.4cm} >{\raggedright\arraybackslash}p{6.4cm}}
+\toprule
+\highlight{macGreen}{\bfseries MAC — Mandatorio} & \highlight{dacYellow}{\bfseries DAC — Discrecional}\\
+\emph{Basado en reglas} & \emph{Basado en identidad}\\
+\midrule
+Control que se aplica en forma \textbf{obligatoria a todos los accesos} de los sujetos a los
+objetos. Reglas universales (p.\ ej.\ Bell--LaPadula Lattice). Las políticas se definen
+\textbf{para el sistema}. &
+La asignación y modificación de permisos queda \textbf{a discreción} del sujeto responsable
+del objeto (o de un administrador). Las políticas se definen \textbf{para el usuario}.\\[3pt]
+Aplica sobre: todos los accesos, los cambios en las reglas/atributos, y el intercambio de
+información entre sujetos. &
+Típico de \textbf{repositorios donde los sujetos crean los objetos} (file systems, object
+storage). Permite distribuir la responsabilidad.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{anecbox}{¿Por qué existe el DAC?}
+Los sistemas mandatorios son demasiado rígidos para sistemas de \emph{propósito general} (un
+sistema operativo, una base de datos, Google Workspace o Microsoft~365). En el DAC las
+propiedades de seguridad \emph{no} las da el sistema, sino el administrador según cómo lo
+configure: es una forma elegante de cubrir múltiples escenarios y de no tener que dar garantías
+fuertes. La contracara: las garantías dependen de \emph{cómo} se configura.
+\end{anecbox}
+
+%=====================================================================
+\section{Control discrecional por extensión}
+%=====================================================================
+
+Dentro del DAC, los accesos se pueden definir \textbf{por extensión} (enumerando) o
+\textbf{por comprensión} (mediante reglas/propiedades). Empecemos por extensión.
+
+\subsection{Matriz de control de accesos}
+Representación matricial: en un eje los \textbf{sujetos} (filas), en el otro los
+\textbf{objetos} (columnas); en cada intersección, las \textbf{operaciones permitidas} para
+esa combinación.
+
+% ---- Diagrama matriz / ACL / capability (recreación slide práctica) ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small]
+  \matrix (m) [matrix of nodes, nodes={draw,minimum width=1.7cm,minimum height=0.7cm,anchor=center},
+               row 1/.style={nodes={fill=lvlS!50,font=\bfseries}},
+               column 1/.style={nodes={fill=attackRed!15,font=\bfseries}},
+               column sep=-\pgflinewidth, row sep=-\pgflinewidth]
+  {
+     & Obj1 & Obj2 & $\cdots$ & ObjN \\
+    Usuario1 & r & rw & & rwx \\
+    Usuario2 & rx & r & & rx \\
+    $\cdots$ & & & & \\
+  };
+  % ACL = columna
+  \draw[decorate,decoration={brace,amplitude=5pt},attackRed,line width=1pt]
+        (m-1-2.north west) -- (m-1-5.north east)
+        node[midway,above=5pt,font=\scriptsize\bfseries]{ACL (columnas)};
+  % capability list = fila
+  \draw[decorate,decoration={brace,amplitude=5pt,mirror},practGreen,line width=1pt]
+        (m-2-1.north west) -- (m-4-1.south west)
+        node[midway,left=5pt,font=\scriptsize\bfseries,align=center,rotate=90,anchor=south]{Capability lists (filas)};
+\end{tikzpicture}
+\caption{Matriz de accesos. Sus \emph{columnas} son las \textbf{ACL} (por objeto); sus
+\emph{filas} son las \textbf{capability lists} (por sujeto). \textit{(Recreación de las
+diapositivas de práctica.)}}
+\end{figure}
+
+\begin{warnbox}{Inconvenientes de la matriz}
+Es simple de entender pero, como implementación directa, tiene problemas serios. Sirve más
+como \emph{concepto ilustrativo}:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Escalabilidad}: con $100\,000$ usuarios y $1\,000\,000$ de objetos crece de
+        forma violenta.
+  \item \textbf{Eficiencia}: la búsqueda puede consumir mucho tiempo y recursos.
+  \item \textbf{Mantenimiento}: agregar un sujeto obliga a definir su relación con \emph{todos}
+        los objetos (y viceversa). Propenso a errores.
+  \item \textbf{Almacenamiento} y \textbf{limitaciones dinámicas}: no se adapta bien a entornos
+        donde cambian permisos, sujetos u objetos.
+\end{itemize}
+\textbf{Clave (consulta de Joaquín):} para la \emph{computadora} tener una matriz gigante no
+es problema; el problema es el \emph{pobre humano} que con su discreción tiene que poner los
+valores. \emph{Eso} es lo que no escala.
+\end{warnbox}
+
+\subsection{Listas de control de acceso (ACL)}
+En un sistema grande los permisos aparecen como ``islas'': la matriz queda \textbf{dispersa}
+(casi todo vacío). Una forma eficiente de representarla es, por cada objeto, enumerar solo los
+pares \emph{(sujeto, permisos)} que tienen sentido. Eso son las \textbf{ACL}: son las
+\emph{columnas} de la matriz.
+
+\begin{defbox}{Definición formal de ACL}
+\[
+  \mathrm{ACL}(o) = \{\, (s_i, p_i) \mid s_i \in \Sset \ \wedge\ p_i \subseteq \Rset \,\}
+\]
+con $\Sset=$ sujetos, $\Oset=$ objetos, $\Rset=$ permisos. Extensiones habituales:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Denegar por defecto}: si $s\notin\mathrm{ACL}(o)\Rightarrow s$ no tiene
+        permiso sobre $o$.
+  \item \textbf{Grupos}: $G=\{s_1,s_2,\dots,s_i \mid s_i\in\Sset\}$, p.\ ej.\
+        $\mathrm{ACL}(o)=\{(s_1,r),(G,rw),\dots\}$. Permite tratar a muchos sujetos como una
+        sola entrada y aplicar reglas a nivel grupo.
+  \item \textbf{Wildcards}: $\mathrm{ACL}(o)=\{(s_1,r),(s_2,\ast),\dots\}$.
+  \item \textbf{Permisos por defecto} (\emph{defaults}) y \textbf{patrones} para identificar
+        objetos: \texttt{/users/*}, \texttt{/home/**/*.tmp}.
+\end{itemize}
+\end{defbox}
+
+\subsubsection{Conflictos en ACL}
+Si \textbf{más de una entrada} de la ACL otorga permisos a un sujeto $s$, hay que resolver:
+\begin{enumerate}[leftmargin=1.7em,itemsep=2pt]
+  \item \textbf{Permitir} el acceso si \emph{alguna} entrada lo da.
+  \item \textbf{Grant All}: denegar si \emph{alguna} entrada lo deniega (exige que
+        \emph{todas} den acceso).
+  \item \textbf{First Rule / First Match}: aplicar la \emph{primera} regla encontrada.
+\end{enumerate}
+
+\begin{practbox}{Ejercicio resuelto — conflictos de ACL}
+Sea $s_1 \in G$ y
+\[
+  \mathrm{ACL}(o) = \{\, (G,\,rw),\ (s_1,\,w),\ (\{s_1,s_2\},\,wx),\ \dots \,\}.
+\]
+¿Qué puede hacer $s_1$ según cada política?
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{>{\bfseries}p{3.6cm} p{4.2cm} p{4.6cm}}
+\toprule
+Política & Entradas que aplican & Resultado para $s_1$\\
+\midrule
+Permitir (unión) & $rw,\ w,\ wx$ & \highlight{slideGray}{$r,w,x$} (la unión)\\
+Grant All (intersección) & $rw \cap w \cap wx$ & \highlight{slideGray}{$w$}\\
+First Rule & primera: $(G,rw)$ & \highlight{slideGray}{$r$ y $w$}\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{practbox}
+
+\subsubsection{Derechos por defecto (clase práctica)}
+Otras reglas aplicables cuando hay una entrada específica y un \emph{default}:
+\begin{enumerate}[leftmargin=1.7em,itemsep=2pt]
+  \item \textbf{Override / Best match}: si el sujeto tiene una entrada específica, usarla;
+        si no, usar el \emph{default}.
+  \item \textbf{Augment}: partir del \emph{default} y \textbf{agregarle} las entradas
+        explícitas.
+\end{enumerate}
+
+\begin{practbox}{Ejercicio resuelto — override vs.\ augment}
+Sea $\mathrm{ACL}(o) = \{\, (s_1,\,x),\ (\ast,\,r),\ \dots \,\}$ (el \emph{default} ``$\ast$''
+da $r$ a todos). ¿Qué puede hacer $s_1$?
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Override}: usa la entrada específica $\Rightarrow$ puede \highlight{slideGray}{$x$}.
+  \item \textbf{Augment}: default $+$ específica $\Rightarrow$ puede
+        \highlight{slideGray}{$r$} (porque todos pueden) \highlight{slideGray}{$x$}.
+\end{itemize}
+\end{practbox}
+
+\subsection{Usuarios privilegiados, transferencias y revocaciones}
+\begin{practbox}{Operaciones sobre las ACL (clase práctica)}
+\begin{description}[leftmargin=2.2em,style=nextline,itemsep=3pt,font=\bfseries]
+  \item[Usuarios privilegiados]
+    \begin{enumerate}[leftmargin=1.2em,itemsep=0pt]
+      \item \emph{Root} o administrador.
+      \item \emph{Owner}: puede modificar la ACL del objeto sobre el que tiene el derecho
+            ``\texttt{own}''.
+    \end{enumerate}
+  \item[Transferencia] Cambia el sujeto de una entrada: el sujeto\,1 \emph{deja} de tener los
+        derechos, que pasan al sujeto\,2.
+  \item[Delegación] El sujeto\,1 le \emph{delega} derechos al sujeto\,2 \textbf{sin perderlos}.
+  \item[Revocación] El \emph{owner} quita la entrada o quita derechos. Si hubo delegación,
+        se produce \textbf{revocación en cascada}.
+\end{description}
+\end{practbox}
+
+%=====================================================================
+\section{Control discrecional por comprensión}
+%=====================================================================
+
+Para sistemas grandes no alcanza con la representación dispersa: en cada ``isla'' hay grupos
+de usuarios y objetos con casi la misma distribución de accesos. La solución es definir el
+control \textbf{por comprensión} (mediante \emph{reglas}/propiedades) en vez de por extensión,
+guardando reglas compactas que podrían reconstruir la matriz \emph{bajo demanda}. El criterio
+de agrupación define el mecanismo:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\bfseries}p{2.6cm} p{2.8cm} p{7.4cm}}
+\toprule
+Sigla & Por\dots & Idea \\
+\midrule
+RBAC & roles & \emph{Role-Based Access Control}.\\
+ABAC & atributos & \emph{Attribute-Based Access Control}.\\
+RuBAC & reglas & \emph{Rule-Based Access Control}.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent No hay uno mejor: según la situación conviene uno u otro.
+
+\subsection{RBAC — control basado en roles}
+Estereotipa \textbf{roles} (más abarcativo que un grupo): genera ``plantillas'' que agrupan
+permisos. Ejemplos de roles en una empresa: \emph{account manager}, persona de ventas,
+administrador de IT, administrador de operaciones, usuario común; o
+\emph{gestor de pacientes}, \emph{analista de compras}, \emph{DBA}.
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Los \textbf{permisos se asignan a los roles}; los \textbf{roles se asignan a los
+        sujetos} (o a grupos).
+  \item Considera \textbf{jerarquías de roles}. En sistemas tradicionales un usuario tiene un
+        solo rol, pero las aplicaciones complejas permiten \emph{varios}.
+  \item Una vez definidos los roles, la \textbf{gestión diaria es simple}: a un usuario nuevo
+        se le dan los roles correctos.
+\end{itemize}
+
+\begin{anecbox}{¿RBAC es MAC o DAC?}
+Algunos libros lo describen como \textbf{mandatorio} (porque define ``reglas de juego
+universales''), pero es una visión sesgada. Hay una \textbf{discrecionalidad fuerte}: alguien
+tiene que \emph{asignar} usuarios a roles, y las garantías dependen de cómo se haga esa
+asignación —característica que define a lo discrecional—. Además, cuando un usuario puede tener
+\textbf{varios roles}, aparece un problema interesante: \emph{múltiples sistemas de control de
+acceso interactuando sobre la misma operación} (p.\ ej.\ un esquema de roles más una zona
+protegida por Bell--LaPadula), lo que obliga a resolver conflictos.
+\end{anecbox}
+
+\subsection{ABAC — control basado en atributos}
+Las reglas se basan en \textbf{atributos}: del sujeto (rol, edad\dots), del objeto (tipo,
+clasificación de seguridad\dots), de la acción y del contexto (tiempo, ubicación\dots).
+
+\subsection{RuBAC — control basado en reglas}
+Muy parecido a roles, pero \textbf{sin asignación de sujetos}. Una regla en su forma más
+básica contiene: \textbf{Principal}, \textbf{Objeto}, \textbf{Tipo de acceso} y si está
+\textbf{permitido o bloqueado}. Típicamente hay una \textbf{lista ordenada de reglas} y
+``aplica la primera que ocurra'' (u otra política de resolución).
+
+%=====================================================================
+\section{Resolución de múltiples reglas}
+%=====================================================================
+
+Cuando varias reglas aplican de forma \textbf{contradictoria}, se usa alguna política de
+resolución. \textbf{El mismo juego de reglas resuelve muy distinto según cómo se manejen los
+conflictos} (clave si alguna vez configuran firewalls):
+
+\begin{defbox}{Políticas de resolución}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{First match}: las reglas tienen un orden; aplica la \emph{primera} que hace
+        \emph{match}.
+  \item \textbf{Best match}: aplica la regla \emph{más específica} (las reglas más específicas
+        priman sobre las generales).
+  \item \textbf{Deny over Allow}: cualquier regla que \emph{deniega} explícitamente tiene
+        precedencia sobre las que permiten (deben permitir \emph{todas} las que apliquen).
+\end{itemize}
+\end{defbox}
+
+\begin{practbox}{Ejemplo: reglas de Firewall}
+Un \emph{firewall} arbitra el tráfico entre dos redes. En su forma más simple es un sistema
+de reglas ordenadas. Considérese:
+\begin{center}
+\ttfamily\footnotesize
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{r l l l l l}
+\toprule
+\# & Proto & Source IP & Dest IP & Port & Action\\
+\midrule
+1 & TCP & 10.1.1.1 & 20.1.1.1 & 80 & Accept\\
+2 & TCP & 10.1.1.2 & 20.1.1.1 & 80 & Deny\\
+3 & TCP & 10.1.1.0/24 & 20.1.1.1 & 80 & Deny\\
+4 & TCP & 10.1.1.3 & 20.1.1.1 & 80 & Accept\\
+5 & TCP & 10.2.2.0/24 & 20.2.2.5 & 80 & Deny\\
+6 & TCP & 10.2.2.5 & 20.2.2.0/24 & 80 & Deny\\
+7 & TCP & 10.3.3.0/24 & 20.3.3.9 & 80 & Accept\\
+8 & TCP & 10.3.3.9 & 20.3.3.0/24 & 80 & Deny\\
+9 & IP  & 0.0.0.0/0 & 0.0.0.0/0 & 0--65535 & Deny\\
+\bottomrule
+\end{tabular}
+\end{center}
+\medskip
+\textbf{Caso A — paquete \texttt{10.1.1.1 $\Rightarrow$ 20.1.1.1:80}} (hacen \emph{match} las
+reglas 1 y 3):
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \emph{First match} $\Rightarrow$ regla 1 $\Rightarrow$ \textbf{Accept}.
+  \item \emph{Deny over Allow} $\Rightarrow$ la 3 deniega $\Rightarrow$ \textbf{Deny}.
+\end{itemize}
+\textbf{Caso B — paquete \texttt{10.3.3.9 $\Rightarrow$ 20.3.3.9:80}} (hacen \emph{match} las
+reglas 7 —red \texttt{/24}— y 8 —host específico—):
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \emph{Best match} $\Rightarrow$ la 8 es más específica $\Rightarrow$ \textbf{Deny}.
+\end{itemize}
+\textbf{Observación:} en \emph{First match}, estas reglas dicen ``no permitas comunicación
+hacia la red 10.1.1.x \emph{salvo} desde el host 10.1.1.1''; para expresar lo mismo con
+\emph{Best match} hay que escribirlas distinto (``permití a toda la red \emph{salvo} a tal
+host''). La regla 9 final ($0.0.0.0/0$ Deny) implementa el \emph{denegar por defecto}.
+\end{practbox}
+
+%=====================================================================
+\section{Reglas basadas en contexto}
+%=====================================================================
+
+Permiten construir reglas que incluyen \textbf{información de contexto}, no solo la entrada/
+salida de la operación. El \textbf{contexto} lo forman todos los datos asociados al sujeto, el
+objeto, el momento o el lugar del acceso —elementos que cambian \emph{independientemente} de
+las reglas—:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Momento del día; ubicación geográfica del origen de la conexión.
+  \item Departamento al que pertenece la persona; si el usuario estaba de vacaciones.
+  \item Nivel de confiabilidad de la máquina (p.\ ej.\ del DBA).
+\end{itemize}
+
+Permiten detectar \textbf{situaciones anómalas}. Ejemplos:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Un usuario se loguea desde China y desde Argentina con 5 minutos de diferencia.
+  \item Una usuaria que figura de licencia por maternidad se loguea en una base de datos del
+        \emph{datacenter}.
+  \item Un usuario inicia dos VPNs en menos de 5 minutos con dos IPs distintas.
+\end{itemize}
+
+\begin{anecbox}{El nicho: prevención de fraude}
+Estas reglas son raras (muy sofisticadas) pero tienen un nicho claro: la \textbf{prevención de
+fraude} en e-commerce y sistemas financieros. Distinción importante:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Un \textbf{problema de seguridad} es un abuso que se \emph{saltea} las reglas del
+        sistema.
+  \item Un \textbf{fraude} \emph{sigue} las reglas del sistema, pero hace algo que el sistema
+        no esperaba (p.\ ej.\ pagar con una tarjeta de crédito robada: el pago ``sale bien'',
+        pero el dueño reclamará y se anulará).
+\end{itemize}
+El control anti-fraude estima la \emph{probabilidad} de que una operación sea fraudulenta
+(en el login, el checkout o el panel de administración) y la deniega ante indicios.
+\end{anecbox}
+
+\subsection{Zero-Trust y Open Policy Agent (OPA)}
+La lógica de estas reglas suele requerir \textbf{programación}, y muchos sistemas no se pueden
+modificar. En el modelo \textbf{Zero-Trust}, la evaluación de contexto se define como una
+\textbf{entidad externa} al \emph{Policy Engine}: un tercero valida cada operación.
+
+\begin{defbox}{Open Policy Agent (OPA)}
+\textbf{OPA} es un \emph{framework} estándar que unifica, mediante un lenguaje programable, la
+implementación de \textbf{políticas de decisión}, \textbf{desacoplando} la política de control
+de acceso del sistema controlado (\emph{policy decoupling}). Las políticas se escriben en un
+lenguaje llamado \textbf{Rego}. El servicio que necesita una decisión \emph{delega} en OPA:
+le envía una \emph{query} (cualquier valor JSON) y recibe una \emph{decision} (otro JSON); OPA
+evalúa contra su \emph{Policy} (Rego) y sus \emph{Data} contextuales (JSON, que se actualizan
+o se proveen \emph{on-demand}).
+\end{defbox}
+
+% ---- Diagrama OPA (recreación slide OPA) ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\scriptsize,>=Stealth,node distance=10mm]
+  \node[draw,rounded corners,minimum width=2.6cm,minimum height=0.8cm,fill=boxBlue!40] (svc) at (0,1.6) {Service};
+  \node[above=4mm of svc,font=\scriptsize] (req) {Request, Event\dots};
+  \node[draw,rounded corners,minimum width=1.6cm,minimum height=0.8cm,fill=slideGray] (opa) at (0,-0.4) {OPA};
+  \node[draw,fill=lvlS!50,minimum width=1.3cm,minimum height=0.8cm,align=center] (pol) at (-2.4,-2.2) {Policy\\(Rego)};
+  \node[draw,cylinder,shape border rotate=90,fill=black!20,aspect=0.3,minimum width=1.2cm,align=center] (data) at (2.4,-2.2) {Data\\(JSON)};
+  \draw[->] (req)--(svc);
+  \draw[->] (svc.south) to[bend right=25] node[left,font=\tiny]{Query} (opa.north);
+  \draw[->] (opa.north) to[bend right=25] node[right,font=\tiny]{Decision} (svc.south);
+  \draw[-] (opa)--(pol); \draw[-] (opa)--(data);
+\end{tikzpicture}
+\caption{\emph{Policy decoupling}: el servicio delega la decisión de acceso en OPA, que evalúa
+política (Rego) y datos de contexto. \textit{(Recreación de la diapositiva ``Open Policy
+Agent''.)}}
+\end{figure}
+
+\begin{slidebox}
+\textbf{Ejemplo de Rego} (\emph{admission control} en Kubernetes: solo imágenes del registro
+\texttt{hooli.com}):
+\begin{lstlisting}[style=code]
+package kubernetes.admission
+import rego.v1
+
+deny contains reason if {
+    some container
+    input_containers[container]
+    not startswith(container.image, "hooli.com/")
+    reason := "container image refers to illegal registry (must be hooli.com)"
+}
+
+input_containers contains container if {
+    container := input.request.object.spec.containers[_]
+}
+\end{lstlisting}
+\end{slidebox}
+
+%=====================================================================
+\section{Ejemplos reales de control de acceso}
+%=====================================================================
+
+\subsection{Unix / Linux file system}
+En el paradigma Unix, los \textbf{usuarios} son sujetos y \textbf{todo es un archivo}
+(monitor, memoria, disco, mouse, teclado\dots). Las acciones se clasifican en tres:
+\textbf{lectura ($r$)}, \textbf{escritura ($w$)} y \textbf{ejecución ($x$)}. Cada usuario
+pertenece a uno o más \textbf{grupos}, y todo archivo tiene un \emph{usuario} y un
+\emph{grupo} dueños. Los permisos se asignan en \textbf{tres secciones}: usuario, grupo y
+resto (\emph{others}).
+
+% ---- Diagrama permisos rwx (recreación slide Unix) ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth]
+  \node[font=\Large\ttfamily\bfseries] (perm) at (0,0) {-\,rwx\,rwx\,rwx};
+  \node[font=\scriptsize,align=center] (ft) at (-2.7,-1.6) {File\\ Type};
+  \node[font=\scriptsize] (us) at (-1.4,-1.2) {User};
+  \node[font=\scriptsize] (gr) at (-0.1,-1.2) {Group};
+  \node[font=\scriptsize] (ot) at (1.3,-1.2) {Others};
+  \draw[->,black!60] (ft) -- (-2.55,-0.3);
+  \draw[->,itbaCyanDark] (us) -- (-1.4,-0.3);
+  \draw[->,practGreen] (gr) -- (-0.1,-0.3);
+  \draw[->,attackRed] (ot) -- (1.25,-0.3);
+  \node[font=\scriptsize,anchor=west] at (3.0,0.5) {$r=$ readable};
+  \node[font=\scriptsize,anchor=west] at (3.0,0.1) {$w=$ writeable};
+  \node[font=\scriptsize,anchor=west] at (3.0,-0.3) {$x=$ executable};
+  \node[font=\scriptsize,anchor=west] at (3.0,-0.7) {$-=$ denied};
+\end{tikzpicture}
+\caption{Permisos Unix: tipo de archivo + tres ternas \texttt{rwx} (usuario, grupo, otros).
+\textit{(Recreación de la diapositiva ``Unix File System''.)}}
+\end{figure}
+
+\begin{practbox}{\texttt{umask}: herencia con máscara}
+Al crear un archivo, este hereda inicialmente los atributos del directorio. El comando
+\textbf{\texttt{umask}} (variable de entorno) le indica al SO que \emph{saque} permisos según
+una máscara: p.\ ej.\ ``que los archivos nuevos nunca sean ejecutables'' o ``que solo los pueda
+ver yo'', sin importar el directorio.
+\end{practbox}
+
+\subsection{SELinux (Security-Enhanced Linux)}
+Conjunto de modificaciones al \emph{kernel} de Linux que agrega un \textbf{control de seguridad
+adicional al DAC} (\emph{hardening} de servidores). Es un conjunto de reglas que siempre
+responden la misma pregunta: \emph{¿puede este sujeto acceder a este objeto?}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Cada proceso tiene un \textbf{contexto SELinux}; todos los recursos accesibles también
+        tienen contexto: \texttt{/var/tmp} $\to$ \texttt{t\_var\_tmp};
+        \texttt{Port 80} $\to$ \texttt{t\_port\_www};
+        \texttt{/var/www/html} $\to$ \texttt{t\_web\_html}.
+  \item Usa \textbf{macros} que expanden a conjuntos de reglas (limitan los \emph{syscalls}
+        entre combinaciones sujeto–objeto).
+  \item Potente: \textbf{dos procesos corriendo como \texttt{root} (UID 0)} pueden tener
+        restringido el acceso a los recursos del otro gracias a SELinux (p.\ ej.\ Apache
+        \texttt{httpd\_t} y MariaDB \texttt{mysqld\_t} aislados entre sí).
+\end{itemize}
+
+\subsection{Windows file system}
+El dueño de cada archivo/directorio define los permisos (\textbf{DAC}); los sujetos pueden ser
+cuentas o grupos. Tiene un nivel \textbf{mucho más granular} (11--13 operaciones por archivo) y
+—a diferencia de Unix— \textbf{herencia de permisos} que \emph{persiste} tras la creación.
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Cada entrada puede \emph{Allow}, \emph{Deny} o dejar ambos en blanco (vale el heredado).
+  \item \textbf{Deny tiene precedencia sobre Allow}; las \textbf{reglas locales} priman sobre
+        las \textbf{heredadas}.
+  \item Por su complejidad, Windows ofrece un \textbf{simulador de permisos efectivos} que
+        resuelve todas las reglas y conflictos. (Históricamente, resolver permisos exigía leer
+        muchos lugares del disco $\Rightarrow$ ``microcortes'' al acceder a archivos.)
+\end{itemize}
+
+\subsection{PostgreSQL: roles y policies}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Usa un modelo \textbf{RBAC}: un rol puede asociarse a un usuario, a un grupo o a otro
+        rol. El atributo \texttt{LOGIN} permite iniciar sesión. Todo objeto creado por un rol
+        tiene a ese rol como \emph{owner} (otro caso de \textbf{DAC}): solo \emph{superusers} y
+        el \emph{owner} acceden.
+  \item Las \textbf{policies} crean políticas de acceso/modificación de \emph{registros} dentro
+        de las tablas: permiten un \emph{need-to-know} a nivel de fila (\emph{Row Level
+        Security}).
+\end{itemize}
+\begin{slidebox}
+\begin{lstlisting}[style=code]
+ALTER TABLE clients ENABLE ROW LEVEL SECURITY;
+CREATE POLICY salesperson_clients ON clients
+  USING (salesperson_id::text = current_user);
+\end{lstlisting}
+\end{slidebox}
+\begin{anecbox}{Vendedores celosos de sus contactos}
+Caso típico: un equipo de ventas donde cada vendedor (va a comisión) solo debe ver
+\emph{sus} clientes. Con una \emph{policy} sobre la tabla \texttt{clients} que compara
+\texttt{salesperson\_id} con el \texttt{current\_user}, una consulta sobre toda la tabla
+devuelve solo las filas propias (es como agregar un filtro automático). \emph{Salvedad:} las
+prácticas modernas tienden a sacar la gestión de usuarios fuera de la base de datos (la base
+es buena gestionando datos, no logins), así que estos \emph{features} se ven más en el modelo
+``usuarios de la app $=$ usuarios de la base''.
+\end{anecbox}
+
+\subsection{Squid Web Proxy}
+Un \emph{web proxy} controla por dónde navegan los usuarios (y acelera/cachea). Squid
+implementa un sistema de \textbf{reglas ordenadas} (\textbf{MAC}; ``mal llamado ACL'') para
+permitir o bloquear sitios.
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Filtra por dominio, protocolo, URL, \emph{headers} del requerimiento y
+        \textbf{listas negras}.
+  \item En la facultad, los sitios de \emph{streaming} se bloquean con esta tecnología.
+  \item \textbf{Blacklists dinámicas}: iniciativas que recolectan IPs de origen de ataques,
+        metodologías y \emph{malware} usado; Squid puede consultarlas para bloquear accesos.
+\end{itemize}
+
+\subsection{AWS (IAM)}
+AWS (más de 1000 servicios) combina \textbf{dos mecanismos}:
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\raggedright\arraybackslash}p{6.2cm} >{\raggedright\arraybackslash}p{6.2cm}}
+\toprule
+\textbf{Identity-based policies} & \textbf{Resource-based policies}\\
+\highlight{macGreen}{Asociadas al \emph{Principal} (MAC)} &
+\highlight{dacYellow}{Asociadas al \emph{Recurso} (DAC)}\\
+\midrule
+Reglas asociadas a la cuenta/usuario; las define el \textbf{administrador}. Cubren ``lo
+grueso'' de la infraestructura (subredes, firewalls). &
+Quien \emph{crea} el recurso define quién accede (p.\ ej.\ una \emph{S3 bucket policy}).
+Más ágil para los equipos de desarrollo.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{API gateway}
+Servicio que se despliega \emph{delante} de las APIs para una capa extra de seguridad.
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Controles \textbf{basados en reglas (MAC)} por URL, dominio, \emph{headers}, método.
+  \item Reglas \textbf{por contexto}: máxima cantidad de requerimientos por segundo, ancho de
+        banda; si se superan los umbrales, bloquea nuevas conexiones del mismo IP o
+        \emph{SessionID}.
+\end{itemize}
+
+%=====================================================================
+\section{OAuth 2.0 (Open Authorization)}
+%=====================================================================
+
+\textbf{OAuth} es un estándar de \textbf{autorización} ampliamente usado para que las
+aplicaciones accedan a recursos de una plataforma \emph{en nombre del usuario}
+\textbf{sin que este comparta sus credenciales} con la aplicación. Está detrás de ``Iniciar
+sesión con Google/Meta''. Funciona emitiendo \textbf{tokens de acceso temporales y
+específicos}; \textbf{OAuth 2.0} es la versión moderna.
+
+\begin{anecbox}{El problema que resuelve}
+La forma ``fea'' sería darle a la app mi usuario y contraseña del servicio: eso le daría poder
+para borrar la cuenta, cambiar la clave, etc., y mis credenciales quedarían en una base que no
+controlo. OAuth nació (Twitter) para que un usuario pueda \emph{delegar} programáticamente a
+una aplicación la capacidad de ejecutar cosas en su nombre, \emph{sin entregar credenciales}.
+\end{anecbox}
+
+\subsection{El flujo de autorización}
+Intervienen el \emph{Resource Owner} (usuario), la \emph{Application}, el
+\emph{Authorization Server} y el \emph{Resource Server}.
+
+% ---- Diagrama de secuencia OAuth (recreación slide OAuth 2.0) ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\scriptsize,>=Stealth]
+  \def\xa{0} \def\xb{3.3} \def\xc{7.0} \def\xd{10.3}
+  \foreach \x/\lab in {\xa/{Resource\\Owner}, \xb/{Application}, \xc/{Authorization\\Server}, \xd/{Resource\\Server}}{
+    \node[font=\scriptsize\bfseries,align=center] at (\x,0.4) {\lab};
+    \draw[black!40,dashed] (\x,0) -- (\x,-6.2);
+  }
+  \draw[->] (\xa,-0.4) -- node[above]{1. Access Application} (\xb,-0.4);
+  \draw[<-] (\xa,-1.1) -- node[above]{2. Authn \& Request Auth.} (\xb,-1.1);
+  \draw[->] (\xa,-1.8) -- node[above]{3. Authn \& Grant Auth.} (\xc,-1.8);
+  \draw[<-] (\xb,-2.5) -- node[above]{4. Send Authorization Code} (\xc,-2.5);
+  \draw[->] (\xb,-3.2) -- node[above]{5. Code Exchange for Token} (\xc,-3.2);
+  \draw[<-] (\xb,-3.9) -- node[above]{6. Issue Access Token} (\xc,-3.9);
+  \draw[->] (\xb,-4.6) -- node[above]{7. Request Resource w/ Token} (\xd,-4.6);
+  \draw[<-] (\xb,-5.3) -- node[above]{8. Return Resource} (\xd,-5.3);
+\end{tikzpicture}
+\caption{Flujo de \emph{authorization code}: el usuario autoriza, la app obtiene un
+\emph{code}, lo intercambia por un \emph{access token} y con él pide el recurso.
+\textit{(Recreación de la diapositiva ``OAuth 2.0''.)}}
+\end{figure}
+
+\noindent Puntos clave del flujo:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item El usuario nunca comparte con la app las credenciales del servicio; \textbf{delega} el
+        control de acceso al \emph{dueño del recurso}, que decide si responde.
+  \item El \emph{access token} viaja en un \emph{header} (típicamente \texttt{Bearer}); el
+        servidor lo valida en cada requerimiento. El usuario puede \textbf{revocar} el acceso.
+\end{itemize}
+
+\subsection{Refresh Token}
+Los \emph{access tokens} \textbf{no} duran para siempre (de una hora a unos días). Aparecen
+\textbf{dos tokens}: \emph{access} y \emph{refresh}.
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Cuando el recurso responde ``token inválido'', el cliente envía el \emph{refresh token}
+        y obtiene —\emph{sin} re-preguntar al usuario— un \emph{access} y un \emph{refresh}
+        nuevos.
+  \item El \emph{refresh token} se usa \textbf{una sola vez y muere}. Esto permite
+        \textbf{recuperarse ante un robo}: si un atacante roba ambos tokens, en cuanto uno de
+        los dos (atacante o app legítima) usa el refresh, \emph{el otro pierde acceso}.
+  \item Así se sostiene la ``sesión infinita'' (Gmail, Mercado Libre\dots) sin el riesgo de un
+        token eterno que, si se roba, sería \emph{game over}.
+\end{itemize}
+
+\subsection{Scope (alcance) — un mecanismo DAC}
+El \textbf{scope} son los permisos específicos que una app solicita para acceder a los datos
+del usuario; definen el \textbf{nivel de acceso} que tendrá el token.
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Al pedir autorización, la app declara qué \emph{scopes} quiere; eso genera la pantalla
+        de consentimiento (``\emph{Get Together} quiere acceder a tu email y a tu calendario'').
+  \item El token emitido se \textbf{limita a los scopes otorgados}; cada servicio que lo recibe
+        verifica que sea válido y que contenga su propio scope.
+\end{itemize}
+
+\begin{anecbox}{OAuth es dual}
+La clase siguiente (Autenticación) retoma OAuth: hoy es un protocolo \textbf{dual} que cumple
+dos funciones de seguridad. Aquí vimos la primera (\emph{autorización}); la otra
+(\emph{autenticación}, vía OpenID Connect) requiere un poco más de teoría.
+\end{anecbox}
+
+%=====================================================================
+\section*{Lectura recomendada}
+\addcontentsline{toc}{section}{Lectura recomendada}
+%=====================================================================
+\begin{center}
+\begin{tcolorbox}[enhanced,colback=itbaBlue!20,colframe=itbaCyanDark,boxrule=1pt,
+  arc=3pt,width=0.85\textwidth,halign=center]
+\large\textbf{Capítulo 4 \;·\; Capítulo 5 (5.1--5.4) \;·\; Capítulo 6 (6.1--6.2)\\
+Capítulo 7 (7.1) \;·\; Capítulo 8 (8.1)}\\[4pt]
+\emph{Computer Security: Art and Science}\\[2pt]
+Matt Bishop
+\end{tcolorbox}
+\end{center}
+\noindent Los temas de políticas y control de acceso corresponden a los capítulos 4 al 8 del
+Bishop, con más ejemplos. Mención especial: el modelo de \textbf{capabilities} (un mecanismo
+dual de las ACL, muy útil en sistemas distribuidos a escala gigantesca). Los papers originales
+de los modelos: \texttt{Bell76.pdf}, \texttt{Biba75.pdf} y
+\texttt{A\_Comparison\_of\_commercial\_and\_military.pdf}.
+
+%---------------------------------------------------------------------
+\vfill
+\begin{center}\small\itshape\color{black!60}
+Apunte integral de la Clase 6 — Políticas de seguridad y Control de acceso · Criptografía y
+Seguridad, ITBA.\\
+Síntesis de teoría (transcripción + diapositivas) y práctica (diapositivas).
+\end{center}
+
+\end{document}
