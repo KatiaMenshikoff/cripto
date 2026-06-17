@@ -1,0 +1,1416 @@
+% !TEX program = pdflatex
+%=====================================================================
+%  Criptografía y Seguridad - ITBA
+%  Clase 10 — Seguridad en la empresa
+%  Apunte integral: teoría + práctica
+%=====================================================================
+\documentclass[11pt,a4paper]{article}
+
+%---------------------------------------------------------------------
+%  Paquetes
+%---------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla,es-noshorthands]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{geometry}
+\geometry{a4paper,margin=2.4cm,headheight=22pt}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{caption}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,shapes.misc,shapes.symbols,arrows.meta,positioning,calc,
+                fit,backgrounds,decorations.pathmorphing,shadows.blur,chains,mindmap,trees}
+
+%---------------------------------------------------------------------
+%  Paleta de color (inspirada en las diapositivas de la cátedra)
+%---------------------------------------------------------------------
+\definecolor{itbaCyan}{HTML}{6EC6D9}
+\definecolor{itbaCyanDark}{HTML}{2E8B9E}
+\definecolor{itbaBlue}{HTML}{AEDCEA}
+\definecolor{boxBlue}{HTML}{BBD4F0}
+\definecolor{slideGray}{HTML}{ECECEC}
+\definecolor{practGreen}{HTML}{4F8A3D}
+\definecolor{practGreenL}{HTML}{E2EFD9}
+\definecolor{attackRed}{HTML}{C0392B}
+\definecolor{codeBg}{HTML}{F5F5F5}
+\definecolor{purpleZTA}{HTML}{7B5BA6}
+\definecolor{purpleZTAL}{HTML}{ECE3F5}
+\definecolor{riskOrange}{HTML}{E67E22}
+
+%---------------------------------------------------------------------
+%  Hipervínculos
+%---------------------------------------------------------------------
+\hypersetup{
+  colorlinks=true,
+  linkcolor=itbaCyanDark,
+  urlcolor=itbaCyanDark,
+  citecolor=itbaCyanDark,
+  pdftitle={Clase 10 - Seguridad en la empresa},
+  pdfauthor={Criptografia y Seguridad - ITBA}
+}
+
+%---------------------------------------------------------------------
+%  Encabezados y pies
+%---------------------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\textsc{Criptografía y Seguridad — ITBA}}
+\rhead{\small Clase 10 · Seguridad en la empresa}
+\cfoot{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{itbaCyanDark}\leaders\hrule height \headrulewidth\hfill}}
+
+%---------------------------------------------------------------------
+%  Títulos de sección con barra de color (estilo diapositiva)
+%---------------------------------------------------------------------
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{itbaCyanDark}}
+  {\thesection}{0.6em}{}
+  [\vspace{-0.4em}{\color{itbaCyan}\titlerule[2pt]}]
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{itbaCyanDark}}
+  {\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{black}}
+  {\thesubsubsection}{0.6em}{}
+
+%---------------------------------------------------------------------
+%  Cajas reutilizables
+%---------------------------------------------------------------------
+% Caja "diapositiva" (recuadro gris de las slides)
+\newtcolorbox{slidebox}[1][]{
+  enhanced, colback=slideGray, colframe=black!55, boxrule=0.5pt,
+  arc=1pt, left=6pt,right=6pt,top=4pt,bottom=4pt, #1}
+
+% Caja de definición
+\newtcolorbox{defbox}[1]{
+  enhanced, breakable, colback=itbaBlue!25, colframe=itbaCyanDark,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+% Caja de nota práctica
+\newtcolorbox{practbox}[1]{
+  enhanced, breakable, colback=practGreenL, colframe=practGreen,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+% Caja de atención / ataque
+\newtcolorbox{warnbox}[1]{
+  enhanced, breakable, colback=attackRed!8, colframe=attackRed,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+% Caja anécdota / dicho en clase
+\newtcolorbox{anecbox}[1]{
+  enhanced, breakable, colback=riskOrange!8, colframe=riskOrange,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+%---------------------------------------------------------------------
+%  Estilo de código
+%---------------------------------------------------------------------
+\lstdefinestyle{hcl}{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{codeBg},
+  keywordstyle=\color{itbaCyanDark}\bfseries,
+  commentstyle=\color{practGreen}\itshape,
+  stringstyle=\color{attackRed},
+  breaklines=true, frame=single, rulecolor=\color{black!30},
+  showstringspaces=false, columns=fullflexible, tabsize=2,
+  xleftmargin=10pt, framexleftmargin=8pt}
+
+\newcommand{\factor}[1]{\textcolor{itbaCyanDark}{\textbf{#1}}}
+
+% Cita textual del profesor
+\newcommand{\prof}[1]{\par\medskip\noindent\textit{``#1''}\\[-2pt]\hspace*{1em}%
+  {\footnotesize\textcolor{black!60}{--- dicho en clase}}\par\medskip\noindent}
+
+%=====================================================================
+\begin{document}
+%=====================================================================
+
+%---------------------------------------------------------------------
+%  Portada
+%---------------------------------------------------------------------
+\begin{titlepage}
+\centering
+\vspace*{1.0cm}
+
+\begin{tikzpicture}
+  \node[rounded corners=2pt, fill=itbaCyan, text=black, inner sep=14pt,
+        minimum width=0.8\textwidth, align=center] (t)
+        {\Huge\bfseries Criptografía y Seguridad};
+\end{tikzpicture}
+
+\vspace{0.6cm}
+
+{\LARGE Seguridad en aplicaciones}\\[0.25cm]
+{\Huge\bfseries\color{itbaCyanDark} Seguridad en la empresa}
+
+\vspace{0.8cm}
+
+% Ilustración: bóveda / caja fuerte (recreación del icono de portada)
+\begin{tikzpicture}[scale=1.0]
+  \fill[black!12] (-3.2,-2.4) rectangle (3.2,2.8);
+  \draw[line width=2pt, black!55] (-3.2,-2.4) rectangle (3.2,2.8);
+  \fill[itbaCyanDark!75] (-2.4,-2.0) rectangle (2.4,2.4);
+  \draw[line width=3pt, black!70] (-2.4,-2.0) rectangle (2.4,2.4);
+  \draw[line width=1.2pt, itbaCyan] (-2.0,-1.6) rectangle (2.0,2.0);
+  \draw[line width=2pt, black!70] (0,-2.0) -- (0,2.4);
+  \foreach \a in {0,45,...,315}{
+    \draw[line width=2pt, black!70] (-1.1,0.2) -- ++(\a:0.6);
+  }
+  \draw[line width=2.5pt, black!70] (-1.1,0.2) circle (0.42);
+  \fill[itbaCyan] (-1.1,0.2) circle (0.16);
+  \draw[line width=2.5pt, black!70] (1.1,0.2) circle (0.42);
+  \fill[itbaCyan] (1.1,0.2) circle (0.16);
+  \foreach \y in {-1.2,-0.4,0.8,1.6}{
+     \fill[black!70] (-2.2,\y) circle (0.07);
+     \fill[black!70] (2.2,\y) circle (0.07);
+  }
+\end{tikzpicture}
+
+\vfill
+{\large Apunte integral — Teoría + Práctica}\\[0.2cm]
+{\normalsize Clase 10 \quad·\quad Lectura recomendada: \emph{NIST SP 800-207} (caps.\ 2 y 3)}\\[0.4cm]
+{\small Instituto Tecnológico de Buenos Aires (ITBA)}
+
+\vspace{0.6cm}
+{\footnotesize\itshape Documento elaborado a partir de las transcripciones de la clase
+teórica (Prof.\ Leandro Suárez) y de las diapositivas oficiales de la teórica y la práctica.
+Esta clase \textbf{no está en Bishop}: está enfocada en el panorama profesional contemporáneo de
+la seguridad en organizaciones.}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+%=====================================================================
+\section{Introducción y contexto}
+%=====================================================================
+
+Esta clase cierra el bloque de \textbf{Seguridad en aplicaciones} pasando de la teoría
+(autenticación, control de acceso, principios de diseño, vulnerabilidades) a la
+\textbf{visión profesional}: cómo una empresa real adopta distintas estrategias para
+\emph{protegerse} de un abanico amplio de amenazas, equilibrando seguridad y negocio.
+
+\begin{anecbox}{Dónde se sitúa esta clase}
+\prof{Esto de la clase que vamos a ver hoy no está en Bishop. [\dots] está más enfocado en
+lo que es el panorama contemporáneo, lo profesional: cómo se maneja esto en un ambiente
+profesional de una organización, una corporación, incluso una Pyme con buenas prácticas.}
+La lectura recomendada para profundizar es el estándar \textbf{NIST SP 800-207} (Zero Trust),
+capítulos 2 y 3.
+\end{anecbox}
+
+\begin{defbox}{Tríada CIA — el marco de toda la seguridad (recordatorio)}
+Toda política de seguridad busca \emph{preservar} tres propiedades sobre la información:
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Confidencialidad}: guardar la info en secreto; acceso sólo a autorizados.
+  \item \textbf{Integridad}: confiabilidad de los datos. Se distingue \emph{integridad de
+        datos} (no se alteran) e \emph{integridad de origen} (provienen de quien dicen).
+  \item \textbf{Disponibilidad}: poder usar la información cuando se la necesita.
+\end{itemize}
+El propósito de todo lo que veremos hoy es, en el fondo, \textbf{forzar el cumplimiento de la
+tríada CIA dentro de la organización}, tanto de forma \textbf{proactiva} (barreras, controles,
+evitar exponer vulnerabilidades) como \textbf{reactiva} (qué medidas tomar una vez que ya nos
+atacaron).
+\end{defbox}
+
+\subsection{Una mirada del temario desde la práctica: la certificación CISSP}
+
+La clase práctica abre presentando la certificación profesional de referencia en este campo:
+\textbf{CISSP} (\emph{Certified Information System Security Professional}, de ISC2). Sus
+\textbf{8 dominios de conocimiento} son un excelente mapa mental de \emph{toda} la materia de
+seguridad de la empresa:
+
+\begin{practbox}{Los 8 dominios de CISSP (aporte de la práctica)}
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item Gestión de Seguridad y riesgos
+  \item Seguridad de activos
+  \item Arquitectura e ingeniería de la seguridad
+  \item Seguridad de comunicaciones y redes
+  \item Gestión de identidades y accesos (IAM)
+  \item Evaluación y pruebas de seguridad
+  \item Operaciones de seguridad
+  \item Seguridad del desarrollo de software
+\end{enumerate}
+Casi todos los temas de esta clase (gobernanza, gestión de riesgos, IAM/PAM, evaluación de
+seguridad, desarrollo seguro) caen dentro de alguno de estos dominios.
+\end{practbox}
+
+\subsection{Vocabulario de seguridad (definiciones de la práctica)}
+
+La práctica fija un vocabulario preciso con el clásico diagrama de Bishop
+(\emph{threat agent $\to$ threat $\to$ vulnerability $\to$ risk $\to$ asset}). Conviene
+tenerlo claro porque toda la gestión de riesgos se apoya en él.
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize,
+   nodo/.style={draw,black!60,fill=slideGray,rounded corners=1pt,minimum width=2.2cm,
+                minimum height=0.7cm,align=center},
+   >=Stealth]
+  \node[nodo] (ta) {Threat\\agent};
+  \node[nodo,right=1.6cm of ta] (th) {Threat\\(amenaza)};
+  \node[nodo,right=1.6cm of th] (vu) {Vulnerability\\(vulnerab.)};
+  \node[nodo,below=0.9cm of vu] (ri) {Risk\\(riesgo)};
+  \node[nodo,left=1.6cm of ri] (as) {Asset\\(activo)};
+  \node[nodo,left=1.6cm of as] (ex) {Exposure\\(exposición)};
+  \node[nodo,below=0.9cm of ex] (sg) {Safeguard\\(medida)};
+  \draw[->] (ta) -- node[above]{da lugar a} (th);
+  \draw[->] (th) -- node[above]{explota} (vu);
+  \draw[->] (vu) -- node[right]{lleva a} (ri);
+  \draw[->] (ri) -- node[above]{daña} (as);
+  \draw[->] (as) -- node[above]{causa} (ex);
+  \draw[->] (sg) -- node[left]{contrarresta} (ex);
+  \draw[->] (sg) |- node[below]{reduce} (ta);
+\end{tikzpicture}
+\end{center}
+
+\begin{defbox}{Definiciones clave}
+\begin{description}[leftmargin=0pt,labelsep=0.4em,style=nextline,itemsep=2pt]
+  \item[Amenaza (threat)] Peligro potencial asociado a la explotación de una vulnerabilidad.
+  \item[Vulnerabilidad] Falta o debilidad en una medida implementada.
+  \item[Riesgo (risk)] \emph{Probabilidad} de que un agente explote la vulnerabilidad y
+        produzca efectos en el negocio.
+  \item[Exposición] Exposición a pérdidas.
+  \item[Medida / control (safeguard)] Mecanismo para reducir el riesgo.
+\end{description}
+\end{defbox}
+
+\begin{practbox}{Tipos de control (aporte de la práctica)}
+Los controles de seguridad se clasifican en tres familias, y la \textbf{defensa en profundidad}
+consiste justamente en combinarlas en capas concéntricas:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Administrativos} (políticas, procedimientos, capacitación).
+  \item \textbf{Técnicos (lógicos)} (firewalls, cifrado, autenticación).
+  \item \textbf{Físicos} (puertas, cámaras, control de acceso a instalaciones).
+\end{itemize}
+\end{practbox}
+
+\begin{practbox}{Políticas vs.\ Mecanismos (aporte de la práctica)}
+Distinción fundamental que recorre toda la materia:
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Política}: define \emph{qué acciones son seguras (permitidas)} y \emph{qué
+        acciones son inseguras (prohibidas)}.
+  \item \textbf{Mecanismo}: procedimiento, herramienta o método para \emph{garantizar el
+        cumplimiento} de la política. Los mecanismos pueden ser de tipo:
+        \textbf{prevenir, disuadir, detectar, corregir, recuperar, compensar}.
+\end{itemize}
+\end{practbox}
+
+%=====================================================================
+\section{Gobernanza (Governance)}
+%=====================================================================
+
+\begin{defbox}{Gobernanza de seguridad}
+Conjunto de \textbf{procesos, políticas, procedimientos y controles} implementados para
+\textbf{gestionar y mitigar los riesgos} de la organización, estableciendo
+\textbf{responsabilidades y roles} dentro de la entidad para garantizar la protección de la
+información.
+\end{defbox}
+
+La analogía del profesor: la gobernanza dentro de una empresa es como el \textbf{gobierno} de
+un Estado.
+
+\begin{anecbox}{La analogía del gobierno}
+\prof{El gobierno expide leyes y después es responsable de alguna forma de hacer que esas
+leyes se cumplan. Dentro de una empresa existe algo bastante análogo: la gobernanza está dada
+generalmente dentro de un equipo de seguridad, que emite las reglas, decide qué reglas hay que
+tomar y se hace responsable de que se cumplan.}
+\end{anecbox}
+
+\subsection{Importancia en la organización}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Asegura la confidencialidad, integridad y disponibilidad de la información.
+  \item Protege contra amenazas cibernéticas y violaciones de seguridad.
+  \item Fomenta la \textbf{confianza de clientes y stakeholders}.
+\end{itemize}
+
+\subsection{Objetivos principales de la gobernanza}
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize]
+  \node[circle,fill=itbaCyanDark,text=white,align=center,minimum size=2.0cm,font=\bfseries\scriptsize]
+       (c) {CYBER\\SECURITY\\STRATEGY};
+  \node[draw=itbaCyanDark,rounded corners,fill=itbaBlue!25,align=center,above left=0.8cm and 1.2cm of c,text width=3.4cm]
+       (a) {\textbf{Alinear} la estrategia de seguridad con los objetivos del \textbf{negocio}};
+  \node[draw=itbaCyanDark,rounded corners,fill=itbaBlue!25,align=center,above right=0.8cm and 1.2cm of c,text width=3.4cm]
+       (b) {\textbf{Reducir} riesgos y \textbf{mitigar} el impacto de incidentes};
+  \node[draw=itbaCyanDark,rounded corners,fill=itbaBlue!25,align=center,below left=0.8cm and 1.2cm of c,text width=3.4cm]
+       (d) {\textbf{Cumplir} regulaciones y normativas aplicables};
+  \node[draw=itbaCyanDark,rounded corners,fill=itbaBlue!25,align=center,below right=0.8cm and 1.2cm of c,text width=3.4cm]
+       (e) {Crear una \textbf{cultura de seguridad} en la organización};
+  \foreach \n in {a,b,d,e}{\draw[-{Stealth},itbaCyanDark] (c) -- (\n);}
+\end{tikzpicture}
+\end{center}
+
+\begin{warnbox}{Cuidado: no atentar contra el negocio (aceptación psicológica)}
+La estrategia de seguridad \textbf{no debe ir en contra de cómo la empresa gana dinero}. Si se
+ponen demasiadas trabas, los empleados \emph{buscan otros caminos} y terminan atentando contra
+la seguridad. Es el problema de la \textbf{aceptación psicológica} visto en clases anteriores.
+\prof{Si yo le pongo muchas barreras a un empleado [\dots] se van a bajar todos los datos en un
+CSV, lo van a publicar en Drive o en algún lugar, y van a empezar a elaborar ahí. Y esto lo
+digo porque sé que ha pasado.}
+\end{warnbox}
+
+\begin{anecbox}{Por qué importa la cultura: el eslabón más débil}
+\prof{¿Cuál es el eslabón más débil en un sistema? Los usuarios, la gente que interactúa con
+esos sistemas terminan siendo los más expuestos.} Por eso la gobernanza debe generar una
+\textbf{cultura de seguridad}: campañas de concientización, campañas de phishing simuladas y
+capacitación, sobre todo a quienes trabajan con tarjetas de crédito, datos personales o
+información crítica.
+\end{anecbox}
+
+\noindent\textbf{Regulaciones que condicionan la estrategia (ejemplos del profe):} empresas que
+cotizan en bolsa deben \emph{informar todo incidente de seguridad} (caso contrario hay
+consecuencias penales); el manejo de \textbf{datos personales} exige protegerlos o se arriesgan
+\emph{multas millonarias} ante un robo.
+
+%=====================================================================
+\section{Gestión de Riesgos (Risk Management)}
+%=====================================================================
+
+\begin{defbox}{Gestión de riesgos}
+\textbf{Identificación, evaluación y control} de amenazas potenciales para el negocio, con el
+objetivo de \textbf{minimizar el impacto} de los incidentes de seguridad en la operación.
+\end{defbox}
+
+\begin{anecbox}{Por qué la seguridad se gestiona como un riesgo}
+\prof{Antes —y todavía se sigue haciendo— la seguridad se gestionaba como un riesgo más. Las
+empresas ya saben de riesgos, saben cómo manejarlos, mitigarlos, eliminarlos. Entonces la
+seguridad se trataba como algo más, y la verdad que funciona, sobre todo en las grandes
+corporaciones.}
+\end{anecbox}
+
+La gestión de riesgos es un \textbf{ciclo continuo} de 4 etapas — nunca termina, porque los
+riesgos evolucionan, decrecen, se transforman o aparecen nuevos.
+
+\begin{center}
+\begin{tikzpicture}[font=\small\bfseries,>=Stealth]
+  \def\R{2.2}
+  \node[circle,minimum size=1.5cm,fill=blue!45!cyan,text=white,align=center] (id) at (90:\R) {Identify\\(Identificar)};
+  \node[circle,minimum size=1.5cm,fill=red!70,text=white,align=center] (as) at (0:\R) {Assess\\(Evaluar)};
+  \node[circle,minimum size=1.5cm,fill=orange!85,text=white,align=center] (mi) at (-90:\R) {Mitigate\\(Mitigar)};
+  \node[circle,minimum size=1.5cm,fill=green!55!black,text=white,align=center] (mo) at (180:\R) {Monitor\\(Monitorear)};
+  \draw[->,line width=2pt,itbaCyanDark] (id) to[bend left=20] (as);
+  \draw[->,line width=2pt,itbaCyanDark] (as) to[bend left=20] (mi);
+  \draw[->,line width=2pt,itbaCyanDark] (mi) to[bend left=20] (mo);
+  \draw[->,line width=2pt,itbaCyanDark] (mo) to[bend left=20] (id);
+\end{tikzpicture}
+\end{center}
+
+\subsection{Identificación del riesgo}
+
+Primero se identifican los \textbf{activos críticos para el negocio} (¿qué puede afectar al
+ciclo de negocio?) y luego los \textbf{riesgos potenciales} sobre ellos.
+
+\begin{center}
+\begin{tabular}{@{}p{0.46\textwidth}p{0.46\textwidth}@{}}
+\toprule
+\textbf{Activos críticos} & \textbf{Riesgos potenciales} \\
+\midrule
+\textbullet\ Datos (empleados, clientes, comerciales, financieros, proveedores) &
+\textbullet\ Malware \\
+\textbullet\ Sistemas (principal activo de las empresas tech) &
+\textbullet\ Ataques externos \\
+\textbullet\ Infraestructura (servidores, data centers, oficinas físicas) &
+\textbullet\ Errores humanos \\
+\textbullet\ Personas (las empresas no se mueven solas) &
+\textbullet\ Sabotaje (amenaza interna) \\
+ & \textbullet\ Ambientales (huracán, incendio) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{anecbox}{Riesgos externos a la empresa: caída de una región cloud}
+Además de los de la slide, el profe remarca los \textbf{problemas externos}: proveedores de
+infraestructura cloud, Internet, DNS\dots
+\prof{Se caía una región de AWS y casi todas las empresas argentinas o de Latam están subidas a
+esa región [\dots] se caía PedidosYa, no se podía usar.} Si la empresa sólo tiene contratada esa
+región, deja de funcionar.
+\end{anecbox}
+
+\subsection{Evaluación del riesgo (Assess)}
+
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Se identifica la \textbf{probabilidad de ocurrencia} y el \textbf{impacto} en el negocio.
+  \item Se realizan \textbf{evaluaciones externas de seguridad} (Red Team / PenTest).
+  \item Se clasifican los riesgos según su impacto: \textbf{Alto / Medio / Bajo}.
+\end{itemize}
+
+\begin{anecbox}{La matriz probabilidad $\times$ impacto}
+En la práctica se arman \textbf{matrices de probabilidad vs.\ impacto}: se ataca primero lo de
+\emph{máxima probabilidad y mayor impacto}, y se barre en diagonal hacia abajo. Hay casos
+opuestos: \prof{Es muy poco probable que pase esto, pero si llega a pasar estamos al horno.}
+Ahí la empresa, como ente que afronta una pérdida económica, decide qué hacer con cada caso.
+\end{anecbox}
+
+\subsection{Mitigación del riesgo (Mitigate)}
+
+En la etapa de mitigación se elaboran \textbf{políticas de gestión}, se definen y evalúan
+\textbf{procedimientos de operación y acción ante incidentes}, se diseñan y prueban
+\textbf{planes de acción} y se capacita al personal a todo nivel. Existen
+\textbf{5 estrategias} para tratar un riesgo:
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize\bfseries,>=Stealth,
+   risk/.style={circle,fill=red!75,text=white,minimum size=1.0cm,font=\scriptsize\bfseries}]
+  % ACEPTARLO
+  \node[risk] (r1) {RISK};
+  \draw[->,black!70,line width=1.2pt] ($(r1.south)+(0,-0.6)$) -- (r1.south);
+  \node[below=0.65cm of r1,align=center] {ACEPTARLO};
+  % EVITARLO
+  \node[risk,right=1.5cm of r1] (r2) {RISK};
+  \draw[->,black!70,line width=1.2pt] (r2.south) arc (-90:90:0.55);
+  \node[below=0.65cm of r2,align=center] {EVITARLO};
+  % TRANSFERIRLO
+  \node[risk,right=1.5cm of r2] (r3) {RISK};
+  \draw[->,black!70,line width=1.2pt] (r3) ++(0:0.75) arc (0:330:0.75);
+  \node[below=0.65cm of r3,align=center] {TRANSFERIRLO};
+  % REDUCIRLO
+  \node[risk,right=1.5cm of r3] (r4) {RISK};
+  \draw[->,black!70,line width=1.2pt] ($(r4.east)+(0.55,0)$) -- (r4.east);
+  \draw[->,black!70,line width=1.2pt] ($(r4.west)+(-0.55,0)$) -- (r4.west);
+  \node[below=0.65cm of r4,align=center] {REDUCIRLO};
+  % COMPENSARLO
+  \node[risk,right=1.5cm of r4] (r5) {RISK};
+  \draw[->,black!70,line width=1.2pt] ($(r5.north)+(0,0.55)$) -- (r5.north);
+  \draw[->,black!70,line width=1.2pt] ($(r5.south)+(0,-0.55)$) -- (r5.south);
+  \node[below=0.65cm of r5,align=center] {COMPENSARLO};
+\end{tikzpicture}
+\end{center}
+
+\begin{defbox}{Las 5 estrategias de tratamiento del riesgo}
+\begin{description}[leftmargin=0pt,labelsep=0.4em,style=nextline,itemsep=3pt]
+  \item[Evitarlo (avoid)] Quitar la causa del riesgo. Suele ser \emph{costoso y complejo}
+        (ej.: arreglar vulnerabilidades en un sistema legacy o migrarlo, con posibles
+        \emph{side effects} que rompen el sistema). Se paga el costo si realmente hay que
+        solucionarlo.
+  \item[Reducirlo (reduce/mitigate)] Bajar el impacto o la probabilidad. \textbf{Es lo más
+        común}. Ejemplo: autenticación débil con sólo password $\to$ se le suma un
+        \textbf{factor extra (MFA)}; no es tan caro como migrar o dar de baja un sistema.
+  \item[Transferirlo (transfer)] Delegarlo a un \textbf{proveedor}; si hay un problema,
+        responde el proveedor. Ejemplo: poner Cloudflare como \emph{proxy reverso} y punto de
+        entrada de una web expuesta a Internet, aplicando políticas anti-ataque.
+  \item[Compensarlo (compensate)] \emph{No es lo mismo que reducir.} Cuando no se puede evitar
+        ni reducir, se \textbf{contrarresta el impacto} con un control adicional. Ejemplo:
+        dependencias que podrían tener vulnerabilidades y que no se pueden quitar $\to$
+        \textbf{auditar y controlar} esa dependencia para detectar CVEs apenas aparecen.
+  \item[Aceptarlo (accept)] Asumir el riesgo (típico en riesgos de \emph{baja probabilidad}).
+        A veces tomar otra alternativa es más costoso que aceptarlo. \textbf{Siempre se
+        documenta}: el equipo de Risk Management deja constancia de que la empresa decidió
+        aceptarlo.
+\end{description}
+\end{defbox}
+
+\begin{anecbox}{Riesgo aceptado en la práctica: el DRP que no se ejecuta}
+A las empresas que cotizan en bolsa se les exige tener un \textbf{DRP} (\emph{Disaster Recovery
+Plan}). Para los bancos digitales y fintech, el \textbf{Banco Central} exige que el DRP esté
+\emph{documentado y probado}. Pero a muchas otras empresas sólo se les exige \emph{tenerlo}:
+\prof{Tengo el plan, está aceptado el riesgo, pero no lo ejecuto porque ejecutarlo me sale un
+montón de plata. Si pasa algo, pasa, y confiamos en que funcione.} Ejecutar un DRP implica tener
+toda la infra duplicada con todos los enlaces y aplicaciones levantadas, lo cual es muy costoso.
+\end{anecbox}
+
+\subsection{Monitoreo y Evaluación (Monitor)}
+
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Elaboración y supervisión de controles y medidas de seguridad}.
+  \item Auditorías internas y externas.
+  \item Simulaciones de ataques e incidentes.
+\end{itemize}
+
+Es la etapa que \textbf{cierra el ciclo}: como la organización es un \emph{sistema vivo}, hay
+que estar ejecutando y revisando esto constantemente. Existen \textbf{frameworks} que dan un
+punto de partida; el profe menciona \textbf{NIST} (la organización de estándares de EE.UU.,
+análoga al IRAM en Argentina), que desarrolló frameworks para medir, mitigar y gestionar
+riesgos de forma segura.
+
+\begin{slidebox}
+\textbf{CIS Critical Security Controls v8} (\url{https://www.cisecurity.org/controls}) — la
+slide muestra los 18 controles agrupados; los \emph{foundational} (1--8) son: \emph{(1)}
+Inventory \& Control of Assets, \emph{(2)} Inventory \& Control of Software, \emph{(3)} Data
+Protection, \emph{(4)} Secure Configuration, \emph{(5)} Account Management, \emph{(6)} Access
+Control, \emph{(7)} Continuous Vulnerability Management, \emph{(8)} SIEM. Los restantes incluyen
+\emph{(14)} Security Awareness \& Training, \emph{(16)} Application Software Security,
+\emph{(17)} Incident Response, \emph{(18)} Penetration Testing.
+\end{slidebox}
+
+\begin{slidebox}
+\textbf{Conclusión (slide):} la gestión de riesgos es \textbf{fundamental} para proteger la
+información; un \textbf{enfoque proactivo} reduce la probabilidad y el impacto de incidentes; y
+la \textbf{revisión y adaptación continua} es esencial para enfrentar nuevos desafíos.
+\end{slidebox}
+
+%=====================================================================
+\section{Políticas de Seguridad}
+%=====================================================================
+
+\begin{anecbox}{La política como ``Biblia'' de seguridad}
+\prof{La política de seguridad es como una especie de Biblia para la seguridad de la empresa.
+Es un documento bastante extenso y denso que se confecciona una sola vez cada cierto tiempo,
+se va revisando y lo aprueba el director de seguridad (CISO).} Es muy genérica y abarcativa;
+por eso luego se \textbf{desglosa} en documentos cada vez más específicos hasta llegar al
+empleado más raso.
+\end{anecbox}
+
+La jerarquía de documentos va de \emph{mayor ownership del management / menor especificidad}
+(arriba) a \emph{menor ownership / mayor especificidad} (abajo). Las dos capas superiores son
+\textbf{mandatorias}; las inferiores, \textbf{discrecionales}.
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize,>=Stealth]
+  % pirámide de 5 niveles
+  \fill[red!55!black]   (0,4)   -- (-1.0,3) -- (1.0,3) -- cycle;
+  \fill[red!70]         (-1.0,3) -- (1.0,3) -- (1.8,2.2) -- (-1.8,2.2) -- cycle;
+  \fill[red!85]         (-1.8,2.2) -- (1.8,2.2) -- (2.6,1.4) -- (-2.6,1.4) -- cycle;
+  \fill[orange!80]      (-2.6,1.4) -- (2.6,1.4) -- (3.4,0.6) -- (-3.4,0.6) -- cycle;
+  \fill[yellow!75!orange](-3.4,0.6) -- (3.4,0.6) -- (4.2,-0.2) -- (-4.2,-0.2) -- cycle;
+  \node[white,font=\bfseries\scriptsize,align=center] at (0,3.45) {POLICY};
+  \node[white,font=\bfseries\scriptsize,align=center] at (0,2.6) {STANDARDS};
+  \node[white,font=\bfseries\scriptsize,align=center] at (0,1.8) {PROCEDURES};
+  \node[white,font=\bfseries\scriptsize,align=center] at (0,1.0) {GUIDELINES};
+  \node[black,font=\bfseries\scriptsize,align=center] at (0,0.2) {BASELINES};
+  % flechas laterales
+  \draw[<->,itbaCyanDark,line width=1pt] (-4.8,-0.2) -- (-4.8,4)
+       node[midway,left,align=center,rotate=90,yshift=8pt]{\scriptsize Ownership del management $+$};
+  \draw[<->,itbaCyanDark,line width=1pt] (4.8,-0.2) -- (4.8,4)
+       node[midway,right,align=center,rotate=-90,yshift=8pt]{\scriptsize Especificidad $+$ (hacia abajo)};
+\end{tikzpicture}
+\end{center}
+
+\begin{defbox}{Niveles de la jerarquía de políticas}
+\begin{description}[leftmargin=0pt,labelsep=0.4em,style=nextline,itemsep=2pt]
+  \item[Policy (Política)] \emph{General management statement}. Documento genérico y
+        abarcativo de toda la seguridad de la organización. \textbf{Mandatorio}.
+  \item[Standards (Estándares)] \emph{Specific mandatory controls}. Reglas obligatorias de
+        seguridad que el hardware y el software deben cumplir. \textbf{Mandatorio}. Ej.: un
+        estándar de desarrollo seguro.
+  \item[Procedures (Procedimientos)] \emph{Step-by-step instructions}. Tareas detalladas paso
+        a paso para lograr algún objetivo.
+  \item[Guidelines (Guías / directrices)] \emph{Recommendations / best practices}. Acciones
+        recomendadas para usuarios y personal cuando no puede aplicarse un estándar específico.
+        \textbf{Discrecional}.
+  \item[Baselines] \emph{Uniform ways for safeguard implementation}. Suelen tomar forma de
+        cursos, capacitaciones y concientizaciones. \textbf{Discrecional}.
+\end{description}
+\end{defbox}
+
+\begin{practbox}{Estándares de NIST (aporte de la práctica)}
+La práctica detalla los estándares concretos del \textbf{NIST} (\emph{National Institute of
+Standards and Technology}):
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{NIST 800-53}: \emph{obligatorio} para sistemas de información federales (EE.UU.).
+  \item \textbf{NIST CSF 2.0} (\emph{Cybersecurity Framework}): \emph{voluntario} para las
+        organizaciones, basado en riesgos, más flexible y adaptable. Sus funciones son:
+        \textbf{Gobernar, Identificar, Proteger, Detectar, Responder, Recuperar}. Distingue
+        \emph{Gobernanza} (cómo se gestiona la organización) de \emph{Gobernanza de seguridad}
+        (cómo se gestiona la seguridad vía políticas y procedimientos).
+  \item \textbf{NIST SP 800-207}: define la \textbf{Zero Trust Architecture (ZTA)}, con las
+        ideas \emph{Never Trust, Always Verify, Assume breach}. (Lectura recomendada de la
+        clase.)
+\end{itemize}
+\end{practbox}
+
+%=====================================================================
+\section{Estrategias de seguridad}
+%=====================================================================
+
+Con el tiempo surgieron formas genéricas de \emph{implementar} las políticas de seguridad. Como
+las políticas de empresas similares se parecen mucho entre sí (\prof{la política de Mercado
+Libre debe ser muy parecida a la de OLX o PedidosYa}), aparecieron estrategias reutilizables.
+Hoy se destacan \textbf{dos}: \emph{Defense-in-depth} y \emph{Zero Trust Architecture}.
+
+\subsection{Defense-in-depth (Defensa en profundidad)}
+
+\begin{defbox}{Defense-in-depth}
+Estrategia que aplica \textbf{múltiples capas de defensa} para proteger los activos de la
+organización. Parte de asumir que \textbf{ningún control de seguridad es perfecto} (la seguridad
+nunca está asegurada al 100\%) y busca crear \textbf{redundancia}: cada capa está pensada para
+\emph{contener a la capa que sigue}.
+\end{defbox}
+
+\begin{anecbox}{La cebolla}
+\prof{Esto se piensa como si fuera una cebolla: agarrando capas y metiéndote cada vez más
+adentro hasta llegar a lo más importante. Si falla la capa de arriba, la contiene la de abajo,
+y así.}
+\end{anecbox}
+
+Las \textbf{5 capas} (de afuera hacia el activo crítico):
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize\bfseries]
+  \def\cx{0}\def\cy{0}
+  \fill[purpleZTA!85] (\cx,\cy) circle (3.2);
+  \fill[purpleZTA!65] (\cx,\cy-0.35) circle (2.6);
+  \fill[purpleZTA!45!itbaCyan] (\cx,\cy-0.7) circle (2.0);
+  \fill[itbaCyan!75] (\cx,\cy-1.05) circle (1.4);
+  \fill[itbaCyanDark] (\cx,\cy-1.4) circle (0.8);
+  \node[white] at (\cx,\cy+2.7) {Perimeter};
+  \node[white] at (\cx,\cy+1.65) {Network};
+  \node[white] at (\cx,\cy+0.6) {Host};
+  \node[white] at (\cx,\cy-0.5) {Application};
+  \node[white] at (\cx,\cy-1.4) {Data};
+\end{tikzpicture}
+\end{center}
+
+\begin{defbox}{Las 5 capas de Defense-in-depth}
+\begin{description}[leftmargin=0pt,labelsep=0.4em,style=nextline,itemsep=2pt]
+  \item[Perímetro] Ej.: un \textbf{firewall} que deniega llamadas de Internet y sólo acepta de
+        cierta red o VPN.
+  \item[Red (Network)] \textbf{Segmentación de red}: separar la red corporativa (operaciones)
+        de la red de servidores. Un empleado del call center no debe poder llegar al servidor
+        de ventas.
+  \item[Host] \textbf{``Jardinizar''} (hardening) los hosts: el host tiene un software fijo,
+        inmutable, no modificable —como un contenedor Docker—, optimizado con buenas prácticas.
+  \item[Aplicación] Buen diseño, buenas prácticas, sin vulnerabilidades (todo lo visto en las
+        clases anteriores de la materia).
+  \item[Datos] La capa más interna, lo que más importa. Para llegar, un atacante debe atravesar
+        \emph{todas} las capas anteriores: firewall $\to$ moverse lateralmente entre redes $\to$
+        vulnerar el host jardinizado $\to$ vulnerar la aplicación.
+\end{description}
+\end{defbox}
+
+\paragraph{Soluciones por capa (corte de la slide ``Outside Threat Protection'').}
+La diapositiva muestra, en abanico, qué herramientas pueblan cada capa, atravesadas por las
+funciones \emph{Prevention, Policy Management, Operations, Monitoring \& Response}:
+
+\begin{center}
+\begin{tabular}{@{}>{\bfseries}p{0.22\textwidth}p{0.72\textwidth}@{}}
+\toprule
+Capa & Herramientas (de la slide y comentadas por el profe) \\
+\midrule
+Perímetro & \textbf{Honeypot} (deriva al atacante a una ``red boba'' para entretenerlo),
+            Message Security (anti-virus/anti-malware), Secure DMZs, Perimeter Firewall,
+            Perimeter IDS/IPS. \\
+Red & \textbf{NAC} (Network Access Control: decide si un dispositivo se conecta según IP, MAC,
+       firmware o credenciales), Web Proxy / Content Filtering (ej.\ Fortinet: bloquea Netflix
+       o sitios maliciosos), Enterprise Message Security, \textbf{DLP}. \\
+Host (Endpoint) & Content Security (anti-virus/anti-malware), Host IDS/IPS, Endpoint Security
+       Enforcement, FDCC Compliance, Patch Management. \\
+Aplicación & \textbf{WAF} (Web Application Firewall: como un firewall pero para tráfico
+       HTTP/HTTPS de una app web; filtra o reemplaza tráfico según reglas), Dynamic App
+       Testing, Database Monitoring/Scanning. \\
+Datos & \textbf{IAM} (Identity \& Access Management: autenticación, autorización, gestión de
+       identidad, roles, permisos), PKI, Data Classification, Data Wiping, Data/Drive
+       Encryption, Database Secure Gateway. \\
+Monitoring & SOC/NOC 24x7, CIRT (Incident Reporting/Detection/Response), \textbf{SIEM}, Digital
+       Forensics. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{defbox}{IDS / IPS y DLP}
+\begin{description}[leftmargin=0pt,labelsep=0.4em,style=nextline,itemsep=2pt]
+  \item[IDS / IPS] \emph{Intrusion Detection/Prevention System}. Detectan patrones tipo
+        antivirus (por \textbf{firmas} o \textbf{anomalías}) y deciden si bloquear, alertar o
+        actuar.
+  \item[DLP] \emph{Data Loss Prevention}. \prof{No es que se pierda data dentro de la compañía,
+        sino que no se filtre data hacia afuera.} Escanean para que no se exfiltren datos de
+        tarjeta o personales; si pasa, levantan alertas.
+\end{description}
+\end{defbox}
+
+\subsubsection{Principios de Defense-in-depth}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Diversificación}: usar diversas tecnologías y métodos $\Rightarrow$ una sola
+        vulnerabilidad no atraviesa todo.
+  \item \textbf{Redundancia}: múltiples capas que se superponen para asegurar protección continua.
+  \item \textbf{Segmentación}: dividir la red en segmentos controlados para limitar el acceso no
+        autorizado. \prof{Hay compañías muy avanzadas donde tu aplicación no ve nada: si sólo
+        tiene que hablar con otra aplicación, sólo tiene visibilidad de esa otra.}
+  \item \textbf{Monitoreo}: visibilidad de todas las capas y \textbf{correlación de eventos}
+        para detectar ataques.
+\end{itemize}
+
+\begin{warnbox}{Problemas de Defense-in-depth}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Altos costos}: de tecnología (muchos proveedores distintos, $\geq 5$
+        presupuestos), de capacitación y operación (no hay ``bala de plata'', cada producto es
+        distinto), y de monitoreo (\emph{se recolectan muchos datos pero se les saca poco
+        valor}).
+  \item \textbf{No resuelve eficientemente los ataques internos.} Si alguien ya está adentro
+        (robó credenciales de un empleado), es muy difícil darse cuenta: no todas las
+        herramientas son bidireccionales.
+  \item \textbf{Difícil de implementar con sistemas distribuidos}: data centers híbridos
+        (propios + terceros), múltiples proveedores de nube, empresas \emph{cloud native}. Esta
+        estrategia fue pensada para la época de \emph{data center / on-premise}.
+\end{itemize}
+\end{warnbox}
+
+\begin{anecbox}{El intranet ``de confianza'' que quedó obsoleto}
+Tradicionalmente, dentro del \textbf{intranet} de la empresa se relajaban los controles (menos
+autenticación, sesiones más largas) para no friccionar al empleado. \prof{Eso durante mucho
+tiempo se consideró buena práctica y seguro. Hoy sabemos que estamos mirando otro tipo de
+estrategias.} Eso da pie al Zero Trust.
+\end{anecbox}
+
+\subsection{Zero Trust Architecture (ZTA)}
+
+\begin{defbox}{Zero Trust Architecture (NIST SP 800-207)}
+Modelo de seguridad que asume que las amenazas, \textbf{tanto internas como externas}, están
+presentes en la red \textbf{en todo momento}. \textbf{Objetivo:} proteger la integridad,
+confidencialidad y disponibilidad de los datos y recursos. \textbf{Premisa:} cualquier red
+interna es tan peligrosa como Internet (``Internet es \emph{Bad Lands}, la tierra de nadie'').
+\end{defbox}
+
+\begin{anecbox}{Por qué ninguna red es segura}
+\prof{Si vos fuiste a Starbucks, te fuiste al baño, dejaste la máquina y vino un chabón con un
+pendrive y te instaló un exploit/malware, y venís y te conectás\dots yo no te pido nada, asumo
+que tu computadora está bien y ya estás inyectando algo dentro de la red.} Con el trabajo remoto
+es aún peor: no se sabe quién accede. Por eso se considera que \textbf{toda red interna es tan
+peligrosa como Internet} y se aplican adentro los mismos controles que afuera.
+\end{anecbox}
+
+\begin{defbox}{Los 3 principios básicos de Zero Trust}
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item \textbf{Nunca confíes} (\emph{Never Trust}).
+  \item \textbf{Siempre verifica} (\emph{Always Verify}).
+  \item \textbf{Asume que has sido atacado} (\emph{Assume breach}).
+\end{enumerate}
+\end{defbox}
+
+\begin{anecbox}{Cómo se relaja en la práctica: SSO / federación}
+En teoría \emph{cada} componente debería forzar la verificación, pero pedir 20 logins a 20
+aplicaciones haría que el empleado se queje. En la práctica se relaja con \textbf{federación de
+identidad}: \prof{te federo el login de una sola forma, por ejemplo a través de Active
+Directory, lo hacés una vez; después cada aplicación tiene los logins federados, no te pide un
+login nuevo, pero los controles de seguridad se aplican porque se heredan los permisos y roles
+de esa persona en cada pieza.}
+\end{anecbox}
+
+\subsubsection{Componentes de ZTA (modelo NIST 800-207)}
+
+El núcleo separa un \textbf{Control Plane} (donde vive el \textbf{PDP} = Policy Decision Point,
+formado por el \emph{Policy Engine} y el \emph{Policy Administrator}) de un \textbf{Data Plane}
+(donde está el \textbf{PEP} = Policy Enforcement Point). El sujeto accede a través de un sistema
+considerado \emph{untrusted}; sólo tras pasar el PEP el acceso al recurso es \emph{trusted}.
+
+\begin{center}
+\begin{tikzpicture}[font=\scriptsize,>=Stealth,
+   blk/.style={draw=black!50,fill=slideGray,rounded corners=1pt,minimum height=0.65cm,minimum width=1.9cm,align=center},
+   red/.style={draw=attackRed,fill=attackRed!75,text=white,rounded corners=2pt,minimum height=0.75cm,minimum width=2.0cm,align=center,font=\bfseries\scriptsize}]
+  % columna izquierda (entradas) — arriba
+  \node[blk] (cdm) at (0,3.6) {CDM System};
+  \node[blk] (ic)  at (0,2.7) {Industry\\Compliance};
+  \node[blk] (ti)  at (0,1.8) {Threat\\Intelligence};
+  \node[blk] (al)  at (0,0.9) {Activity Logs};
+  % columna derecha (entradas) — arriba
+  \node[blk] (dap)  at (10,3.6) {Data Access\\Policy};
+  \node[blk] (pki)  at (10,2.7) {PKI};
+  \node[blk] (idm)  at (10,1.8) {ID Management};
+  \node[blk] (siem) at (10,0.9) {SIEM System};
+  % control plane (centro arriba)
+  \node[red] (pe) at (5,3.1) {Policy Engine};
+  \node[red] (pa) at (5,2.0) {Policy\\Administrator};
+  \node[draw=black!40,dashed,fit=(pe)(pa),inner sep=6pt,label=above:{\bfseries Control Plane (PDP)}] (cp) {};
+  % data plane (fila inferior, ancho completo)
+  \node[blk,minimum width=1.5cm] (subj) at (0.4,-0.7) {Subject};
+  \node[blk,minimum width=1.5cm] (sys)  at (2.6,-0.7) {System};
+  \node[red,minimum width=2.4cm] (pep)  at (5.6,-0.7) {Policy\\Enforcement Point};
+  \node[draw=black!50,fill=itbaBlue!30,rounded corners,minimum height=0.7cm,align=center] (er) at (9.0,-0.7) {Enterprise\\Resource};
+  \node[font=\scriptsize\itshape] at (5.6,-1.7) {\textbf{Data Plane}};
+  % flechas de las columnas hacia el centro
+  \foreach \n in {cdm,ic,ti,al}{\draw[->,black!55] (\n.east) -- ++(0.5,0);}
+  \foreach \n in {dap,pki,idm,siem}{\draw[<-,black!55] (\n.west) -- ++(-0.5,0);}
+  % flujo data plane
+  \draw[->,black!55] (subj) -- (sys);
+  \draw[->,black!55] (sys) -- node[above]{Untrusted} (pep);
+  \draw[->,black!55] (pep) -- node[above]{Trusted} (er);
+  % control -> enforcement
+  \draw[->,dashed,black!55] (pa.south) -- (pep.north);
+  \draw[->,dashed,black!55] (pe) -- (pa);
+\end{tikzpicture}
+\end{center}
+
+\begin{defbox}{Componentes que alimentan al motor de políticas}
+\begin{description}[leftmargin=0pt,labelsep=0.4em,style=nextline,itemsep=2pt]
+  \item[CDM — Continuous Diagnostics and Mitigation] Sistema de \emph{diagnóstico y mitigación
+        continuos}. Provee al motor de políticas información sobre el activo que solicita acceso:
+        ¿tiene el antivirus actualizado? ¿los últimos updates de seguridad? Si una regla no se
+        cumple, puede \textbf{desactivar el recurso} (ej.: software en la PC del empleado que no
+        se puede desinstalar y, ante una anomalía, deshabilita la máquina).
+  \item[Industry Compliance] Garantiza que la empresa cumpla los regímenes normativos
+        aplicables: \textbf{HIPAA} (datos médicos), \textbf{Banco Central}, \textbf{SOX}
+        (cotizar en bolsa, transparencia), \textbf{PCI} (datos de tarjeta de crédito).
+  \item[Threat Intelligence] Fuentes de inteligencia sobre amenazas (internas/externas) que
+        informan sobre nuevos ataques y vulnerabilidades (CVEs, hashes de malware, IPs
+        comprometidas, botnets). Ej.\ de la slide: \emph{VirusTotal}, feeds de IoC.
+  \item[Activity Logs] Registros de actividad de la red y el sistema: tráfico, accesos a
+        recursos y eventos que dan una visión (casi) en tiempo real de la postura de seguridad.
+  \item[SIEM — Security Information and Event Management] Recolecta eventos y los
+        \textbf{correlaciona} para su posterior análisis, detectar anomalías y generar alertas.
+  \item[ID Management] Crea, almacena y gestiona las cuentas de usuario y los registros de
+        identidad (nombre, email, certificados, función, privilegios y derechos). \prof{Yo soy
+        Nando Suárez, pero en MELI soy lee.suarez: una persona puede tener varios usuarios.}
+  \item[PKI — Public Key Infrastructure] Genera y registra los certificados emitidos por la
+        empresa a recursos, sujetos, servicios y aplicaciones.
+  \item[Data Access Policy] Características, reglas y políticas sobre el acceso a los recursos.
+        Pueden estar codificadas (vía interfaz de gestión) o generarse dinámicamente por el PE,
+        y son el punto de partida para autorizar el acceso a un recurso.
+\end{description}
+\end{defbox}
+
+\begin{slidebox}
+\textbf{ZTA en el mundo real:} todos los grandes proveedores publican guías de implementación —
+Azure, AWS, RedHat (Linux), Windows Server. La adopción de ZTA está en plena ``oleada''.
+\end{slidebox}
+
+\begin{warnbox}{Cuidado: ZTA mal implementado}
+ZTA parece la panacea, pero \prof{es muy fácil que lo implementemos mal.} Casos típicos:
+implementarlo \emph{de forma deficiente} (mal informados), o implementarlo y \textbf{no
+controlar nada} —``tenemos ZTA'' pero no se monitorea ni se hace seguimiento de cómo evoluciona.
+Por eso son importantes las guías/framework y las \textbf{auditorías}.
+\prof{Si arrancás de cero, casi seguro conviene ir por ZTA, porque es arrancar sin ningún sesgo
+ni \emph{baggage}.} Migrar un Defense-in-depth existente a ZTA es muy difícil.
+\end{warnbox}
+
+%=====================================================================
+\section{Privileged Access Management (PAM)}
+%=====================================================================
+
+\begin{defbox}{Privileged Access Management (PAM)}
+Se utiliza para \textbf{proteger y gestionar el uso de cuentas especiales} de una organización
+que tienen \textbf{acceso privilegiado} a sistemas críticos. Estos accesos son especialmente
+sensibles porque pueden: conceder a los usuarios capacidades amplias, modificar configuraciones
+de seguridad, acceder a datos confidenciales y supervisar otras cuentas de usuario.
+\end{defbox}
+
+\begin{anecbox}{Por qué los atacantes buscan estas cuentas}
+\prof{Estos usuarios son lo que más buscan los atacantes, porque una vez que te haces con uno de
+ellos ya tenés allanado el camino para hacer daño, robar cosas, y tenés menos trabas para
+ejecutar tus acciones.}
+\end{anecbox}
+
+\subsection{Prácticas y herramientas de PAM}
+
+\begin{enumerate}[leftmargin=1.6em,itemsep=3pt]
+  \item \textbf{Inventario de cuentas privilegiadas.} Inventariar todas las cuentas con acceso
+        privilegiado para asegurar \emph{visibilidad y control}; documentarlas y registrarlas.
+  \item \textbf{Principio de privilegio mínimo.} Los usuarios deben tener el mínimo acceso
+        necesario para su trabajo. La cuenta privilegiada \textbf{no es la cuenta de trabajo
+        diario}: es una cuenta separada, que puede transferirse cuando la persona se va o cambia
+        de rol (de ahí que se reutilicen, lo cual tiene un lado malo).
+  \item \textbf{Autenticación multifactor (MFA).} 2, 3 o más factores para garantizar que sólo
+        usuarios autorizados accedan, y \textbf{el no repudio} (nadie puede negar haber actuado:
+        ``vos tenías el TOTP, sólo vos podías avanzar sobre esos factores'').
+  \item \textbf{Registro y monitoreo.} Se registran y monitorean todas las actividades —en un
+        servidor externo, guardando logs de auditoría— para detectar actividad sospechosa y
+        poder \emph{reconstruir lo que pasó}.
+  \item \textbf{Rotación de contraseñas.} Las contraseñas se cambian regular y automáticamente
+        para reducir el riesgo de \emph{compromisos prolongados}. También se hacen
+        \textbf{reválidas}: cuando una cuenta se transfiere se cambia la contraseña, y cada
+        tanto se revalida que la persona deba seguir teniéndola.
+\end{enumerate}
+
+\subsection{Ciclo de vida de PAM (PAM Life cycle)}
+
+\begin{center}
+\begin{tikzpicture}[font=\scriptsize\bfseries,>=Stealth]
+  \def\R{2.6}
+  \foreach \ang/\lbl/\i in {90/Define/1, 30/Discover/2, -30/{Manage \&\\Protect}/3,
+                            -90/Monitor/4, -150/{Detect Abnormal\\Usage}/5, 150/{Respond to\\Incidents}/6}{
+    \node[circle,fill=purpleZTA!85,text=white,minimum size=1.25cm,align=center,font=\tiny\bfseries] (n\i) at (\ang:\R) {\lbl};
+  }
+  \node[circle,draw=practGreen,line width=1.5pt,text=practGreen,minimum size=1.0cm,font=\bfseries] (c) at (0,0) {PAM};
+  % Review & Audit (séptimo, arriba-izq entre Respond y Define)
+  \foreach \a/\b in {1/2,2/3,3/4,4/5,5/6}{\draw[->,line width=1.2pt,practGreen] (n\a) to[bend left=12] (n\b);}
+  \draw[->,line width=1.2pt,practGreen] (n6) to[bend left=12] (n1);
+\end{tikzpicture}
+\end{center}
+
+\noindent El ciclo (según la slide): \textbf{Define $\to$ Discover $\to$ Manage \& Protect $\to$
+Monitor $\to$ Detect Abnormal Usage $\to$ Respond to Incidents $\to$ Review \& Audit} (y vuelve
+a empezar). Resumido por el profe como: \emph{descubrir, manejar y proteger, monitorear,
+detectar usos anormales, respuesta a incidentes, revisar y auditar}.
+
+%=====================================================================
+\section{Prevención de vulnerabilidades: DevSecOps}
+%=====================================================================
+
+Muchas organizaciones \textbf{construyen su propio software} y operan a través de él. A
+diferencia de los productos que se compran (donde el proveedor vela por las vulnerabilidades),
+aquí \emph{nosotros} debemos gestionar y prevenir las vulnerabilidades de nuestro código.
+
+\begin{anecbox}{De DevOps a DevSecOps (la historia que contó el profe)}
+\textbf{Antes (80s/90s/2000s):} el equipo de \emph{desarrollo} programaba y un equipo de
+\emph{operaciones (Ops)} desplegaba y monitoreaba —aislados y con \textbf{objetivos opuestos}:
+desarrollo quería sacar features rápido, operaciones quería no tocar nada para no romper la
+estabilidad. \prof{Se bloqueaba todo, había peleas, enfrentamientos.}%
+\textbf{DevOps:} alguien dice ``estos equipos ahora son uno solo'', con el mismo objetivo: ser
+responsables de todo lo que se despliega y de que funcione. De ahí surgen CI/CD, infraestructura
+como código y las \emph{métricas} (New Relic, Datadog, Grafana). Lema: \prof{\emph{you build it,
+you run it}}%
+\textbf{DevSecOps:} se aplica el mismo principio al \emph{equipo de seguridad}, que también
+estaba aislado y quería ``frenar todo''. La idea: meter la seguridad en \textbf{cada paso} del
+proceso.
+\end{anecbox}
+
+\begin{defbox}{DevSecOps = Development + Security + Operations}
+\textbf{Metodología} que integra la seguridad en \emph{todos} los procesos de desarrollo de
+software y operaciones de TI. La idea central es el \textbf{Shift Left}: meter la seguridad cada
+vez más ``a la izquierda'' del proceso (desde la planificación), porque \textbf{cuanto más
+temprano se detecta un problema, menos costoso es resolverlo}.
+\end{defbox}
+
+\begin{center}
+\begin{tikzpicture}[font=\scriptsize,>=Stealth,
+  fase/.style={signal,signal to=east,draw=black!40,minimum height=0.85cm,minimum width=2.3cm,align=center,font=\bfseries\scriptsize}]
+  \node[fase,fill=red!25]    (f1) {PLAN \&\\DEVELOP};
+  \node[fase,fill=purple!20,right=0.15cm of f1] (f2) {COMMIT\\THE CODE};
+  \node[fase,fill=orange!25,right=0.15cm of f2] (f3) {BUILD \&\\TEST};
+  \node[fase,fill=blue!18,right=0.15cm of f3]   (f4) {GO TO\\PRODUCTION};
+  \node[fase,fill=green!22,right=0.15cm of f4]  (f5) {OPERATE};
+  \draw[->,line width=2.5pt,attackRed] ($(f5.south)+(0,-0.45)$) -- node[below,font=\bfseries,attackRed]{Shift Left} ($(f1.south)+(0,-0.45)$);
+\end{tikzpicture}
+\end{center}
+
+\begin{anecbox}{Security Champions: cómo escalar seguridad en cada equipo}
+El equipo de seguridad puede ser ``10 personas vs.\ 1500 desarrolladores''. ¿Cómo estar en cada
+equipo? Con el programa \textbf{Security Champions}: se delega en una persona de cada equipo el
+rol de ``campeón de seguridad''. No es trivial (hay que capacitar, y el expertise no es el de un
+especialista). \prof{DevSecOps implica que haya gente de seguridad en cada uno de los equipos
+desde el primer momento en que se toma un desarrollo y se planifica.} Muchas empresas dicen tener
+DevSecOps cuando en realidad sólo hacen herramientas que le piden usar a los desarrolladores.
+\end{anecbox}
+
+\subsection{Las 5 fases de DevSecOps}
+
+\begin{description}[leftmargin=0pt,labelsep=0.4em,style=nextline,itemsep=4pt]
+  \item[1. Plan \& Develop (Planeamiento y Desarrollo)]
+    Aplicar todos los principios de seguridad vistos en la materia.
+    \begin{itemize}[leftmargin=1.4em,itemsep=0pt,topsep=2pt]
+      \item \textbf{Threat modeling}: evaluar las amenazas/riesgos de una solución o feature
+            nuevo \emph{antes} de desarrollarlo (nueva superficie de ataque).
+      \item \textbf{IDE security plugins} y uso de asistentes de IA para código seguro.
+      \item \textbf{Pre-commit hooks}: forzar controles \emph{antes} del commit, corriendo
+            localmente (que no se expongan secretos ni vulnerabilidades).
+      \item \textbf{Secure coding standards}, capacitación, \textbf{revisión de PRs} (peer
+            review) y revisión de vulnerabilidades/correcciones.
+    \end{itemize}
+  \item[2. Commit the code (On Commit/PR)]
+    Controles \textbf{automatizados} antes de que el código siga el deployment.
+    \begin{itemize}[leftmargin=1.4em,itemsep=0pt,topsep=2pt]
+      \item \textbf{SAST} (Static Application Security Testing): análisis estático del código
+            (ej.\ SonarQube), que marca \emph{code smells}, malas prácticas y problemas de
+            seguridad.
+      \item \textbf{Security unit \& functional tests}: unit tests específicos de seguridad,
+            con foco en los \textbf{CWE}; probar inyecciones y vulnerabilidades vistas en clase.
+      \item \textbf{Dependency management}: control de vulnerabilidades en las dependencias.
+      \item \textbf{Secure pipelines}: proteger el acceso a recursos confidenciales y claves de
+            seguridad. Los pipelines definen, como antes la \emph{cobertura de testing}, ahora
+            un \emph{nivel de seguridad} del feature.
+    \end{itemize}
+  \item[3. Build \& Test (On Build/Test, ambientes bajos / sandbox)]
+    \begin{itemize}[leftmargin=1.4em,itemsep=0pt,topsep=2pt]
+      \item \textbf{DAST} (Dynamic Application Security Testing): controles dinámicos sobre la
+            app \emph{ejecutándose}, vía sus interfaces (APIs, URL endpoints).
+      \item \textbf{Cloud configuration validation} e \textbf{Infrastructure scanning}: validar
+            el código que crea recursos en la nube (IaC) y controlar la configuración tras
+            correr el IaC.
+      \item \textbf{Security acceptance testing}: evaluación de seguridad de la aplicación como
+            un todo; ejecución de ataques (mini pen-tests automatizados).
+    \end{itemize}
+  \item[4. Go to Production (On Deployment)]
+    \begin{itemize}[leftmargin=1.4em,itemsep=0pt,topsep=2pt]
+      \item \textbf{Security smoke tests} y \textbf{configuration checks} sobre los artefactos
+            consumidos en el despliegue (configuraciones, secretos). Las configuraciones de
+            producción difieren de las de ambientes bajos.
+      \item Evaluación de la app \emph{incluyendo el ambiente de despliegue} (Firewalls, WAF,
+            IPS).
+      \item \textbf{Live site penetration testing} (pen-tests externos) y aparición de los
+            \textbf{Red / Blue Team}.
+    \end{itemize}
+  \item[5. Operate (On Operation)]
+    \begin{itemize}[leftmargin=1.4em,itemsep=0pt,topsep=2pt]
+      \item \textbf{Continuous monitoring} de métricas y logs de seguridad.
+      \item Integración con \textbf{Threat Intelligence}.
+      \item \textbf{Blind Penetration Test}, ejercicios de simulación de incidentes y
+            \textbf{respuesta ante incidentes}.
+      \item \textbf{Blameless postmortems}.
+    \end{itemize}
+\end{description}
+
+\begin{anecbox}{El estado real de la industria}
+\prof{Hoy la gran mayoría de las empresas tiene la seguridad atacando esta última etapa
+(operación): ``ya se desarrolló, ya se testeó, ya está, ahora quiero ver la seguridad''. La idea
+es que la seguridad surja desde el principio. Cuanto más al principio, mejor.}
+\end{anecbox}
+
+\subsection{Testeos de seguridad en el código}
+
+\begin{practbox}{DAST / SAST / SCA (la práctica los agrupa explícitamente)}
+\begin{description}[leftmargin=0pt,labelsep=0.4em,style=nextline,itemsep=2pt]
+  \item[DAST — Dynamic Application Security Testing] Evalúa la seguridad de la app
+        \textbf{mientras se ejecuta}, interactuando como un usuario externo. Identifica
+        vulnerabilidades explotables en la red (validación de entrada, autenticación). Usa las
+        interfaces estándares de la app; se corre en ambientes bajos y \textbf{automatiza
+        pruebas repetibles} (escanear puertos, inputs inválidos, requests que generan errores,
+        clásico \emph{Stack trace} expuesto).
+  \item[SAST — Static Application Security Testing] Evalúa la app \textbf{analizando el código}
+        (estático), sin ejecutarla.
+  \item[SCA — Software Composition Analysis] Analiza las \textbf{dependencias y bibliotecas}
+        usadas para identificar vulnerabilidades de seguridad, problemas de \emph{licencia} y
+        otros riesgos (incluidas dependencias \emph{transitivas}). Debe extenderse a los
+        servicios SaaS consumidos (bases de datos online, versiones de APIs, ambientes cloud).
+\end{description}
+\end{practbox}
+
+\begin{anecbox}{Log4Shell: por qué importa el SCA y el SBOM}
+\prof{A mí me tocó vivir la de Log4Shell.} Vulnerabilidad crítica (2021) que permitía
+\textbf{ejecución remota de código} a través de \emph{Log4j}, una librería de logging usada por
+casi cualquier aplicación Java del planeta. \prof{Salían todas las PoC [\dots] cosas
+impresionantes, y todos salieron a correr a ver qué tenía su aplicación, porque nadie sabía si
+realmente estaba usando Log4j: era una dependencia tan estándar que uno se olvidaba que la
+tenía.} El parche salió rápido, pero \emph{todas} las apps del mundo tuvieron que actualizar y
+desplegar. Moraleja: sin un inventario (SBOM) no sabés si estás afectado.
+\end{anecbox}
+
+\subsection{Inventario de software: SBOM}
+
+\begin{defbox}{SBOM — Software Bill of Materials}
+Inventario \textbf{formal y legible por máquina} de los componentes de software y dependencias,
+con información sobre esos componentes y sus relaciones.
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Debe ser lo \textbf{más completo posible} e indicar explícitamente dónde no se pueden
+        articular las relaciones.
+  \item Incluye software de código abierto y con licencia comercial; puede estar ampliamente
+        disponible o tener acceso restringido para proteger info confidencial.
+  \item Componentes típicos (slide): Libraries, Software Components Name, Author Name, Supplier
+        Name, Licences, Version String, Open Source Components, Dependencies, Compliance
+        Requirements.
+\end{itemize}
+\end{defbox}
+
+\begin{anecbox}{La historia del SBOM}
+Es una idea \emph{vieja} (un inventario formal de componentes). Se dejó de mantener en cierto
+momento, y muchas empresas terminaron \textbf{sin saber qué componentes usaban} (de ahí el
+desastre Log4Shell). Hoy \textbf{resurge} por los incidentes recientes; hay plugins en los IDEs
+que detectan qué usás, si quedó obsoleto o tiene vulnerabilidades.
+\end{anecbox}
+
+%=====================================================================
+\section{Protección de la nube}
+%=====================================================================
+
+Ya se vio el \textbf{modelo de seguridad compartida} de la nube: la \textbf{configuración es
+responsabilidad del cliente}. El uso de \textbf{infraestructura como código (IaC)} permite
+definir la configuración de la nube de forma \textbf{reproducible}.
+
+\begin{lstlisting}[style=hcl,caption={Ejemplo de IaC con Terraform (de la slide)},captionpos=b]
+resource "aws_instance" "example_server" {
+  ami           = "ami-04e914639d0cca79a"
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "JacksBlogExample"
+  }
+}
+\end{lstlisting}
+
+\begin{anecbox}{Configuraciones que quedan expuestas}
+\prof{Hay redes que quedaron expuestas a la nada, a Internet [\dots] estás exponiendo puertos
+que no se están usando o demasiados puertos.} Como IaC ya tiene varios años y está madurando,
+aparecen herramientas que detectan \textbf{patrones inseguros} y los marcan. Estas herramientas
+están pensadas para empresas con \emph{miles y miles de servidores}; no las usa una Pyme.
+\end{anecbox}
+
+\begin{defbox}{Familias de herramientas de protección cloud}
+\begin{description}[leftmargin=0pt,labelsep=0.4em,style=nextline,itemsep=3pt]
+  \item[CSPM — Cloud Security Posture Management] Busca \textbf{problemas de configuración y
+        permisos}. Analiza IaC \emph{antes} de que sea desplegado y revisa la configuración
+        actual para ver que no haya habido cambios. Enfoque más \textbf{estático}. (Analiza
+        Infrastructure-as-Code y la valida.)
+  \item[CWPP — Cloud Workflow/Workload Protection Platform] (en las slides aparece como
+        ``CWSS''). Se focaliza en la \textbf{protección de las aplicaciones corriendo} en la
+        nube: servidores virtuales, contenedores y \emph{serverless} (ej.\ Lambdas). Analiza
+        comportamiento, microsegmentación a nivel de contenedores, threat intelligence.
+        \textbf{Complementa a CSPM} (que es más estático).
+  \item[CIEM — Cloud Infrastructure Entitlement Management] Foco en los \textbf{permisos de los
+        sujetos sobre los recursos} de la nube. Busca \textbf{permisos excesivos}: compara los
+        registros de uso de los accesos contra los permisos otorgados para identificar y remover
+        los no utilizados. Muestra consistencia entre cuentas cloud y permite una visualización
+        efectiva de permisos (útil con múltiples cuentas).
+  \item[CNAPP — Cloud Native Application Protection Platform] La ``sombrilla'' que integra todo
+        lo anterior. Vista simplificada (Gartner): combina \emph{seguridad proactiva}
+        (development artifact scanning) con \emph{reactiva} (runtime visibility/protection),
+        atravesada por DevSecOps y \emph{cloud configuration and compliance}.
+\end{description}
+\end{defbox}
+
+%=====================================================================
+\section{Evaluaciones de seguridad}
+%=====================================================================
+
+\begin{anecbox}{¿Por qué evaluar la seguridad?}
+\prof{Construimos y tratamos de hacer nuestro sistema seguro, tomamos todas las precauciones y
+las mejores prácticas\dots y en algún momento ese sistema va a fallar. No pregunten cuándo, no
+pregunten cómo, pero va a fallar, así hayamos tomado todos los recaudos. ¿Por qué? Porque la
+seguridad no está asegurada.} Van surgiendo nuevos vectores de ataque que uno no contempla; por
+eso hay que estar \textbf{evaluando todo el tiempo}: es un proceso constante y sin pausa.
+\end{anecbox}
+
+\begin{slidebox}
+\textit{``Security doesn't have to last forever; just longer than everything else that might
+notice it's gone.''} \hfill (cita de la slide)
+\end{slidebox}
+
+\subsection{Tipos de evaluaciones de seguridad}
+
+\begin{defbox}{Las 6 evaluaciones de seguridad}
+\begin{description}[leftmargin=0pt,labelsep=0.4em,style=nextline,itemsep=2pt]
+  \item[Evaluación de Vulnerabilidades] Uso de \textbf{herramientas automatizadas} para escanear
+        sistemas y redes en busca de \emph{vulnerabilidades conocidas}. Da un resumen de
+        debilidades explotables.
+  \item[Pruebas de Penetración (PenTest)] Más \textbf{exhaustivas}; realizadas por expertos que
+        intentan \emph{explotar vulnerabilidades de manera controlada}. Ayudan a entender cómo
+        un atacante podría acceder.
+  \item[Evaluación de Riesgos] Identificar, evaluar y priorizar riesgos para los activos de
+        información. Visión integral (la seguridad como una amenaza más del negocio).
+  \item[Auditoría de Seguridad] Revisión \emph{sistemática} de políticas, procedimientos y
+        controles. Interna o externa; busca asegurar el cumplimiento de normativas y estándares.
+  \item[Evaluación de Cumplimiento] Verifica que la organización cumpla regulaciones y
+        estándares aplicables: \textbf{GDPR, HIPAA, PCI-DSS}. Obligatoria para ciertas
+        regulaciones.
+  \item[Evaluación de Seguridad Física] A menudo se pasa por alto pero es crucial: control de
+        acceso a instalaciones, cámaras, protección de archivos físicos y equipos.
+  \item[Evaluación de Seguridad de Aplicaciones] Vulnerabilidades en software y apps web:
+        revisiones de código, pruebas de seguridad y análisis de arquitectura.
+\end{description}
+\end{defbox}
+
+\subsection{Penetration Test (PenTest)}
+
+\begin{defbox}{Objetivo del PenTest}
+Agarrar el \textbf{sistema funcionando} y probarlo integralmente para \textbf{identificar
+vulnerabilidades} que permitan que el sistema pase de un \textbf{estado seguro a uno inseguro}.
+\prof{Muchas veces el diseño es bueno y seguro, pero si le pasás ciertos inputs o ante cierto
+comportamiento, deja de ser seguro.}
+\end{defbox}
+
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Se realizan con un \textbf{alcance definido}, en \textbf{tiempo y sistemas evaluados}
+        (podrían extenderse indefinidamente).
+  \item Pueden hacerse \textbf{metódicamente}, como control recurrente para verificar que los
+        controles definidos siguen en su lugar.
+  \item Pueden ejecutarlos un \textbf{grupo de expertos} (internos o un proveedor contratado),
+        para identificar problemas no detectados antes.
+\end{itemize}
+
+\subsubsection{Tipos de PenTest según visibilidad del evaluador}
+
+\begin{center}
+\begin{tabular}{@{}>{\bfseries}p{0.18\textwidth}p{0.76\textwidth}@{}}
+\toprule
+Tipo & Descripción \\
+\midrule
+Black Box & El evaluador \emph{no tiene conocimiento previo} del sistema (a lo sumo el dominio o
+            IP). Simula un atacante externo sin info interna. También llamado \textbf{Blind Test}. \\
+White Box & El evaluador tiene \emph{acceso completo} a la info interna: código fuente, diagramas
+            de red, credenciales. Evaluación exhaustiva de vulnerabilidades internas. \\
+Gray Box & Enfoque \emph{intermedio}: algún conocimiento, sin acceso completo. Simula un usuario
+           con acceso limitado (empleado con privilegios restringidos). \\
+Double Blind & Es un ataque Black Box donde \emph{el atacado tampoco está al tanto}. Evalúa
+               adicionalmente las capacidades de \textbf{monitoreo y respuesta}. Es lo más
+               parecido a la realidad. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{anecbox}{¿Por qué Black Box si White Box parece más eficiente?}
+Pregunta de un alumno. Respuesta del profe: \prof{El Black Box te da descubrir vectores que vos,
+estando sesgado con toda la información, no verías. Estar afuera con la presión de ``tengo que
+lograr entrar'' te da un montón de creatividad; con toda la info te metés en la piel del
+desarrollador y te terminás encerrando en esa caja sin poder salir.} Además, la razón más clara
+para Black Box es que \textbf{no querés compartir} info sensible (red, credenciales, código
+fuente) al proveedor, muchas veces por motivos \emph{legales}. \prof{Generalmente se suelen hacer
+de los dos tipos.}
+\end{anecbox}
+
+\begin{anecbox}{Double Blind y Chaos Monkey}
+El \emph{Double Blind} se parece a la metodología \textbf{Chaos Monkey}: ir rompiendo a propósito
+aplicaciones dentro de la infraestructura (interrupciones de servicio) \emph{sin avisar} y ver
+cómo reacciona el equipo. Si está bien focalizado y controlado, genera aprendizaje sin bajar la
+operación.
+\end{anecbox}
+
+\subsubsection{Tipos de PenTest según el sistema evaluado}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Test de Red Externa}: sistemas y servicios expuestos a Internet (atacantes
+        externos).
+  \item \textbf{Test de Red Interna}: red interna; simula un ataque desde dentro (empleado
+        descontento o malware en una workstation).
+  \item \textbf{Test de redes inalámbricas}: NFC, Bluetooth, Wireless, entre otras.
+  \item \textbf{Test de Aplicaciones Web}: inyecciones SQL, XSS, etc.
+  \item \textbf{Test de Ingeniería Social}: susceptibilidad de los empleados a ser engañados
+        (phishing, smishing, campañas con supuestos regalos).
+\end{itemize}
+
+\subsubsection{Etapas de un PenTest (6 pasos)}
+
+\begin{center}
+\begin{tikzpicture}[font=\scriptsize\bfseries,>=Stealth]
+  \def\R{2.7}
+  \foreach \ang/\lbl/\i in {90/{1. Preparación}/1, 30/{2. Construir\\plan ataque}/2,
+                            -30/{3. Seleccionar\\equipo}/3, -90/{4. Tipo de\\datos a robar}/4,
+                            -150/{5. Ejecutar\\el test}/5, 150/{6. Integrar\\resultados}/6}{
+    \node[circle,fill=itbaCyan!85,text=black,minimum size=1.35cm,align=center,font=\tiny\bfseries] (n\i) at (\ang:\R) {\lbl};
+  }
+  \node[align=center,font=\bfseries,itbaCyanDark] at (0,0) {The 6 steps\\of penetration\\testing};
+  \foreach \a/\b in {1/2,2/3,3/4,4/5,5/6}{\draw[->,line width=1.2pt,itbaCyanDark] (n\a) to[bend left=12] (n\b);}
+  \draw[->,line width=1.2pt,itbaCyanDark] (n6) to[bend left=12] (n1);
+\end{tikzpicture}
+\end{center}
+
+\begin{enumerate}[leftmargin=1.6em,itemsep=2pt]
+  \item \textbf{Preparación.} Identificar el objetivo a evaluar, el alcance y \textbf{acordar el
+        nivel de riesgo} que la organización desea correr (ej.: un ataque de fuerza bruta podría
+        dejar cuentas bloqueadas y afectar sistemas). Entender legalidades y propósito.
+  \item \textbf{Armado del plan de ataque.} Definir herramientas a utilizar y la ubicación
+        lógica y física desde donde se lanzará.
+  \item \textbf{Identificar el equipo de trabajo.} Expertos en distintas tecnologías y
+        generalistas con conocimiento amplio.
+  \item \textbf{Definir el objetivo a alcanzar.} Estos ataques son muy enfocados; muchas veces
+        \emph{no aportan} info sobre la efectividad del sistema como un todo si no logran el
+        objetivo. \prof{Es mejor no tener éxito, porque eso implica que no hay que hacer cambios.}
+  \item \textbf{Ejecutar el ataque.} Bajo el tiempo y alcance definidos. Termina al lograr el
+        objetivo o al vencerse el tiempo.
+  \item \textbf{Integrar los hallazgos} y reiniciar el ciclo, \emph{pivoteando} y escalando con
+        lo encontrado. Ejemplo del profe: \emph{(1)} ingeniería social $\to$ \emph{(2)} ataque
+        de phishing $\to$ \emph{(3)} con las credenciales se accede al repositorio de archivos y
+        se extraen documentos $\to$ con esos documentos se prepara el siguiente ataque.
+\end{enumerate}
+
+\subsection{Red / Blue / Purple Team}
+
+Son divisiones dentro del equipo de seguridad de la organización.
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize]
+  \begin{scope}
+    \clip (-0.7,0) circle (2.1);
+    \fill[attackRed!75] (-2.0,0) circle (2.1);
+    \fill[purpleZTA!80] (0.7,0) circle (2.1);
+  \end{scope}
+  \fill[attackRed!75] (-2.0,0) circle (2.1);
+  \fill[blue!65!black] (2.0,0) circle (2.1);
+  \begin{scope}
+    \clip (-2.0,0) circle (2.1);
+    \fill[purpleZTA!85] (2.0,0) circle (2.1);
+  \end{scope}
+  \node[white,font=\bfseries,align=center] at (-2.5,0.4) {RED TEAM\\\scriptsize OFFENSE};
+  \node[white,font=\bfseries,align=center] at (2.5,0.4) {BLUE TEAM\\\scriptsize DEFENSE};
+  \node[white,font=\bfseries,align=center] at (0,0.4) {PURPLE\\TEAM};
+  \node[white,font=\scriptsize,align=center] at (-2.5,-0.6) {Vuln.\ Assessments\\Pen Tests\\Social Eng.};
+  \node[white,font=\scriptsize,align=center] at (2.5,-0.6) {Implem.\ Controls\\Monitoring\\Incident Resp.};
+  \node[white,font=\scriptsize,align=center] at (0,-0.5) {Common\\goal};
+\end{tikzpicture}
+\end{center}
+
+\begin{defbox}{Red / Blue / Purple Team}
+\begin{description}[leftmargin=0pt,labelsep=0.4em,style=nextline,itemsep=2pt]
+  \item[Red Team (ofensivo)] Piensa y actúa como un \textbf{atacante malintencionado}, usando
+        técnicas de hacking para comprometer sistemas, redes y aplicaciones \emph{de forma
+        ética y controlada}. Ejecuta pen-tests, ingeniería social y assessments de
+        vulnerabilidades, para probar la efectividad de las medidas y mejorar la detección y
+        respuesta.
+  \item[Blue Team (defensivo)] Implementa y mantiene medidas de seguridad (firewalls, IDS,
+        gestión de parches y configuraciones), \textbf{monitorea} en busca de actividad
+        sospechosa y \textbf{responde} a intentos de intrusión. Objetivo: proteger los activos y
+        mitigar riesgos de ciberataques.
+  \item[Purple Team (colaborativo)] Enfoque que \textbf{combina} los esfuerzos del Red y el Blue
+        Team para mejorar la postura de seguridad. En lugar de trabajar aislados, fomenta la
+        comunicación y colaboración entre ofensiva y defensiva. \prof{Muchas veces surge de la
+        pelea entre ambos teams.}
+  \end{description}
+\end{defbox}
+
+\subsection{Breach and Attack Simulation (BAS)}
+
+\begin{defbox}{Breach and Attack Simulation (BAS)}
+Categoría de herramientas y técnicas para \textbf{evaluar la efectividad de las defensas} de una
+organización contra posibles ataques. Simulan las \textbf{tácticas, técnicas y procedimientos
+(TTP)} que un atacante real podría emplear.
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Objetivo: identificar vulnerabilidades y brechas \emph{antes} de que las exploten
+        atacantes reales, y medir la \textbf{capacidad de la organización para identificar y
+        reaccionar} ante ataques.
+  \item Se evalúan las \emph{mismas herramientas} que protegen la organización y los sistemas de
+        monitoreo y alertas; identifican cambios de configuración o procesos que dejen de actuar
+        como se espera.
+  \item Se ejecutan de \textbf{forma recurrente}, probando en distintos puntos la capacidad de
+        detección, mitigación y respuesta.
+\end{itemize}
+\end{defbox}
+
+\begin{anecbox}{``War games'': baratos pero valiosos}
+El profe lo asocia a los \emph{juegos de guerra}: se simula un escenario desfavorable puntual,
+p.\ ej.\ \prof{¿qué pasa si un atacante obtiene acceso a una ruta/credencial de admin del cloud?
+Tiene la ruta, puede borrar infraestructura, crear nueva, hacer lo que quiera.} Se analiza qué
+tácticas y técnicas usar para defenderse y qué equipos se involucran. \prof{Son baratos entre
+comillas: solamente juntar a la gente involucrada y proponer el escenario.} A veces se prueba
+incluso en un ambiente controlado.
+\end{anecbox}
+
+%=====================================================================
+\section*{Resumen visual: el panorama de la clase}
+\addcontentsline{toc}{section}{Resumen visual}
+%=====================================================================
+
+\begin{center}
+\begin{tikzpicture}[font=\scriptsize,>=Stealth,
+   raiz/.style={rectangle,rounded corners,fill=itbaCyanDark,text=white,font=\bfseries\small,minimum height=0.8cm,align=center},
+   rama/.style={rectangle,rounded corners,draw=itbaCyanDark,fill=itbaBlue!30,align=center,minimum height=0.6cm,text width=2.7cm}]
+  \node[raiz] (r) {Seguridad en la empresa};
+  \node[rama,above left=0.7cm and 1.8cm of r] (gov) {Gobernanza};
+  \node[rama,left=2.2cm of r] (risk) {Gestión de riesgos\\(Identify/Assess/\\Mitigate/Monitor)};
+  \node[rama,below left=0.7cm and 1.8cm of r] (pol) {Políticas\\(Policy$\to$Baselines)};
+  \node[rama,above right=0.7cm and 1.8cm of r] (estr) {Estrategias\\(Defense-in-depth\\/ Zero Trust)};
+  \node[rama,right=2.2cm of r] (pam) {PAM + DevSecOps\\(IAM, Shift Left)};
+  \node[rama,below right=0.7cm and 1.8cm of r] (eval) {Evaluaciones\\(PenTest, Red/Blue,\\BAS)};
+  \foreach \n in {gov,risk,pol,estr,pam,eval}{\draw[->,itbaCyanDark,line width=1pt] (r) -- (\n);}
+\end{tikzpicture}
+\end{center}
+
+%=====================================================================
+\section*{Lectura recomendada}
+\addcontentsline{toc}{section}{Lectura recomendada}
+%=====================================================================
+\begin{center}
+\begin{tcolorbox}[enhanced,colback=itbaBlue!20,colframe=itbaCyanDark,boxrule=1pt,
+  arc=3pt,width=0.85\textwidth,halign=center]
+\large\textbf{NIST SP 800-207 — Zero Trust Architecture}\\[4pt]
+Capítulos 2 y 3\\[2pt]
+\url{https://csrc.nist.gov/pubs/sp/800/207/final}
+\end{tcolorbox}
+\end{center}
+\noindent\textbf{Nota de alcance.} El profe aclaró que \emph{esta clase no está en Bishop}: el
+libro tiene material relacionado, pero esta clase está enfocada en el panorama profesional
+contemporáneo y se apoya en el estándar \textbf{NIST 800-207}. El detalle del \emph{Penetration
+Testing} (metodología paso a paso) corresponde además a la clase aparte de \textbf{Pentesting
+(Clase 10b)}.
+
+%---------------------------------------------------------------------
+\vfill
+\begin{center}\small\itshape\color{black!60}
+Apunte integral de la Clase 10 — Seguridad en la empresa · Criptografía y Seguridad, ITBA.\\
+Síntesis de teoría (transcripciones + diapositivas) y práctica.
+\end{center}
+
+\end{document}

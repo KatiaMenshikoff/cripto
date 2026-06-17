@@ -1,0 +1,1208 @@
+% !TEX program = pdflatex
+%=====================================================================
+%  Criptografía y Seguridad - ITBA
+%  Clase 11 — Protección de datos
+%  Apunte integral basado en la teoría (transcript + diapositivas)
+%=====================================================================
+\documentclass[11pt,a4paper]{article}
+
+%---------------------------------------------------------------------
+%  Paquetes
+%---------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla,es-noshorthands]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{geometry}
+\geometry{a4paper,margin=2.4cm,headheight=22pt}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{caption}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,shapes.misc,shapes.symbols,arrows.meta,positioning,calc,
+                fit,backgrounds,decorations.pathmorphing,shadows.blur,chains}
+
+%---------------------------------------------------------------------
+%  Paleta de color (inspirada en las diapositivas de la cátedra)
+%---------------------------------------------------------------------
+\definecolor{itbaCyan}{HTML}{6EC6D9}
+\definecolor{itbaCyanDark}{HTML}{2E8B9E}
+\definecolor{itbaBlue}{HTML}{AEDCEA}
+\definecolor{boxBlue}{HTML}{BBD4F0}
+\definecolor{slideGray}{HTML}{ECECEC}
+\definecolor{practGreen}{HTML}{4F8A3D}
+\definecolor{practGreenL}{HTML}{E2EFD9}
+\definecolor{attackRed}{HTML}{C0392B}
+\definecolor{codeBg}{HTML}{F5F5F5}
+% Colores auxiliares para los estados del dato (idénticos al diagrama de la slide)
+\definecolor{stateRest}{HTML}{F4B6B0}   % rosa  - at rest
+\definecolor{stateMotion}{HTML}{F4CE5E} % amarillo - in motion
+\definecolor{stateUse}{HTML}{CBC6E6}    % lila  - in use
+
+%---------------------------------------------------------------------
+%  Hipervínculos
+%---------------------------------------------------------------------
+\hypersetup{
+  colorlinks=true,
+  linkcolor=itbaCyanDark,
+  urlcolor=itbaCyanDark,
+  citecolor=itbaCyanDark,
+  pdftitle={Clase 11 - Proteccion de datos},
+  pdfauthor={Criptografia y Seguridad - ITBA}
+}
+
+%---------------------------------------------------------------------
+%  Encabezados y pies
+%---------------------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\textsc{Criptografía y Seguridad — ITBA}}
+\rhead{\small Clase 11 · Protección de datos}
+\cfoot{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{itbaCyanDark}\leaders\hrule height \headrulewidth\hfill}}
+
+%---------------------------------------------------------------------
+%  Títulos de sección con barra de color (estilo diapositiva)
+%---------------------------------------------------------------------
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{itbaCyanDark}}
+  {\thesection}{0.6em}{}
+  [\vspace{-0.4em}{\color{itbaCyan}\titlerule[2pt]}]
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{itbaCyanDark}}
+  {\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{black}}
+  {\thesubsubsection}{0.6em}{}
+
+%---------------------------------------------------------------------
+%  Cajas reutilizables
+%---------------------------------------------------------------------
+% Caja "diapositiva" (recuadro gris de las slides)
+\newtcolorbox{slidebox}[1][]{
+  enhanced, colback=slideGray, colframe=black!55, boxrule=0.5pt,
+  arc=1pt, left=6pt,right=6pt,top=4pt,bottom=4pt, #1}
+
+% Caja de definición
+\newtcolorbox{defbox}[1]{
+  enhanced, breakable, colback=itbaBlue!25, colframe=itbaCyanDark,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+% Caja de nota / aclaración del profe (verde)
+\newtcolorbox{notebox}[1]{
+  enhanced, breakable, colback=practGreenL, colframe=practGreen,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+% Caja de atención / ataque / error
+\newtcolorbox{warnbox}[1]{
+  enhanced, breakable, colback=attackRed!8, colframe=attackRed,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+% Caja "recuadro rojo" de las diapositivas (frase destacada en rojo)
+\newtcolorbox{redslide}{
+  enhanced, colback=attackRed!85, colframe=attackRed!85, boxrule=0pt,
+  arc=2pt, halign=center, coltext=white, fontupper=\large\bfseries,
+  left=8pt,right=8pt,top=8pt,bottom=8pt}
+
+%---------------------------------------------------------------------
+%  Estilo de código
+%---------------------------------------------------------------------
+\lstdefinestyle{json}{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{codeBg},
+  keywordstyle=\color{itbaCyanDark}\bfseries,
+  commentstyle=\color{practGreen}\itshape,
+  stringstyle=\color{black},
+  breaklines=true, frame=single, rulecolor=\color{black!30},
+  showstringspaces=false, columns=fullflexible, tabsize=2,
+  xleftmargin=10pt, framexleftmargin=8pt}
+
+%---------------------------------------------------------------------
+%  Cita textual del profe
+%---------------------------------------------------------------------
+\newcommand{\prof}[1]{%
+  \medskip\noindent\hspace*{1em}\textit{``#1''}\\[-1pt]%
+  \hspace*{1em}{\footnotesize\textcolor{black!55}{--- Prof.\ Leandro Suárez (clase teórica)}}\medskip}
+
+%=====================================================================
+\begin{document}
+%=====================================================================
+
+%---------------------------------------------------------------------
+%  Portada
+%---------------------------------------------------------------------
+\begin{titlepage}
+\centering
+\vspace*{1.0cm}
+
+\begin{tikzpicture}
+  \node[rounded corners=2pt, fill=itbaCyan, text=black, inner sep=14pt,
+        minimum width=0.8\textwidth, align=center] (t)
+        {\Huge\bfseries Criptografía y Seguridad};
+\end{tikzpicture}
+
+\vspace{0.6cm}
+{\LARGE Seguridad en la empresa}\\[0.25cm]
+{\Huge\bfseries\color{itbaCyanDark} Protección de datos}
+
+\vspace{0.8cm}
+
+% Ilustración: bóveda / caja fuerte (recreación del icono de portada)
+\begin{tikzpicture}[scale=1.0]
+  \fill[black!12] (-3.2,-2.4) rectangle (3.2,2.8);
+  \draw[line width=2pt, black!55] (-3.2,-2.4) rectangle (3.2,2.8);
+  \fill[itbaCyanDark!75] (-2.4,-2.0) rectangle (2.4,2.4);
+  \draw[line width=3pt, black!70] (-2.4,-2.0) rectangle (2.4,2.4);
+  \draw[line width=1.2pt, itbaCyan] (-2.0,-1.6) rectangle (2.0,2.0);
+  \draw[line width=2pt, black!70] (0,-2.0) -- (0,2.4);
+  \foreach \a in {0,45,...,315}{
+    \draw[line width=2pt, black!70] (-1.1,0.2) -- ++(\a:0.6);
+  }
+  \draw[line width=2.5pt, black!70] (-1.1,0.2) circle (0.42);
+  \fill[itbaCyan] (-1.1,0.2) circle (0.16);
+  \draw[line width=2.5pt, black!70] (1.1,0.2) circle (0.42);
+  \fill[itbaCyan] (1.1,0.2) circle (0.16);
+  \foreach \y in {-1.2,-0.4,0.8,1.6}{
+     \fill[black!70] (-2.2,\y) circle (0.07);
+     \fill[black!70] (2.2,\y) circle (0.07);
+  }
+\end{tikzpicture}
+
+\vfill
+{\large Apunte integral — Teoría}\\[0.2cm]
+{\normalsize Clase 11 \quad·\quad Última clase de la materia}\\[0.4cm]
+{\small Instituto Tecnológico de Buenos Aires (ITBA)}
+
+\vspace{0.6cm}
+{\footnotesize\itshape Documento elaborado a partir de la transcripción de la clase
+teórica (Prof.\ Leandro Suárez) y de las diapositivas oficiales. No se agregó contenido
+externo al material de clase.}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+%=====================================================================
+\section{Introducción: el problema}
+%=====================================================================
+
+Esta es la \textbf{última clase de la materia} y conecta directamente con la anterior
+(\emph{Seguridad en la empresa}). El tema se mira desde la perspectiva de un
+\textbf{CISO} (\emph{Chief Information Security Officer}): el director de seguridad de la
+organización, la persona encargada de velar por la seguridad de la empresa y que,
+generalmente, tiene \textbf{implicancias legales} si se produjera un incidente de
+seguridad severo con consecuencias jurídicas.
+
+\prof{Acá es donde pasamos a aplicar, digamos, para la protección de datos se pasa a aplicar
+todos los principios que ya vimos en pos de proteger la CIA: la confidencialidad, integridad
+y disponibilidad de los datos.}
+
+\subsection{El escenario que motiva todo}
+
+\begin{slidebox}
+En una empresa se define una \textbf{política de protección de datos personales} que dice:
+\emph{«Un empleado no puede acceder a ver los sueldos de otros empleados.»}
+\end{slidebox}
+
+El profesor plantea el problema como disparador: \emph{¿dónde habría que poner controles
+para proteger esa información?} La respuesta no es trivial, porque el mismo dato (la planilla
+de sueldos) se replica y viaja por muchísimos lugares. La diapositiva muestra un diagrama
+de flujo del dato que conviene tener presente durante toda la clase: un dato «sensible» no
+vive en un solo lugar.
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  store/.style={cylinder,shape border rotate=90,draw,minimum width=1.5cm,minimum height=0.9cm,align=center},
+  app/.style={rounded corners=6pt,draw,minimum width=1.6cm,minimum height=1.0cm,align=center},
+  doc/.style={draw,signal,signal to=south,minimum width=1.5cm,minimum height=0.9cm,align=center,inner sep=2pt},
+  cl/.style={cloud,draw,aspect=2,minimum width=1.7cm,minimum height=1.1cm,align=center},
+  >=Stealth, node distance=0.9cm and 0.95cm]
+
+  \node[store] (rh) {RR.HH.};
+  \node[app, right=of rh] (app) {RR.HH.\\APP};
+  \node[cl, below right=0.9cm and 0.2cm of app] (drive) {Drive};
+  \node[app, right=1.7cm of app] (xls) {Excel};
+  \node[app, right=of xls] (mail) {Email};
+  \node[cl, right=of mail] (nube) {};
+
+  \node[doc, below=0.5cm of rh] (b1) {BACKUP};
+  \node[doc, below=0.45cm of drive] (b2) {BACKUP};
+
+  \draw[->] (rh) -- (app);
+  \draw[->] (rh) -- (b1);
+  \draw[->] (app) |- (drive);
+  \draw[->] (drive) -- (b2);
+  \draw[->] (app.east) -- ([yshift=4pt]xls.west);
+  \draw[->] (drive.east) -| (xls.south);
+  \draw[->] (xls) -- (mail);
+  \draw[->] (mail) -- (nube);
+\end{tikzpicture}
+\end{center}
+{\centering\footnotesize El mismo dato sensible se copia en una base, una app, backups,
+una hoja de cálculo, un Drive, un mail y la nube.\par}
+
+\begin{warnbox}{Idea central de la clase}
+Los \textbf{controles de acceso} de un sistema son parte de la solución, \textbf{pero no
+son suficientes}. El dato escapa del sistema (se exporta a un Excel, se sube a Drive, se
+manda por mail, se respalda en backups), y en cada uno de esos lugares hay que protegerlo.
+Por eso se necesita un enfoque integral: el \emph{ciclo de protección de la información}.
+\end{warnbox}
+
+%=====================================================================
+\section{El ciclo de protección de la información}
+%=====================================================================
+
+La materia vuelve sobre la idea de los \textbf{ciclos} en seguridad. La protección de la
+información se organiza como un ciclo de seis etapas que se repite indefinidamente.
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\small,
+  stage/.style={draw, rounded corners=2pt, fill=white, minimum width=2.6cm,
+                minimum height=1.0cm, align=center, line width=0.8pt},
+  >=Stealth]
+
+  \def\R{3.5cm}
+  \node[stage] (gov)  at (90:\R)  {Gobierno\\\footnotesize(Govern)};
+  \node[stage] (dis)  at (30:\R)  {Descubrimiento\\\footnotesize(Discover)};
+  \node[stage] (pro)  at (-30:\R) {Protección\\\footnotesize(Protect)};
+  \node[stage] (com)  at (-90:\R) {Cumplimiento\\\footnotesize(Comply)};
+  \node[stage] (det)  at (-150:\R){Detección\\\footnotesize(Detect)};
+  \node[stage] (res)  at (150:\R) {Respuesta\\\footnotesize(Respond)};
+
+  \draw[->,line width=1pt] (gov) to[bend left=15] (dis);
+  \draw[->,line width=1pt] (dis) to[bend left=15] (pro);
+  \draw[->,line width=1pt] (pro) to[bend left=15] (com);
+  \draw[->,line width=1pt] (com) to[bend left=15] (det);
+  \draw[->,line width=1pt] (det) to[bend left=15] (res);
+  \draw[->,line width=1pt] (res) to[bend left=15] (gov);
+\end{tikzpicture}
+\end{center}
+
+\begin{enumerate}[leftmargin=1.6em,itemsep=3pt]
+  \item \textbf{Gobierno (Govern):} el punto de \emph{gestión}, donde se toman las
+        decisiones y se define cómo se ejecuta todo. (Es lo visto en la clase anterior,
+        \emph{Seguridad en la empresa}.)
+  \item \textbf{Descubrimiento (Discover):} ver qué datos hay en el universo de datos de
+        la organización.
+  \item \textbf{Protección (Protect):} definir cómo y qué datos se protegen (no todos los
+        datos son sensibles).
+  \item \textbf{Cumplimiento (Comply):} asegurar que esa protección se cumple efectivamente.
+  \item \textbf{Detección (Detect):} ser capaces de detectar filtraciones o brechas de la
+        información.
+  \item \textbf{Respuesta (Respond):} responder a esas filtraciones y evitar que se sigan
+        produciendo.
+\end{enumerate}
+
+\noindent Y luego se vuelve a empezar: \prof{Y luego volvemos a empezar. Es un ciclo.}
+
+\noindent El resto del apunte recorre el ciclo etapa por etapa.
+
+%=====================================================================
+\section{Gobierno (Data Governance)}
+%=====================================================================
+
+\begin{defbox}{Data Governance}
+Son \textbf{todas las tareas que se realizan para asegurar que los datos sean seguros,
+estén íntegros, sean confidenciales y estén disponibles} en todo momento que se requiera.
+Incluye:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt,topsep=2pt]
+  \item las medidas que deben tomar las \textbf{personas},
+  \item los \textbf{procesos} que deben seguir,
+  \item la \textbf{tecnología} que los respalda,
+\end{itemize}
+durante todo el \textbf{ciclo de vida de los datos}. También \textbf{define los roles}
+dentro de la organización para el uso de la información.
+\end{defbox}
+
+Como los sistemas, los datos también tienen un ciclo de vida. Hay normativas que obligan a
+que los datos vivan cierta cantidad de tiempo, que se borren o que no se borren; y casos en
+los que se deben eliminar datos por cuestiones legales.
+
+El gobierno de datos establece \textbf{estándares internos} (conocidos como
+\textbf{políticas de datos}) que se aplican a cinco actividades sobre los datos:
+
+\begin{center}
+\begin{tikzpicture}[font=\small,>=Stealth,
+  dgstep/.style={draw,rounded corners=2pt,fill=itbaBlue!30,minimum height=0.9cm,
+               minimum width=2.5cm,align=center}]
+  \node[dgstep] (a) {Recopilación};
+  \node[dgstep,right=0.4cm of a] (b) {Almacenamiento};
+  \node[dgstep,right=0.4cm of b] (c) {Procesamiento};
+  \node[dgstep,below=0.5cm of b] (d) {Retención};
+  \node[dgstep,right=0.4cm of d] (e) {Eliminación};
+\end{tikzpicture}
+\end{center}
+
+\subsection{El ciclo de vida del dato (Data life cycle)}
+
+La diapositiva lo presenta como un ciclo de 5 fases:
+
+\begin{enumerate}[leftmargin=1.8em,itemsep=2pt]
+  \item \textbf{Create \& collect} — recolección de información a través de todos los
+        canales disponibles.
+  \item \textbf{Store \& transmit} — almacenamiento y transmisión de lo recolectado para su
+        procesamiento (a través de sistemas IT, archivado físico y transporte).
+  \item \textbf{Use \& distribute} — procesamiento de la información y distribución interna.
+  \item \textbf{Retain} — retención de la información procesada por posibles usos y
+        requerimientos legales/regulatorios.
+  \item \textbf{Dispose and destroy} — disposición/destrucción de la información una vez que
+        vence el período de retención.
+\end{enumerate}
+
+\begin{notebox}{¿Por qué importa el ciclo de vida?}
+\prof{Tener datos en el fondo es tener información, es tener activos importantes que buscan
+los atacantes muchas veces.} Por eso conviene gestionar cuándo y cuánto viven los datos:
+cuanto más datos sensibles se conservan sin necesidad, mayor es la superficie de ataque.
+\end{notebox}
+
+%=====================================================================
+\section{Regulaciones (externas e internacionales)}
+%=====================================================================
+
+El gobierno de datos está condicionado por regulaciones que la organización debe cumplir.
+
+\subsection{Regulación local: Ley 25.326 (Argentina)}
+
+La \textbf{Ley 25.326 de Protección de Datos Personales} aplica a todo sistema que opera en
+Argentina. La clase resaltó dos artículos:
+
+\begin{slidebox}
+\textbf{Artículo 1º (Objeto).} «La presente ley tiene por objeto la protección integral de
+los datos personales asentados en archivos, registros, bancos de datos, u otros medios
+técnicos de tratamiento de datos, sean éstos públicos, o privados destinados a dar informes,
+para garantizar el derecho al honor y a la intimidad de las personas, así como también el
+acceso a la información que sobre las mismas se registre, de conformidad a lo establecido en
+el artículo 43, párrafo tercero de la Constitución Nacional.»
+
+\smallskip
+\textbf{Artículo 9º (Seguridad de los datos).}
+\emph{1.} «El responsable o usuario del archivo de datos debe adoptar las medidas técnicas y
+organizativas que resulten necesarias para garantizar la seguridad y confidencialidad de los
+datos personales, de modo de evitar su adulteración, pérdida, consulta o tratamiento no
+autorizado, y que permitan detectar desviaciones, intencionales o no, de información, ya sea
+que los riesgos provengan de la acción humana o del medio técnico utilizado.»
+\emph{2.} «Queda prohibido registrar datos personales en archivos, registros o bancos que no
+reúnan condiciones técnicas de integridad y seguridad.»
+\end{slidebox}
+
+\begin{defbox}{¿Qué es un dato personal?}
+Es todo lo que permite \textbf{identificar a una persona} sólo por ese mismo dato. Ejemplos:
+nombre y apellido, dirección de correo, número de documento, dirección del domicilio.
+
+\smallskip
+El nombre es un caso de borde: un nombre muy común (muchos «Leandro Suárez») casi no
+identifica, mientras que uno único (p.\ ej.\ «Lionel Messi») sí. Igualmente, las leyes lo
+consideran dato personal por el caso particular en que sí es identificable.
+\end{defbox}
+
+\begin{notebox}{Lo importante de esta ley (según el profe)}
+La ley \textbf{no especifica una tecnología}: te dice «a grandes rasgos, hacé todo lo posible
+para que estos datos permanezcan íntegros y confidenciales y evitá filtraciones o borrados no
+intencionales». Esto es bueno: al no atarse a una tecnología (la ley es de los años 80),
+\textbf{sigue siendo aplicable hoy}.
+
+\smallskip
+Consecuencia práctica: si tu aplicación guarda datos personales, hay que \textbf{asesorarse
+legalmente}. Y este tipo de leyes suele dar a las personas el derecho a \emph{ver} qué datos
+guarda la organización, \emph{modificarlos} e incluso \emph{pedir su borrado} (el
+«\textbf{derecho al olvido}»). Es algo que se exige en casi todo el mundo (Facebook, Twitter,
+etc., permiten descargar tu historial y borrar tu cuenta).
+\end{notebox}
+
+\subsection{Regulaciones internacionales}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{>{\bfseries}p{2.4cm} p{12.2cm}}
+\toprule
+HIPAA & \emph{Health Insurance Portability and Accountability Act of 1996.} Protección de
+datos relacionados con la salud de las personas (\textbf{PHI / PPI}). Surge de acá la
+\textbf{anonimización} de los datos médicos (ver más abajo). \\
+GDPR & \emph{General Data Protection Regulation.} La más conocida de protección de datos
+personales; de la Unión Europea, aplicada en \textbf{2018}. \\
+PCI-DSS & \emph{Payment Card Industry Data Security Standard.} Regula el uso de información de
+tarjetas de crédito. \textbf{Obligatorio} para cualquier empresa que quiera operar con
+tarjetas. \\
+SOX & \emph{Sarbanes-Oxley Act} (ley federal de EE.UU., 2002). Para empresas que cotizan en
+bolsa / públicas; exige transparencia en sus operaciones. \\
+FFIEC & \emph{Assessment Tool.} Framework (hoy algo en desuso). \\
+FDA & \emph{Cybersecurity.} Consideraciones de ciberseguridad de la \emph{Food and Drug
+Administration} (estudios médicos, alimentos y drogas). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{GDPR y las cookies.} Por esta ley (2018) apareció «de golpe» el tema de los
+banners de cookies: GDPR pide un \textbf{consentimiento explícito} del usuario. Por eso los
+sitios te dejan elegir «solo lo esencial» (lo necesario para que el sitio funcione) y
+rechazar las demás (marketing y similares, que registran tus preferencias/actividad e incluso
+pueden acceder a cookies de terceros). Aplica aunque el sistema esté en Argentina, siempre
+que haya usuarios o infraestructura en la Unión Europea.
+
+\begin{notebox}{PCI-DSS: dos conceptos clave que impuso}
+\textbf{1) Acotar la cantidad de datos a proteger según su criticidad.} PCI definió que los
+datos críticos de una tarjeta son básicamente \textbf{5}: número de tarjeta, nombre del
+titular, vencimiento, código de seguridad (el más crítico) y datos de la banda magnética/chip
+(a veces, un \emph{PIN} que funciona como segundo factor en el POS). Al acotar a esos
+\(\sim\)5 datos, la norma da un \emph{blueprint}: concentrarse en proteger lo realmente
+sensible y no «todo».
+\prof{Una de las cosas más importantes a la hora de proteger datos es acotar la cantidad de
+datos en base a su criticidad.}
+
+\medskip
+\textbf{2) Tokenización.} La tarjeta (sus 5 datos) se guarda «bajo 7 llaves» en una base muy
+protegida y segmentada; el sistema opera con un \textbf{token} que apunta a esos datos. Si se
+filtrara el token, no tiene valor por sí mismo: habría que ir a buscar los datos a la base
+recontra-protegida. Así se desacopla la operación de los datos sensibles.
+\end{notebox}
+
+\begin{notebox}{HIPAA: anonimización}
+Con HIPAA surgió el concepto de \textbf{anonimizar} los datos médicos. La idea: se pueden
+seguir usando los datos para análisis y búsqueda de patrones, pero \emph{sin saber de quién
+es cada dato}. \prof{Yo no sé de quién es este estudio, yo no sé de quién es esta enfermedad.}
+Esto se suele exigir para historias clínicas.
+\end{notebox}
+
+%=====================================================================
+\section{Data Roles (roles sobre los datos)}
+%=====================================================================
+
+Para distribuir la responsabilidad sobre los datos se define una \textbf{jerarquía de roles}.
+A medida que se baja en la jerarquía, el dominio de datos que maneja cada interviniente es
+cada vez más chico.
+
+\begin{center}
+\begin{tikzpicture}[font=\small,>=Stealth,
+  role/.style={draw,rounded corners=2pt,minimum height=0.95cm,align=center,
+               text=white,font=\bfseries},
+  note/.style={align=left,font=\footnotesize,text width=4.4cm}]
+
+  \node[role,fill=attackRed,minimum width=4.0cm] (trustee) {Data Trustee};
+  \node[role,fill=orange!85!black,minimum width=2.2cm,below left=1.0cm and 0.1cm of trustee] (s1) {Data Steward};
+  \node[role,fill=orange!70!yellow,minimum width=2.2cm,below right=1.0cm and 0.1cm of trustee] (s2) {Data Steward};
+  \node[role,fill=orange!60!yellow,minimum width=1.7cm,below=1.0cm of s1] (c1) {Data Custodian};
+  \node[role,fill=orange!75!black,minimum width=1.7cm,below=1.0cm of s2] (c2) {Data Custodian};
+  \node[role,fill=itbaCyanDark,minimum width=5.2cm] (user) at ($(c1)!0.5!(c2) - (0,1.5cm)$) {Data User};
+
+  \draw (trustee) -- (s1);
+  \draw (trustee) -- (s2);
+  \draw (s1) -- (c1);
+  \draw (s2) -- (c2);
+  \draw[<->] (c1) -- (user);
+  \draw[<->] (c2) -- (user);
+\end{tikzpicture}
+\end{center}
+
+\begin{description}[leftmargin=0pt,itemsep=4pt]
+  \item[\textcolor{attackRed}{Data Trustee.}] Posición estratégica alta (nivel \emph{cabinet}),
+        \textbf{responsable legalmente} por los datos. Si pasa algo con esos datos, es el
+        responsable a nivel jurídico.
+  \item[\textcolor{itbaCyanDark}{Data Steward.}] Responsable interno que \textbf{aprueba
+        accesos} a los datos sensibles/restringidos \emph{dentro de su dominio}.
+  \item[\textcolor{itbaCyanDark}{Data Custodian.}] Autorizado por un Steward para
+        \textbf{otorgar (grant) acceso} a los usuarios sobre elementos del dominio del Steward.
+  \item[\textcolor{itbaCyanDark}{Data User.}] El individuo autorizado que efectivamente
+        \textbf{accede a los datos} y hace algo con ellos.
+\end{description}
+
+%=====================================================================
+\section{Descubrimiento (Discovery)}
+%=====================================================================
+
+Identificar y «contar» los datos que se van a proteger. No todo es un activo y no todo dato
+requiere asegurarse, así que primero hay que \textbf{clasificar} y luego decidir.
+
+\subsection{Clasificación de los datos}
+
+La diapositiva la presenta como un ciclo \textbf{PLAN $\to$ DO $\to$ CHECK $\to$ ACT}:
+
+\begin{center}
+\begin{tikzpicture}[font=\small,>=Stealth,
+  phase/.style={draw,circle,fill=practGreen,text=white,font=\bfseries,minimum size=1.0cm},
+  lbl/.style={align=center,font=\footnotesize}]
+
+  \def\R{2.6cm}
+  \node[phase] (p) at (90:\R)  {PLAN};
+  \node[phase] (d) at (0:\R)   {DO};
+  \node[phase] (c) at (-90:\R) {CHECK};
+  \node[phase] (a) at (180:\R) {ACT};
+
+  \node[lbl,above=2pt of p] {Identificar activos · roles · perfiles};
+  \node[lbl,right=2pt of d,text width=3cm] {Educar · desplegar tecnología};
+  \node[lbl,below=2pt of c] {Revisar logs y alertas};
+  \node[lbl,left=2pt of a,text width=2.6cm] {Reclasificar · bloquear/permitir};
+
+  \draw[->,line width=1.2pt,practGreen] (p) to[bend left=20] (d);
+  \draw[->,line width=1.2pt,practGreen] (d) to[bend left=20] (c);
+  \draw[->,line width=1.2pt,practGreen] (c) to[bend left=20] (a);
+  \draw[->,line width=1.2pt,practGreen] (a) to[bend left=20] (p);
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Planificar:} identificar los \emph{activos}, identificar los \emph{roles}
+        sobre esos datos (quién controla cada dominio — los \emph{data roles}) y definir
+        \emph{perfiles de acceso} (algunos no requieren autorización; otros más protegidos).
+  \item \textbf{Ejecutar:} \emph{educar} a todos los involucrados sobre la clasificación de
+        los datos y quién tiene potestad sobre cada uno; \emph{desplegar la tecnología} que
+        permita protegerlos (herramientas, políticas y perfiles de acceso).
+  \item \textbf{Monitorear:} revisar \emph{logs y alertas} para verificar que no se vulnere
+        el acceso a datos que no corresponden.
+  \item \textbf{Reaccionar:} si se detectan desvíos, \emph{reclasificar} y \emph{bloquear o
+        permitir} según corresponda (un dato crítico puede pasar a no crítico y viceversa).
+\end{itemize}
+
+\subsection{El mismo dato en distintos estados}
+
+El mismo dato puede pasar por distintos \textbf{estados}, formatos, medios y tecnologías, en
+distintas ubicaciones (hoy los data centers están distribuidos por el mundo). Las regulaciones
+definen lineamientos para \textbf{cada estado por separado}. Habitualmente se hablaba de dos
+estados (\emph{en reposo} y \emph{en tránsito}), pero hay un tercero importante (\emph{en uso}).
+
+\begin{defbox}{Los tres estados del dato}
+\begin{description}[leftmargin=0pt,itemsep=2pt,topsep=2pt]
+  \item[\textbf{Data at-rest (en reposo).}] El dato está quieto, no se mueve ni se procesa.
+        Ej.: una base de datos, un backup, una hoja de Excel, un objeto en un bucket S3.
+  \item[\textbf{Data in-motion (en movimiento/tránsito).}] El dato se mueve de una ubicación o
+        estado a otro, generalmente por la red (también un pendrive, o cuando una app le pide
+        un dato a otra y el dato sale de la base hacia el programa).
+  \item[\textbf{Data in-use (en uso).}] El dato está siendo procesado/utilizado por una
+        aplicación, un servidor o una persona (transformándolo, calculando algo con él, etc.).
+\end{description}
+\end{defbox}
+
+\noindent Sobre el mismo flujo de datos del problema inicial, cada componente está en alguno de
+los tres estados:
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,>=Stealth, node distance=0.85cm and 0.85cm,
+  store/.style={cylinder,shape border rotate=90,draw,fill=stateUse,minimum width=1.4cm,minimum height=0.85cm,align=center},
+  app/.style={rounded corners=6pt,draw,fill=stateUse,minimum width=1.5cm,minimum height=0.95cm,align=center},
+  doc/.style={draw,signal,signal to=south,fill=stateRest,minimum width=1.4cm,minimum height=0.85cm,align=center,inner sep=2pt},
+  cl/.style={cloud,draw,aspect=2,minimum width=1.6cm,minimum height=1.0cm,align=center},
+  arr/.style={->,line width=2.2pt,stateMotion}]
+
+  \node[store] (rh) {RR.HH.};
+  \node[app, right=of rh] (app) {RR.HH.\\APP};
+  \node[cl, fill=stateUse, below right=0.85cm and 0.1cm of app] (drive) {Drive};
+  \node[app, right=1.6cm of app] (xls) {Excel};
+  \node[app, right=of xls] (mail) {Email};
+  \node[cl, fill=white, right=of mail] (nube) {};
+
+  \node[doc, below=0.5cm of rh] (b1) {BACKUP};
+  \node[doc, below=0.4cm of drive] (b2) {BACKUP};
+
+  \draw[arr] (rh) -- (app);
+  \draw[arr] (rh) -- (b1);
+  \draw[arr] (app) |- (drive);
+  \draw[arr] (drive) -- (b2);
+  \draw[arr] (app.east) -- ([yshift=4pt]xls.west);
+  \draw[arr] (drive.east) -| (xls.south);
+  \draw[arr] (xls) -- (mail);
+  \draw[arr] (mail) -- (nube);
+
+  % leyenda
+  \node[draw,fill=stateRest,rounded corners=2pt,below=1.3cm of rh,anchor=west,xshift=-0.4cm] (lr)
+       {\textbf{Data at-rest}};
+  \node[draw,fill=stateMotion,rounded corners=2pt,right=0.5cm of lr] (lm) {\textbf{Data in-motion}};
+  \node[draw,fill=stateUse,rounded corners=2pt,right=0.5cm of lm] (lu) {\textbf{Data in-use}};
+\end{tikzpicture}
+\end{center}
+
+\subsection{Data Inventory}
+
+\begin{defbox}{Data Inventory}
+Identifica y \textbf{registra todos los datos críticos}: su ubicación, su uso, su
+clasificación y los responsables de cada uno. Sirve de \textbf{guía de referencia} para la
+toma de decisiones, el diseño de la seguridad y la aplicación de políticas.
+\end{defbox}
+
+No alcanza con «proteger todos los datos y listo»: los datos se necesitan para procesamiento,
+análisis y para que distintas personas los usen en distintos formatos. Por eso conviene
+inventariarlos: saber que existen, cómo deben clasificarse y de qué forma se pueden usar. El
+ciclo de inventario es: \emph{Engage the business $\to$ Collect the information $\to$ Build the
+inventory $\to$ Create classifications $\to$ Use the inventory}.
+
+\subsubsection*{Desafíos del Data Inventory}
+
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Costo de mantenerlo actualizado:} cambian los tipos de datos y, sobre todo,
+        los \textbf{flujos de los datos} (la slide lo resalta en negrita). Cada vez que aparece,
+        cambia o desaparece un dato, hay que actualizarlo.
+  \item \textbf{Costo de inventariar:} descubrir nuevos tipos de datos es caro, especialmente
+        en organizaciones muy grandes (hay que barrer cómo opera toda la empresa).
+  \item \textbf{Falta de educación en su uso:} si la gente no avisa que generó datos nuevos,
+        no se le saca provecho al inventario.
+  \item \textbf{Son datos sensibles:} el propio inventario debe protegerse bajo las mismas
+        reglas.
+  \item \textbf{Complejo para la dinámica de las nuevas empresas:} queda rápidamente
+        desactualizado.
+\end{itemize}
+
+\subsection{Data Labeling (etiquetado)}
+
+Como alternativa al inventario centralizado surgió el \textbf{data labeling}.
+
+\begin{defbox}{Data Labeling}
+Busca inventariar los datos \textbf{dentro de los datos mismos} (como \emph{metadata}):
+el dato lleva su propia clasificación. \textbf{Descentraliza} el inventario, pero permite que
+las etiquetas \textbf{circulen con los datos}. Simplifica las reglas de protección y monitoreo.
+\end{defbox}
+
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item Es \textbf{más flexible y realizable} que el inventario tradicional: el sistema que
+        genera el dato ya le asigna su etiqueta.
+  \item \textbf{No es un proceso estandarizado:} cada sistema debe \emph{traducir} las
+        etiquetas de un medio a otro. La organización puede normalizarlo internamente («todos
+        los que manejen este tipo de datos sensibles aplican la política del labeling»).
+  \item La mayoría de los sistemas modernos permiten crear etiquetas/metadata donde guardar
+        esta información.
+\end{itemize}
+
+\subsubsection*{Ejemplo: AWS Tag Policy}
+
+Una política de IAM de AWS otorga acceso a un objeto S3 sólo si el objeto tiene cierta
+etiqueta. Es la materialización de la idea de \emph{control de acceso basado en etiquetas}:
+
+\begin{lstlisting}[style=json]
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Principal": {                                  // <-- SUJETO
+        "AWS": [ "arn:aws:iam::111122223333:role/JohnDoe" ]
+      },
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:GetObjectVersion"],
+      "Resource": "arn:aws:s3:::DOC-EXAMPLE-BUCKET/*", // <-- OBJETOS
+      "Condition": {
+        "StringEquals": {
+          "s3:ExistingObjectTag/environment": "production" // <-- ETIQUETA
+        }
+      }
+    }
+  ]
+}
+\end{lstlisting}
+
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Sujeto:} el \texttt{Principal} (el rol \texttt{JohnDoe}).
+  \item \textbf{Objetos:} el \texttt{Resource} (los objetos del bucket).
+  \item \textbf{Etiqueta:} la \texttt{Condition} sobre la tag \texttt{environment = production}.
+\end{itemize}
+
+%=====================================================================
+\section{Protección (Protect)}
+%=====================================================================
+
+Toda la preparación anterior (gobierno, descubrimiento, clasificación) sirve para
+\textbf{efectivamente proteger} los datos. Acá se ven las técnicas concretas.
+
+\subsection{Enforcement en tiempo de compilación (Compiler-time)}
+
+\begin{defbox}{Enforcement (Compiler-time)}
+Asegura que el código cumple ciertas políticas de seguridad \textbf{antes de ser ejecutado}.
+Se hace en la fase de compilación, donde el compilador analiza el código fuente para detectar
+posibles violaciones (\textbf{análisis estático de código}). El compilador puede asegurar que
+los datos clasificados como confidenciales no se filtren a variables o zonas de memoria de
+menor seguridad.
+\end{defbox}
+
+Ejemplos de violaciones que se buscan detectar: imprimir contraseñas o datos sensibles en un
+log. El profesor aclara una errata de la slide: el ejemplo en Java es el
+\texttt{GuardedString} (la slide dice \texttt{SecureString}).
+
+\begin{notebox}{\texttt{GuardedString} vs.\ \texttt{String} en Java}
+Un \texttt{GuardedString} guarda el string \textbf{encriptado}: si alguien inspecciona la
+memoria en vivo, no lo va a poder leer (tendría que desencriptarlo). En cambio, una contraseña
+en un \texttt{String} clásico de Java se ve en \textbf{texto plano} examinando la memoria del
+proceso con una herramienta. El profe acota que el \texttt{GuardedString} es «bastante lento».
+
+\smallskip
+También ayudan las \textbf{herramientas de análisis de código estático}, que conectan con las
+metodologías \emph{DevSecOps} vistas la clase anterior (meter la seguridad dentro del
+desarrollo).
+\end{notebox}
+
+\subsection{Encriptación de datos en reposo (at-rest)}
+
+Los datos en reposo no se mueven; una de las medidas es \textbf{encriptarlos en el medio en
+que están}. Como esos datos después hay que recuperarlos, se usa encriptación (reversible).
+Aparecen varias alternativas de \emph{dónde} se guardan las claves:
+
+\begin{description}[leftmargin=0pt,itemsep=4pt]
+  \item[\textbf{HSM} (\emph{Hardware Security Module}, FIPS 140-1 a 4).] Hardware específico de
+        seguridad (visto también en Autenticación) dedicado a proteger secretos —p.\ ej.\ las
+        \textbf{claves simétricas}, que son muy sensibles porque con una sola se puede
+        desencriptar un montón de datos. Es \textbf{anti-tamper}: no se puede vulnerar
+        fácilmente. Además, \textbf{ofrece las operaciones de (des)encriptación dentro del
+        propio hardware}, así uno nunca accede a la clave: la operación la hace el HSM.
+  \item[\textbf{Keystore.}] Forma de resguardar claves (con software asociado): se guardan
+        todas las claves encriptadas con una \textbf{clave maestra}, y con esa clave se accede
+        a las demás.
+  \item[\textbf{Security Appliance.}] Otro dispositivo dedicado a este resguardo (de la slide).
+\end{description}
+
+\subsubsection*{Esquema KEK-DEK (encriptación por capas)}
+
+\begin{defbox}{KEK / DEK}
+\textbf{DEK} = \emph{Data Encryption Key} (la clave que efectivamente cifra los datos).\\
+\textbf{KEK} = \emph{Key Encryption Key} (una clave que cifra a la DEK).
+\end{defbox}
+
+\begin{center}
+\begin{tikzpicture}[font=\small,>=Stealth,node distance=0.9cm and 1.4cm,
+  blk/.style={draw,rounded corners=2pt,minimum height=0.9cm,minimum width=1.5cm,align=center},
+  op/.style={draw,fill=black!75,text=white,rounded corners=2pt,minimum size=0.85cm},
+  key/.style={draw,fill=itbaBlue!40,rounded corners=2pt,minimum height=0.8cm,minimum width=1.2cm,align=center}]
+
+  \node[blk] (data) {Data};
+  \node[op,right=of data] (ed1) {E/D};
+  \node[cylinder,shape border rotate=90,draw,right=of ed1,minimum width=1.3cm,minimum height=0.9cm] (db) {DB};
+  \node[key,below=of ed1] (dek) {DEK};
+  \node[op,below right=0.9cm and 0.9cm of dek] (ed2) {E/D};
+  \node[key,below=of ed2] (kek) {KEK};
+
+  \draw[->,line width=1.2pt] (data) -- (ed1);
+  \draw[->,line width=1.2pt] (ed1) -- (db);
+  \draw[->,line width=1pt] (dek) -- (ed1);
+  \draw[->,line width=1pt] (kek) -- (ed2);
+  \draw[->,line width=1pt] (ed2) -- (dek);
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Más seguro:} con la KEK se cifra la DEK, que es la que termina cifrando los
+        datos (dos capas).
+  \item \textbf{Más flexible:} se puede \textbf{rotar la KEK} sin tener que reencriptar todos
+        los datos, porque la DEK (la que cifró los datos) no cambia.
+  \item \textbf{Contra:} es \textbf{más difícil de administrar} (implica una segunda capa de
+        encriptación).
+  \item Ejemplos de cifrado de almacenamiento en reposo: \textbf{EncFS / Loop-AES},
+        \textbf{EFS} (Windows), \textbf{FileVault} (macOS).
+  \item La slide marca como problemas pendientes (\(\times\)): \textbf{Data Remanence}
+        (remanencia de datos) y \textbf{Secure Deletion} (borrado seguro).
+\end{itemize}
+
+\subsubsection*{En reposo, en la nube}
+
+La nube es \textbf{infraestructura de terceros}, en posesión del proveedor. La estrategia de
+encriptación es un \emph{trade-off}: a más control sobre las claves, mayor complejidad y menor
+costo del lado del proveedor; a menos control, más eficiencia operativa pero mayor costo.
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize,>=Stealth,
+  opt/.style={draw,rounded corners=2pt,minimum height=1.1cm,text width=2.0cm,align=center}]
+
+  \node[opt,fill=attackRed!18] (smk) {Service\\Managed Keys};
+  \node[opt,fill=attackRed!35,right=0.4cm of smk] (cmk) {Customer\\Managed Keys};
+  \node[opt,fill=attackRed!55,right=0.4cm of cmk] (byok) {Bring Your\\Own Keys};
+  \node[opt,fill=attackRed!80,text=white,right=0.4cm of byok] (hyok) {Hold Your\\Own Keys};
+
+  \draw[<-,line width=3pt,itbaCyan]
+    ([yshift=-12pt]smk.south west) -- node[below,black,font=\scriptsize]{Eficiencia operativa} ([yshift=-12pt]hyok.south east);
+  \draw[->,line width=3pt,itbaCyanDark]
+    ([yshift=-26pt]smk.south west) -- node[below,black,font=\scriptsize]{Seguridad / control propio} ([yshift=-26pt]hyok.south east);
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\bfseries}p{3.6cm} p{11.0cm}}
+\toprule
+\multicolumn{2}{l}{\itshape Cloud Workload con encriptación \emph{cloud-native} (claves del lado del proveedor):}\\
+\midrule
+Service Managed Keys & El cliente \textbf{no gestiona} las claves. El proveedor decide cuándo
+rotarlas. No se puede acceder a las claves privadas ni usarlas para cifrar otros contenidos
+distintos de los que el proveedor decide. (Máxima delegación, máximo costo.) \\
+Customer Managed Keys & El cliente \textbf{gestiona} las claves y decide cuándo rotarlas; no
+puede acceder a las claves privadas, pero puede encriptar lo que desee. \\
+Bring Your Own Keys & El cliente \textbf{trae sus propias claves} (las genera y se las da al
+proveedor), las posee y decide cuándo rotarlas. \\
+\midrule
+\multicolumn{2}{l}{\itshape Cloud Workload con encriptación propia:}\\
+\midrule
+Hold Your Own Keys & El cliente cifra \textbf{de su lado, antes de almacenar} la info en el
+proveedor. Independiente del proveedor de nube (máximo control, mínima delegación). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{notebox}{¿De qué depende la elección? (pregunta de M.\ Gallardo en clase)}
+Depende 100\% de tres cosas: \textbf{(1)} qué querés hacer / cuánto te importa la seguridad;
+\textbf{(2)} cuánto querés delegar; y \textbf{(3)} tu posibilidad económica. Cuanto más a la
+izquierda (\emph{Service Managed}), más responsabilidad tiene el proveedor $\Rightarrow$ mayor
+costo, menos complejidad para vos. Cuanto más a la derecha (\emph{Hold Your Own}), menos costo
+pero más complejidad propia (rotar y generar tus claves, protegerlas). Muchas empresas no son
+expertas en seguridad y terminan delegando cada vez más.
+\end{notebox}
+
+\begin{warnbox}{Ojo con la ubicación de los datos en la nube}
+Los proveedores tienen distintas \textbf{regiones}. Según cómo esté armada la distribución,
+los datos pueden quedar repartidos en \textbf{distintos países con regulaciones distintas}
+cada uno. Hay que tenerlo muy en cuenta.
+\end{warnbox}
+
+\subsection{Encriptación de datos en tránsito (in-transit)}
+
+Los datos en tránsito se mueven de una ubicación a otra (internet, red privada). Dos enfoques:
+
+\begin{enumerate}[leftmargin=1.6em,itemsep=2pt]
+  \item \textbf{Encriptar antes de mover el dato.} Ej.: cifrar un archivo con \textbf{GPG}
+        antes de mandarlo por mail.
+  \item \textbf{Usar protocolos de transporte que cifran.} Ej.: enviar el mail con
+        \textbf{SMTP sobre TLS}; así no hace falta cifrar el archivo a mano y igual viaja
+        seguro.
+\end{enumerate}
+
+\noindent Protocolos de cifrado in-transit: \textbf{TLS}, \textbf{IPSEC}, \textbf{SSH}. Todo el
+tráfico \textbf{HTTPS} va asegurado por TLS (no se puede leer). El esquema general es el ya
+visto: se acuerda primero con \textbf{criptografía asimétrica} la \textbf{clave simétrica}, y
+luego se cifra todo el tráfico de forma simétrica.
+
+\subsection{Enforcement en tiempo de ejecución (Execution-time)}
+
+\begin{defbox}{Enforcement (Execution-time)}
+Es la técnica más utilizada para \textbf{monitorear y controlar cómo se transmite la
+información entre los componentes} de un sistema. Requiere entender el \textbf{movimiento de
+datos} dentro del sistema de información: entre procesos, entre distintos niveles de seguridad
+o entre distintos estados. Se implementa:
+\begin{itemize}[leftmargin=1.4em,topsep=2pt,itemsep=1pt]
+  \item a \textbf{nivel aplicativo} (buenas decisiones y principios de seguridad: no imprimir
+        secretos en un log, tomar medidas para no exponer datos sensibles), o
+  \item a \textbf{nivel de infraestructura}, con herramientas \textbf{DLP} (\emph{Data Loss
+        Prevention}) que detectan filtraciones/exposición de datos.
+\end{itemize}
+\end{defbox}
+
+\subsection{Encriptación en memoria}
+
+Los datos en memoria son un caso particular: se los puede ver como \emph{at-rest} en memoria
+esperando que la CPU los use, o \emph{in-transit} entre el bus de I/O y la CPU. El riesgo:
+en un ambiente de \textbf{múltiples máquinas virtuales accediendo a la misma memoria}, hay
+riesgo potencial de acceder a información confidencial de otra VM.
+
+\begin{defbox}{TME y TME-MK (Intel y otros fabricantes)}
+\textbf{TME} = \emph{Total Memory Encryption}: mecanismo implementado en \textbf{hardware}, con
+una \textbf{sola clave} de encriptación compartida por todos los procesos. La desencriptación
+se realiza \textbf{dentro de la CPU, antes de la caché}.\\
+\textbf{TME-MK} = \emph{Total Memory Encryption — Multi-Key}: \textbf{múltiples claves} de
+encriptación, con un control de acceso soportado por los registros de \textbf{VT-x}. El cifrado
+es \emph{AES-XTS} y cada página de memoria física lleva asociado un \emph{KeyID}.
+\end{defbox}
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize,>=Stealth,
+  box/.style={draw,fill=black!10,minimum width=2.0cm,minimum height=0.6cm,align=center},
+  ctrl/.style={draw,fill=black!55,text=white,minimum width=1.4cm,minimum height=0.55cm,align=center}]
+
+  \node[box] (core) {Cores};
+  \node[box,below=0.25cm of core,minimum width=3.0cm] (cache) {Cache};
+  \node[ctrl,below left=0.3cm and -1.0cm of cache] (aes1) {AES-XTS};
+  \node[ctrl,right=0.3cm of aes1] (aes2) {AES-XTS};
+  \node[box,below=0.2cm of aes1,minimum width=1.4cm] (dram) {DRAM};
+  \node[box,below=0.2cm of aes2,minimum width=1.4cm] (nvram) {NVRAM};
+  \node[align=center,below=0.25cm of dram,text width=3.4cm,font=\scriptsize] (lbl)
+       {Memoria cifrada con AES-XTS\\(la CPU descifra antes de la caché)};
+
+  \draw[->] (dram) -- (aes1);
+  \draw[->] (nvram) -- (aes2);
+  \draw[->] (aes1) -- ([xshift=-0.6cm]cache.south);
+  \draw[->] (aes2) -- ([xshift=0.6cm]cache.south);
+  \draw[<->] (cache) -- (core);
+
+  \node[draw,fill=stateUse,rounded corners=2pt,right=1.6cm of core,align=center] (vm1) {VM1\\KeyID 0,\textbf{1},3};
+  \node[draw,fill=black!8,rounded corners=2pt,right=0.4cm of vm1,align=center] (vm2) {VM2\\KeyID 0,\textbf{2},3};
+  \node[draw,below=0.4cm of vm1,xshift=0.9cm,align=center,text width=2.6cm,font=\scriptsize] (vmm)
+       {VMM: usa KeyID 0 para sus páginas y gestiona los KeyID de toda la memoria};
+\end{tikzpicture}
+\end{center}
+
+\subsection{Homomorphic Encryption}
+
+\begin{defbox}{Encriptación homomórfica}
+Es un esquema de encriptación que admite \textbf{operar sobre el dato cifrado}: aplicar una
+función al texto cifrado equivale a aplicarla al texto plano. La slide lo expresa como:
+\[
+  f(x) = y \;\Longrightarrow\; f(\mathrm{Enc}(x)) = \mathrm{Enc}(f(x))
+\]
+\end{defbox}
+
+\begin{warnbox}{Nota de fidelidad sobre la fórmula de la slide}
+La diapositiva escribe literalmente \(f(x)=y \Rightarrow f(\mathrm{Enc}(x)) =
+f(\mathrm{Dec}(y))\). La \emph{idea} que transmite —y que el profe describe como «un esquema
+que admite operar»— es la propiedad homomórfica: poder calcular sobre datos cifrados sin
+desencriptarlos. Se reproduce la fórmula tal cual aparece para no alterar la fuente, aclarando
+que la formulación canónica del homomorfismo es \(f(\mathrm{Enc}(x)) = \mathrm{Enc}(f(x))\).
+\textbf{Referencia citada en la slide:} \emph{Protecting privacy through homomorphic
+encryption}, Lauter, 2022.
+\end{warnbox}
+
+\subsection{Encriptación en SoC / IoT / sistemas embebidos}
+
+Uno de los escenarios \textbf{más desfavorables}: chips pequeños (Arduino, Raspberry,
+ESP8266/ESP32) metidos en cualquier lado (un semáforo, un campo de cultivos, dentro de otras
+cosas). Características y vectores de ataque:
+
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Tampering-with:} están \textbf{físicamente expuestos}; alguien puede ir y
+        romperlos o manipularlos.
+  \item \textbf{Open Arch (arquitectura abierta):} usan protocolos abiertos, ya muy conocidos.
+  \item \textbf{Debug complejo (debug/seguridad):} al ser de bajo nivel, suelen permitir
+        \emph{debugging} fácil, muchas veces \textbf{sin interfaz de autenticación}.
+  \item \textbf{Wireless:} aunque el dispositivo esté físicamente inaccesible, uno se puede
+        conectar inalámbricamente (hasta desde un celular).
+  \item \textbf{Diversidad / Escala:} se despliegan en grandes cantidades, distribuidos por
+        todos lados y dentro de muchas cosas.
+  \item \textbf{Riesgo físico.}
+\end{itemize}
+
+La slide ubica estos riesgos en tres capas de la taxonomía de IoT: \textbf{Perception Layer},
+\textbf{Application Layer} y \textbf{Network Layer} (chip de ejemplo: \emph{Microchip
+ATECC608A}).
+
+\begin{notebox}{Ejemplo del profe: sensores de riego}
+Si un atacante manipula (\emph{tampering}) un sensor de riego controlado por uno de estos
+chips —por ejemplo, fijando una condición de temperatura que sabe que se va a superar todo el
+año— logra que el sistema riegue todo el tiempo y genere \textbf{gastos económicos}. Por eso
+es importante meter algún tipo de \textbf{HSM / seguridad embebida} en estos aparatos, algo a
+lo que todavía no se le da la importancia que tiene.
+\end{notebox}
+
+%=====================================================================
+\section{Cumplimiento (Comply)}
+%=====================================================================
+
+\begin{redslide}
+«No basta con ser bueno, también hay que parecerlo.»
+\end{redslide}
+\noindent Con esa anécdota («mi abuelo era un genio», sobre la viñeta de Daniel Paz), el profe
+introduce el cumplimiento: \textbf{no alcanza con proteger; hay que poder demostrarlo}.
+
+Todas las regulaciones internacionales y comerciales definen reglas e imponen un proceso de
+\textbf{auditoría y certificación}. Cuando llega una auditoría, hay que \textbf{demostrar con
+evidencia} que todo lo que dijiste que hacías, lo hacés efectivamente. Por eso las empresas
+suelen obligar a que \textbf{todo se loguee} y quede registro: con esos registros es mucho más
+fácil probar que se es \emph{compliant}.
+
+\subsection{Retención de datos}
+
+\begin{defbox}{Retención de la información}
+Es el \textbf{guardado de información que ya no es necesaria}, usualmente por temas
+regulatorios. Tiene fines \textbf{legales} o de \textbf{análisis forense}.
+\end{defbox}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\bfseries}p{2.6cm} p{11.6cm}}
+\toprule
+HIPAA & Si un log, nota o registro se relaciona con una política/procedimiento HIPAA, debe
+retenerse \textbf{6 años} desde la fecha en que el contenido fue usado por última vez / fue
+efectivo por última vez. (Ej.: una obra social o medicina prepaga conserva la historia clínica
+6 años aunque la persona deje de ser cliente.) \\
+PCI-DSS & El \emph{Requirement 3.1} exige retener y seguir procedimientos de retención y
+disposición de datos: los registros que ya no se necesitan deben borrarse pronta y
+adecuadamente. \\
+SOX & Retención de \textbf{7 años}: toda la documentación de auditoría/revisión de los estados
+financieros, por si hay que investigar a futuro. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{notebox}{Rotación de claves por cumplimiento}
+Algunas leyes que obligan a encriptar ciertos datos personales también obligan a
+\textbf{rotar las claves de encriptación} (p.\ ej.\ cada 10 años) y \textbf{reencriptar} todo.
+Si a los 10 años llega una auditoría y no rotaste, probablemente no estés cumpliendo y tengas
+una consecuencia (probablemente económica).
+\end{notebox}
+
+%=====================================================================
+\section{Detección (Detect): Data Loss Prevention (DLP)}
+%=====================================================================
+
+Cumplir no es suficiente: hay que \textbf{verificar constantemente} que se sigue cumpliendo.
+La herramienta principal de esta etapa son los \textbf{DLP}.
+
+\begin{defbox}{DLP — Data Loss Prevention}
+Herramientas que ayudan en la \textbf{clasificación, inventariado y detección} de los datos en
+todos sus estados. A pesar del nombre («Prevention»), \textbf{la mayoría son de detección, no
+de prevención}: están orientadas a un control \textbf{detectivo}, no preventivo ni correctivo.
+Se activan cuando se produce una falla en la aplicación de una política.
+\end{defbox}
+
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item Permiten ver los datos en todos sus estados y detectar si están saliendo de estados
+        que no corresponden, si están siendo filtrados, divulgados o \textbf{exfiltrados}.
+  \item Se le da toda la información a la herramienta y ésta \textbf{alerta} cuando algo no se
+        está cumpliendo.
+  \item \textbf{No son una panacea} y son \textbf{súper complejas de implementar}: requieren un
+        esfuerzo enorme de toda la compañía.
+\end{itemize}
+
+\subsection{DLP hoy en día}
+
+Como eran tan difíciles de implementar, hoy las \textbf{funcionalidades de DLP ya vienen
+incorporadas} en muchos de los productos de uso diario (muchas empresas que «hacían DLP»
+fueron compradas e integradas a otras soluciones). Los DLP cubren múltiples canales de salida:
+USB/CD/DVD, Print/Fax, Email, Webmail, mensajería instantánea, FTP, servidores, bases de datos,
+etc.
+
+\begin{notebox}{Ejemplo: ransomware}
+Una funcionalidad de DLP puede detectar \textbf{encriptaciones no autorizadas} de datos, o que
+un dato cambió o tiene un comportamiento extraño. Primero alerta; y según la sofisticación de
+la herramienta, podría tomar medidas adicionales (p.\ ej.\ \textbf{inutilizar el dispositivo}
+de un empleado cuya máquina fue encriptada por un ataque).
+\end{notebox}
+
+%=====================================================================
+\section{Respuesta (Respond): respuesta a incidentes}
+%=====================================================================
+
+\begin{defbox}{Respuesta a incidentes}
+Cómo opera la organización cuando detecta una filtración, un ataque o una vulneración de la
+protección de los datos. Por lo general, hay \textbf{equipos dedicados} en las empresas a la
+respuesta a incidentes, que ya tienen el protocolo incorporado y van indicando los pasos al
+resto de las personas.
+\end{defbox}
+
+\subsection{Qué hacer en las primeras 24 horas}
+
+Durante el incidente se trata de \textbf{guardar, documentar e identificar} todo lo que pasó,
+y de \textbf{frenar la filtración}. La checklist de la slide:
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize,node distance=0.35cm,
+  it/.style={draw,fill=black!72,text=white,rounded corners=2pt,minimum width=2.55cm,
+             minimum height=1.0cm,align=center,inner sep=3pt}]
+  \node[it] (a) {Record the\\date and time};
+  \node[it,right=of a] (b) {Alert\\everyone};
+  \node[it,right=of b] (c) {Secure the\\premises};
+  \node[it,right=of c] (d) {Stop data\\exfiltration};
+  \node[it,right=of d] (e) {Document\\everything};
+
+  \node[draw,fill=attackRed,text=white,below=0.35cm of c,minimum width=13.3cm,
+        font=\bfseries,align=center] (mid) {WHAT TO DO IN THE FIRST 24 HOURS};
+
+  \node[it,below=0.35cm of mid.west,anchor=north west] (f) {Interview\\anyone involved};
+  \node[it,right=of f] (g) {Review comms\\protocols};
+  \node[it,right=of g] (h) {Assess priorities\\and risks};
+  \node[it,right=of h] (i) {Bring in a\\forensic team};
+  \node[it,right=of i] (j) {Notify law\\enforcement};
+\end{tikzpicture}
+\end{center}
+
+\noindent Se toman además medidas de \textbf{sobre-segurización} para evitar otras
+exfiltraciones que no se estén viendo (la analogía del profe: si te entran a robar por una
+puerta insegura, ponés una puerta súper segura y además asegurás ventanas, techo, etc.).
+
+\begin{warnbox}{No ocultar el incidente — pero comunicar lo mínimo y necesario}
+No hay que tratar de \textbf{ocultar} los incidentes: hay que trabajar con un protocolo. Pero
+tampoco hay que sobre-exponer información: \emph{no} se sale a publicar en Twitter «ayer
+hackearon la base de datos de mis clientes». Si se está sujeto a una normativa de datos
+personales, hay que \textbf{informar al organismo} correspondiente, comunicando \textbf{sólo
+lo requerido}. Después ese organismo pedirá la información que necesite, y ahí sí se le
+disponibiliza (cómo fue el ataque, qué datos quedaron expuestos), tarea del \textbf{equipo de
+forense} dentro de la respuesta a incidentes.
+\end{warnbox}
+
+\subsection{Más allá de las 24 horas}
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize,>=Stealth,
+  seg/.style={draw,rounded corners=2pt,minimum width=2.9cm,minimum height=0.9cm,align=center,text=white}]
+  \node[align=center,font=\bfseries] (c) {BEYOND\\24 HOURS};
+  \node[seg,fill=attackRed!75,above right=0.2cm and 0.6cm of c] (w) {Work with forensics};
+  \node[seg,fill=itbaCyanDark,below right=0.2cm and 0.6cm of c] (l) {Identify legal obligations};
+  \node[seg,fill=black!60,below=0.7cm of c] (r) {Report to upper management};
+  \node[seg,fill=practGreen,below left=0.2cm and 0.6cm of c] (b) {Identify possible battles};
+  \node[seg,fill=orange!85!black,above left=0.2cm and 0.6cm of c] (f) {Fix the issue};
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Trabajar con el equipo de forenses} e \textbf{identificar las implicancias
+        legales} (qué hay que hacer legalmente). Ej.: ante una filtración de tarjetas de
+        crédito, probablemente haya que informar a los \textbf{bancos} emisores qué pasó y qué
+        clientes fueron afectados, y también a los propios clientes (el típico mail «tus datos
+        fueron vulnerados»; en passwords, pedir el segundo factor o cambiar la contraseña).
+  \item \textbf{Reportar a la dirección} (\emph{upper management}); si es una empresa pública,
+        dar explicaciones al board / a los inversores.
+  \item \textbf{Identificar posibles problemas} (\emph{battles}) que el incidente pueda traer a
+        futuro.
+  \item \textbf{Arreglar el problema} (\emph{fix the issue}): según la causa —si fue un
+        empleado que divulgó algo, bajar una política exhaustiva; si fue una vulnerabilidad de
+        un sistema, corregirla.
+\end{itemize}
+
+%=====================================================================
+\section{Cierre y mapa mental}
+%=====================================================================
+
+Con esta clase \textbf{termina la materia}. El hilo conductor fue recorrer el ciclo de
+protección de la información de punta a punta, aplicando sobre los datos los principios de la
+\textbf{tríada CIA} vistos durante el curso.
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize,>=Stealth,
+  et/.style={draw,rounded corners=2pt,fill=itbaBlue!30,minimum width=2.6cm,
+             minimum height=0.8cm,align=center}]
+  \node[et] (g) {Govern\\\scriptsize Data Governance, roles, ciclo de vida};
+  \node[et,below=0.3cm of g] (di) {Discover\\\scriptsize Clasificación, estados, inventory, labeling};
+  \node[et,below=0.3cm of di] (pr) {Protect\\\scriptsize Encriptación at-rest / in-transit / in-use, DLP};
+  \node[et,below=0.3cm of pr] (co) {Comply\\\scriptsize Auditoría, evidencia, retención, rotación};
+  \node[et,below=0.3cm of co] (de) {Detect\\\scriptsize DLP (detectivo)};
+  \node[et,below=0.3cm of de] (re) {Respond\\\scriptsize Forense, legal, primeras 24h y más allá};
+
+  \foreach \a/\b in {g/di,di/pr,pr/co,co/de,de/re}
+    \draw[->,line width=1pt] (\a) -- (\b);
+\end{tikzpicture}
+\end{center}
+
+\begin{defbox}{Resumen de ideas para llevar}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt,topsep=2pt]
+  \item Los controles de acceso \textbf{no alcanzan}: el dato escapa del sistema; hay que
+        protegerlo en todos sus estados y a lo largo de su ciclo de vida.
+  \item \textbf{Acotar} los datos a proteger según criticidad (lección de PCI-DSS); usar
+        \textbf{tokenización} y \textbf{anonimización} (PCI / HIPAA) cuando aplique.
+  \item Tres estados del dato: \textbf{at-rest}, \textbf{in-motion}, \textbf{in-use}; cada uno
+        con sus técnicas (HSM/keystore/KEK-DEK, TLS/IPSEC/SSH/GPG, TME-MK/homomórfica).
+  \item En la nube, elegir el modelo de claves (\emph{Service / Customer / Bring / Hold Your
+        Own Keys}) es un trade-off entre control, costo y complejidad; cuidado con la
+        \textbf{ubicación legal} de los datos.
+  \item \textbf{Comply:} «hay que parecerlo» — todo se loguea para tener \textbf{evidencia};
+        respetar plazos de \textbf{retención}.
+  \item \textbf{DLP} es detectivo, no preventivo, y complejo de implementar.
+  \item Ante un incidente: documentar, contener, \textbf{no ocultar} pero comunicar lo
+        mínimo y necesario, y trabajar con forense y legales.
+\end{itemize}
+\end{defbox}
+
+\vfill
+\begin{center}\small\itshape\color{black!60}
+Apunte integral de la Clase 11 — Protección de datos · Criptografía y Seguridad, ITBA.\\
+Síntesis fiel de la teoría (transcripción de la clase del Prof.\ Leandro Suárez + diapositivas oficiales).
+\end{center}
+
+\end{document}
