@@ -1,0 +1,1129 @@
+%=====================================================================
+%  Criptografía y Seguridad - ITBA
+%  Clase 1 — Introducción a la Criptografía
+%  Apunte integral: teoría (esta clase NO tuvo clase práctica asociada)
+%=====================================================================
+\documentclass[11pt,a4paper]{article}
+
+%---------------------------------------------------------------------
+%  Paquetes
+%---------------------------------------------------------------------
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+  \usepackage{lmodern}
+\else
+  \usepackage{fontspec}
+\fi
+\usepackage[spanish,es-tabla,es-noshorthands]{babel}
+\usepackage{microtype}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{geometry}
+\geometry{a4paper,margin=2.4cm,headheight=22pt}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{caption}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,shapes.misc,shapes.symbols,arrows.meta,positioning,calc,
+                fit,backgrounds,decorations.pathmorphing,shadows.blur,chains}
+
+%---------------------------------------------------------------------
+%  Paleta de color (inspirada en las diapositivas de la cátedra)
+%---------------------------------------------------------------------
+\definecolor{itbaCyan}{HTML}{6EC6D9}
+\definecolor{itbaCyanDark}{HTML}{2E8B9E}
+\definecolor{itbaBlue}{HTML}{AEDCEA}
+\definecolor{boxBlue}{HTML}{BBD4F0}
+\definecolor{slideGray}{HTML}{ECECEC}
+\definecolor{slideCream}{HTML}{F4F1DE}
+\definecolor{practGreen}{HTML}{4F8A3D}
+\definecolor{practGreenL}{HTML}{E2EFD9}
+\definecolor{attackRed}{HTML}{C0392B}
+\definecolor{codeBg}{HTML}{F5F5F5}
+\definecolor{histBar}{HTML}{2E8B9E}
+\definecolor{timelineBlue}{HTML}{1F4E79}
+
+%---------------------------------------------------------------------
+%  Hipervínculos
+%---------------------------------------------------------------------
+\hypersetup{
+  colorlinks=true,
+  linkcolor=itbaCyanDark,
+  urlcolor=itbaCyanDark,
+  citecolor=itbaCyanDark,
+  pdftitle={Clase 1 - Introduccion a la Criptografia},
+  pdfauthor={Criptografia y Seguridad - ITBA}
+}
+
+%---------------------------------------------------------------------
+%  Encabezados y pies
+%---------------------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\textsc{Criptografía y Seguridad — ITBA}}
+\rhead{\small Clase 1 · Introducción a la Criptografía}
+\cfoot{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{itbaCyanDark}\leaders\hrule height \headrulewidth\hfill}}
+
+%---------------------------------------------------------------------
+%  Títulos de sección con barra de color (estilo diapositiva)
+%---------------------------------------------------------------------
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{itbaCyanDark}}
+  {\thesection}{0.6em}{}
+  [\vspace{-0.4em}{\color{itbaCyan}\titlerule[2pt]}]
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{itbaCyanDark}}
+  {\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{black}}
+  {\thesubsubsection}{0.6em}{}
+
+%---------------------------------------------------------------------
+%  Cajas reutilizables
+%---------------------------------------------------------------------
+% Caja "diapositiva" (recuadro gris de las slides)
+\newtcolorbox{slidebox}[1][]{
+  enhanced, colback=slideGray, colframe=black!55, boxrule=0.5pt,
+  arc=1pt, left=6pt,right=6pt,top=4pt,bottom=4pt, #1}
+
+% Caja "aclaración" (cuadro crema con globo de las slides)
+\newtcolorbox{notebox}[1][]{
+  enhanced, breakable, colback=slideCream, colframe=black!45, boxrule=0.6pt,
+  arc=3pt, left=7pt,right=7pt,top=5pt,bottom=5pt, #1}
+
+% Caja de definición
+\newtcolorbox{defbox}[1]{
+  enhanced, breakable, colback=itbaBlue!25, colframe=itbaCyanDark,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+% Caja de nota / ejemplo trabajado
+\newtcolorbox{practbox}[1]{
+  enhanced, breakable, colback=practGreenL, colframe=practGreen,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+% Caja de atención / ataque
+\newtcolorbox{warnbox}[1]{
+  enhanced, breakable, colback=attackRed!8, colframe=attackRed,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+%---------------------------------------------------------------------
+%  Estilo de código / monoespaciado
+%---------------------------------------------------------------------
+\lstdefinestyle{mono}{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{codeBg},
+  breaklines=true, frame=single, rulecolor=\color{black!30},
+  showstringspaces=false, columns=fullflexible, tabsize=2,
+  xleftmargin=10pt, framexleftmargin=8pt}
+
+%---------------------------------------------------------------------
+%  Macros matemáticos
+%---------------------------------------------------------------------
+\newcommand{\Pset}{\mathcal{P}}
+\newcommand{\Cset}{\mathcal{C}}
+\newcommand{\Kset}{\mathcal{K}}
+\newcommand{\Mset}{\mathcal{M}}
+\DeclareMathOperator{\Enc}{Enc}
+\DeclareMathOperator{\Dec}{Dec}
+\DeclareMathOperator{\Gen}{Gen}
+\DeclareMathOperator{\mcd}{mcd}
+
+%=====================================================================
+\begin{document}
+%=====================================================================
+
+%---------------------------------------------------------------------
+%  Portada
+%---------------------------------------------------------------------
+\begin{titlepage}
+\centering
+\vspace*{1.0cm}
+
+\begin{tikzpicture}
+  \node[rounded corners=2pt, fill=itbaCyan, text=black, inner sep=14pt,
+        minimum width=0.8\textwidth, align=center] (t)
+        {\Huge\bfseries Criptografía y Seguridad};
+\end{tikzpicture}
+
+\vspace{0.6cm}
+{\LARGE Primera mitad: Criptografía}\\[0.25cm]
+{\Huge\bfseries\color{itbaCyanDark} Introducción a la Criptografía}
+
+\vspace{0.9cm}
+
+% Ilustración: bóveda / caja fuerte (recreación del icono de portada)
+\begin{tikzpicture}[scale=1.0]
+  % marco de la bóveda
+  \fill[black!12] (-3.2,-2.4) rectangle (3.2,2.8);
+  \draw[line width=2pt, black!55] (-3.2,-2.4) rectangle (3.2,2.8);
+  % puerta blindada
+  \fill[itbaCyanDark!75] (-2.4,-2.0) rectangle (2.4,2.4);
+  \draw[line width=3pt, black!70] (-2.4,-2.0) rectangle (2.4,2.4);
+  \draw[line width=1.2pt, itbaCyan] (-2.0,-1.6) rectangle (2.0,2.0);
+  % bisagra central
+  \draw[line width=2pt, black!70] (0,-2.0) -- (0,2.4);
+  % volantes / ruedas
+  \foreach \a in {0,45,...,315}{
+    \draw[line width=2pt, black!70] (-1.1,0.2) -- ++(\a:0.6);
+    \draw[line width=2pt, black!70] ( 1.1,0.2) -- ++(\a:0.6);
+  }
+  \draw[line width=2.5pt, black!70] (-1.1,0.2) circle (0.42);
+  \fill[itbaCyan] (-1.1,0.2) circle (0.16);
+  \draw[line width=2.5pt, black!70] (1.1,0.2) circle (0.42);
+  \fill[itbaCyan] (1.1,0.2) circle (0.16);
+  % pernos
+  \foreach \y in {-1.2,-0.4,0.8,1.6}{
+     \fill[black!70] (-2.2,\y) circle (0.07);
+     \fill[black!70] (2.2,\y) circle (0.07);
+  }
+\end{tikzpicture}
+
+\vfill
+{\large Apunte integral — Teoría}\\[0.2cm]
+{\normalsize Clase 1 \quad·\quad Capítulo 1, \emph{Introduction to Modern Cryptography} (Katz \& Lindell)}\\[0.4cm]
+{\small Instituto Tecnológico de Buenos Aires (ITBA)}
+
+\vspace{0.5cm}
+{\footnotesize\itshape Documento elaborado a partir de la transcripción de la clase teórica
+(Prof.\ Pablo E.\ Abad) y de las diapositivas oficiales.}
+
+\vspace{0.4cm}
+\begin{tcolorbox}[enhanced,colback=practGreenL,colframe=practGreen,boxrule=1pt,
+  arc=3pt,width=0.8\textwidth,halign=center]
+\small\textbf{Nota.} Esta clase \textbf{no tuvo clase práctica asociada}: fue exclusivamente
+teórica. (El ejercicio de descifrado se realizó en vivo durante la propia clase.)
+\end{tcolorbox}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+%=====================================================================
+\section{¿Qué es la criptografía?}
+%=====================================================================
+
+Esta es la primera clase de la mitad de la materia dedicada a \textbf{criptografía}. El
+enfoque es introductorio: se trabajan \emph{fundamentos e ideas}, sin entrar todavía en el
+campo formal ni en construcciones de uso actual. La estrategia pedagógica es
+\textbf{aprovechar la historia de la criptografía} para ir entendiendo los conceptos básicos.
+
+\begin{defbox}{Criptografía}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Etimología}: del griego, significa \emph{escritura secreta}. Sus orígenes
+        responden a la necesidad de \textbf{ocultar información}.
+  \item \textbf{Definición moderna}: un \emph{conjunto de funciones matemáticas y técnicas}
+        que permiten asegurar distintas \emph{propiedades} sobre la información.
+  \item \textbf{Rol en seguridad}: son las \emph{herramientas básicas} desde donde se
+        construye la seguridad.
+\end{itemize}
+\end{defbox}
+
+El concepto moderno trasciende la mera \textbf{confidencialidad} (esconder información) y
+abarca otras propiedades. Pero la idea nace con un hecho atávico: \emph{desde que el hombre
+se agrupa, existe la necesidad de mantener algo en secreto}.
+
+\subsection{La criptografía está en todos lados (y oculta)}
+Fuera del mundo técnico casi no se habla de criptografía, pero sus construcciones están
+prácticamente en todo lo que usamos todo el tiempo. Ejemplos mencionados:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Comunicaciones seguras}: tráfico web, tráfico inalámbrico (Wi-Fi),
+        transmisiones satelitales, tráfico por Internet (cableado o no).
+  \item \textbf{Protección de archivos en disco}: si a un empleado le roban o pierde la
+        notebook, los datos confidenciales de la empresa deben quedar protegidos.
+  \item \textbf{Autenticación de usuarios}: segundo factor de autenticación, generadores de
+        claves, Google Authenticator.
+  \item \textbf{Protección de contenido} (DRM): venta de libros digitales (e-readers),
+        alquiler de películas en formato digital para evitar la copia indiscriminada.
+  \item \textbf{Firmas digitales}: contratos que se celebran de forma totalmente digital, sin
+        papel.
+  \item \textbf{Voto electrónico}: con más o menos sofisticación, hay criptografía detrás.
+  \item \textbf{Dinero electrónico}: desde Bitcoin hasta todo el ecosistema de criptomonedas.
+\end{itemize}
+
+%=====================================================================
+\section{El criptosistema (visión informal)}
+%=====================================================================
+
+Dentro de la larga lista de funciones criptográficas, hay una construcción \textbf{básica,
+común y muy ligada al origen}: el \textbf{criptosistema}. Lo abordamos primero de forma
+intuitiva; la definición formal llega más adelante.
+
+\begin{defbox}{Criptosistema (idea inicial)}
+Es, en principio, un conjunto de \textbf{dos funciones}:
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Cifrado} (cifrar / encriptar): toma un mensaje \emph{arbitrario} (un texto,
+        un archivo, cualquier cosa) que tiene sentido para nosotros y lo transforma en algo
+        que parece producido por un mono tipeando teclas al azar.
+  \item \textbf{Descifrado} (descifrar / desencriptar): toma ese mensaje sin sentido (el
+        \emph{mensaje cifrado}) y recupera el \textbf{mensaje original}.
+\end{itemize}
+\end{defbox}
+
+% ---- Diagrama: esquema de comunicación cifrada (slide Criptosistema) ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth,node distance=8mm]
+  \tikzset{
+    plano/.style={draw,rounded corners,fill=slideCream,minimum width=2.0cm,
+                  minimum height=1.3cm,align=center},
+    cif/.style={draw,rounded corners,fill=boxBlue,minimum width=2.0cm,
+                minimum height=1.3cm,align=center},
+    gear/.style={draw,circle,fill=black!80,text=white,minimum size=0.85cm,
+                 font=\scriptsize\bfseries}
+  }
+  \node[plano] (m1) {Mensaje o\\ texto plano};
+  \node[gear, right=1.0cm of m1] (e) {E/D};
+  \node[cif, right=1.0cm of e] (c) {Mensaje o\\ texto cifrado};
+  \node[gear, right=1.0cm of c] (d) {E/D};
+  \node[plano, right=1.0cm of d] (m2) {Mensaje o\\ texto plano};
+
+  \draw[->,line width=1pt] (m1) -- (e);
+  \draw[->,line width=1pt] (e) -- (c);
+  \draw[->,line width=1pt] (c) -- (d);
+  \draw[->,line width=1pt] (d) -- (m2);
+
+  % clave
+  \node[draw,fill=yellow!75!orange,rounded corners,minimum width=1.0cm,
+        minimum height=0.5cm,font=\scriptsize] (k) at ($(c)+(0,-2.0)$) {clave $k$};
+  \draw[->,line width=1pt] (k) -| (e);
+  \draw[->,line width=1pt] (k) -| (d);
+
+  % etiquetas globo
+  \node[draw,rounded corners,fill=practGreenL,draw=practGreen,font=\scriptsize,
+        above=4mm of e] {Cifrar / encriptar};
+  \node[draw,rounded corners,fill=practGreenL,draw=practGreen,font=\scriptsize,
+        above=4mm of d] {Descifrar / desencriptar};
+
+  % ejemplo
+  \node[cif,below=2.7cm of m1,font=\scriptsize] (ex1) {Nos vemos\\ a las 18};
+  \node[cif,below=2.7cm of c,font=\scriptsize]  (ex2) {skjejcaeidl\\ dsfjkfj ieu\\ olkjds kjkli};
+  \node[cif,below=2.7cm of m2,font=\scriptsize] (ex3) {Nos vemos\\ a las 18};
+  \node[left=1mm of ex1,font=\scriptsize\itshape] {Ejemplo:};
+\end{tikzpicture}
+\caption{Esquema de comunicación cifrada. El emisor cifra el mensaje plano con la clave; el
+mensaje cifrado puede viajar por un canal inseguro; el receptor lo descifra con la misma
+clave. \textit{(Recreación de la diapositiva ``Criptosistema''.)}}
+\end{figure}
+
+\subsection{La función de cifrado y la clave}
+La función de cifrado es, conceptualmente, una función de \textbf{dos parámetros}: el mensaje
+a transformar y un bloque adicional de información llamado \textbf{clave}.
+\[
+  \underbrace{\text{mensaje plano}}_{p}\ \times\ \underbrace{\text{clave}}_{k}
+  \;\longrightarrow\; \underbrace{\text{mensaje cifrado}}_{c}
+  \qquad\Longrightarrow\qquad e_k(p)=c
+\]
+
+\begin{notebox}
+\textbf{Diferentes representaciones, mismo significado.} En la literatura aparece la misma
+función de cifrado escrita de varias maneras:
+\[
+  e_k(p) \;=\; \mathrm{enc}_k(p) \;=\; e(k,p) \;=\; \{\,p\,\}_k
+\]
+La última notación, $\{\,p\,\}_k$ (``lo que está entre llaves está cifrado con la clave $k$''),
+se usa más en \emph{protocolos}. Análogamente, el descifrado se escribe
+$d_k(c)=\mathrm{dec}_k(c)=d(k,c)=\{\,c\,\}_k^{-1}$ y cumple
+\[
+  \text{mensaje cifrado}\ \times\ \text{clave} \;\longrightarrow\; \text{mensaje plano},
+  \qquad d(c,k)=p .
+\]
+\end{notebox}
+
+\begin{defbox}{¿Qué es la clave?}
+La clave es \textbf{un bloque arbitrario de información}, igual que el mensaje. La separamos
+y le damos un nombre especial porque, al probar la seguridad de un sistema, vamos a
+\textbf{presuponer que la clave es información protegida}: el atacante \emph{no} la tiene, y
+si la consigue, se acabó la seguridad.
+\end{defbox}
+
+\begin{notebox}
+\textbf{Ejercicio mental del atacante.} Una técnica habitual para razonar sobre seguridad es
+\emph{ponerse en el lugar del atacante}: ``si yo quisiera romper esto, ¿qué tendría que
+pasar?''. En todos esos escenarios la constante es: donde aparece una clave, suponemos que el
+atacante no la tiene.
+\end{notebox}
+
+\subsection{Principio de Kerckhoffs}
+\begin{defbox}{Principio de Kerckhoffs}
+Un criptosistema debe ser seguro \textbf{incluso si todo el sistema} —todo el algoritmo,
+todas las funciones— \textbf{excepto la clave es de conocimiento público.}
+\end{defbox}
+\noindent En consecuencia, la seguridad de un sistema \textbf{no puede depender} de que el
+atacante desconozca, por ejemplo, el código fuente. Debemos asumir que eventualmente lo
+conoce, y eso no debe comprometer la seguridad.
+
+\subsection{¿Para qué sirve un criptosistema?}
+En el fondo, resuelve el problema de \textbf{controlar el acceso y la diseminación de
+información}. Proteger un documento ``a mano'' (borrarlo de todos lados salvo de un pendrive
+guardado en una caja fuerte) no escala: en cuanto el archivo está digitalizado y hay que
+compartirlo, se pierde el control sobre quién accede.
+
+\begin{notebox}
+\textbf{La gran idea: ``patear'' el problema a algo manejable.} Proteger un mensaje de tamaño
+arbitrario es difícil. Con un criptosistema, ciframos el mensaje con una clave: el
+\textbf{mensaje cifrado} puede dejarse en cualquier lado (una página pública, enviarlo por
+todos lados) siempre que la \textbf{clave esté protegida}. No resolvemos el problema por
+completo, pero lo reducimos a proteger algo \textbf{mucho más chico}: en los criptosistemas
+modernos, la clave no tiene relación con el tamaño del mensaje. Se pueden cifrar
+\emph{terabytes} de información con una clave de \textbf{128 bits}, y proteger 128 bits es
+mucho más fácil que proteger varios terabytes.
+\end{notebox}
+
+% ---- Diagrama: uso básico (slide Uso básico de un criptosistema) ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth]
+  \tikzset{
+    cif/.style={draw,rounded corners,fill=boxBlue,minimum width=1.9cm,
+                minimum height=1.2cm,align=center,font=\scriptsize},
+    gear/.style={draw,circle,fill=black!80,text=white,minimum size=0.8cm,
+                 font=\scriptsize\bfseries}
+  }
+  % lado izquierdo: sin clave
+  \node[font=\bfseries] at (-3.4,1.3) {Sin conocer la clave:};
+  \node[cif] (c1) at (-5.0,0) {skjejcaeidl\\ dsfjkfj ieu};
+  \node[gear,right=0.7cm of c1] (g1) {E/D};
+  \node[cif,right=0.7cm of g1] (o1) {hsdfudsahj\\ sjhguy};
+  \draw[->] (c1)--(g1); \draw[->] (g1)--(o1);
+  \node[draw,fill=yellow!75!orange,rounded corners,minimum width=0.9cm,
+        minimum height=0.45cm,font=\scriptsize] (k1) at ($(g1)+(0,-1.2)$) {clave};
+  \node[font=\Large,red] at (k1) {$\times$};
+  \draw[->] (k1) -- (g1);
+
+  % separador
+  \draw[line width=1pt,black!50] (0.2,-1.8) -- (0.2,1.5);
+
+  % lado derecho: con clave
+  \node[font=\bfseries] at (4.0,1.3) {Conociendo la clave:};
+  \node[cif] (c2) at (2.4,0) {skjejcaeidl\\ dsfjkfj ieu};
+  \node[gear,right=0.7cm of c2] (g2) {E/D};
+  \node[cif,right=0.7cm of g2] (o2) {Nos vemos\\ a las 18};
+  \draw[->] (c2)--(g2); \draw[->] (g2)--(o2);
+  \node[draw,fill=yellow!75!orange,rounded corners,minimum width=0.9cm,
+        minimum height=0.45cm,font=\scriptsize] (k2) at ($(g2)+(0,-1.2)$) {clave};
+  \draw[->] (k2) -- (g2);
+\end{tikzpicture}
+\caption{El texto cifrado \emph{no tiene información útil} y puede ser almacenado o
+transferido libremente. Sin la clave no se recupera el mensaje; con la clave, sí. Permite
+\textbf{controlar quién puede recuperar un mensaje}. \textit{(Recreación de la diapositiva
+``Uso básico de un criptosistema''.)}}
+\end{figure}
+
+%=====================================================================
+\section{Seguridad informal de un criptosistema}
+%=====================================================================
+
+Una primera respuesta intuitiva (aportada en clase) es: \emph{``alguien que no tiene la clave
+no puede descifrar el mensaje en un tiempo razonable''}. Es correcta, pero la criptografía
+moderna pide \textbf{más}.
+
+\begin{defbox}{Seguridad (informal)}
+Un criptosistema es seguro si \textbf{ningún adversario puede computar cualquier función del
+texto plano} a partir del mensaje cifrado que posee. Es decir, no se puede extraer
+\emph{ningún tipo} de información del mensaje. Significa:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item No se puede recuperar el mensaje.
+  \item No se puede recuperar \emph{parte} del mensaje.
+  \item No se puede recuperar el \emph{sentido} del mensaje.
+\end{itemize}
+\end{defbox}
+
+\begin{notebox}
+\textbf{¿Por qué pedir tanto?} A veces un adversario no necesita todo el documento:
+\begin{itemize}[leftmargin=1.3em,itemsep=1pt]
+  \item Un informe gigante puede tener un \emph{resumen} en la primera página: recuperar solo
+        esa página ya hace daño.
+  \item En la negociación secreta de una fusión multimillonaria, a quien espía (para invertir
+        ilegalmente en la bolsa) no le hace falta decodificar el mensaje: le basta con saber
+        si el resultado será \emph{positivo o negativo}.
+\end{itemize}
+Por eso la seguridad se asocia a que \textbf{no se pueda extraer ningún tipo de información}.
+\end{notebox}
+
+\subsection{Criptografía vs.\ Criptoanálisis}
+\begin{notebox}
+Las técnicas para probar o romper la seguridad de un criptosistema se denominan
+\textbf{criptoanálisis}. La disciplina suele separarse en:
+\begin{itemize}[leftmargin=1.3em,itemsep=1pt]
+  \item \textbf{Criptografía}: el estudio (diseño) de las funciones.
+  \item \textbf{Criptoanálisis}: el estudio de los ataques.
+\end{itemize}
+En esta materia se verá criptoanálisis ``muy por arriba'', para saber que existe.
+\end{notebox}
+
+\begin{warnbox}{No inventes tu propia primitiva}
+Un objetivo secundario de la materia es que el ingeniero entienda la \textbf{complejidad}
+detrás de las funciones criptográficas, para que \textbf{no} se le ocurra crear una primitiva
+nueva y, en cambio, \emph{busque las que ya existen}. En los años 80 diseñar funciones
+criptográficas era un pasatiempo de ingenieros; hoy, dado el avance del criptoanálisis, se
+estima que hay en el planeta \textbf{solo unas 30 o 40 personas} capacitadas para construir
+funciones que sobrevivan al escrutinio público (y cada una con su colección de fracasos). Por
+suerte, como ingenieros vamos a \emph{utilizar} las que ya existen.
+\end{warnbox}
+
+%=====================================================================
+\section{Una breve historia de la criptografía}
+%=====================================================================
+
+La necesidad de ocultar información existe desde siempre. La siguiente línea de tiempo guía el
+recorrido por los criptosistemas clásicos.
+
+% ---- Diagrama: línea de tiempo (slide Historia de la criptografía) ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\footnotesize]
+  \def\xl{0}      % x de la línea
+  \def\xt{0.9}    % x del texto
+  % barra vertical
+  \fill[timelineBlue] (\xl-0.12,-13.2) rectangle (\xl+0.12,0.3);
+  \foreach \y/\fecha/\titulo/\desc in {
+     0/{$\sim$2500 a.C.}/{Egipto}/{Criptosistemas de sustitución: jeroglíficos no estándar},
+     -1.9/{$\sim$700--300 a.C.}/{Escítala (Scitala)}/{Criptosistema de transposición usando báculos},
+     -3.8/{50 a.C.}/{César}/{Criptosistema de rotación (subtipo de sustitución)},
+     -5.7/{800 d.C.}/{Primeros documentos de criptoanálisis}/{Análisis de frecuencias: comienzan a ``romperse'' los cifrados},
+     -7.6/{1500}/{Criptosistemas polialfabéticos}/{Un símbolo cifrado representa distintos símbolos del original},
+     -9.5/{1939}/{Fuerza bruta: Bombe -- Enigma}/{Ataques sistemáticos por fuerza bruta -- protocomputadoras},
+     -11.4/{1949}/{Information Theory \& Cryptography (Shannon)}/{Publicaciones seminales: nace la criptografía moderna}
+  }{
+     \fill[timelineBlue] (\xl,\y) circle (0.13);
+     \draw[timelineBlue,line width=1pt] (\xl-0.55,\y) -- (\xl,\y);
+     \node[anchor=east,timelineBlue] at (\xl-0.6,\y) {\fecha};
+     \node[anchor=west,timelineBlue,font=\footnotesize\bfseries] at (\xt,\y+0.18) {\titulo};
+     \node[anchor=west,text width=8.6cm,timelineBlue] at (\xt,\y-0.32) {\desc};
+  }
+\end{tikzpicture}
+\caption{Línea de tiempo de la criptografía. \textit{(Recreación de la diapositiva ``Historia
+de la criptografía''.)}}
+\end{figure}
+
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Egipto ($\sim$2500 a.C.)}: indicios de criptosistemas de \emph{sustitución}
+        basados en darle un significado distinto a los jeroglíficos. (Hay registros hebreos
+        de hasta $\sim$5000 a.C.\ que se presumen ``proto-criptografía''.)
+  \item \textbf{Escítala (época grecorromana)}: criptosistema de \emph{transposición}. Se
+        enrolla una tira de cuero en un báculo de cierto tamaño y topología, se escribe
+        \emph{transversalmente} y luego se desenrolla. Para descifrar hace falta un báculo
+        idéntico. Lo usaban los gobernantes de las polis griegas.
+  \item \textbf{Julio César}: usos documentados de criptografía en campañas militares para
+        coordinar ataques entre unidades. En su honor existe el \emph{cifrado de César}.
+  \item \textbf{$\sim$800 d.C.}: primeros intentos documentados de \emph{romper}
+        criptosistemas (análisis de frecuencias).
+  \item \textbf{Renacimiento ($\sim$1500)}: surge una generación nueva, los
+        \emph{polialfabéticos}, que dominan casi \textbf{400 años}. Primera gran revolución.
+  \item \textbf{Segunda Guerra Mundial}: segunda gran revolución. Uso bélico masivo de
+        criptografía y, por primera vez, un esfuerzo deliberado y muy financiado por
+        \emph{quebrarla} en todos los frentes.
+  \item \textbf{Shannon (1949)}: funda la \emph{Teoría de la Información} y da origen a la
+        \textbf{criptografía moderna}. Ochenta años después se siguen usando sus fundamentos
+        teóricos (llevados al poder de cómputo actual).
+\end{itemize}
+
+%=====================================================================
+\section{Cifrado por rotación (ROT-X) y el cifrado de César}
+%=====================================================================
+
+Es el criptosistema más básico que se conoce.
+
+\begin{defbox}{Cifrado por rotación}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item Se asigna un orden a los símbolos del alfabeto (cada letra es un número: su posición,
+        empezando por 0).
+  \item La \textbf{clave} $k$ es el \emph{número de desplazamientos}; varía entre $1$ y $N$
+        (cantidad de letras). En realidad entre $1$ y $N-1$, porque rotar el alfabeto completo
+        da la función identidad.
+  \item \textbf{Cifrar}: reemplazar cada letra por la que está $k$ posiciones después, de
+        forma \textbf{cíclica} (después de la \texttt{z} se vuelve a la \texttt{a}).
+\end{itemize}
+\end{defbox}
+
+\begin{practbox}{Ejemplo trabajado: $e(\text{prueba},4)$}
+Con clave $k=4$ se reemplaza cada letra por la que está 4 posiciones después:
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{cccccc}
+\toprule
+plano   & p & r & u & e & b a\\
+\midrule
+\textbf{cifrado} & t & v & y & i & f\,$\cdots$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Resultado: $\;e(\text{prueba},4)=\texttt{tvyife}$. El cifrado preserva el largo del mensaje.
+\end{practbox}
+
+\subsection{Criptoanálisis: fuerza bruta}
+\begin{warnbox}{Debilidad: hay pocas claves}
+Como el atacante \emph{conoce el algoritmo} (principio de Kerckhoffs) y \emph{desconoce la
+clave}, no hay forma de impedir un \textbf{ataque por fuerza bruta}: probar todas las claves.
+Con tan pocas claves posibles, el ataque es trivial.
+\end{warnbox}
+
+\begin{practbox}{Ataque por fuerza bruta sobre $c=\texttt{tvyife}$}
+Se prueban todos los desplazamientos hasta hallar uno ``con sentido'':
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{lll}
+\toprule
+clave & $d(k,\texttt{tvyife})$ & \\
+\midrule
+$k=1$ & \texttt{suxhed} & $\leftarrow$ sin sentido\\
+$k=2$ & \texttt{rtwgdc} & $\leftarrow$ sin sentido\\
+$k=3$ & \texttt{qsvfcb} & $\leftarrow$ sin sentido\\
+$k=4$ & \texttt{prueba} & $\leftarrow$ \textbf{¡con sentido!}\\
+\bottomrule
+\end{tabular}
+\end{center}
+Resultado: $k=4$, \ $m=\texttt{prueba}$.
+\end{practbox}
+
+\begin{notebox}
+\textbf{El cifrado de César concreto.} El que usó Julio César y está documentado para
+coordinar campañas bélicas era una rotación \emph{fija} de \textbf{3 letras} en el alfabeto
+romano. Inseguro en retrospectiva, pero le valió un montón de guerras (en su época, las
+condiciones eran otras).
+\end{notebox}
+
+\subsection{Redundancia, distancia de unicidad y los límites de la fuerza bruta}
+Una buena pregunta surge naturalmente: ¿y si al probar con otra clave también aparece una
+palabra con sentido? Esta inquietud es una de las razones por las que Shannon desarrolló la
+Teoría de la Información, que permite \textbf{cuantificar la cantidad de información} de un
+mensaje. De allí dos conceptos:
+
+\begin{defbox}{Redundancia y distancia de unicidad}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Redundancia}: diferencia entre el \emph{tamaño} de un mensaje y la
+        \emph{información} que realmente lleva. Los lenguajes naturales tienen mucha
+        redundancia (por eso entendemos una oración a la que le sacaron las vocales). Es un
+        \emph{mecanismo de control de errores}: si se pierde una letra, el sentido se
+        mantiene.
+  \item \textbf{Distancia de unicidad}: longitud mínima que debe tener un mensaje para que las
+        chances de que exista \emph{más de un} descifrado con sentido sean despreciables.
+\end{itemize}
+\end{defbox}
+
+\begin{notebox}
+\textbf{Datos prácticos.}
+\begin{itemize}[leftmargin=1.3em,itemsep=1pt]
+  \item \textbf{Compresión $=$ eliminar redundancia}: comprimir es recodificar en un alfabeto
+        donde el tamaño del mensaje iguala al de la información. El \emph{algoritmo de Huffman}
+        es una aplicación directa de la teoría de Shannon.
+  \item \textbf{Distancia de unicidad de los lenguajes naturales} (español, inglés): del orden
+        de \textbf{4 caracteres}. Cualquier mensaje de más de 4 letras tiene chance
+        despreciable de tener dos descifrados con sentido. Por eso, en la práctica, la fuerza
+        bruta sobre ROT-X funciona: el primer descifrado con sentido suele ser el correcto.
+\end{itemize}
+\end{notebox}
+
+\begin{warnbox}{Los límites de la fuerza bruta}
+La fuerza bruta \emph{siempre} está disponible para el atacante, pero \textbf{tiene un
+prerrequisito}: poder \emph{discriminar un descifrado válido de uno inválido}. \\[3pt]
+\textbf{Contraejemplo (caso límite).} Supongamos que se cifró con ROT-X un mensaje plano $p$
+de \textbf{una sola letra}, elegida al azar de una distribución \emph{uniforme}, y el texto
+cifrado resultante es $c=\texttt{a}$. ¿Cuál era $p$? \textbf{Imposible de saber}: cualquier
+letra es un descifrado igualmente válido, así que aun sobre un cifrado ``trivialmente
+inseguro'' la fuerza bruta no decide. \\[3pt]
+\emph{Hipótesis de fuerza bruta}: se puede discriminar un descifrado válido de uno inválido.
+Esta idea se retoma al final de la clase (es la base de uno de los desarrollos seminales de la
+criptografía moderna).
+\end{warnbox}
+
+%=====================================================================
+\section{Cifrado de sustitución (monoalfabético)}
+%=====================================================================
+
+\begin{defbox}{Cifrado de sustitución}
+Para cada símbolo del alfabeto se establece una \textbf{transformación única} (se reemplaza
+cada símbolo por otro). La asignación debe ser \emph{biyectiva}: \textbf{sin repeticiones}
+(dos símbolos distintos no pueden ir al mismo, o no se podría invertir). Los símbolos de
+llegada \emph{no} tienen por qué ser del mismo alfabeto: pueden ser otros símbolos.
+\end{defbox}
+
+\begin{practbox}{Ejemplo trabajado}
+Clave (permutación del alfabeto):
+\begin{center}\ttfamily
+\begin{tabular}{ll}
+k = & dublcmfthijnzpxqeaosvkrwgy\\
+    & abcdefghijklmnopqrstuvwxyz
+\end{tabular}
+\end{center}
+La fila de abajo es el alfabeto plano; la de arriba, su imagen. Entonces:
+\[
+  \texttt{esto es una prueba}\;\xrightarrow{\;\text{sustitución}\;}\;\texttt{cosx co vpd qavcud}
+\]
+(cada \texttt{e} se transforma siempre en \texttt{c}, cada \texttt{s} en \texttt{o}, etc.)
+\end{practbox}
+
+\subsection{Tamaño del espacio de claves}
+\begin{practbox}{¿Cuántas claves tiene? — cálculo}
+La clave es la \emph{transformación} completa. Como no puede haber repeticiones, quedarse con
+la fila imagen equivale a una \textbf{permutación} del alfabeto. Para el español
+(\textbf{27 símbolos}):
+\[
+  |\Kset| \;=\; 27! \;\approx\; 1.09\times10^{28}
+  \qquad(\text{un número de} \approx 28 \text{ dígitos}).
+\]
+Es un número ``bestialmente alto'' (del orden de cuatrillones, en escala larga). Por lo tanto,
+a diferencia de la rotación, \textbf{este cifrado NO tiene pocas claves}: la fuerza bruta es
+inviable.
+\end{practbox}
+
+\subsection{Criptoanálisis: análisis de frecuencias}
+A pesar del enorme espacio de claves, el cifrado de sustitución es inseguro.
+
+\begin{warnbox}{Debilidad: las propiedades estadísticas del lenguaje no se alteran}
+La transformación \textbf{preserva las características estadísticas del lenguaje}. Como las
+vocales aparecen mucho más que las consonantes, si en el texto cifrado un símbolo aparece
+mucho, hay altas chances de que sea la imagen de una vocal. La misma letra del plano produce
+\emph{siempre} la misma letra cifrada, lo que delata patrones (p.\ ej.\ en ``Eduardo'' la 2.\textsuperscript{a}
+y la anteúltima letra cifradas serán iguales).
+\end{warnbox}
+
+\begin{defbox}{Procedimiento de criptoanálisis}
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item Obtener la frecuencia \emph{estimada} de cada símbolo en el lenguaje del mensaje
+        (\emph{tabla de frecuencias} del idioma).
+  \item Calcular la frecuencia de cada símbolo en el \emph{texto cifrado}.
+  \item Asumir que los símbolos de mayor probabilidad se corresponden.
+  \item Formar grupos de dos y tres letras comunes (\texttt{el}, \texttt{la}, \texttt{de},
+        \texttt{las}, \texttt{los}, \dots) y propagar/podar por prueba y error.
+\end{enumerate}
+\end{defbox}
+
+% ---- Diagrama: gráfico de barras de frecuencias (slide Frecuencias de letras) ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\scriptsize]
+  \def\sx{0.42} % ancho de banda
+  \def\sy{0.28} % escala vertical (unidades por %)
+  % ejes
+  \draw[->] (-0.4,0) -- (27.5*\sx+0.4,0) node[right]{letra};
+  \draw[->] (-0.4,0) -- (0,14*\sy+0.4) node[above]{\% frecuencia};
+  \foreach \v in {0,5,10}{
+     \draw[black!30] (-0.1,\v*\sy) -- (27*\sx,\v*\sy);
+     \node[anchor=east] at (-0.15,\v*\sy) {\v};
+  }
+  % datos: letra/frecuencia (tabla del español de la slide)
+  \foreach \i/\L/\f in {
+     0/E/13.11, 1/A/10.60, 2/S/8.47, 3/O/8.23, 4/I/7.16, 5/N/7.14,
+     6/R/6.95, 7/D/5.87, 8/T/5.40, 9/C/4.85, 10/L/4.42, 11/U/4.34,
+     12/M/3.11, 13/P/2.71, 14/G/1.40, 15/B/1.16, 16/F/1.13, 17/V/0.82,
+     18/Y/0.79, 19/Q/0.74, 20/H/0.60, 21/Z/0.26, 22/J/0.25, 23/X/0.15,
+     24/W/0.12, 25/K/0.11, 26/{Ñ}/0.10}{
+     \fill[histBar] ({\i*\sx+0.07},0) rectangle ({\i*\sx+\sx-0.07},{\f*\sy});
+     \node[anchor=north,font=\tiny] at ({\i*\sx+\sx/2},-0.05) {\L};
+  }
+\end{tikzpicture}
+\caption{Tabla de frecuencias del idioma español (en \%). Frecuencia alta: E, A, S, O, I, N,
+R, D, T; media: C, L, U, M, P, G, B, F; baja: V, Y, Q, H, Z, J, X, W, K, Ñ.
+\textit{(Recreación, como gráfico de barras, de la diapositiva ``Frecuencias de letras''.)}}
+\end{figure}
+
+\begin{notebox}
+\textbf{Tabla de frecuencias del español} (valores de la slide, en \%):
+\begin{center}\ttfamily\footnotesize
+\begin{tabular}{llllll}
+E 13,11 & C 4,85 & Y 0,79 \qquad & A 10,60 & L 4,42 & Q 0,74\\
+S 8,47  & U 4,34 & H 0,60 \qquad & O 8,23  & M 3,11 & Z 0,26\\
+I 7,16  & P 2,71 & J 0,25 \qquad & N 7,14  & G 1,40 & X 0,15\\
+R 6,95  & B 1,16 & W 0,12 \qquad & D 5,87  & F 1,13 & K 0,11\\
+T 5,40  & V 0,82 & Ñ 0,10 \qquad &         &        &      \\
+\end{tabular}
+\end{center}
+La tabla es una característica \emph{intrínseca} del lenguaje: si se calcula sobre 3 o 4 libros
+grandes, el histograma casi no varía.
+\end{notebox}
+
+\begin{notebox}
+\textbf{Anécdotas del profesor.}
+\begin{itemize}[leftmargin=1.3em,itemsep=1pt]
+  \item Las revistas de \emph{acertijos / criptogramas} para chicos de primaria son
+        exactamente esto: un chico de 8--9 años puede resolver un cifrado de sustitución sin
+        teoría, usando su noción estadística internalizada del lenguaje.
+  \item Pistas idiomáticas: en español la \texttt{q} casi siempre va seguida de \texttt{u}; tres
+        consonantes seguidas no existen; los artículos (\texttt{el}, \texttt{la}, \texttt{de},
+        \texttt{los}) aparecen mucho.
+  \item En un curso de criptoanálisis, el profesor descifró un mensaje en \textbf{alemán} sin
+        que nadie supiera alemán, apoyándose solo en los \emph{indicadores estadísticos
+        formales} del idioma. Reveló que el ataque no requiere conocer el lenguaje.
+  \item \textbf{Aplica al mundo digital}: cifrar un \texttt{.mp4} o un \texttt{.docx} con
+        sustitución es igualmente atacable, porque el formato tiene mucha \emph{estructura}
+        (que pasa a ser parte de la estadística del ``lenguaje''). A veces es más fácil, porque
+        los \emph{headers} deben tener valores concretos.
+\end{itemize}
+\end{notebox}
+
+\subsection{Los símbolos pueden ser diferentes: el criptograma de Trinity}
+\begin{notebox}
+\textbf{Criptograma del cementerio de Trinity (NY, 1794).} Ejemplo de sustitución donde cada
+letra se reemplaza por un \emph{símbolo} (no por otra letra). La clave se arma con
+\textbf{tableros tipo ta-te-ti}: como hay más de un tablero, se los distingue con cero, uno o
+dos puntos, y cada letra se reemplaza por la representación de su cuadrante. Fue descifrado
+recién en \textbf{1986}: no por dificultad del sistema, sino porque el \emph{mensaje era muy
+corto} (poca información para el ataque estadístico). \emph{(Queda de tarea descifrarlo.)}
+\end{notebox}
+
+\subsection{Ejercicio resuelto en clase: ``el escarabajo de oro''}
+\begin{practbox}{Ejercicio de descifrado (hecho en vivo en la clase)}
+Se planteó descifrar un mensaje en \textbf{castellano} cifrado por sustitución con
+\emph{símbolos / números}. Ayudas dadas:
+\begin{itemize}[leftmargin=1.3em,itemsep=1pt]
+  \item El mensaje original está en castellano.
+  \item La separación en grupos de 5 símbolos no es parte del problema; solo ayuda a contar.
+  \item \textbf{Gancho} (\emph{crib}): la secuencia \texttt{LACABEZA} aparece en el mensaje
+        plano.
+\end{itemize}
+El mensaje cifrado (con palos de cartas, llaves y dígitos) fue, por ejemplo:
+\begin{center}\ttfamily\small
+$\diamondsuit$>]$\clubsuit$0\quad $\heartsuit$34$\diamondsuit$3\quad 44]>\}\quad
+>\{:$\odot$$\spadesuit$\quad \{4$\heartsuit$3>\quad 34]02\quad 014:0\quad \dots
+\end{center}
+\textbf{No se dio la solución}: el mensaje pertenece a \emph{El escarabajo de oro}, de
+\textbf{Edgar Allan Poe} (también criptógrafo amateur), cuyo libro explica cómo decodificarlo;
+quien lo termine puede verificar por ahí.
+\end{practbox}
+
+\begin{warnbox}{Lección: ``débil'' no es lo mismo que ``romperlo''}
+Una cosa es decir, desde lo abstracto, que un criptosistema es débil/fácil de romper; otra es
+\emph{romperlo}. Cuanto más complejo el criptosistema, más grande el espacio de búsqueda.
+\textbf{Contracara histórica}: hubo criptosistemas considerados ``buenos'' \emph{solo porque
+nadie los había roto} —no por ser fundacionalmente seguros, sino porque nadie les había
+dedicado el tiempo necesario—. Esta es la idea de ``\emph{handshake / crib}'' (gancho) que se
+retoma con Enigma.
+\end{warnbox}
+
+%=====================================================================
+\section{Cifrado de Vigenère (sustitución polialfabética)}
+%=====================================================================
+
+Al entrar el Renacimiento surgen los \textbf{criptosistemas de sustitución polialfabética}:
+también sustituyen símbolo por símbolo según una regla, pero con la característica de que
+\textbf{un mismo símbolo puede terminar en símbolos distintos}. El más emblemático es el de
+\textbf{Vigenère}.
+
+\begin{defbox}{Cifrado de Vigenère}
+Es una \textbf{composición de cifrados por rotación}. Se define una clave de longitud $n$,
+donde cada elemento indica \emph{cuántas veces rotar} la letra en esa posición. El mensaje se
+divide en \textbf{bloques} del tamaño de la clave; al terminar la clave, se vuelve a empezar
+(la clave se repite cíclicamente).
+\end{defbox}
+
+\begin{practbox}{Ejemplo trabajado: $K=\texttt{ECFD}=4253$ (long.\ 4)}
+La clave puede darse como letras o como números (con la correspondencia
+$\texttt{A}=0,\texttt{B}=1,\texttt{C}=2,\dots$; aquí se usa la variante numérica de la slide).
+Se rota cada letra según el dígito de la clave alineado debajo:
+\begin{center}\ttfamily\small
+\begin{tabular}{ll}
+mensaje:  & esto es una prueba\\
+clave:    & 4253 42 534 253 42\\
+cifrado:  & iuyr dg xcy ofc ttzhfc
+\end{tabular}
+\end{center}
+\textbf{Lo clave del ejemplo:} la letra \texttt{e}, según en qué posición del bloque caiga, se
+transforma en \emph{letras distintas}; y una misma letra del cifrado (p.\ ej.\ dos
+\texttt{c} seguidas, o un espacio que aparece dos veces) puede provenir de letras \emph{distintas}
+del plano. Esto \textbf{rompe todas las propiedades estadísticas}: la letra más frecuente del
+plano deja de ser el símbolo más frecuente del cifrado.
+\end{practbox}
+
+\begin{notebox}
+\textbf{Vigenère en la historia.} Creado en \textbf{1553}. Durante casi \textbf{300 años} se
+lo consideró seguro. En \textbf{1863}, \textbf{Friedrich Kasiski} (un soldado aficionado a la
+criptografía, destacado en la fría Rusia y con mucho tiempo libre) publica un método para
+resolverlo.
+\end{notebox}
+
+\subsection{Criptoanálisis: el test de Kasiski}
+El ataque tiene \textbf{dos fases}: (1) determinar la longitud de la clave (tamaño de bloque);
+(2) analizar la clave de cada bloque por separado. Una consecuencia importante: para los
+polialfabéticos \textbf{ya no hay solución genérica}; los ataques pasan a ser
+\emph{ad hoc}, específicos de cada algoritmo (explotan el conocimiento del criptosistema).
+
+\subsubsection{Fase 1 — Longitud de la clave (n-gramas repetidos)}
+\begin{defbox}{Observación de Kasiski}
+Si una misma secuencia del texto plano cae en la \emph{misma posición de bloque}, se cifra
+igual. Por lo tanto, \textbf{secuencias repetidas en el texto cifrado} provienen, con alta
+probabilidad, de los mismos caracteres del plano alineados al mismo punto del bloque. La
+\textbf{distancia} entre dos apariciones debe ser un \textbf{múltiplo del tamaño de bloque}.
+\[
+  \text{longitud de clave} \;=\; \mcd(\text{distancias entre repeticiones})
+\]
+\end{defbox}
+
+\begin{practbox}{Ejemplo trabajado del test de Kasiski (slide)}
+Sobre un texto cifrado largo se hallan estas secuencias repetidas y sus distancias:
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{lll}
+\toprule
+secuencia & apariciones & distancias\\
+\midrule
+\texttt{GGMP} & 3 veces & 256 y 104 caracteres\\
+\texttt{YEDS} & 2 veces & 72 caracteres\\
+\texttt{HASE} & 2 veces & 156 caracteres\\
+\texttt{VSUE} & 2 veces & 32 caracteres\\
+\bottomrule
+\end{tabular}
+\end{center}
+Cálculo del máximo común divisor:
+\[
+  \mcd(32,\;72,\;104,\;156,\;256) \;=\; 4 .
+\]
+Luego, la \textbf{longitud de clave es 4}. (Es una prueba estadística: si falla, suele dar
+$\mcd=1$ por una coincidencia espuria; se descarta esa muestra y se recalcula.)
+\end{practbox}
+
+\subsubsection{Fase 2 — Método de coincidencia mutua}
+Conocida la longitud $n$, el mensaje se separa en $n$ \emph{sub-mensajes}: el formado por las
+primeras letras de cada bloque, el de las segundas, etc. Cada sub-mensaje fue cifrado con
+\textbf{una única rotación} (es, en sí, un cifrado por rotación). Como un histograma de letras
+es una propiedad robusta del lenguaje, cada sub-mensaje conserva (rotado) la estadística del
+idioma.
+
+\begin{defbox}{Método de coincidencia mutua}
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item Determinar estadísticamente las letras más probables en cada grupo.
+  \item Estimar las rotaciones que llevan a cada grupo a \emph{equipararse} con las
+        estadísticas del lenguaje.
+  \item Probar las rotaciones, podando caminos al encontrar combinaciones sin sentido.
+\end{enumerate}
+\end{defbox}
+
+\begin{notebox}
+\textbf{La idea fina de Kasiski.} Si se juntan dos sub-grupos con rotaciones distintas, el
+histograma combinado ``se rompe''. Pero \emph{existe una rotación relativa} entre ambos para
+la cual, al combinarlos, el histograma vuelve a parecerse al del idioma: esa rotación es la
+\textbf{diferencia} entre las dos claves parciales. Encontrando todas las diferencias
+relativas, se transforma el problema en un \emph{único} cifrado por rotación, y entonces se
+prueban las $\sim$26 posibilidades para recuperar el mensaje.
+\end{notebox}
+
+%=====================================================================
+\section{Sustitución polialfabética avanzada: la máquina Enigma}
+%=====================================================================
+
+El estado del arte hacia la Segunda Guerra Mundial eran polialfabéticos mucho más
+sofisticados que Vigenère. Todos los ejércitos (Alemania, EE.UU., Japón, Inglaterra) tenían
+alguno. El más estudiado es \textbf{Enigma}, usado por los alemanes.
+
+\begin{defbox}{Enigma — criptosistema de rotores}
+Es electromecánica, similar a una máquina de escribir, salvo que al pulsar una tecla
+\emph{imprime otra letra}. Componentes:
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Rotores} (3, en versiones posteriores 4): cada rotor es una sustitución
+        simple (entra una letra, sale otra). Al \emph{rotar}, la asociación cambia.
+  \item \textbf{Avance escalonado}: cada vez que se pulsa una tecla, el primer rotor avanza;
+        al completar una vuelta hace avanzar al segundo, y así (como un cuentakilómetros). El
+        período antes de repetir es $\approx 26^3$ posiciones: en términos prácticos, para un
+        mensaje \textbf{nunca se repite}.
+  \item \textbf{Plugboard} (tablero de conexiones): pares de cables intercambiables.
+  \item \textbf{Reflector}: la señal ``rebota'' y vuelve. Gracias a esto, con la misma
+        configuración inicial, tipear el cifrado devuelve el plano: la \textbf{misma máquina
+        cifra y descifra} (idea reutilizada en sistemas modernos).
+\end{itemize}
+\end{defbox}
+
+% ---- Diagrama: esquema de Enigma (slide Maquina enigma) ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\scriptsize,>=Stealth]
+  \tikzset{rotor/.style={draw,fill=itbaBlue!40,minimum width=1.0cm,minimum height=3.0cm}}
+  % teclado
+  \node[draw,fill=black!8,minimum width=0.9cm,minimum height=2.6cm,align=center] (kb) at (0,0)
+       {\rotatebox{90}{Teclado}};
+  % rotores
+  \node[rotor] (r1) at (1.9,0) {26};
+  \node[rotor] (r2) at (3.1,0) {26};
+  \node[rotor] (r3) at (4.3,0) {26};
+  \node[draw,fill=black!25,minimum width=0.45cm,minimum height=3.0cm] (refl) at (5.1,0) {};
+  \node[align=center,font=\tiny] at (5.1,2.0) {Reflector};
+  % plugboard
+  \node[draw,fill=black!12,minimum width=0.9cm,minimum height=2.6cm,align=center] (pb) at (6.6,0)
+       {\rotatebox{90}{Plugboard}};
+  % lamparas
+  \node[draw,circle,minimum size=0.45cm] (l1) at (8.1,0.7) {T};
+  \node[draw,circle,minimum size=0.45cm,fill=yellow!70] (l2) at (8.1,0.0) {R};
+  \node[draw,circle,minimum size=0.45cm] (l3) at (8.1,-0.7) {E};
+  \node[above=1mm of l1,font=\tiny] {Lámparas};
+
+  \node[below=1mm of r1] {Rotor 1}; \node[below=1mm of r2] {Rotor 2};
+  \node[below=1mm of r3] {Rotor 3};
+  % recorrido de la señal (ida: hacia el reflector)
+  \draw[->,red,line width=0.9pt]
+        (0.45,0.9) -- (1.4,0.9) -- (1.4,0.3) -- (2.5,0.3) -- (2.5,-0.4)
+        -- (3.7,-0.4) -- (3.7,0.5) -- (4.9,0.5) -- (4.9,-0.6) -- (4.3,-0.6);
+  % recorrido de la señal (vuelta: del reflector a la lampara)
+  \draw[->,blue,line width=0.9pt]
+        (4.3,-0.9) -- (1.9,-0.9) -- (1.9,-1.3) -- (6.1,-1.3)
+        -- (6.1,0.0) -- (7.6,0.0) -- (l2.west);
+  \node[red,font=\tiny] at (0.2,1.15) {T};
+  \node[blue,font=\tiny] at (8.1,-0.95) {R};
+\end{tikzpicture}
+\caption{Esquema conceptual de Enigma: la pulsación pasa por el plugboard, atraviesa los 3
+rotores, se refleja y regresa por otro camino hasta encender una lámpara. Cada pulsación hace
+avanzar un rotor, por lo que la misma tecla produce salidas distintas (``3 permutaciones por
+pasada''). \textit{(Recreación de la diapositiva ``Máquina Enigma''.)}}
+\end{figure}
+
+\begin{notebox}
+\textbf{La clave de Enigma y su criptoanálisis.}
+\begin{itemize}[leftmargin=1.3em,itemsep=1pt]
+  \item La \textbf{clave} era la \emph{disposición inicial de los rotores} (p.\ ej.\
+        $15,8,14$). El plugboard quedaba fijado por tipo de unidad (marina, infantería). Cada
+        oficial tenía un \emph{cuaderno} con una configuración distinta \textbf{por día}: si
+        en un día no se barrían todas las posibilidades, el trabajo se perdía.
+  \item Los aliados, liderados por \textbf{Alan Turing} (entre otros) en \emph{Bletchley
+        Park}, \textbf{capturaron físicamente} una máquina, hicieron \emph{ingeniería
+        inversa} y construyeron una computadora (la \emph{Bombe}) para fuerza bruta. Aun así,
+        $26^3$ claves por día desbordaban el cómputo.
+  \item Lo lograron usando \textbf{cribs} (ganchos): muchos mensajes empezaban con el mismo
+        \emph{saludo}, lo que reducía drásticamente el espacio. \emph{No rompieron Enigma de
+        forma general}, solo ese \textbf{uso} de Enigma. Los submarinos con máquinas de
+        \textbf{4 rotores} no pudieron descifrarse durante la guerra.
+  \item \textbf{Legado}: para resolver esto prácticamente se inventó la computadora; de aquí
+        sale el modelo de procesamiento que luego von Neumann toma para la arquitectura
+        (memoria + ejecución) que usamos hoy.
+\end{itemize}
+\end{notebox}
+
+%=====================================================================
+\section{¿Hay criptosistemas seguros? El nacimiento de la criptografía moderna}
+%=====================================================================
+
+La historia de los clásicos es un juego del gato y el ratón: se inventan criptosistemas, se
+rompen, se inventan otros. La Segunda Guerra Mundial genera una \textbf{crisis}: al juntar
+mucha gente brillante, se rompieron cosas que se suponían muy seguras. La realización clave
+fue que \textbf{no había un criterio} para dar fiabilidad: ``esto es seguro porque nadie lo
+rompió'' no es una definición.
+
+\begin{defbox}{Los tres pilares de la criptografía moderna}
+\begin{enumerate}[leftmargin=1.6em,itemsep=2pt]
+  \item \textbf{Representaciones formales} de criptosistemas (ya no recetas algorítmicas, sino
+        definiciones precisas).
+  \item \textbf{Definiciones del modelo de amenaza}: \emph{no hay una única definición de ``es
+        seguro''}. (Tal vez Enigma era seguro, pero el \emph{uso} que se le daba no lo era.)
+  \item \textbf{Pruebas formales de seguridad}, que permiten salir de la definición vaga y
+        \emph{comparar} la seguridad de dos construcciones.
+\end{enumerate}
+\end{defbox}
+
+\subsection{Definición formal de criptosistema}
+\begin{defbox}{Criptosistema (terna de algoritmos)}
+\[
+\begin{aligned}
+  \Gen&: () \to \Kset && \text{Generador de clave}\\
+  \Enc&: \Kset \times \Pset \to \Cset && \text{Cifrado}\\
+  \Dec&: \Kset \times \Cset \to \Pset && \text{Descifrado}
+\end{aligned}
+\]
+\textbf{Propiedad básica (corrección).} Para todo $m$ y $k$ válidos:
+\[
+  d_k\bigl(e_k(m)\bigr) = m .
+\]
+\textbf{Conjuntos involucrados:} $\Kset$ (espacio de claves: todas las claves posibles),
+$\Pset$ (espacio plano: todos los mensajes posibles), $\Cset$ (espacio cifrado: todos los
+mensajes cifrados posibles).
+\end{defbox}
+
+\begin{notebox}
+\textbf{Detalles.}
+\begin{itemize}[leftmargin=1.3em,itemsep=1pt]
+  \item $\Gen$ suele ser una función \emph{sin parámetros} que \textbf{determina el espacio de
+        claves} (dice cuántas y cuáles claves hay: 26, un millón, un cuatrillón, \dots).
+  \item $\Enc$ y $\Dec$ deben actuar como \textbf{inversas} para una misma clave: si cifro con
+        $k$ y descifro con $k$, recupero el mensaje.
+  \item Esta propiedad es \emph{``sanitaria''} (básica): garantiza que el sistema sirva, pero
+        \textbf{no habla de seguridad}. De hecho, la función \emph{identidad} (que ignora la
+        clave y devuelve el mensaje) la cumple. No se incluye una propiedad de seguridad
+        \emph{porque no hay una única noción de seguridad}.
+\end{itemize}
+\end{notebox}
+
+%=====================================================================
+\section{Seguridad: el secreto perfecto de Shannon}
+%=====================================================================
+
+Al formalizar la seguridad, \textbf{Shannon} define el criterio de \textbf{secreto perfecto}:
+una formulación estadística que constituye el \emph{ideal} de los criptosistemas.
+
+\begin{defbox}{Secreto perfecto (Shannon)}
+Dado un criptosistema $(\Gen,e,d)$, posee \textbf{secreto perfecto} si para toda distribución
+de probabilidades en $\Mset$, para cada mensaje $m$ y cada cifrado $c$ con $\Pr[C=c]>0$:
+\[
+  \Pr[\,M=m \mid C=c\,] \;=\; \Pr[\,M=m\,] .
+\]
+Es decir: \textbf{conocer el texto cifrado no modifica} la probabilidad \emph{a priori} que se
+tenía sobre el mensaje. No se aprende \emph{nada} del mensaje a partir del cifrado.
+\end{defbox}
+
+\begin{notebox}
+\textbf{Interpretación (con ejemplos del profesor).}
+\begin{itemize}[leftmargin=1.3em,itemsep=1pt]
+  \item \textbf{Ejemplo de una letra}: si la probabilidad \emph{a priori} de que el mensaje
+        sea \texttt{a} es $0.106$ (su frecuencia), y tras conocer el cifrado $c=\texttt{J}$
+        sigue siendo $0.106$ (y lo mismo para todas las letras), el sistema tiene secreto
+        perfecto.
+  \item \textbf{Ejemplo binario}: si la respuesta es ``sí/no'' y se sabe a priori que hay
+        80\,\% de chances de ``sí'', con secreto perfecto conocer el cifrado mantiene ese
+        80\,\%: no pasa a 79\,\% ni a 81\,\%. \emph{Es mucho más fuerte que ``no poder
+        decodificar''}: es no extraer \emph{ninguna} información.
+\end{itemize}
+\end{notebox}
+
+\begin{warnbox}{La paradoja del secreto perfecto}
+Notar que $c=e_k(m)$, así que las variables aleatorias discretas $C$ y $M$ están
+\emph{relacionadas por diseño} (la función de cifrado). Sin embargo, la propiedad de secreto
+perfecto, interpretada probabilísticamente, dice que $M$ y $C$ se comportan como variables
+\textbf{estadísticamente independientes} (conocer una no modifica la distribución de la otra).
+Esa tensión es la ``paradoja''. \\[3pt]
+\emph{Consecuencia bestial:} un criptosistema con secreto perfecto es \textbf{imposible de
+romper, incluso por fuerza bruta} (conecta con el límite de la fuerza bruta visto en ROT-X).
+\end{warnbox}
+
+\begin{notebox}
+\textbf{Pregunta abierta que deja la clase.} ¿El secreto perfecto es una \emph{asíntota
+teórica} inalcanzable (que solo sirve para medir cuán cerca estamos), o existe una
+construcción que efectivamente lo alcanza? Se retoma la clase siguiente, junto con un repaso
+de probabilidades y los matices que llevan a distintas definiciones de seguridad.
+\end{notebox}
+
+%=====================================================================
+\section*{Lectura recomendada}
+\addcontentsline{toc}{section}{Lectura recomendada}
+%=====================================================================
+\begin{center}
+\begin{tcolorbox}[enhanced,colback=itbaBlue!20,colframe=itbaCyanDark,boxrule=1pt,
+  arc=3pt,width=0.85\textwidth,halign=center]
+\large\textbf{Capítulo 1}\\[4pt]
+\emph{Introduction to Modern Cryptography}\\[2pt]
+J.~Katz \& Y.~Lindell
+\end{tcolorbox}
+\end{center}
+\noindent Recoge todo lo visto y contiene más ejemplos de criptosistemas clásicos.
+
+%---------------------------------------------------------------------
+\vfill
+\begin{center}\small\itshape\color{black!60}
+Apunte integral de la Clase 1 — Introducción a la Criptografía · Criptografía y Seguridad, ITBA.\\
+Síntesis de la teoría (transcripción + diapositivas). Esta clase no tuvo clase práctica asociada.
+\end{center}
+
+\end{document}

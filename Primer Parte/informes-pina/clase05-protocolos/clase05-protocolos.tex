@@ -1,0 +1,1063 @@
+% !TEX program = tectonic
+%=====================================================================
+%  Criptografía y Seguridad - ITBA
+%  Clase 5 — Protocolos (PKI, KDC, Needham-Schroeder, TLS, Shamir)
+%  Apunte integral: teoría + práctica
+%=====================================================================
+\documentclass[11pt,a4paper]{article}
+
+%---------------------------------------------------------------------
+%  Paquetes
+%---------------------------------------------------------------------
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+  \usepackage{lmodern}
+\else
+  \usepackage{fontspec}
+\fi
+\usepackage[spanish,es-tabla,es-noshorthands]{babel}
+\usepackage{microtype}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{geometry}
+\geometry{a4paper,margin=2.4cm,headheight=22pt}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{caption}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,shapes.misc,shapes.symbols,arrows.meta,positioning,calc,
+                fit,backgrounds,decorations.pathmorphing,shadows.blur,chains}
+
+%---------------------------------------------------------------------
+%  Paleta de color (inspirada en las diapositivas de la cátedra)
+%---------------------------------------------------------------------
+\definecolor{itbaCyan}{HTML}{6EC6D9}
+\definecolor{itbaCyanDark}{HTML}{2E8B9E}
+\definecolor{itbaBlue}{HTML}{AEDCEA}
+\definecolor{boxBlue}{HTML}{BBD4F0}
+\definecolor{slideGray}{HTML}{ECECEC}
+\definecolor{practGreen}{HTML}{4F8A3D}
+\definecolor{practGreenL}{HTML}{E2EFD9}
+\definecolor{attackRed}{HTML}{C0392B}
+\definecolor{codeBg}{HTML}{F5F5F5}
+
+%---------------------------------------------------------------------
+%  Hipervínculos
+%---------------------------------------------------------------------
+\hypersetup{
+  colorlinks=true,
+  linkcolor=itbaCyanDark,
+  urlcolor=itbaCyanDark,
+  citecolor=itbaCyanDark,
+  pdftitle={Clase 5 - Protocolos},
+  pdfauthor={Criptografia y Seguridad - ITBA}
+}
+
+%---------------------------------------------------------------------
+%  Encabezados y pies
+%---------------------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\textsc{Criptografía y Seguridad — ITBA}}
+\rhead{\small Clase 5 · Protocolos}
+\cfoot{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{itbaCyanDark}\leaders\hrule height \headrulewidth\hfill}}
+
+%---------------------------------------------------------------------
+%  Títulos de sección con barra de color (estilo diapositiva)
+%---------------------------------------------------------------------
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{itbaCyanDark}}
+  {\thesection}{0.6em}{}
+  [\vspace{-0.4em}{\color{itbaCyan}\titlerule[2pt]}]
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{itbaCyanDark}}
+  {\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{black}}
+  {\thesubsubsection}{0.6em}{}
+
+%---------------------------------------------------------------------
+%  Cajas reutilizables
+%---------------------------------------------------------------------
+\newtcolorbox{slidebox}[1][]{
+  enhanced, colback=slideGray, colframe=black!55, boxrule=0.5pt,
+  arc=1pt, left=6pt,right=6pt,top=4pt,bottom=4pt, #1}
+
+\newtcolorbox{defbox}[1]{
+  enhanced, breakable, colback=itbaBlue!25, colframe=itbaCyanDark,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+\newtcolorbox{practbox}[1]{
+  enhanced, breakable, colback=practGreenL, colframe=practGreen,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+\newtcolorbox{warnbox}[1]{
+  enhanced, breakable, colback=attackRed!8, colframe=attackRed,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+%---------------------------------------------------------------------
+%  Estilo de código
+%---------------------------------------------------------------------
+\lstdefinestyle{shell}{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{codeBg},
+  keywordstyle=\color{itbaCyanDark}\bfseries,
+  commentstyle=\color{practGreen}\itshape,
+  stringstyle=\color{attackRed},
+  breaklines=true, frame=single, rulecolor=\color{black!30},
+  showstringspaces=false, columns=fullflexible, tabsize=2,
+  xleftmargin=10pt, framexleftmargin=8pt}
+
+%---------------------------------------------------------------------
+%  Macros
+%---------------------------------------------------------------------
+\newcommand{\enc}[2]{\{#1\}\,#2}          % {M} k
+\newcommand{\kdc}{\textsf{KDC}}
+\newcommand{\concat}{\,\|\,}
+
+%  Estilo común para diagramas de secuencia
+\tikzset{
+  lifeline/.style={thick, dotted, black!55},
+  actor/.style={draw, rounded corners, fill=boxBlue, minimum width=1.3cm,
+                minimum height=0.7cm, font=\bfseries},
+  msg/.style={-{Stealth}, thick, itbaCyanDark},
+  msgback/.style={-{Stealth}, thick, itbaCyanDark},
+  atk/.style={-{Stealth}, thick, attackRed},
+  note/.style={draw=black!40, fill=slideGray, rounded corners, font=\scriptsize,
+               inner sep=3pt, align=center}
+}
+
+%=====================================================================
+\begin{document}
+%=====================================================================
+
+%---------------------------------------------------------------------
+%  Portada
+%---------------------------------------------------------------------
+\begin{titlepage}
+\centering
+\vspace*{1.2cm}
+
+\begin{tikzpicture}
+  \node[rounded corners=2pt, fill=itbaCyan, text=black, inner sep=14pt,
+        minimum width=0.8\textwidth, align=center] (t)
+        {\Huge\bfseries Criptografía y Seguridad};
+\end{tikzpicture}
+
+\vspace{0.6cm}
+{\LARGE Criptografía: Protocolos y otros}\\[0.25cm]
+{\Huge\bfseries\color{itbaCyanDark} Protocolos, PKI y Secreto Compartido}
+
+\vspace{0.8cm}
+
+% Ilustración: bóveda / caja fuerte (recreación del icono de portada)
+\begin{tikzpicture}[scale=1.0]
+  \fill[black!12] (-3.2,-2.4) rectangle (3.2,2.8);
+  \draw[line width=2pt, black!55] (-3.2,-2.4) rectangle (3.2,2.8);
+  \fill[itbaCyanDark!75] (-2.4,-2.0) rectangle (2.4,2.4);
+  \draw[line width=3pt, black!70] (-2.4,-2.0) rectangle (2.4,2.4);
+  \draw[line width=1.2pt, itbaCyan] (-2.0,-1.6) rectangle (2.0,2.0);
+  \draw[line width=2pt, black!70] (0,-2.0) -- (0,2.4);
+  \foreach \a in {0,45,...,315}{
+    \draw[line width=2pt, black!70] (-1.1,0.2) -- ++(\a:0.6);
+  }
+  \draw[line width=2.5pt, black!70] (-1.1,0.2) circle (0.42);
+  \fill[itbaCyan] (-1.1,0.2) circle (0.16);
+  \draw[line width=2.5pt, black!70] (1.1,0.2) circle (0.42);
+  \fill[itbaCyan] (1.1,0.2) circle (0.16);
+  \foreach \y in {-1.2,-0.4,0.8,1.6}{
+     \fill[black!70] (-2.2,\y) circle (0.07);
+     \fill[black!70] (2.2,\y) circle (0.07);
+  }
+\end{tikzpicture}
+
+\vfill
+{\large Apunte integral — Teoría + Práctica}\\[0.2cm]
+{\normalsize Clase 5 \quad·\quad Capítulo 11, \emph{Computer Security: Art and Science} (M.~Bishop) \quad·\quad RFC 8446 (TLS 1.3)}\\[0.4cm]
+{\small Instituto Tecnológico de Buenos Aires (ITBA)}
+
+\vspace{0.6cm}
+{\footnotesize\itshape Documento elaborado a partir de las diapositivas oficiales de la
+teórica y de la práctica, y de las transcripciones de ambas clases.}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+%=====================================================================
+\section{Introducción: del cifrado simétrico a los protocolos}
+%=====================================================================
+
+Esta clase cierra el bloque de criptografía con los \textbf{protocolos} que hacen utilizable
+todo lo visto: cómo dos partes acuerdan una clave, cómo se asocia una clave pública a una
+identidad (PKI), cómo se construye un canal seguro (TLS) y cómo se reparte un secreto entre
+varios custodios (Shamir). La idea central es que los \emph{algoritmos} criptográficos son
+piezas; los \emph{protocolos} son las reglas de intercambio de mensajes que los combinan para
+lograr propiedades de seguridad frente a un adversario.
+
+\begin{defbox}{Punto de partida (repaso)}
+Un criptosistema \textbf{CCA-Secure} permite enviar información manteniendo
+\textbf{confidencialidad} e \textbf{integridad}:
+\[
+  A \xrightarrow{\;\;\mathrm{Enc}_k(M)\;\;} B
+\]
+\textbf{Pero requiere que ambas partes conozcan una misma clave $k$.} De ahí surge el
+problema que organiza toda la clase: \emph{¿cómo logran $A$ y $B$ compartir esa clave?}
+\end{defbox}
+
+\begin{defbox}{Intercambio de claves como protocolo $\Pi(n)$}
+Un \textbf{intercambio de claves} es un protocolo $\Pi(n)$ ejecutado por dos partes:
+\[
+  \Pi : (n) \;\to\; (\mathrm{Tran},\, k_a,\, k_b)
+\]
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item No tiene entrada salvo el \textbf{parámetro de seguridad} $n$.
+  \item La salida es: un conjunto de \textbf{mensajes intercambiados} ($\mathrm{Tran}$), una
+        clave $k_a$ conocida solo por una parte y una clave $k_b$ conocida solo por la otra.
+\end{itemize}
+\textbf{Condición fundamental:} $\;k_a = k_b$ (ambas partes terminan con la misma clave).
+\end{defbox}
+
+\begin{practbox}{Aporte de la práctica — limitaciones de la clave privada (KDC)}
+La práctica encuadra toda la clase en las \textbf{tres limitaciones de la criptografía de
+clave privada (simétrica)}:
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item \textbf{Distribución de la clave} $\;\to\;$ se ataca con un \textbf{KDC} (Key
+        Distribution Center).
+  \item \textbf{Almacenamiento de la clave} $\;\to\;$ también lo alivia el KDC (cada uno
+        guarda una sola clave).
+  \item \textbf{Sistemas abiertos} (\emph{open systems}) $\;\to\;$ motiva la
+        \emph{revolución de clave pública} (PKI).
+\end{enumerate}
+Con $n$ participantes que quieren hablar de a pares, un esquema todos-con-todos requiere
+$\binom{n}{2}$ claves; el KDC lo reduce a $n$ claves (una por participante con el centro).
+\end{practbox}
+
+%=====================================================================
+\section{Distribución simétrica de claves: el KDC}
+%=====================================================================
+
+\begin{defbox}{KDC — Key Distribution Center}
+Un \textbf{punto único} en el que se concentran las relaciones de confianza. Cada entidad
+$U$ comparte una clave $k_U$ \emph{solo con el KDC} ($k_A$ para $A$, $k_B$ para $B$, etc.).
+Cuando $A$ quiere hablar con $B$:
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item $A \to \kdc$: ``quiero comunicarme con $B$''.
+  \item El \kdc{} genera una \textbf{clave de sesión} $s$ y la entrega cifrada a cada uno:
+        $\kdc \to A:\enc{s}{k_A}$ \ y \ $\kdc \to B:\enc{s}{k_B}$.
+  \item $A$ y $B$ se comunican entre sí cifrando con $s$: $\enc{\dots}{s}$.
+\end{enumerate}
+La clave de sesión $s$ se genera \emph{ad hoc} para esa conversación.
+\end{defbox}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small]
+  \node[actor, fill=attackRed!25] (kdc) at (4,2.4) {KDC};
+  \node[actor] (a) at (0,0) {A};
+  \node[actor] (b) at (8,0) {B};
+  \draw[msg] (a) to[bend left=18] node[above left,font=\scriptsize]{1.\ ``quiero hablar con $B$''} (kdc);
+  \draw[msg] (kdc) to[bend left=18] node[below right,font=\scriptsize]{2.\ $\enc{s}{k_A}$} (a);
+  \draw[msg] (kdc) to[bend left=18] node[above right,font=\scriptsize]{2.\ $\enc{s}{k_B}$} (b);
+  \draw[msg] (a) -- node[below,font=\scriptsize]{3.\ usan $s$: $\enc{\dots}{s}$} (b);
+\end{tikzpicture}
+\caption{Esquema del KDC (recreación de la diapositiva de práctica). Ejemplo de uso real:
+\textbf{Kerberos} y \textbf{Active Directory}.}
+\end{figure}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{>{\bfseries}p{3.2cm} p{10.2cm}}
+\toprule
+\textcolor{practGreen}{Ventajas} & Cada participante guarda \emph{solo} $k_U$. Hay un único sitio sensible: el KDC.\\
+\textcolor{attackRed}{Desventajas} & \textbf{Centralización}: si el KDC es atacado o falla, \emph{se cae todo}. Es el único punto de confianza (y de falla).\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{practbox}{Aclaración del profe — KDC vs.\ PKI}
+El KDC y la PKI \emph{ambos} requieren confiar en un tercero, pero de naturaleza distinta:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item En el \textbf{KDC} (mundo simétrico) confío en un servicio \emph{en línea} que
+        \emph{conoce todas las claves} y participa en cada conversación.
+  \item En la \textbf{PKI} (mundo asimétrico) confío en una \textbf{autoridad certificante}
+        que solo \emph{firma} la asociación clave--identidad; \emph{no} conoce las claves
+        privadas ni participa en cada conexión.
+\end{itemize}
+La PKI \emph{no es aplicable} a los criptosistemas simétricos: resuelve la integridad/origen
+de \emph{claves públicas}.
+\end{practbox}
+
+%=====================================================================
+\section{Protocolo Needham--Schroeder (clave simétrica)}
+%=====================================================================
+
+Es el protocolo de intercambio de claves simétricas que usan \textbf{Kerberos} y
+\textbf{Active Directory} (con modificaciones). Requiere un servicio centralizado (KDC) y
+\textbf{genera claves de sesión entre pares}. \emph{Hipótesis}: cada entidad comparte una
+clave con el KDC. A lo largo de las sucesivas ``aproximaciones'' se ven los ataques y sus
+arreglos.
+
+\medskip
+\noindent\textbf{Notación.} Se escribe $e_k(M) = \enc{M}{k}$ (cifrado de $M$ bajo $k$), y
+$\concat$ denota concatenación.
+
+\subsection{Primera aproximación (ingenua)}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small]
+  % lifelines
+  \foreach \x/\n in {0/A, 8/KDC}{
+    \node[actor] (\n t) at (\x,0.6) {\n};
+    \node[actor] (\n b) at (\x,-3.2) {\n};
+    \draw[lifeline] (\n t) -- (\n b);
+  }
+  \node[actor] (Bt2) at (12,0.6) {B};
+  \node[actor] (Bb2) at (12,-3.2) {B};
+  \draw[lifeline] (Bt2) -- (Bb2);
+  % messages
+  \draw[msg] (0,-0.1) -- node[above,font=\scriptsize]{1.\ $\enc{\text{Sesión }A\to B}{k_A}$} (8,-0.1);
+  \draw[msgback] (8,-1.2) -- node[above,font=\scriptsize]{2.\ $\enc{s}{k_A}\concat\enc{s}{k_B}$} (0,-1.2);
+  \draw[msg] (0,-2.4) -- node[above,font=\scriptsize]{3.\ $\enc{s}{k_B}$} (12,-2.4);
+\end{tikzpicture}
+\caption{Primera aproximación: $A$ pide la sesión, el KDC le devuelve $s$ cifrada para ambos,
+$A$ reenvía a $B$ su copia. (Recreación de la diapositiva.)}
+\end{figure}
+
+\begin{warnbox}{Problemas de la primera aproximación}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Repetición (replay)}: un atacante graba los mensajes de $A$ hacia $B$ y luego
+        reenvía $\enc{s}{k_B}$ y los siguientes. \emph{$B$ no tiene forma de saber que no
+        está hablando con $A$.}
+  \item \textbf{Reúso de claves (key reuse)}: un atacante graba el mensaje del KDC a $A$ y se
+        lo reenvía cuando $A$ inicia otra conversación. $A$ y $B$ terminan usando la
+        \emph{misma} clave de sesión vieja.
+\end{itemize}
+\end{warnbox}
+
+\subsection{Segunda aproximación (con nonces)}
+
+Se agregan \textbf{nonces} (números aleatorios de un solo uso) $r_1, r_2$ para garantizar
+\textbf{frescura} (anti-replay) y autenticación mutua.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small]
+  \node[actor] (At) at (0,1) {A};   \node[actor] (Ab) at (0,-5) {A};
+  \node[actor] (Kt) at (12,1) {KDC};\node[actor] (Kb) at (12,-1.8) {KDC};
+  \node[actor] (Bt) at (12,-2.6) {B}; \node[actor] (Bb) at (12,-5) {B};
+  \draw[lifeline] (At) -- (Ab);
+  \draw[lifeline] (Kt) -- (Kb);
+  \draw[lifeline] (Bt) -- (Bb);
+  \draw[msg] (0,0.4) -- node[above,font=\scriptsize]{1.\ $A\concat B\concat r_1$} (12,0.4);
+  \draw[msgback] (12,-0.6) -- node[above,font=\scriptsize]{2.\ $\enc{A\concat B\concat r_1\concat s\concat \enc{A\concat s}{k_B}}{k_A}$} (0,-0.6);
+  \draw[msg] (0,-2.1) -- node[above,font=\scriptsize]{3.\ $\enc{A\concat s}{k_B}$} (12,-2.1);
+  \draw[msgback] (12,-3.2) -- node[above,font=\scriptsize]{4.\ $\enc{r_2}{s}$} (0,-3.2);
+  \draw[msg] (0,-4.2) -- node[above,font=\scriptsize]{5.\ $\enc{r_2-1}{s}$} (12,-4.2);
+\end{tikzpicture}
+\caption{Segunda aproximación con nonces. (Recreación de la diapositiva.) El mensaje~2 está
+cifrado con $k_A$ (clave A--KDC), el mensaje~3 contiene el ``ticket'' $\enc{A\concat s}{k_B}$
+que solo $B$ abre.}
+\end{figure}
+
+\begin{defbox}{Por qué funciona — explicación mensaje a mensaje}
+\begin{description}[leftmargin=2.4em,style=nextline,itemsep=2pt]
+  \item[Segundo mensaje] Cifrado con la clave compartida $A$--KDC $\Rightarrow$ \emph{proviene
+        del KDC}. \textbf{No es repetición} porque el $r_1$ recibido coincide con el enviado.
+  \item[Cuarto mensaje] \textbf{Solo $B$ puede enviarlo} (solo $B$ obtiene $s$ del ticket).
+        Avisa a $A$ de un intento de comunicación enviando $\enc{r_2}{s}$.
+  \item[Quinto mensaje] $A$ confirma la comunicación devolviendo $\enc{r_2-1}{s}$. $B$ sabe
+        que \emph{no es una repetición} (por $r_2$): prueba que del otro lado hay alguien que
+        conoce $s$ \emph{ahora}.
+\end{description}
+\end{defbox}
+
+\subsection{Ataque residual y modificación Denning--Sacco}
+
+\begin{warnbox}{Problema: clave de sesión vieja comprometida}
+Escenario: el atacante $E$ obtiene una \textbf{clave de sesión antigua} $s$. Comienza
+directamente por el \textbf{tercer paso}, reenviando el ticket viejo $\enc{A\concat s}{k_B}$:
+\end{warnbox}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small]
+  \node[actor,fill=attackRed!25] (Et) at (0,0.6) {E}; \node[actor,fill=attackRed!25] (Eb) at (0,-2.8) {E};
+  \node[actor] (Bt) at (8,0.6) {B}; \node[actor] (Bb) at (8,-2.8) {B};
+  \draw[lifeline] (Et) -- (Eb);
+  \draw[lifeline] (Bt) -- (Bb);
+  \draw[atk] (0,-0.1) -- node[above,font=\scriptsize]{$\enc{A\concat s}{k_B}$ (ticket viejo)} (8,-0.1);
+  \draw[msgback,attackRed] (8,-1.1) -- node[above,font=\scriptsize]{$\enc{r_2}{s}$} (0,-1.1);
+  \draw[atk] (0,-2.1) -- node[above,font=\scriptsize]{$\enc{r_2-1}{s}$} (8,-2.1);
+  \node[note, fill=attackRed!12, draw=attackRed] at (4,-3.4) {\textbf{¡E logra impersonar a A!}};
+\end{tikzpicture}
+\caption{Ataque por reúso de clave de sesión vieja. (Recreación de la diapositiva.)}
+\end{figure}
+
+\begin{defbox}{Modificación Denning--Sacco — agregar timestamps}
+El arreglo propuesto es incluir un \textbf{timestamp} $T$ dentro del ticket. El ticket pasa a
+ser $\enc{A\concat T\concat s}{k_B}$: $B$ verifica que $T$ sea \emph{reciente} y rechaza
+tickets viejos, neutralizando el ataque anterior.
+\end{defbox}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small]
+  \node[actor] (At) at (0,1) {A};   \node[actor] (Ab) at (0,-5) {A};
+  \node[actor] (Kt) at (12,1) {KDC};\node[actor] (Kb) at (12,-1.8) {KDC};
+  \node[actor] (Bt) at (12,-2.6) {B}; \node[actor] (Bb) at (12,-5) {B};
+  \draw[lifeline] (At) -- (Ab);
+  \draw[lifeline] (Kt) -- (Kb);
+  \draw[lifeline] (Bt) -- (Bb);
+  \draw[msg] (0,0.4) -- node[above,font=\scriptsize]{1.\ $A\concat B\concat r_1$} (12,0.4);
+  \draw[msgback] (12,-0.6) -- node[above,font=\scriptsize]{2.\ $\enc{A\concat B\concat r_1\concat s\concat \enc{A\concat \textcolor{attackRed}{T}\concat s}{k_B}}{k_A}$} (0,-0.6);
+  \draw[msg] (0,-2.1) -- node[above,font=\scriptsize]{3.\ $\enc{A\concat \textcolor{attackRed}{T}\concat s}{k_B}$} (12,-2.1);
+  \draw[msgback] (12,-3.2) -- node[above,font=\scriptsize]{4.\ $\enc{r_2}{s}$} (0,-3.2);
+  \draw[msg] (0,-4.2) -- node[above,font=\scriptsize]{5.\ $\enc{r_2-1}{s}$} (12,-4.2);
+\end{tikzpicture}
+\caption{Modificación Denning--Sacco: el timestamp $T$ (en rojo) viaja dentro del ticket.
+(Recreación de la diapositiva.)}
+\end{figure}
+
+\begin{practbox}{Aclaración del profe — nonces, frescura y anti-replay}
+Los ataques de \textbf{replay} (repetición de mensajes) y de \textbf{key reuse} aparecen en
+\emph{cualquier} protocolo (KDC, Diffie--Hellman, etc.). Las dos herramientas para garantizar
+\textbf{frescura} son:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Nonces} ($r_1, r_2$): números aleatorios de un solo uso; quien responde con el
+        nonce correcto demuestra que participa \emph{ahora}.
+  \item \textbf{Timestamps} ($T$): marcas de tiempo que prueban que el mensaje es reciente y
+        no una grabación vieja.
+\end{itemize}
+\end{practbox}
+
+%=====================================================================
+\section{El problema de las claves públicas: Man-in-the-Middle}
+%=====================================================================
+
+Con criptografía asimétrica desaparece la necesidad de compartir un secreto previo, pero
+\textbf{aparece otro problema}: ¿de dónde se obtienen las claves públicas? Se confía
+\emph{implícitamente} en la asociación entre una clave y la identidad de su dueño.
+
+\begin{warnbox}{Ataques activos}
+Un atacante activo puede \textbf{omitir}, \textbf{reescribir}, \textbf{reordenar} o
+\textbf{repetir} mensajes. Los esquemas de intercambio ingenuos \emph{no sirven} contra
+atacantes activos $\Rightarrow$ ataques \textbf{Man-in-the-Middle (MITM)}.
+\end{warnbox}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small]
+  % lo que A imagina
+  \node[font=\bfseries\scriptsize] at (-0.5,1.4) {Lo que A imagina:};
+  \node[actor] (a1) at (0,0.6) {A}; \node[actor] (r1) at (8,0.6) {Repo};
+  \draw[msg] (a1) -- node[above,font=\scriptsize]{¿clave de $B$?} (r1);
+  \draw[msgback] (8,0.2) -- node[below,font=\scriptsize]{$pk_b$} (0,0.2);
+  % lo que pasa
+  \node[font=\bfseries\scriptsize] at (-0.5,-1.0) {Lo que pasa en realidad:};
+  \node[actor] (a2) at (0,-1.8) {A};
+  \node[actor,fill=attackRed!25] (e2) at (4,-1.8) {E};
+  \node[actor] (r2) at (8,-1.8) {Repo};
+  \draw[msg] (a2) -- node[above,font=\scriptsize]{¿clave de $B$?} (e2);
+  \draw[msg] (e2) -- node[above,font=\scriptsize]{¿clave de $B$?} (r2);
+  \draw[atk] (4,-2.2) -- node[below,font=\scriptsize]{\textcolor{attackRed}{$pk_e$}} (0,-2.2);
+  \draw[msgback] (8,-2.2) -- node[below,font=\scriptsize]{$pk_b$} (4,-2.2);
+\end{tikzpicture}
+\caption{$E$ se interpone entre $A$ y el repositorio y entrega \emph{su} clave $pk_e$ en lugar
+de $pk_b$. (Recreación de las diapositivas ``Problemas'' y ``Man in the middle''.)}
+\end{figure}
+
+Una vez que $A$ tiene la clave equivocada, todo lo que cifre ``para $B$'' lo abre $E$:
+\[
+  \underbrace{A \xrightarrow{e_{pk_e}(M)} E}_{\text{$E$ descifra}}
+  \xrightarrow{e_{pk_b}(M)} B .
+\]
+\textbf{El problema entra en la esfera de la administración de claves}: usar la clave
+equivocada significa que \emph{no hay garantías de confidencialidad ni integridad}.
+
+%=====================================================================
+\section{Infraestructura de Clave Pública (PKI)}
+%=====================================================================
+
+\begin{defbox}{Objetivo de la PKI}
+\textbf{Asociar una identidad a las claves públicas} para evitar la suplantación
+(\emph{man-in-the-middle} / \emph{spoofing}). \textbf{No es aplicable a criptosistemas
+simétricos.} \emph{Motivo}: la selección de claves depende de las partes; usar la clave
+equivocada anula la confidencialidad y la integridad.
+\end{defbox}
+
+\subsection{Certificados}
+
+\begin{defbox}{Certificado}
+Es un mensaje que contiene \textbf{al menos}: información de identidad (p.\ ej.\ nombre),
+\textbf{clave pública asociada}, fecha de emisión, intervalo de validez y \textbf{tipo de uso}
+de la clave (firma de mensajes, cifrado de e-mails, firma de certificados, cifrado de sitios
+web). El certificado está, a su vez, \textbf{firmado digitalmente por una autoridad
+competente} (CA).
+\end{defbox}
+
+\paragraph{Uso de un certificado.} $A$ solicita el certificado de $B$ (puede proveerlo $B$ o
+cualquier otra entidad). Con él, $A$ puede:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Verificar la identidad} comparando el \textbf{CN} (\emph{Common Name}):
+        e-mails $\to$ CN${=}$dirección; servidores $\to$ CN${=}$IP o \emph{hostname};
+        empresas $\to$ CN${=}$razón social.
+  \item \textbf{Obtener la clave pública de $B$}: es parte del propio certificado e incluye el
+        tipo de clave (p.\ ej.\ RSA-2048, DSA-EC 320).
+  \item \textbf{Verificar la validez}: tipo de uso permitido y fecha de vigencia.
+  \item \textbf{Verificar la integridad}: validando la \textbf{firma digital} de la autoridad.
+\end{itemize}
+
+\begin{slidebox}
+\textbf{El gran ``pero''}: la validación de una firma digital \emph{requiere una clave
+pública}. ¿Cómo se obtiene la clave pública \emph{de la autoridad}? $\Rightarrow$ cadenas de
+firmas.
+\end{slidebox}
+
+\subsection{Cadenas de firmas y CA raíces}
+
+\begin{defbox}{Cadenas de certificados}
+\textbf{Las autoridades certificantes tienen, a su vez, un certificado.} Se acostumbra incluir
+el certificado de la autoridad junto con cada certificado. ¿Quién valida el certificado de la
+CA? \textbf{Otra CA}.
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{CA raíces}: firman su \emph{propio} certificado (auto-firmado). Son el
+        \textbf{punto de confianza} del sistema.
+  \item \textbf{Concepto de raíz}: confiar en una única CA que \emph{delega} en otras la
+        capacidad de firmar certificados.
+\end{itemize}
+\textbf{Ejemplos} (la cadena se concatena $\concat$ del sujeto hacia la raíz):
+\[
+  \text{Cert. de }A\text{ firmado por CA3:}\quad C_a = C'_a \concat C_{\text{CA3}} \concat C_{\text{CA2}} \concat C_{\text{CA1}}
+\]
+\[
+  \text{Cert. de }B\text{ firmado por CA1:}\quad C_b = C'_b \concat C_{\text{CA1}}
+\]
+\end{defbox}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small, node distance=6mm]
+  \node[actor, fill=itbaCyan] (root) {CA1 (raíz, auto-firmada)};
+  \node[actor, below=of root] (ca2) {CA2};
+  \node[actor, below=of ca2] (ca3) {CA3};
+  \node[actor, below=of ca3] (a) {Cert.\ de A};
+  \draw[msg] (root) -- node[right,font=\scriptsize]{firma} (ca2);
+  \draw[msg] (ca2) -- node[right,font=\scriptsize]{firma} (ca3);
+  \draw[msg] (ca3) -- node[right,font=\scriptsize]{firma} (a);
+\end{tikzpicture}
+\caption{Cadena de confianza: la raíz delega y firma hacia abajo hasta el certificado final.}
+\end{figure}
+
+\begin{defbox}{Validación entre CA distintas}
+\textbf{No existe una única CA raíz.} Si $A$ y $B$ tienen CA diferentes, ¿cómo valida $A$ el
+certificado de $B$?
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Opción 1}: $A$ confía en la CA de $B$.
+  \item \textbf{Opción 2}: las CA \textbf{se certifican entre sí} (cada una emite un
+        certificado de la identidad de la otra).
+\end{itemize}
+\textbf{En la práctica}: existe una \textbf{lista de CA reconocidas} embebida en el sistema
+operativo, en los navegadores y en \emph{runtimes} como la JVM.
+\end{defbox}
+
+\subsection{Certificados X.509}
+
+\begin{defbox}{X.509 — estándar de certificados digitales}
+Incluye: \textbf{versión}, número de serie, identificador del algoritmo de firma, nombre del
+emisor (CA), intervalo de validez, nombre del sujeto (CN), \textbf{clave pública del sujeto} y
+\textbf{firma} (firma del hash de todo lo anterior). Forman cadenas de certificados.
+\end{defbox}
+
+\begin{slidebox}
+\textbf{Ejemplo (recorte de un X.509 real, formato OpenSSL):}
+\begin{lstlisting}[style=shell]
+Version: 3 (0x2)
+Serial Number: 1 (0x1)
+Signature Algorithm: md5WithRSAEncryption
+Issuer:  C=ZA, ST=Western Cape, ... CN=Thawte Server CA/Email=...
+Validity
+    Not Before: Aug  1 00:00:00 1996 GMT
+    Not After : Dec 31 23:59:59 2020 GMT
+Subject: C=ZA, ... CN=Thawte Server CA/Email=...
+Subject Public Key Info:
+    Public Key Algorithm: rsaEncryption
+    RSA Public Key: (1024 bit) ... Exponent: 65537 (0x10001)
+X509v3 extensions:
+    X509v3 Basic Constraints: critical  ->  CA:TRUE
+Signature Algorithm: md5WithRSAEncryption  07:fa:4c:69:...
+\end{lstlisting}
+\end{slidebox}
+
+\begin{defbox}{Verificación de un certificado X.509}
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item \textbf{Obtener la clave pública del emisor}: de la cadena de certificados, o del
+        sistema si es raíz. Si hace falta, verificar \emph{recursivamente} el certificado del
+        emisor.
+  \item \textbf{Verificar la integridad}: con el algoritmo especificado y la clave pública del
+        emisor (validar la firma).
+  \item \textbf{Verificar el intervalo de validez}: debe estar vigente; la CA debe haber
+        estado vigente al \emph{comienzo} del período de vigencia.
+  \item \textbf{Verificar la identidad}: comparar el CN con el que espera la aplicación (según
+        el uso del certificado).
+  \item \textbf{Verificar el uso}: que el certificado esté autorizado para el uso pretendido.
+\end{enumerate}
+\end{defbox}
+
+\begin{practbox}{Ejercicio (práctica/teoría) — cadena \texttt{www.itba.edu.ar}}
+La diapositiva muestra una cadena real de 4 certificados. \textbf{Las validaciones necesarias}
+para aceptar el del servidor:
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item \textbf{Servidor} (CN \texttt{www.itba.edu.ar}, SAN \texttt{www.itba.edu.ar}, emisor
+        \emph{Amazon}): chequear que el CN/SAN coincide con el host pretendido; vigencia
+        (6/6/2017–7/7/2018); validar su firma con la clave pública de \emph{Amazon}; uso
+        permitido para TLS de servidor.
+  \item \textbf{Intermedio} (CN \emph{Amazon}, emisor \emph{Amazon Root CA 1}): validar su
+        firma con la clave de \emph{Amazon Root CA 1}; vigencia; que tenga atributo de CA.
+  \item \textbf{Intermedio/raíz} (CN \emph{Amazon Root CA 1}, emisor \emph{Starfield Services
+        Root CA - G2}): validar su firma con la clave de Starfield; vigencia.
+  \item \textbf{Raíz} (CN \emph{Starfield Services Root CA - G2}, \textbf{auto-firmada}): debe
+        estar en la \textbf{lista de CA confiables} del SO/navegador; vigencia (1/9/2009–28/6/2034).
+\end{enumerate}
+En cada eslabón: la clave pública del \emph{emisor} valida la firma del \emph{sujeto}, hasta
+llegar a una raíz confiada. Además, conviene chequear que ninguno esté \textbf{revocado}.
+\end{practbox}
+
+\subsection{Revocación: CRL y OCSP}
+
+\begin{defbox}{Revocación de claves}
+Necesidad de invalidar una clave \textbf{antes} de su expiración: fue averiguada por un
+atacante, o hay un cambio anticipado (cambio de dueño). \emph{Problemas}: no revocar claves
+que no deben revocarse (evitar revocaciones sin autorización) y \textbf{propagar} la
+información para evitar futuras comunicaciones con esa clave.
+\end{defbox}
+
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{CRL (Listas de revocación)}: listas de certificados revocados, análogas a las
+        listas de tarjetas de crédito robadas. \emph{Actual}: vigentes y revocados;
+        \emph{histórico}: expirados y revocados. En X.509 \textbf{solo el emisor de un
+        certificado puede revocarlo}; se agrega al CRL de la CA y puede validarse
+        \emph{offline} u \emph{online}.
+  \item \textbf{OCSP (Online Certificate Status Protocol)}: certifica que una firma está
+        ``activa''. Servicio en línea con API estandarizada, administrado por las CA; el
+        resultado está \textbf{firmado} (es un certificado de \emph{corta duración}: 1~hora a
+        7~días). \textbf{OCSP Stapling}: el resultado se incluye en la cadena, de modo que el
+        cliente no consulta una fuente externa (recomendado para sitios de alto tráfico).
+\end{itemize}
+
+\begin{slidebox}
+\textbf{Resumen de certificados:} asocian una clave pública con una identidad; se pueden
+validar \emph{offline} (¡cuidado con las revocaciones!); están certificados por otra entidad;
+forman cadenas de confianza; \textbf{resuelven la integridad de las claves públicas}.
+\end{slidebox}
+
+%=====================================================================
+\section{Canal seguro: SSL / TLS}
+%=====================================================================
+
+\begin{defbox}{Canal seguro}
+\textbf{Confidencialidad e integridad sobre un canal inseguro.} SSL/TLS ofrece seguridad a
+\textbf{nivel transporte}, sobre un canal confiable (TCP). Provee \textbf{confidencialidad},
+\textbf{integridad} y \textbf{autenticación} de los participantes (origen y destino).
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{SSL} (Secure Socket Layer): versión inicial, creada por Netscape.
+  \item \textbf{TLS} (Transport Layer Security): evolución de SSL (TLS 1.2 $\equiv$ SSL 3.3),
+        mejora deficiencias; es el \textbf{estándar actual}. Depende de la \textbf{PKI}.
+\end{itemize}
+\end{defbox}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small, node distance=4mm]
+  % insegura
+  \node[draw,fill=slideGray] (a1) {Aplicación};
+  \node[draw,fill=slideGray, below=8mm of a1] (t1) {Transporte};
+  \node[draw,fill=slideGray, right=5cm of a1] (a2) {Aplicación};
+  \node[draw,fill=slideGray, below=8mm of a2] (t2) {Transporte};
+  \draw[msg] (a1)--(t1); \draw[msg] (t2)--(a2);
+  \draw[dotted,thick] (t1) -- node[above,font=\scriptsize]{$m$ (en claro)} (t2);
+  \node[font=\bfseries\scriptsize] at ($(a1)!0.5!(a2)+(0,0.9)$) {Conexión normal, insegura};
+\end{tikzpicture}
+
+\vspace{0.4cm}
+
+\begin{tikzpicture}[font=\small, node distance=2mm]
+  \node[draw,fill=slideGray] (a1) {Aplicación};
+  \node[draw,fill=practGreenL, below=7mm of a1] (s1) {SSL};
+  \node[draw,fill=slideGray, below=0mm of s1] (t1) {Transporte};
+  \node[draw,fill=slideGray, right=5cm of a1] (a2) {Aplicación};
+  \node[draw,fill=practGreenL, below=7mm of a2] (s2) {SSL};
+  \node[draw,fill=slideGray, below=0mm of s2] (t2) {Transporte};
+  \draw[msg] (a1)--(s1); \draw[msg] (s2)--(a2);
+  \draw[dotted,thick] (t1) -- node[above,font=\scriptsize]{\texttt{(\$!)\$J"=?*} (cifrado)} (t2);
+  \node[font=\bfseries\scriptsize] at ($(a1)!0.5!(a2)+(0,0.9)$) {Conexión con SSL, protegida};
+\end{tikzpicture}
+\caption{SSL se inserta entre aplicación y transporte. (Recreación de la diapositiva
+``Concepto''.)}
+\end{figure}
+
+\subsection{TLS Record}
+TLS recibe un mensaje a enviar, lo \textbf{divide en bloques} de no más de $2^{16}$ bytes,
+\textbf{comprime} cada bloque y \textbf{calcula su hash}, \textbf{cifra} cada bloque y su hash,
+y lo \textbf{envía} al servicio inferior (TCP). Cada \emph{record} lleva un \textbf{header}.
+
+\subsection{Tipos de mensajes y material criptográfico}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\bfseries}p{3.8cm} p{9.6cm}}
+\toprule
+TLS handshake & Configuración inicial, autenticación y negociación del material criptográfico.\\
+TLS application data & Información del protocolo encapsulado.\\
+TLS alert & Informa eventos y problemas (advertencia o fatal).\\
+TLS change cipher spec & Concluye una renegociación de claves.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{slidebox}
+\textbf{Criptografía soportada (lo vigente en azul en las slides):}
+\begin{itemize}[leftmargin=1.4em,itemsep=0pt]
+  \item \emph{Intercambio de clave}: \textbf{RSA}, \textbf{DH con certificado RSA o DSS}, DH
+        anónimo, \textbf{ECDH} (DH sobre curvas elípticas), Kerberos. (Variantes obsoletas de
+        512 bits por restricciones de exportación de EE.UU.)
+  \item \emph{Cifrado simétrico}: ChaCha20, 3DES-EDE-CBC, \textbf{AES} (CBC, CCM,
+        \textbf{GCM}), IDEA-CBC, ARIA. (Obsoletos: RC4, DES-CBC, claves de 40 bits.)
+  \item \emph{Hash/MAC}: HMAC-MD5, HMAC-SHA1, \textbf{HMAC-SHA2 (256/384)}, \textbf{AEAD}
+        (Authenticated Encryption with Associated Data).
+  \item \emph{Autenticación}: firmas RSA, \textbf{firmas DSS}.
+\end{itemize}
+\end{slidebox}
+
+\begin{defbox}{Sesión vs.\ conexión TLS}
+\textbf{Sesión}: asociación entre dos pares; puede soportar múltiples conexiones. Contiene:
+identificador único, certificado X.509v3 del otro extremo (opcional), método de compresión,
+método de cifrado y MAC acordados, y el \textbf{Master Secret} (clave de sesión compartida de
+48 bytes).\\[3pt]
+\textbf{Conexión}: describe cómo intercambiar datos. Contiene: secuencia de bits aleatoria de
+calidad criptográfica, claves de escritura (distintas) para cada lado, claves para los MAC,
+IVs si hacen falta, y números de secuencia para cliente y servidor.
+\end{defbox}
+
+\subsection{TLS Handshake (diagrama de secuencia)}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small]
+  \node[actor] (Ct) at (0,1) {C}; \node[actor] (Cb) at (0,-9.5) {C};
+  \node[actor] (St) at (11,1) {S}; \node[actor] (Sb) at (11,-9.5) {S};
+  \draw[lifeline] (Ct) -- (Cb);
+  \draw[lifeline] (St) -- (Sb);
+  % parte 1
+  \draw[msg] (0,0.3) -- node[above,font=\scriptsize]{\textbf{ClientHello}: $V_c\concat r_1\concat S_{id}\concat \text{Ciphers}\concat \text{Comps}$} (11,0.3);
+  \draw[msgback] (11,-0.5) -- node[above,font=\scriptsize]{\textbf{ServerHello}: $V\concat r_2\concat S_{id}\concat \text{Cipher}\concat \text{Comp}$} (0,-0.5);
+  % parte 2
+  \draw[msgback] (11,-1.5) -- node[above,font=\scriptsize]{\textbf{Certificate} (si el servidor se autentica)} (0,-1.5);
+  \draw[msgback] (11,-2.3) -- node[above,font=\scriptsize]{\textbf{ServerKeyExchange}: $p\concat \enc{\mathrm{hash}(r_1\concat r_2\concat p)}{k_s}$} (0,-2.3);
+  \draw[msgback] (11,-3.1) -- node[above,font=\scriptsize]{\textbf{CertificateRequest} (si pide cert.\ al cliente): $\text{ctype}\concat \text{CAs}$} (0,-3.1);
+  \draw[msgback] (11,-3.9) -- node[above,font=\scriptsize]{\textbf{ServerHelloDone}: \{\,\}} (0,-3.9);
+  % parte 3
+  \draw[msg] (0,-4.9) -- node[above,font=\scriptsize]{\textbf{ClientCertificate} (si fue solicitado)} (11,-4.9);
+  \draw[msg] (0,-5.7) -- node[above,font=\scriptsize]{\textbf{ClientKeyExchange} (RSA): $\enc{V\concat \mathrm{PRE}_{rand}}{k_s}$ \ \ ó (DH): $\enc{g^b \bmod p}{k_s}$} (11,-5.7);
+  % parte 4
+  \draw[msg] (0,-6.7) -- node[above,font=\scriptsize]{\textbf{ChangeCipherSpec}: \{\,\}} (11,-6.7);
+  \node[note] at (5.5,-7.15) {A partir de aquí el cliente usa los parámetros negociados};
+  \draw[msg] (0,-7.9) -- node[above,font=\scriptsize]{\textbf{Finished}: $\enc{h(\text{master}\concat \text{opad}\concat h(\text{msgs}\concat \text{master}\concat \text{ipad}))}{}$} (11,-7.9);
+  \draw[msgback] (11,-8.7) -- node[above,font=\scriptsize]{\textbf{ChangeCipherSpec} + \textbf{Finished} (servidor)} (0,-8.7);
+  \node[note] at (5.5,-9.15) {A partir de aquí el servidor usa los parámetros negociados};
+\end{tikzpicture}
+\caption{Handshake completo de TLS. (Recreación de las 4 partes de las diapositivas.)}
+\end{figure}
+
+\begin{defbox}{Parámetros del handshake}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item $V_c$: versión del cliente; \ $V = \min(V_c, V_{\text{servidor}})$.
+  \item $r_1, r_2$: \textbf{nonces} (timestamp + 28 bytes aleatorios); \textbf{evitan replay}.
+  \item $S_{id}$: ID de sesión ($0$ para iniciar una nueva).
+  \item Ciphers/Cipher, Comps/Comp: \emph{stacks} criptográficos y métodos de compresión
+        ofrecidos vs.\ el elegido.
+  \item $p$: parámetros criptográficos ($e,n$ para RSA; $p,g,g^a$ para DH).
+  \item $k_s$: clave privada del servidor (correspondiente a la pública del certificado).
+  \item \textbf{Anti-downgrade}: el cliente reenvía la versión $V$ originalmente informada
+        dentro del ClientKeyExchange para \textbf{prevenir downgrade attacks}.
+  \item DH: $\mathrm{PRE} = g^{ab} \bmod p$ es el \emph{pre-master secret}.
+\end{itemize}
+El \textbf{Master Secret} se deriva combinando $\mathrm{pre}$, $r_1$, $r_2$ con MD5/SHA:
+\[
+  \text{Master} = \mathrm{MD5}(\mathrm{pre}\concat \mathrm{SHA}('A'\concat \mathrm{pre}\concat r_1\concat r_2))
+  \concat \mathrm{MD5}(\mathrm{pre}\concat \mathrm{SHA}('BB'\concat \cdots)) \concat \cdots
+\]
+\end{defbox}
+
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Change Cipher Spec}: usado durante el handshake, puede aparecer en cualquier
+        momento; implica \textbf{renegociación} de las claves de sesión; lo solicita cliente o
+        servidor; \emph{no tiene contenido} (es un tipo de mensaje).
+  \item \textbf{Alert}: eventos fuera de banda, de \emph{advertencia} o \emph{fatales} (un
+        fatal invalida la conexión). \texttt{CloseNotify} indica el fin de una sesión. Errores
+        fatales: mensaje no esperado, MAC incorrecto, error al descomprimir, error de
+        handshake, parámetro ilegal. Advertencias: no hay certificado / no válido / no
+        soportado / expirado / revocado.
+\end{itemize}
+
+\begin{slidebox}
+\textbf{Panorama:} TLS es el estándar de comunicación segura en servicios web (HTTPS); depende
+de la PKI; no suele usarse para validar clientes; soportado por todos los navegadores (con
+distinta respuesta frente a alertas). Problemas de diseño en los clientes le hicieron perder
+parte de su utilidad, pero \emph{sigue siendo la alternativa más adoptada}.
+\end{slidebox}
+
+%=====================================================================
+\section{Criptografía de umbrales (Threshold Cryptography)}
+%=====================================================================
+
+\begin{defbox}{Criptosistema de umbrales}
+Es una terna de algoritmos:
+\[
+\begin{aligned}
+  \text{Gen}: ()&\to K^N &&\text{(generador de clave)}\\
+  \text{Enc}: K^T \times P &\to C &&\text{(cifrado)}\\
+  \text{Dec}: K^T \times C &\to P &&\text{(descifrado)}
+\end{aligned}
+\]
+\textbf{Propiedad básica:} para todo $m$ y $k^n$ válidos, para todo
+$k' = \{k^n\}_t$ y $k'' = \{k^n\}_t$ se cumple $\;d_{k''}(e_{k'}(m)) = m$.\\[4pt]
+\textbf{Conceptos nuevos:}
+\begin{itemize}[leftmargin=1.4em,itemsep=0pt]
+  \item $N$ = \textbf{sombras} o cantidad de claves disponibles.
+  \item $T$ = \textbf{umbral}: cantidad de claves \emph{necesarias}.
+  \item $K^X$: $X$ claves, cada una perteneciente a $K$; \ $\{K^x\}_n$: subconjunto de $n$
+        claves cualesquiera de $K^X$.
+\end{itemize}
+\end{defbox}
+
+La idea: \emph{cualquier} subconjunto de $T$ de las $N$ sombras alcanza para operar, pero con
+menos de $T$ no se puede.
+
+%=====================================================================
+\section{Secreto compartido de Shamir}
+%=====================================================================
+
+\begin{defbox}{Método de Shamir — esquema $(t,n)$ threshold}
+\textbf{Principio:} un polinomio de grado $t-1$ queda \textbf{unívocamente determinado por su
+evaluación en $t$ puntos distintos}. El \textbf{secreto es el polinomio} (en particular,
+$s = P(0)$, el término independiente) y los \textbf{puntos son las sombras}.\\[4pt]
+\textbf{Construcción (reparto):} sea $s$ el secreto a compartir.
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Se fija $a_0 = s$ y se eligen $a_1,\dots,a_{t-1} \leftarrow \{0,\dots,p-1\}$ al azar.
+  \item Se arma $P(x) = a_{t-1}x^{t-1} + \cdots + a_1 x + a_0 \pmod p$, con $p > s$ y $p > n$
+        ($p$ primo).
+  \item Las sombras son $P(1), P(2), \dots, P(n)$ (se pueden generar muchas: $n$ a elección).
+\end{itemize}
+\textbf{Reconstrucción:} con $t$ sombras cualesquiera $(s_{i_1},\dots,s_{i_t})$, $s_{i_a}=P(i_a)$,
+se interpola por \textbf{Lagrange}:
+\[
+  P(x) = \sum_{a=1}^{t} \left( s_{i_a} \prod_{\substack{b=1\\ b\neq a}}^{t}
+          \frac{x - i_b}{\,i_a - i_b\,} \right)
+\]
+y se evalúa $\;s = P(0)$.
+\end{defbox}
+
+\subsection{Intuición geométrica}
+
+\begin{practbox}{Aporte de la práctica — la recta, la parábola y las imágenes}
+La práctica desarrolla la intuición:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Grado 1 (recta) $\Rightarrow$ esquema $(2,n)$}: hacen falta \emph{2} puntos
+        para trazar una recta. Con un solo punto pasan \textbf{infinitas} rectas $\Rightarrow$
+        secreto indeterminado.
+  \item \textbf{Grado 2 (parábola) $\Rightarrow$ esquema $(3,n)$}: hacen falta \emph{3}
+        puntos. Con 1 o 2 puntos, hay miles de parábolas posibles.
+  \item En general: \textbf{número de sombras necesarias $=$ grado del polinomio $+\,1 = t$}.
+        Se pueden repartir \emph{muchas} sombras (a todo un curso), pero juntando cualesquiera
+        $t$ se recupera el secreto, y con menos de $t$ \emph{no se sabe nada}.
+  \item \textbf{Secreto compartido por imágenes}: una imagen secreta se divide en ``capas''
+        que se reparten como imágenes; superponiendo $t$ de ellas se reconstruye la imagen
+        original (misma idea $(t,n)$ aplicada a píxeles).
+\end{itemize}
+\end{practbox}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=12cm, height=7cm,
+  scale only axis,
+  xlabel={$x$}, ylabel={$P(x)$},
+  axis lines=middle,
+  xmin=-0.6, xmax=4.6, ymin=-0.5, ymax=10.5,
+  xtick={0,1,2,3,4}, ytick={0,2,4,6,8,10},
+  enlargelimits=false, clip=true,
+  legend pos=north west, legend cell align=left,
+  every axis legend/.append style={font=\footnotesize},
+  label style={font=\small}, tick label style={font=\footnotesize}
+]
+  % polinomio de grado t-1=2 (curva conceptual, valores en rango)
+  \addplot[domain=-0.4:4.4, samples=120, thick, itbaCyanDark] {0.5*x*x-0.5*x+7};
+  \addlegendentry{$P(x)$, grado $t{-}1=2$ (pasa por las sombras)}
+  % curva "fantasma": otra parabola por (0,7) y otro punto -> ilustra ambiguedad con < t puntos
+  \addplot[domain=-0.4:4.4, samples=120, dashed, attackRed] {-0.6*x*x+1.5*x+7};
+  \addlegendentry{otra curva posible con menos de $t$ puntos}
+  % sombras P(1)=7, P(2)=8, P(3)=10 (sobre la curva azul)
+  \addplot[only marks, mark=*, mark size=2.5pt, black]
+    coordinates {(1,7) (2,8) (3,10)};
+  \node[anchor=north west, font=\scriptsize] at (axis cs:1.05,6.9) {sombras};
+  % secreto
+  \addplot[only marks, mark=square*, mark size=3.2pt, practGreen] coordinates {(0,7)};
+  \node[practGreen, anchor=south west, font=\bfseries\footnotesize] at (axis cs:0.08,7.1) {$S=P(0)$};
+\end{axis}
+\end{tikzpicture}
+\captionof{figure}{Secreto compartido de Shamir (esquema conceptual): el polinomio de grado
+$t-1$ pasa por las sombras (puntos negros); el secreto es $S=P(0)$ (cuadrado verde). Con
+\emph{menos} de $t$ puntos hay \textbf{infinitas} curvas posibles (la curva roja punteada
+ilustra una alternativa que pasa por el mismo $S$).}
+\end{center}
+
+\subsection{Ejemplo de cifrado (reparto) — esquema $(3,5)$}
+
+\begin{practbox}{Ejemplo resuelto (diapositiva ``Ejemplo Cifrado'')}
+\textbf{Secreto} $s=7$, esquema $(3,5)$, en $\mathbb{Z}_{11}$. Se elige el polinomio de grado
+$t-1=2$:
+\[
+  P(x) = 5x^2 + 3x + 7 \pmod{11}
+\]
+Se calculan las sombras $P(1),\dots,P(5)$:
+\[
+\begin{aligned}
+  P(1) &= 5+3+7 = 15 \equiv 4 \pmod{11}\\
+  P(2) &= 20+6+7 = 33 \equiv 0 \pmod{11}\\
+  P(3) &= 45+9+7 = 61 \equiv 6 \pmod{11}\\
+  P(4) &= 80+12+7 = 99 \equiv \mathbf{0} \pmod{11}\\
+  P(5) &= 125+15+7 = 147 \equiv 4 \pmod{11}
+\end{aligned}
+\]
+\textbf{Sombras:} $(1,4),\ (2,0),\ (3,6),\ (4,0),\ (5,4)$.
+\end{practbox}
+
+\begin{warnbox}{Errata de la diapositiva — $P(4)$}
+La diapositiva original escribe $P(4)=2$, pero $80+12+7=99=9\cdot 11$, luego
+$P(4)\equiv \mathbf{0}\pmod{11}$, \emph{no} $2$. Es un error aritmético de la slide. La
+reconstrucción de la slide usa $(2,0),(3,6),(5,4)$ —que \emph{no} incluyen la sombra $4$—, por
+lo que el resultado $s=7$ sigue siendo correcto. (Verificado aparte: las sombras correctas son
+$4,0,6,0,4$.)
+\end{warnbox}
+
+\subsection{Ejemplo de descifrado (reconstrucción por Lagrange)}
+
+\begin{practbox}{Ejemplo resuelto (diapositiva ``Ejemplo Descifrado'')}
+Tomando tres sombras cualesquiera, p.\ ej.\ $(2,0),(3,6),(5,4)$, se interpola por Lagrange
+(todo $\bmod\ 11$):
+\[
+  P(x) = \sum_{a=1}^{t} \left( s_{i_a} \prod_{\substack{b=1\\ b\neq a}}^{t}
+          \frac{x - i_b}{i_a - i_b} \right)
+\]
+\[
+  P(x) = \left[\, 0\cdot\frac{(x-3)(x-5)}{(2-3)(2-5)}
+              + 6\cdot\frac{(x-2)(x-5)}{(3-2)(3-5)}
+              + 4\cdot\frac{(x-2)(x-3)}{(5-2)(5-3)} \,\right]
+\]
+\[
+  P(x) = \left[\, 0 \;-\; 3\,(x^2-7x+10) \;+\; (4/6)(x^2-5x+6) \,\right] \bmod 11
+\]
+\[
+  P(x) = 5x^2 + 3x + 7 \qquad\Longrightarrow\qquad \boxed{\,s = P(0) = 7\,}
+\]
+Recordando que en $\mathbb{Z}_{11}$ la división es multiplicación por el inverso: el término
+medio $\frac{6}{(1)(-2)} = \frac{6}{-2}$ y $4/6$ se resuelven con la tabla de inversos
+modulares.
+\end{practbox}
+
+\begin{practbox}{Aporte de la práctica — aritmética modular e implementación}
+La práctica desarrolla un \emph{segundo} ejemplo equivalente: $s=7$, esquema $(3,n)$ con
+$P(x)=5x^2+2x+7$ (variante mostrada en clase) en $\mathbb{Z}_{11}$, resuelto de dos maneras:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Por sistema de ecuaciones (Gauss)}: plantear $a_0 + a_1 x + a_2 x^2$ para cada
+        sombra y resolver el sistema $3\times 3$ con eliminación gaussiana \emph{módulo 11}
+        (pivoteo, restando filas). Cómodo en papel, incómodo en código (arrastra las $x$).
+  \item \textbf{Por interpolación de Lagrange}: más fácil de \emph{implementar} (no arrastra
+        las $x$). Es la recomendada para el TP.
+\end{itemize}
+\textbf{Claves de la aritmética modular} (todo $\bmod\ 11$):
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \emph{Dividir} por $d$ $=$ \emph{multiplicar} por $d^{-1}$. Ej.: $10^{-1}=10$ (pues
+        $10\cdot 10 = 100 \equiv 1$); $5^{-1}=9$ (pues $5\cdot 9 = 45 \equiv 1$);
+        $8^{-1}=7$ (pues $8\cdot 7 = 56 \equiv 1$).
+  \item Conviene tener a mano la \textbf{tabla de inversos modulares}.
+\end{itemize}
+\textbf{En el TP} se usa $\mathbb{Z}_{251}$ (el primo más grande que entra en un byte) en
+lugar de $\mathbb{Z}_{11}$.
+\end{practbox}
+
+%=====================================================================
+\section{Cross-check teoría vs.\ práctica}
+%=====================================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\bfseries}p{3.6cm} p{4.7cm} p{4.7cm}}
+\toprule
+Tema & Teoría (slides) & Práctica (slides + transcript) \\
+\midrule
+KDC & Mencionado como base de Needham-Schroeder & \textcolor{practGreen}{Desarrolla el flujo $A\to$KDC$\to A,B$, pros/contras, Kerberos}\\
+Needham-Schroeder & Las 3 aproximaciones + Denning-Sacco, paso a paso & Encuadre como limitación de clave privada\\
+MITM / Masquerading & MITM sobre claves públicas & \textcolor{practGreen}{Distingue MITM (activo, ambos extremos) de Masquerading (un solo extremo); replay y key reuse}\\
+PKI / Certificados & X.509, cadenas, CRL/OCSP, verificación & \textcolor{practGreen}{Certificado vs.\ clave pública ``pelada''; PKI Argentina}\\
+TLS & Handshake completo, record, alert & \textcolor{practGreen}{Resumen conf./aut./integridad; DH \emph{autenticado}; RFC 2246/8446}\\
+Shamir & Construcción + Lagrange + ejemplo $(3,5)$ & \textcolor{practGreen}{Intuición recta/parábola, imágenes, Gauss vs.\ Lagrange, inversos modulares, $\mathbb{Z}_{251}$ en TP}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent\textbf{Lo que agrega la práctica:} (1) el encuadre KDC como solución a la
+distribución/almacenamiento de claves; (2) el detalle del flujo del KDC con pros y contras;
+(3) la distinción precisa MITM vs.\ Masquerading y el rol de replay/key-reuse; (4) la
+intuición geométrica de Shamir (recta/parábola/imágenes); (5) la resolución \emph{completa}
+del ejemplo de reconstrucción y la mecánica de la aritmética modular (inversos) con ambos
+métodos (Gauss y Lagrange).
+
+%=====================================================================
+\section*{Lectura recomendada}
+\addcontentsline{toc}{section}{Lectura recomendada}
+%=====================================================================
+\begin{center}
+\begin{tcolorbox}[enhanced,colback=itbaBlue!20,colframe=itbaCyanDark,boxrule=1pt,
+  arc=3pt,width=0.9\textwidth,halign=center]
+\large\textbf{Capítulo 11} — \emph{Computer Security: Art and Science} (Matt Bishop)\\[6pt]
+\normalsize \textbf{RFC 8446} — TLS v1.3 \quad(\url{http://tools.ietf.org/html/rfc8446})\\[3pt]
+\textbf{RFC 2246} — TLS (primera versión)\\[3pt]
+\emph{Applied Cryptography} — Bruce Schneier\\[3pt]
+Vulnerabilidad en la renegociación de claves: \url{http://www.g-sec.lu/practicaltls.pdf}
+\end{tcolorbox}
+\end{center}
+
+%---------------------------------------------------------------------
+\vfill
+\begin{center}\small\itshape\color{black!60}
+Apunte integral de la Clase 5 — Protocolos · Criptografía y Seguridad, ITBA.\\
+Síntesis de teoría (diapositivas + transcripción) y práctica (KDC, Needham-Schroeder,
+Denning-Sacco, TLS y Secreto Compartido de Shamir).
+\end{center}
+
+\end{document}

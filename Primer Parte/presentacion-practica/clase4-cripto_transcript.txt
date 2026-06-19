@@ -1,0 +1,585 @@
+Lo tendría que particionar para poder aplicarlo a la función subvariatoria, y si tengo un mensaje que puedo particionar, ¿cómo le aplico la función y qué etiqueta saco?
+Este va a ser S, entonces, porque podría ser una etiqueta por cada bloque, por ejemplo, pero bueno, eso puede dar lugar a algunas fallas en el MacForge.
+Entonces, vamos a analizar las distintas construcciones en el caso del mensaje tecnológico variable.
+Por ejemplo, se podría, en lugar de hacer así, que uno ponga distintos bloques y emita, bueno, M1, M2, M3, M4,
+y podría uno decir, bueno, a partir de estos bloques, usar la función subvariatoria, pero si este bloque te saca un T1, y este te saca un T2, y este me saca un T3, y este me saca un T4,
+hace un sol entre todo, y directamente sacas un único valor, y entonces emitís MT.
+O sea, podría ser una forma de manejarlo, pero eso va a fallar, porque hay una posibilidad de que yo consulte mensajes anteriores al oráculo,
+y termine armando uno que sea válido para MSubIs diferentes.
+¿De qué manera podría yo lograr un par MT válido para un mensaje que no sea este?
+Conseguís el del prefijo.
+Bueno...
+A ver, la idea sería que yo cambiando alguna cosita, acá por ejemplo, cambio un bit de acá por uno de acá, y a lo mejor el SOR me da lo mismo.
+Entonces yo conseguiría un par MT válido, donde M' es distinto de M.
+Entonces, si yo puedo conseguir un par MT válido para un M' distinto del M original, quiere decir que yo pude falsificar el mensaje.
+Entonces, esto se puede hacer modificando un bit de un bloque con un bit de otro bloque a lo mejor.
+Si el SOR me da lo mismo, me alcanza.
+Entonces, este no sería un método válido.
+Porque puedo lograr ahora mismo una etiqueta válida a partir de un mensaje diferente.
+Vamos a analizar otro caso, supongamos este caso.
+¿Qué es lo que podríamos tener en esta situación?
+Fíjense que me dice, autenticar cada bloque por separado.
+Ah, lo que habíamos puesto al principio.
+Que yo los deje separados.
+Entonces, si yo tengo todos los bloques separados, ¿puedo armar un par MT válido con todos los bloques que yo tenía y las etiquetas que yo tenía?
+O sea, supóngase que yo consulto para distintas cosas.
+¿Puedo armar un MT válido a partir de consultas anteriores?
+Si yo fuera el atacante, iría probando el M1.
+Iría usando el aráculo con el M1 y ver qué me da, y con el M2 ver qué me da.
+Y después puedo mandar todos juntos en cadena, porque yo nunca miré el aráculo todo en cadena.
+Si permutaba bloques, yo estaría bien.
+O permutando, aun cuando yo lo hubiera mandado todo junto, permutando bloques.
+O sea, si yo mando primero M2 con su etiqueta T2, o sea, armo un nuevo M', con la concatenación M2, M1, M3.
+Y su correspondiente T, que va a ser T2, T1, T3.
+Y listo, ya tengo un M', T, válido.
+¿Ya está?
+Intercambio de los bloques y ya está.
+Acá lo tienen.
+Entonces, esto sería falsificable por el experimento.
+Vamos a ver este otro caso.
+Este otro caso me resuelve un poco, porque fíjense que dice cada bloque,
+junto con un número de secuencias.
+O sea, que cuando hace el etiquetado, hace el etiquetado del bloque y del número de bloque con el bloque.
+Así que ya esto no podría hacerse.
+Pero, esto ya no se puede hacer.
+Bueno, tiene que ir en orden.
+Pero, ¿qué podemos hacer para que falle esto?
+A ver, yo tengo...
+¿Podés pedir un mensaje que tenga en la misma altura otro bloque?
+Eh...
+Supongamos que tengo esto.
+¿Cuál sería?
+Ya pedí este, ¿no?
+Pido este.
+¿Qué otro podría pedir?
+Si pidieras otro que sea lo mismo, pero poner M2, lo cambiás por otro bloque que no sea el mismo.
+Y después lo mezclás y es uno nuevo, ¿no?
+No, no sé.
+Vamos a poner así, como...
+Lo pongo como con mayúsculas, para que se entienda que igual tiene el número 2 y el número 1 y así.
+Supongamos que este me da M.
+Bueno, ¿cuál puede emitir ahora a partir de esos dos que sea válido?
+Dos M grandes y una M chiquita.
+O sea, los mezclás.
+Bueno, claro.
+Entonces, yo puedo decir, bueno, combino M1, M2 y M3.
+¿Sí?
+Ese va a ser mi número 1.
+Y este va a ser mi número 2.
+¿Vale?
+M1, M2 y M3.
+¿Sí?
+Ese va a ser mi nuevo mensaje M'.
+Y su etiqueta válida va a ser T' igual a T1, T2 y T3.
+¿Está?
+Entonces, de esa manera, como que combiné y este M1 va a registrar eso, el número de orden y el mensaje.
+Se corresponde con la etiqueta válida, ¿sí?
+Porque este T1 se obtuvo a partir del MAC del valor 1 concatenado con M1.
+¿Sí?
+O sea, que eso lo valida bien.
+Entonces, no va a haber problema, no se va a dar cuenta.
+¿Sí?
+Así que este sigue fallando.
+Conclusión, hay que pensar algo que trate de evitar los problemas anteriores.
+Y una forma es esta que vamos a ver acá abajo.
+En esta forma, fíjense lo que hace.
+Bueno, en esta forma, fíjense lo que hace.
+Parte el mensaje en bloques, ¿sí?
+Y arma bloques, en lugar de solo poner el bloque de mensaje, concatena en cada pedacito un número de random,
+la longitud completa, con lo cual ya sabe cuántos tienen que llegar,
+el número de orden y el bloque en sí de datos.
+¿Sí?
+Entonces, esto va a ser seguro porque fíjense que resuelve el problema de que no es un único tag con un sor,
+así que eso ya no va a poder, digamos, no...
+Además sabe que el orden se mantiene.
+¿Sí?
+Resuelve el tema de la secuencia, pero no me permite mezclar mensajes como hicimos recién.
+¿Por qué no me va a permitir mezclar mensajes?
+¿Cuál es lo que hace que no se pueda hacer lo último que hicimos recién ahí?
+O sea, el número random, ¿sí?
+Porque ahora, si yo le diera a encriptar esto, si yo le pido a encriptar este y le pido a encriptar este,
+este, en realidad, no va a venir así.
+Va a venir el m1 concatenado con su numerito 1, concatenado con la longitud, que es 3,
+concatenado con un número random.
+9.
+¿Sí?
+Y este, en cambio, m2, por ejemplo,
+supongamos este fuera m2,
+y el m1, ¿sí?
+Va a tener acá otro random, ¿sí?
+Acá va a decir, por ejemplo, 3, acá puede decir 1,
+pero este random y este random no van a coincidir, ¿sí?
+Entonces yo acá voy a tener un random para este bloque, otro random para este bloque,
+otro random para este bloque, ¿sí?
+Acá va a decir 17, este se va a hacer con 9 y este va a volver a hacerse con 17.
+Entonces, al no haber una relación de que todos tengan el mismo r,
+se va a dar cuenta que está mal, ¿sí?
+Que no existe, no va a validar nada, ¿sí?
+Porque no va a tener en cuenta, o sea, esto no le va a dar, ¿sí?
+Además, fíjense que, bueno, emite en todos y emite en random.
+Entonces ese r tiene que coincidir.
+Entonces cuando acá, si quisiéramos hacer esto, el problema es que qué random le va a apurar.
+No puede.
+¿Qué es?
+Para todos los, o sea, cuando vos armes todo este,
+todos ellos van a tener el mismo número random, suponete 9.
+Cuando armes el t, va a poner 9, el tag 1, el tag 2, etc.
+Para este, hace un tag que va a tener 17, tag 1, tag 2, etc.
+Pero si vos querés hacer este, que lo sacaste de acá con 17,
+y este que se armó de acá con 9,
+cuando vos tengas que emitir el tag para este nuevo mensaje, ¿qué le vas a emitir?
+Basura.
+Porque no te va a coincidir con los demás.
+Bueno, la longitud concreta de todo el mensaje completo.
+Para saber cuántos se supone que tienen que dar.
+Bueno, este estaría bueno, pero fíjense que emite todos los tags por separado,
+con lo cual es una barbaridad de pedacitos de bloques que se van a tener que emitir.
+Entonces, este no es muy práctico, pero sí es seguro.
+Tiene el hecho de que no es eficiente, pero es algo seguro.
+Se puede demostrar que es seguro, pero como no es eficiente, hay que buscar algo eficiente.
+Entonces, una de las cosas que no es eficiente es que además partimos el mensaje original
+en la cuarta parte, para que me pueda caber todo esto.
+Entonces, al no ser eficiente, lo que vamos a hacer es usar otro esquema que sí es eficiente,
+que se llama CBC-MAC.
+Y el CBC-MAC es algo como basado en el MAC, en el CBC, pero para etiquetado.
+Es distinto de CBC para inscripción.
+¿Se acuerdan que el otro día vimos como cifrador de bloque CBC?
+Pero esto es para etiquetado.
+Tiene algunas cosas parecidas.
+¿Y qué tiene de parecido?
+Que se encadena una cosa con la siguiente.
+Eso es lo que tiene de parecido.
+Pero acá lo que se hace es lograr que haya un único etiquetado al final.
+Una sola etiqueta.
+¿Vieron que lo que vimos recién emitía montones de etiquetas?
+Acá emite una sola etiqueta, que es la que se corresponde con el resultado del último bloque.
+Entonces, ¿qué es lo que se hace?
+Se divide en bloques de igual longitud y hay un valor inicial que está todo en cero.
+Y se va calculando cada bloque a partir del anterior.
+Entonces, se hace un sor del anterior y se combina.
+Se hace un sor con la última etiqueta y se aplica la función soderatoria.
+Y así es la que se obtiene el último.
+Entonces, este último, si hubiera sido alterado en algún lugar, va a fallar.
+Y fíjense que importa el orden.
+Esto no se puede combinar.
+No se puede sacar uno de algún otro lado porque generaría algo diferente.
+Y estaría como resolviendo los problemas que veníamos teniendo.
+Tiene un par de cuestiones de cómo se va a tener que utilizar.
+Y si por alguna forma correcta de utilizarlo serían estas tres.
+Que después, en todo caso, la próxima vez volvemos a mirar una cosa de estas.
+Creo que se las va a dar Fabiana.
+Pero bueno, ¿cómo hacer si yo tengo mensajes que puedan venir de distintas longitudes?
+Entonces, tengo que tener en cuenta la longitud del mensaje.
+¿Y dónde ubico eso, la longitud del mensaje?
+Bueno, se va a considerar cualquiera de estas tres opciones.
+Una posibilidad es aplicar la función soderatoria a la longitud del mensaje.
+Y con eso, tomando eso como clave, hacer CVCMA del resto del mensaje.
+Otra posibilidad es anexar la longitud al principio y después hacer el MAC de todo eso.
+Y la longitud tiene que ser al principio, no al final.
+Porque es inseguro si es lo que se coloca al final.
+Y después, la otra posibilidad es usar una clave primero.
+Y después hacer un etiquetado.
+Hacer la última etiqueta a partir de la etiqueta anterior.
+La cuestión es que acá estamos usando toda función soderatoria.
+O sea que tenemos N en N.
+Acá tenemos N bits y salen N bits.
+Ahora vamos a ver cómo se puede hacer para construir esquemas seguros de MAC.
+Pero en lugar de con funciones soderatorias, hacerlo con funciones de cache.
+Una función de cache, ¿qué viene a ser?
+¿Qué características tiene?
+O sea, la función soderatoria...
+Entran en N bits y salen en N bits.
+Y en la función de cache...
+Bueno, acá entran en N bits y acá salen en N bits.
+Y en la función de cache, ¿qué características tiene?
+Son menos.
+Sí, entonces el dibujito va a ser algo así.
+Donde yo tengo una cantidad de bits y salen menos.
+¿Sí?
+¿Vale?
+¿Está bien?
+O sea, casi siempre vamos a usar este trapecio.
+Para mostrar que la entrada es de longitud mayor que la salida.
+¿Sí?
+Y en realidad la salida además es de longitud fija.
+Es decir, siempre tiene el mismo tamaño.
+¿Vale?
+¿Vale?
+¿Vale?
+¿Vale?
+¿Vale?
+¿Vale?
+¿Vale?
+¿Vale?
+¿Vale?
+¿Vale?
+¿Vale?
+¿Vale?
+¿Vale?
+¿Vale?
+¿Vale?
+Tiene el mismo tamaño.
+Entonces, comprime.
+Podemos decir que son funciones compresoras.
+Y por eso también las conocen como digest.
+Bueno.
+Entonces, comprime.
+Le da entrada a una longitud fija.
+O sea, no solamente le da una entrada más chica, sino que es una longitud fija.
+Que puede tener 160 bits, 250 bits.
+Ahora vamos a ver cuál es lo que tiene que ser, señor.
+Bien.
+¿Qué pasa?
+Al tener una longitud menor van a ocurrir colisiones.
+¿Qué significan colisiones?
+Que dos entradas se maten a la misma salida.
+Exactamente.
+Entonces, vamos a considerar en general que una colisión es que para dos entradas distintas me da el mismo hash.
+¿Sí?
+Las colisiones van a ocurrir.
+Y deberán ocurrir en la menor proporción posible.
+Entonces, se van a considerar nociones de seguridad que van a consistir en resistencia a segundas preimágenes y resistencia a preimágenes.
+Pero además vamos a tener que poner condiciones de seguridad para que las colisiones, además de la función que tenga que ser con ciertas características,
+vamos a tener que después dar alguna relación de tamaño.
+Porque ya para ciertos tamaños, sea cual sea la función de hash, siempre va a ser insegura.
+¿Está?
+Y después voy a mostrar.
+Pero una de las cosas que se va a hacer es exigir un tamaño para que esto, por lo menos,
+vamos a poner así, no es segura, sí, longitud menor a, ahora vamos a ver cuánto.
+¿Sí?
+160, por ejemplo, no es segura.
+O sea, eso sería porque podés computarlo.
+Sí, en pocas iteraciones de cómputo podés encontrar una colisión.
+¿Está?
+Entonces, va a ser una condición necesaria, pero no suficiente.
+Obviamente que si vos es igual, aunque le pongas una cantidad de bits que estaría buena, pero si la función es mala, va a ser igual.
+Pero sería condición necesaria para una función de hash tener una cierta salida de una determinada cantidad de bits.
+¿Sí? Que ahora les voy a decir bien el valor.
+Vamos primero a decir a qué llamamos resistencia a segundas preimágenes y resistencia a preimágenes.
+Que son los tres niveles de seguridad.
+A ver, resistencia a condiciones significa encontrar X distinto de X' que el hash me dé lo mismo.
+Eso significa que yo tengo el conjunto y trato de agarrar así, así, así, dos valores y justo hashean a los mismos.
+O sea, tengo el conjunto este y tengo donde van a estar los hashes.
+Sería encontrar dos valores y justo hashean a los mismos.
+¿Sí?
+En cambio, cuando yo hablo de resistencia a segundas preimágenes, lo que tengo es, ya tengo un X, ¿sí?
+Ya tengo un X que hashea un determinado resultado.
+Quiero encontrar uno diferente a ese que me dé lo mismo.
+¿Sí?
+Entonces, es levemente distinto.
+Porque acá es como que estoy considerando dos cualquiera.
+Si meto las dos manos al mismo tiempo, saco y tiene que ser el mismo resultado.
+En cambio acá, si yo ya saqué uno, sé cuánto da.
+Bueno, la idea es volver a meter la mano en la bolsa y encontrar uno que dé el mismo resultado.
+Es difícil a veces ver las diferencias, pero bueno, depende de qué tengo como dato.
+Acá ya tengo un X, acá no.
+Es tomar dos al azar.
+Y acá en resistencia a preimágenes, tengo un valor de Y.
+O sea, me estoy parando en el segundo conjunto, en el conjunto de los hash.
+Tengo un valor de Y.
+He encontrado un valor que me dé ese resultado.
+¿Sí?
+Entonces, también es como que está todo dentro del mismo concepto.
+Pero no es exactamente igual.
+¿Sí?
+Entonces, resistencia a preimágenes, yo tengo un valor de Y.
+He encontrado algún valor que me dé ese resultado.
+Entonces, ¿cuál es el tamaño que tiene que tener la salida?
+Bueno, hoy por hoy, para ser segura, está relacionado, por supuesto, con la cantidad de cálculos, de cómputos.
+Y como se estima que dos al ochenta cómputos está suficiente para los esquemas actuales,
+podríamos considerar 160 bits.
+O sea, los bits están relacionados con este número.
+Así que, bueno, tendría que ser mayor que 160 bits, y quizás más.
+Así que no va a ser segura si la longitud es menor que 160.
+¿Sí?
+Acá tengo que tener, por lo menos, 160 como condición necesaria, pero no suficiente.
+O sea, la función también tiene que cumplirse con más cantidad.
+La verdad es que entonces...
+Acá tienen, por ejemplo...
+Acá tienen algunos ejemplos definitivos de hash.
+Por ejemplo, ml5 ya no se usa.
+Ya uno prácticamente tampoco, porque justo está en el borde.
+Así que, en realidad, el estándar actual es ya tres, con valores de 224, 256, 512.
+Que son las que ustedes ven cuando abren una página, o cuando descargan algo.
+Ahora, ¿cómo funciona esto?
+Porque, en realidad, ustedes tienen, por ejemplo, todo un PDF enorme.
+¿Sí?
+Y me da...
+256 bits, por ejemplo, de hash.
+¿Sí?
+¿Cómo hace todo el proceso?
+¿Cómo que mete todo y salen los 256 bits?
+¿Sí?
+Bueno, la cuestión es que, para lograr eso, se hacen construcciones iterativas
+que tienen una función de hash, que trabaja de una determinada manera.
+Por ejemplo, puede trabajar con 256 bits y acá 512.
+Por ejemplo, esto tiene mucho más de 512.
+Entonces, ¿cómo estaría funcionando para que entre, por ejemplo, 512 bits?
+¿Cómo estaría funcionando para que entre, por ejemplo, 512 y salgan 256?
+¿Qué estaría haciendo con toda esta cantidad de bytes?
+¿Qué se imagina que hace?
+O sea, si la función primitiva de hash trabaja con una entrada chiquitita y 256.
+Supongamos que sean 512 y 256.
+Todo esto, que es un bloque re grande, ¿qué es lo que tendría que hacer?
+La parte.
+Va a partir, ¿sí?
+Entonces, va a trabajar con un mon...
+Va a hacer algo así.
+Va a tener todos los bloques, ¿sí?
+Y va a ir procesándolos y la salida de uno retroalimenta al otro, así,
+hasta lograr un resultado final que sería el del último bloque.
+¿Está?
+A eso se lo llama transformación de Merkle data.
+Entonces, hay dos métodos en realidad.
+Uno es el iterativo, que es el que se hace con Merkle, que ahora lo vamos a ver.
+Y el esponja, que es un método más nuevo, que es el que usa Ya3.
+¿Sí?
+Es un método diferente, ¿sí?
+El iterativo tiene un poco este esquema como el de CBCMAC,
+donde un bloque alimenta al siguiente.
+Y el esponja, bueno...
+No sé si me puse el dibujo acá.
+Pero bueno, es un método diferente.
+Entonces, ¿cómo funciona la transformación de Merkle?
+Bueno, un poco como les puse ahí, ¿no?
+La idea es particionar.
+Obviamente se trabaja con esta funcióncita,
+se verifica que esta que está acá es resistente a colisiones,
+o sea que las colisiones se producen con una probabilidad despreciable.
+Y entonces lo que hace es partir el mensaje original,
+supongamos, todo el pdf en bloquecitos.
+Cada bloquecito tiene una determinada longitud,
+y se anexa primero con un vector de inicialización.
+Y después, la salida de una de las funciones,
+se anexa al segundo bloque,
+se anexa al tercero, se anexa al último,
+así hasta que el último se concatena con la longitud del mensaje.
+Y esa salida sería la de todo el hash.
+¿Sí?
+O sea, la idea siempre va a ser...
+Ese sería un método iterativo.
+Bueno, el otro método de esponja...
+Ese es el que usa ya tres...
+¿Sí?
+¿Qué es eso?
+¿Qué manera es esa?
+Si no te digo, van a dejar de preguntar eso.
+¿Verdad? Nunca he pensado en eso.
+¿Verdad?
+Este es el método que usa ya tres.
+¿Sí?
+Es distinto, acá tiene el mensaje,
+y va haciéndose sucesivoso, se aplica la función.
+¿Sí?
+Y tiene toda una parte donde va tomando todo el mensaje.
+Fíjense que va entrando y le hace una operación,
+luego otra operación y así,
+hasta que a partir de un determinado momento empieza a emitir la salida.
+Entonces esta es la parte de absorción del mensaje,
+y esta es la parte de emisión ya del resultado.
+Ahí está, donde logra la salida.
+¿No se paraleliza nunca esto?
+¿No se paraleliza? ¿Es siempre secuencial?
+La cuestión es que entonces,
+se supone que este método es más seguro.
+La cuestión es que siempre obviamente la función esta tiene que ser resistente a colisiones.
+Si yo uso una función que es mala, va a ser malo todo el esquema.
+No lo aseguro, tengo que hacerlo a partir de una función que sea válida.
+Y esto dijimos que nosotros íbamos a usar hash para construir
+el CBC MAC usaba una función pseudo aleatoria
+y me permitía construir un esquema de MAC seguro.
+Entonces, nosotros vamos a tener la posibilidad de armar otros esquemas de MAC seguros
+a partir de las funciones de hash.
+Y entonces,
+puedo construir un esquema de MAC seguro a partir de una función pseudo aleatoria
+o a partir de una función de hash.
+Si lo hago a partir de una función de hash,
+podemos tener como ejemplo el HMAC y el NMAC.
+Son dos formas posibles de hacer construcciones de MAC seguro.
+NMAC
+HMAC
+Son dos.
+Bueno, el NMAC, fíjense lo que hace.
+Entonces, dijimos, el esquema de MAC tenía generación de clave
+al algoritmo de etiquetado, al algoritmo de verificación.
+Bueno, entonces se va a generar la clave.
+Y el algoritmo de etiquetado consiste en todo esto.
+O sea, se utilizan funciones de hash para obtener la etiqueta.
+¿Cómo se obtiene la etiqueta? Bueno, con este procedimiento.
+Fíjense que acá tengo una segunda clave que se concatena con el mensaje 1,
+se va a sustituir el proceso de hash,
+a lo último se usa la clave 1
+y me da una etiqueta
+que esta es la definitiva.
+Este T viene a ser el hash, o sea, todo el proceso,
+utilizando las claves.
+Porque en un algoritmo de etiquetado, yo tengo una clave.
+¿Está?
+¿MV?
+No, claro, MV es el último.
+Sí, sería MV-1.
+Hay que arreglarlo.
+Fíjense que hasta acá viene a ser como el hash del mensaje puro, digamos.
+¿Pero qué diferencia hay del hash de solo el mensaje?
+Aquí estoy utilizando las claves,
+acá estoy usando la longitud,
+y acá, por último, utilizando la clave otra vez.
+La segunda clave.
+Acá tengo dos.
+¿Qué?
+¿Cuál era el problema que estaba acá?
+¿Cuál era el problema que estaba acá?
+Acá, porque acá era Z1,
+tendría que ser Z2, Z3,
+y acá sería su B-1.
+Acá en lugar de Z1 debería decir B-1.
+B-1.
+¿Ven que entonces el etiquetado resulta de hacer el hash sobre lo último?
+O sea, como si fuera el hash del mensaje normal,
+pero el último paso se hizo con L.
+La cuestión es que entonces, este sería el nested MAC,
+y otro algoritmo que se puede utilizar es el HMAC,
+que es este.
+Que de vuelta, uno puede leer esto, o si no, mira el dibujo.
+En el dibujo tenemos una clave,
+y hay dos valores de inicialización,
+uno que se llama IPAD y otro que se llama OPAD.
+Acá se utiliza esta constante IPAD,
+acá se utiliza la otra constante OPAD.
+Pero entonces se hace todo el procedimiento hasta obtener este Z,
+y una vez que tengo este Z,
+se hace el vector inicialización con la clave y el OPAD,
+y se concatena con el Z que había obtenido antes
+para obtener el tag definitivo.
+OPAD e IPAD son constantes.
+Y el IB es una constante fija también.
+Ahora vamos a ver una cosita más.
+Este es bastante más complejo, pero parece...
+...
+Es una forma de usar...
+...de armar el hash.
+Por ejemplo, es como funciona en SHA-3.
+SHA-3 funciona directamente con el Z.
+...
+...
+O sea que en realidad...
+Bueno, ¿qué tiene que entonces?
+Acá nos falta mover una cosa importante.
+...
+¿Qué es esta cuestión?
+¿Cómo hago yo si quiero lograr privacidad e integridad?
+O sea, si quiero conseguir las dos cosas voy a tener que de alguna manera combinar
+lo que veníamos haciendo de cifrado, esto con esto.
+¿Sí? Porque esto solo me provee confidencialidad.
+Etiquetado solo estamos enviando el M plano.
+O sea, me estaría dando solamente integridad.
+Si yo quiero combinar las dos cosas, bueno, tendré que...
+...
+Por ejemplo, podría decir, bueno, primero hago el cifrado
+y después hago el etiquetado del cifrado.
+Podría ser, ¿sí?
+Podría también ser al revés, decir, bueno, primero hago el etiquetado
+y después encripto el mensaje y, no sé, encripto la etiqueta.
+Cosas así.
+Pero bueno, hay formas que son válidas y seguras
+y otras que no.
+Entonces...
+Las formas seguras, a partir de lo que se va a conocer como cifrado resistente
+a texto cifrado elegido, va a consistir en lo siguiente.
+Las formas seguras serían de las tres, estas tres.
+La que sería segura...
+Vamos a ver cuál de las tres es.
+Tres posibilidades que uno podría intentar hacer.
+La primera es decir, bueno, cifrar y autenticar por separado.
+Entonces, bueno, hago el cifrado que hago con una primera clave.
+Cifro el mensaje y después, por otro lado, hago el etiquetado del mensaje.
+¿Sí?
+Y emito C con T.
+Entonces, la persona que recibe, ¿qué tendría que hacer?
+Desencriptar y después chequear.
+Exactamente.
+Desencriptar y el mensaje, hacer la verificación.
+Fijarse si me da el mismo tag.
+¿Está bien?
+Si no.
+Este no es un esquema seguro.
+¿Sí?
+No es un esquema válido.
+¿Sí?
+Porque la etiqueta podría llegar a brindar información respecto al mensaje.
+Igual no vamos a ver la demostración de por qué no es seguro.
+Bueno, pero simplemente sepan que este no es seguro.
+Este va a ser seguro según ciertas condiciones.
+Este sería, fíjense que dice, autenticar y luego cifrar.
+Entonces, ¿qué es lo que hace?
+Hace primero el MAC y hace la inscripción al MAC.
+¿Sí?
+Y eso es lo que emite.
+Esto puede ser seguro, pero según qué características.
+O sea, que requiere ciertas cuestiones.
+Por ejemplo, si hay que hacer PADI, ya no sería tan seguro.
+Bueno, y después, este sí es el más seguro de todos,
+que consiste en cifrar y luego autenticar.
+Entonces, acá, si se cifra y luego autentica,
+entonces el etiquetado se está haciendo sobre el cifrado.
+Entonces, primero obtuve el cifrado y el etiquetado lo hace sobre el cifrado.
+Esta es la forma más segura de todas.
+¿Sí?
+De todas maneras, exige que los algoritmos de inscripción y de MAC,
+obviamente que sean seguros.
+Y que tengan claves independientes.
+Porque con claves iguales se podría ser susceptible de textos y ataques psicodélicos.
+Esperen.
+Bueno, acá.
+Deja el tiempo, que quería mostrarles esto primero.
+Pero acá aparece el último de los algoritmos,
+que es el de texto cifrado elegido.
+Que se agregaría, entonces, acá, a la lista esta.
+Que es otra de las cosas, de los parámetros de seguridad.
+Fijar si es seguro frente al texto cifrado elegido.
+Acá, en este caso, es parecido a las anteriores.
+Pero, ¿cuál es la gran diferencia?
+El adversario tiene acceso al oráculo, ¿de qué cosa?
+¿De cifrado?
+De cifrado también, sí.
+Entonces, puede encriptar lo que quiera, puede desencriptar lo que quiera.
+Pero no va a poder.
+O sea, obviamente que el challenge no lo desencripta.
+Entonces, solamente puede seguir teniendo acceso a los algoritmos,
+puede preguntar, pero no puede preguntar sobre el último challenge.
+No puede preguntar sobre el último C.
+Entonces, acá, accede al oráculo de encripción y desencripción,
+excepto del challenge.
+¿Sí?
+Y obviamente, como son dos mensajes, va a tener probabilidades de éxito.
+Buscamos que sea cercana a 0.7.
+Y esto es como lo más fuerte de todo.
+O sea, si exigimos seguridad en texto,
+es como que estamos expusiendo el mayor nivel de seguridad.
+Porque estamos teniendo acceso a todo, casi.
+Seguro en texto es seguro en verdad.
+Bueno, creo que ya con esto sabemos casi todo.
+Y bueno, se puede hacer, bueno, vieron que recién dijimos,
+cifrar y luego autenticar sería la manera más apropiada.
+¿Y de qué manera me conviene hacerlo?
+De esta manera que está acá.
+De esta manera, fíjense qué se hace.
+Se usa un esquema que sea cifrado seguro ante CPA.
+Un esquema de MAC que sea seguro ante MAC Forge.
+Y una vez que tengo esas dos cosas, se generan dos claves, K1 y K2,
+y se hace la encripción con K1, que tiene que ser distinta de K2.
+No puede ser la misma clave.
+K1, se hace la encripción del mensaje y luego se hace el etiquetado de lo que se cifró.
+¿Sí?
+Y este esquema, si está bien hecho, si está, digamos, las condiciones estas
+de que esto sea seguro, esto sea seguro, y las claves sean distintas,
+entonces va a ser seguro ante CSA.
+¿Sí?
+Ante este último experimento que nosotros vimos acá,
+un esquema armado de esta manera, con estas propiedades,
+va a ser seguro ante CSA.
+O sea, es bastante fuerte y nos está dando las dos cosas,
+integridad y confianza.
+¿Ya?
+¿Está?
+Entonces, tienen, si quieren, para empezar hasta la guía 3.

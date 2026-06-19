@@ -1,0 +1,1663 @@
+% !TEX program = tectonic
+%=====================================================================
+%  Criptografía y Seguridad - ITBA
+%  Clase 2 — Cifrado (simétrico, secreto perfecto, modos de bloque,
+%  seguridad CPA/CCA)
+%  Apunte integral: teoría + práctica
+%=====================================================================
+\documentclass[11pt,a4paper]{article}
+
+%---------------------------------------------------------------------
+%  Paquetes
+%---------------------------------------------------------------------
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+  \usepackage{lmodern}
+\else
+  \usepackage{fontspec}
+\fi
+\usepackage[spanish,es-tabla,es-noshorthands]{babel}
+\usepackage{microtype}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{geometry}
+\geometry{a4paper,margin=2.4cm,headheight=22pt}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage[normalem]{ulem}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,shapes.misc,shapes.symbols,arrows.meta,positioning,calc,
+                fit,backgrounds,decorations.pathmorphing,shadows.blur,chains,matrix}
+
+%---------------------------------------------------------------------
+%  Paleta de color (inspirada en las diapositivas de la cátedra)
+%---------------------------------------------------------------------
+\definecolor{itbaCyan}{HTML}{6EC6D9}
+\definecolor{itbaCyanDark}{HTML}{2E8B9E}
+\definecolor{itbaBlue}{HTML}{AEDCEA}
+\definecolor{boxBlue}{HTML}{BBD4F0}
+\definecolor{slideGray}{HTML}{ECECEC}
+\definecolor{slideYellow}{HTML}{FCF6CF}
+\definecolor{practGreen}{HTML}{4F8A3D}
+\definecolor{practGreenL}{HTML}{E2EFD9}
+\definecolor{attackRed}{HTML}{C0392B}
+\definecolor{codeBg}{HTML}{F5F5F5}
+
+%---------------------------------------------------------------------
+%  Hipervínculos
+%---------------------------------------------------------------------
+\hypersetup{
+  colorlinks=true,
+  linkcolor=itbaCyanDark,
+  urlcolor=itbaCyanDark,
+  citecolor=itbaCyanDark,
+  pdftitle={Clase 2 - Cifrado},
+  pdfauthor={Criptografia y Seguridad - ITBA}
+}
+
+%---------------------------------------------------------------------
+%  Encabezados y pies
+%---------------------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\textsc{Criptografía y Seguridad — ITBA}}
+\rhead{\small Clase 2 · Cifrado}
+\cfoot{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{itbaCyanDark}\leaders\hrule height \headrulewidth\hfill}}
+
+%---------------------------------------------------------------------
+%  Títulos de sección con barra de color (estilo diapositiva)
+%---------------------------------------------------------------------
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{itbaCyanDark}}
+  {\thesection}{0.6em}{}
+  [\vspace{-0.4em}{\color{itbaCyan}\titlerule[2pt]}]
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{itbaCyanDark}}
+  {\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{black}}
+  {\thesubsubsection}{0.6em}{}
+
+%---------------------------------------------------------------------
+%  Cajas reutilizables
+%---------------------------------------------------------------------
+% Caja "diapositiva" (recuadro gris de las slides)
+\newtcolorbox{slidebox}[1][]{
+  enhanced, colback=slideGray, colframe=black!55, boxrule=0.5pt,
+  arc=1pt, left=6pt,right=6pt,top=4pt,bottom=4pt, #1}
+
+% Caja "diapositiva" amarilla (los recuadros amarillos de las slides)
+\newtcolorbox{notebox}[1][]{
+  enhanced, colback=slideYellow, colframe=black!45, boxrule=0.6pt,
+  arc=1pt, left=6pt,right=6pt,top=4pt,bottom=4pt, #1}
+
+% Caja de definición
+\newtcolorbox{defbox}[1]{
+  enhanced, breakable, colback=itbaBlue!25, colframe=itbaCyanDark,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+% Caja de nota práctica
+\newtcolorbox{practbox}[1]{
+  enhanced, breakable, colback=practGreenL, colframe=practGreen,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+% Caja de atención / ataque
+\newtcolorbox{warnbox}[1]{
+  enhanced, breakable, colback=attackRed!8, colframe=attackRed,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+%---------------------------------------------------------------------
+%  Estilo de código
+%---------------------------------------------------------------------
+\lstdefinestyle{plain}{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{codeBg},
+  keywordstyle=\color{itbaCyanDark}\bfseries,
+  commentstyle=\color{practGreen}\itshape,
+  stringstyle=\color{attackRed},
+  breaklines=true, frame=single, rulecolor=\color{black!30},
+  showstringspaces=false, columns=fullflexible, tabsize=2,
+  xleftmargin=10pt, framexleftmargin=8pt}
+
+%---------------------------------------------------------------------
+%  Macros matemáticos
+%---------------------------------------------------------------------
+\newcommand{\Kset}{\mathcal{K}}
+\newcommand{\Mset}{\mathcal{M}}
+\newcommand{\Cset}{\mathcal{C}}
+\newcommand{\Pset}{\mathcal{P}}
+\newcommand{\xor}{\oplus}
+\newcommand{\Enc}{\mathsf{Enc}}
+\newcommand{\Dec}{\mathsf{Dec}}
+\newcommand{\Gen}{\mathsf{Gen}}
+\DeclareMathOperator{\negl}{negl}
+\DeclareMathOperator{\PRF}{PRF}
+\newcommand{\E}{\mathsf{e}}
+\newcommand{\D}{\mathsf{d}}
+\newcommand{\bits}{\{0,1\}}
+
+%=====================================================================
+\begin{document}
+%=====================================================================
+
+%---------------------------------------------------------------------
+%  Portada
+%---------------------------------------------------------------------
+\begin{titlepage}
+\centering
+\vspace*{1.2cm}
+
+\begin{tikzpicture}
+  \node[rounded corners=2pt, fill=itbaCyan, text=black, inner sep=14pt,
+        minimum width=0.8\textwidth, align=center] (t)
+        {\Huge\bfseries Criptografía y Seguridad};
+\end{tikzpicture}
+
+\vspace{0.6cm}
+{\LARGE Criptografía}\\[0.25cm]
+{\Huge\bfseries\color{itbaCyanDark} Cifrado}
+
+\vspace{0.6cm}
+{\large\itshape Secreto perfecto · Seguridad computacional ·
+Modos de bloque · CPA/CCA}
+
+\vspace{0.8cm}
+
+% Ilustración: bóveda / caja fuerte (recreación del icono de portada)
+\begin{tikzpicture}[scale=1.0]
+  \fill[black!12] (-3.2,-2.4) rectangle (3.2,2.8);
+  \draw[line width=2pt, black!55] (-3.2,-2.4) rectangle (3.2,2.8);
+  \fill[itbaCyanDark!75] (-2.4,-2.0) rectangle (2.4,2.4);
+  \draw[line width=3pt, black!70] (-2.4,-2.0) rectangle (2.4,2.4);
+  \draw[line width=1.2pt, itbaCyan] (-2.0,-1.6) rectangle (2.0,2.0);
+  \draw[line width=2pt, black!70] (0,-2.0) -- (0,2.4);
+  \foreach \a in {0,45,...,315}{
+    \draw[line width=2pt, black!70] (-1.1,0.2) -- ++(\a:0.6);
+  }
+  \draw[line width=2.5pt, black!70] (-1.1,0.2) circle (0.42);
+  \fill[itbaCyan] (-1.1,0.2) circle (0.16);
+  \draw[line width=2.5pt, black!70] (1.1,0.2) circle (0.42);
+  \fill[itbaCyan] (1.1,0.2) circle (0.16);
+  \foreach \y in {-1.2,-0.4,0.8,1.6}{
+     \fill[black!70] (-2.2,\y) circle (0.07);
+     \fill[black!70] (2.2,\y) circle (0.07);
+  }
+\end{tikzpicture}
+
+\vfill
+{\large Apunte integral — Teoría + Práctica}\\[0.2cm]
+{\normalsize Clase 2 \quad·\quad Capítulos 2 y 3, \emph{Introduction to Modern
+Cryptography} (Katz \& Lindell)}\\[0.4cm]
+{\small Instituto Tecnológico de Buenos Aires (ITBA)}
+
+\vspace{0.6cm}
+{\footnotesize\itshape Documento elaborado a partir de las transcripciones de la clase
+teórica (Prof.\ Pablo Abad) y de la clase práctica, junto con las diapositivas
+oficiales de ambas.}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+%=====================================================================
+\section{Repaso: criptosistema y secreto perfecto}
+%=====================================================================
+
+Esta clase retoma los formalismos introducidos al final de la clase anterior y los
+profundiza: arranca repasando la definición de \textbf{criptosistema} y de
+\textbf{secreto perfecto}, demuestra que el \emph{One Time Pad} (OTP) alcanza ese ideal,
+muestra por qué es impráctico, y de ahí construye toda la \textbf{seguridad
+computacional} moderna (criptosistemas de flujo, modos de bloque, DES/AES).
+
+\begin{defbox}{Criptosistema (terna de algoritmos)}
+Un criptosistema es una \textbf{terna de algoritmos} $\langle \Gen,\E,\D\rangle$:
+\[
+\begin{aligned}
+  \Gen &: ()\to \Kset && \text{Generador de clave}\\
+  \E &: \Kset\times\Pset \to \Cset && \text{Cifrado}\\
+  \D &: \Kset\times\Cset \to \Pset && \text{Descifrado}
+\end{aligned}
+\]
+\textbf{Propiedad básica:} para todo $m$ y $k$ válidos,\quad $\D_k(\E_k(m))=m$.\\[4pt]
+\textbf{Conjuntos involucrados:}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item $\Kset$ — espacio de \underline{claves}: todas las claves posibles.
+  \item $\Pset$ — espacio \underline{plano}: todos los mensajes posibles.
+  \item $\Cset$ — espacio \underline{cifrado}: todos los mensajes cifrados posibles.
+\end{itemize}
+\end{defbox}
+
+\begin{slidebox}
+\textbf{Aclaración del profe.} El generador $\Gen$ ``en los criptosistemas más comunes
+suele ser simplemente una función \emph{no determinística} que toma una clave desde el
+espacio de claves con una distribución aleatoria uniforme''. Es decir, \textbf{elige una
+clave al azar}: nos da la idea de que la clave criptográfica es totalmente aleatoria. La
+terna establece la \emph{relación} entre las funciones, pero \textbf{todavía no habla de
+seguridad}: ya se adelantó que \textbf{no hay una única definición de seguridad}.
+\end{slidebox}
+
+\subsection{Secreto perfecto}
+
+\begin{defbox}{Secreto perfecto (Shannon)}
+Dado un criptosistema $\langle \Gen,\E,\D\rangle$, posee \textbf{secreto perfecto} si
+para toda distribución de probabilidades en $\Mset$, cada mensaje $m$ y cada mensaje
+cifrado $c$ tal que $\Pr[C=c]>0$:
+\[
+  \boxed{\ \Pr[M=m \mid C=c] \;=\; \Pr[M=m]\ }
+\]
+\end{defbox}
+
+En palabras: \textbf{conocer el texto cifrado no da ningún tipo de información extra
+sobre el texto plano} que no se conociera de antemano. A priori uno puede tener una
+\emph{tabla de probabilidades} sobre los mensajes (p.\ ej.\ ``hay un 90\,\% de chances de
+que el mensaje sea tal''); la ecuación dice que, conociendo el valor concreto que tomó
+el texto cifrado, esa tabla de probabilidades \textbf{no cambia}.
+
+\begin{warnbox}{La paradoja del secreto perfecto}
+Notar que $c=\E_k(m)$, así que las variables aleatorias discretas $C$ y $M$ son
+\textbf{dependientes} (hay una función que las relaciona). Sin embargo, la propiedad de
+secreto perfecto, interpretada probabilísticamente, dice que son
+\textbf{V.A.D.s independientes}.\\[4pt]
+\textbf{El truco} (explicación del profe): estas ecuaciones \emph{no toman en cuenta las
+claves}. Las claves son las que introducen la capacidad de llegar a la independencia
+estadística \emph{a pesar} de que exista una función determinística que vincule $M$ con $C$.
+\end{warnbox}
+
+% --- Diagrama: dependencia funcional vs independencia estadistica ---
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,>={Stealth}]
+  \node[draw,rounded corners,fill=boxBlue,minimum width=1.6cm] (M) at (0,0) {$M$};
+  \node[draw,rounded corners,fill=slideGray,minimum width=1.6cm] (K) at (3,1.1) {$K$ (azar)};
+  \node[draw,rounded corners,fill=boxBlue,minimum width=1.6cm] (C) at (6,0) {$C$};
+  \draw[-{Stealth}] (M) -- node[below]{$\E_k$} (C);
+  \draw[-{Stealth}] (K) -- (C);
+  \node[align=center,font=\footnotesize,gray] at (3,-1.0)
+     {Dependencia funcional ($c=\E_k(m)$)\\ pero independencia estadística
+      $\Pr[M{=}m\mid C{=}c]=\Pr[M{=}m]$};
+\end{tikzpicture}
+\caption{La clave aleatoria ``rompe'' la información que $C$ podría revelar sobre $M$.}
+\end{figure}
+
+%=====================================================================
+\section{One Time Pad (cifrado de Vernam)}
+%=====================================================================
+
+\begin{slidebox}
+\textbf{Anécdota histórica del profe.} Shannon y, en paralelo, el investigador
+\emph{Vernam} estudiaron si la condición de secreto perfecto era un ideal asintótico
+(inalcanzable) o realizable. Ambos llegaron casi independientemente a la misma
+conclusión: \textbf{sí es posible construir una función con esas características}, y es
+\textbf{la transformación más simple y tonta que se les pueda ocurrir}: el One Time Pad
+(criptosistema de Vernam, 1917).
+\end{slidebox}
+
+\begin{defbox}{One Time Pad — atribuido a Vernam (1917)}
+\[
+\begin{aligned}
+  \Gen &:\ k \leftarrow \bits^{\,n},\quad n=|m| && (\text{clave aleatoria del tamaño del mensaje})\\
+  \E &:\ \E_k(m) = m \xor k\\
+  \D &:\ \D_k(c) = c \xor k
+\end{aligned}
+\]
+Cifrar y descifrar es un \textbf{XOR bit a bit} entre el mensaje y la clave.
+\end{defbox}
+
+El descifrado es igual de fácil porque, en base $2$, el XOR es una operación
+\textbf{lineal} y \textbf{su propia inversa}: $(m\xor k)\xor k = m$. ``Y ahí se acabó la
+magia.''
+
+% --- Diagrama OTP / XOR con el ejemplo de la slide ---
+\begin{figure}[h]
+\centering
+\setlength{\tabcolsep}{3pt}\ttfamily\footnotesize
+\begin{tabular}{r *{17}{c}}
+\rmfamily m= & 0&0&1&0&1&1&0&1&0&0&0&1&0&1&1&1&0\\
+\rmfamily k= & 0&1&1&0&0&1&1&1&0&1&0&0&1&1&0&1&0\\
+\cmidrule(lr){2-18}
+\rmfamily c= & 0&1&0&0&1&0&1&0&0&1&0&1&1&0&1&0&0\\
+\end{tabular}
+\quad\rmfamily\scriptsize\textcolor{gray}{$c = m\xor k$}
+\caption{Ejemplo de la diapositiva: cada bit de $c$ es el XOR del bit de $m$ con el de
+$k$. \textit{(Recreación de la diapositiva del OTP.)}}
+\end{figure}
+
+\subsection{Propiedad fundamental: el OTP tiene secreto perfecto}
+
+\begin{practbox}{Estrategia de la demostración (en dos partes)}
+Para cualquier par $(m,c)$ de longitud $n$, con $|\Kset|=2^n=N$, queremos probar
+$\Pr[M{=}m\mid C{=}c]=\Pr[M{=}m]$.
+\begin{itemize}[leftmargin=1.3em,itemsep=2pt]
+  \item \textbf{Lema (Parte 1):} mostrar que $\Pr[C=c]=\tfrac1N$, \emph{independiente del
+        mensaje}.
+  \item \textbf{Parte 2:} usar la regla del producto / cambio de variable para concluir.
+\end{itemize}
+\end{practbox}
+
+\paragraph{Demostración (1) — el lema $\Pr[C=c]=\tfrac1N$.}
+La probabilidad de que el texto cifrado tome un valor concreto se obtiene sumando sobre
+\emph{todas} las claves: para cada clave $k$, el texto cifrado vale $c$ cuando ocurre la
+conjunción de un mensaje y esa clave que, al pasar por la función, dan $c$. Como la clave
+no puede tomar dos valores distintos a la vez, los eventos son \textbf{disjuntos} y la
+probabilidad total es la suma:
+\[
+  \Pr[C=c] \;=\; \sum_{k}\Pr[C=c \,\cap\, K=k].
+\]
+Usando que $c=\E_k(m)\iff M = c\xor k$ (aplicando la función de descifrado) y que
+\textbf{$k$ y $m$ se eligen independientemente}:
+\[
+  \Pr[C=c\cap K=k] \;=\; \Pr[M=c\xor k \,\cap\, K=k]
+  \;=\; \Pr[M=c\xor k]\cdot\Pr[K=k] \;=\; \Pr[M=c\xor k]\cdot \tfrac1N,
+\]
+ya que en el OTP la clave es uniforme: $\Pr[K=k]=1/N$. Entonces
+\[
+  \Pr[C=c] \;=\; \frac1N\sum_{k}\Pr[M=c\xor k].
+\]
+Como $c$ es fijo y $k$ recorre las $N$ claves, $c\xor k$ recorre \textbf{todos los
+mensajes posibles} (cada uno una sola vez, sin repetir). Por lo tanto la suma recorre
+todos los valores de $M$, y la suma de las probabilidades de una V.A.D.\ sobre todos sus
+valores es $1$:
+\[
+  \boxed{\ \Pr[C=c] \;=\; \frac1N\cdot 1 \;=\; \frac1N\ }
+\]
+
+\begin{slidebox}
+\textbf{Qué implica el lema.} La probabilidad de que el cifrado tome un valor en
+particular \textbf{no depende} del mensaje que estábamos cifrando. Aun sabiendo a priori
+que el 90\,\% (¡o el 100\,\%!) de las veces el mensaje original es $0$, cada posible
+valor de $C$ sigue teniendo probabilidad $1/N$. Esto ya es una pista de que el OTP tiene
+secreto perfecto: viendo el texto cifrado solo, no aprendemos nada del texto plano.
+\end{slidebox}
+
+\paragraph{Demostración (2) — conclusión.}
+Partimos de la regla del producto para probabilidades condicionales:
+\[
+  \Pr[M=m\mid C=c]\cdot\Pr[C=c] \;=\; \Pr[C=c\cap M=m].
+\]
+Como en el OTP $C=M\xor K$, el evento $\{C=c\cap M=m\}$ equivale a $\{K=c\xor m\cap M=m\}$.
+Por independencia de $K$ y $M$:
+\[
+  \Pr[C=c\cap M=m]\;=\;\Pr[K=c\xor m\,\cap\, M=m]
+  \;=\;\Pr[K=c\xor m]\cdot\Pr[M=m] \;=\; \tfrac1N\cdot\Pr[M=m].
+\]
+Reemplazando $\Pr[C=c]=1/N$ (del lema):
+\[
+  \Pr[M=m\mid C=c]\cdot \tfrac1N \;=\; \tfrac1N\cdot\Pr[M=m]
+  \;\;\Longrightarrow\;\;
+  \boxed{\ \Pr[M=m\mid C=c]=\Pr[M=m]\ }
+\]
+que es exactamente la definición de secreto perfecto. $\qquad\blacksquare$
+
+\begin{practbox}{Detalle fino (consulta de Martín en la teórica)}
+En el paso $\Pr[K=c\xor m]=1/N$ se está \emph{salteando un paso}: como la probabilidad de
+que $K$ tome cualquier valor constante es siempre $1/N$ (distribución uniforme), se puede
+asignar a $K=c\xor m$ el valor $1/N$ sin importar $m$. De no ser uniforme la clave, $K$ y
+$M$ no serían independientes y la separación en producto no valdría.
+\end{practbox}
+
+\subsection{Las malas noticias del OTP}
+
+\begin{warnbox}{Limitaciones del One Time Pad}
+\begin{enumerate}[leftmargin=1.5em,itemsep=2pt]
+  \item \textbf{Tamaño de clave:} secreto perfecto $\Rightarrow |\Kset|\ge|\Cset|$. La
+        clave debe ser \emph{tan grande como el mensaje}.
+  \item \textbf{No reutilizar la clave:} si una clave se usa 2 veces,
+        \[
+          c_1 = m_1\xor k,\qquad c_2 = m_2\xor k
+          \;\;\Longrightarrow\;\; c_1\xor c_2 = m_1\xor m_2.
+        \]
+        Se cancela la clave y \textbf{se pierde el secreto perfecto}.
+  \item \textbf{La clave seleccionada DEBE ser aleatoria.} ¿Cómo garantizar
+        verdadera aleatoriedad?
+\end{enumerate}
+\end{warnbox}
+
+Cuando una clave se reutiliza, $c_1\xor c_2 = m_1\xor m_2$. Como el XOR es lineal, las
+\textbf{propiedades estadísticas} de los mensajes se mantienen, así que reutilizar la
+clave convierte al OTP en \textbf{un criptosistema de sustitución} (un caso apenas más
+difícil que las sustituciones monoalfabéticas).
+
+\begin{slidebox}
+\textbf{Sobre la aleatoriedad (profe).} No existe un ``generador mágico de números
+realmente aleatorios''; todo lo disponible son \emph{aproximaciones} asintóticas: chips
+con generadores de hardware, ruido del micrófono, cadencia de tecleo, tiempos de
+\emph{seek} de discos magnéticos, ruido eléctrico de un capacitor cargando/descargando
+(\texttt{/dev/random} de Linux mezclaba varias fuentes), decaimiento radiactivo. Si no
+tenemos un generador realmente aleatorio, \textbf{técnicamente no podríamos implementar
+el OTP} (nos saldríamos de una hipótesis de la demostración).
+\end{slidebox}
+
+\begin{practbox}{Usos históricos documentados (anécdotas del profe)}
+\begin{itemize}[leftmargin=1.3em,itemsep=2pt]
+  \item \textbf{Segunda Guerra Mundial:} una variante de OTP \emph{en papel}, en base
+        $26/27$, para cifrar letra a letra contra un cuaderno. Pusieron a $100$ personas
+        con máquinas de escribir a teclear ``loco'', tomaron una letra de cada una,
+        generaron una secuencia, la escribieron a mano en \textbf{dos cuadernos
+        idénticos} y le dieron uno a cada parte.
+  \item \textbf{Guerra Fría — el ``teléfono rojo'':} la línea segura entre EE.UU.\ y la
+        URSS estaba protegida con un OTP. La secuencia aleatoria se generó
+        \textbf{midiendo la tasa de decaimiento radiactivo} dentro de un reactor; se
+        imprimió, se puso en dos maletas esposadas a agentes, y habilitaba $\sim$media
+        hora de comunicación hablada \textbf{a prueba de manipulaciones}.
+  \item \textbf{Por qué no sirve para e-commerce:} por cada \emph{request} habría que
+        generar una clave del tamaño del request y hacerla llegar por un canal aparte.
+        Impráctico en el mundo comercial normal.
+\end{itemize}
+\end{practbox}
+
+%=====================================================================
+\section{Ejercicio: clave NO aleatoria}
+%=====================================================================
+
+Este ejercicio numérico muestra qué pasa cuando la clave \textbf{no} es aleatoria (tiene
+sesgo): se rompe el secreto perfecto y el atacante extrae información.
+
+\begin{slidebox}
+\textbf{Enunciado.} Clave no aleatoria sobre mensajes de $2$ bits:
+\[
+  \Pr[k{=}00]=0.3,\quad \Pr[k{=}01]=0.1,\quad \Pr[k{=}10]=0.4,\quad \Pr[k{=}11]=0.2.
+\]
+Distribución del texto plano:
+\[
+  \Pr[m{=}00]=0.60,\quad \Pr[m{=}01]=0.15,\quad \Pr[m{=}10]=0.10,\quad \Pr[m{=}11]=0.15.
+\]
+Se obtiene un mensaje cifrado $C=01$. ¿Qué probabilidad hay de que $M=00$?
+\end{slidebox}
+
+Notar que la clave $10$ es \emph{más probable} que las otras: si fuese aleatoria, cada
+valor tendría probabilidad $0.25$. Queremos $\Pr[M{=}00\mid C{=}01)$. Como $M$ y $C$
+\textbf{no} son independientes, usamos la regla del producto:
+\[
+  \Pr[M{=}00\mid C{=}01)\cdot \Pr[C{=}01] \;=\; \Pr[C{=}01\mid M{=}00)\cdot\Pr[M{=}00].
+\]
+
+\paragraph{Cálculo de $\Pr[C{=}01]$.} Sumando sobre todas las claves (cada combinación
+$m,k$ que produce $c=01$):
+\[
+\begin{aligned}
+  \Pr[C{=}01] &= \sum_k \Pr[C{=}01\cap K{=}k] = \sum_k \Pr[M{=}01\xor k]\cdot\Pr[K{=}k]\\
+  &= \Pr[M{=}01]\Pr[K{=}00] + \Pr[M{=}00]\Pr[K{=}01]\\
+  &\quad + \Pr[M{=}11]\Pr[K{=}10] + \Pr[M{=}10]\Pr[K{=}11]\\
+  &= 0.15\cdot0.3 + 0.6\cdot0.1 + 0.15\cdot0.4 + 0.1\cdot0.2 \;=\; \mathbf{0.185}.
+\end{aligned}
+\]
+
+\paragraph{Cálculo de $\Pr[C{=}01\mid M{=}00)$.} Si el mensaje era $00$, hay una
+\textbf{única} clave que produce $c=01$, a saber $k=01$ (pues $00\xor01=01$):
+\[
+  \Pr[C{=}01\mid M{=}00) \;=\; \Pr[K{=}01) \;=\; \mathbf{0.1}.
+\]
+
+\paragraph{Juntando todo.}
+\[
+  \Pr[M{=}00\mid C{=}01)\cdot 0.185 = 0.1\cdot 0.6
+  \;\;\Longrightarrow\;\;
+  \Pr[M{=}00\mid C{=}01) = \frac{0.06}{0.185} = \boxed{0.32}.
+\]
+Pero a priori $\Pr[M{=}00]=0.6$. Como $0.32\neq 0.6$, \textbf{no se cumple secreto
+perfecto}: aprendimos algo del texto plano. Concretamente, habiendo interceptado $01$,
+es \textbf{menos probable de lo que creíamos} que el mensaje fuera $00$.
+
+\begin{practbox}{Lectura del ataque (profe, respondiendo a Tomás/Santiago)}
+Si esto \emph{tuviera} secreto perfecto, la respuesta sería $0.6$ (ignorando el sesgo):
+conocer el cifrado no diría nada nuevo. El ataque simula un atacante que hizo
+\textbf{ingeniería inversa} de lo que se creía una secuencia aleatoria y la convirtió en
+una \emph{no aleatoria}: \textbf{no necesita predecir la clave completa}, le alcanza con
+detectar un \emph{sesgo} para corrigir las probabilidades a su favor.
+\end{practbox}
+
+%=====================================================================
+\section{Más allá del OTP: resultados teóricos}
+%=====================================================================
+
+\begin{defbox}{Dos teoremas importantes sobre el secreto perfecto}
+\begin{enumerate}[leftmargin=1.5em,itemsep=2pt]
+  \item \textbf{Cualquier criptosistema con secreto perfecto es reducible al OTP}
+        (existe un isomorfismo: cualquier sistema con secreto perfecto es ``otra forma,
+        más enrevesada, de representar al OTP'').
+  \item \textbf{Cualquier sistema que NO sea reducible al OTP no posee secreto perfecto}
+        (la contrarrecíproca).
+\end{enumerate}
+\textbf{Consecuencias:} el secreto perfecto es \emph{demasiado impráctico}; necesitamos
+\textbf{otras construcciones}. Esta es la razón de fondo por la cual \emph{no hay una
+única definición de seguridad}.
+\end{defbox}
+
+%=====================================================================
+\section{Seguridad computacional}
+%=====================================================================
+
+\begin{center}
+\itshape Secreto perfecto $=$ Seguridad incondicional.
+\end{center}
+
+El secreto perfecto es \textbf{seguridad incondicional}: protege incluso contra un
+adversario con \textbf{capacidad de cómputo infinita}. Para escapar de sus
+limitaciones, relajamos dos cosas y pasamos a la \textbf{seguridad computacional}.
+
+% --- Diagrama: de secreto perfecto a seguridad computacional ---
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,>={Stealth},node distance=6mm]
+  \node[draw,rounded corners,fill=itbaBlue!30,minimum width=4cm,align=center] (sp)
+     {\textbf{Secreto perfecto}\\(seguridad incondicional)};
+  \node[draw,rounded corners,fill=practGreenL,minimum width=4.6cm,align=center,
+        below=14mm of sp] (sc)
+     {\textbf{Seguridad computacional}};
+  \draw[-{Stealth},line width=1pt] (sp) -- (sc);
+  \node[draw,rounded corners,fill=slideGray,align=left,right=12mm of sp.east,anchor=west]
+     {$\bullet$\ Limitar \textbf{escenarios}\\
+      $\bullet$\ Limitar \textbf{garantías}};
+\end{tikzpicture}
+\caption{Para construir criptosistemas prácticos se ``baja'' del ideal incondicional.}
+\end{figure}
+
+\begin{defbox}{Las dos relajaciones}
+\begin{enumerate}[leftmargin=1.5em,itemsep=3pt]
+  \item \textbf{Garantizar seguridad solo contra adversarios ``limitados''.} Se asume un
+        \textbf{límite en los recursos del atacante} (especialmente el \emph{tiempo}). Si
+        alguien materializa el cómputo infinito, \emph{game over}.
+  \item \textbf{Aceptar una pequeña probabilidad de éxito para el atacante.} Se deja de
+        lado la \textbf{infalibilidad}: se acepta una probabilidad de quiebre tan pequeña
+        que podamos ``dormir tranquilos''.
+\end{enumerate}
+Con estas dos condiciones, algo deja de ser \emph{imposible} para ser
+\emph{computacionalmente imposible}.
+\end{defbox}
+
+\begin{slidebox}
+\textbf{Por qué aceptar una probabilidad de éxito (analogía de la lotería, profe).} Al
+salir del secreto perfecto aparece un sesgo entre textos cifrados $\Rightarrow$ el ataque
+por \textbf{fuerza bruta} siempre es posible. Como en la lotería: quien recorre todas las
+claves \emph{garantiza} el quiebre, pero también está el afortunado que compra un único
+número y gana. Por eso hay que aceptar que un atacante con suerte puede quebrar un caso
+particular (no es un quiebre general).
+\end{slidebox}
+
+\begin{practbox}{Redefinición del esquema (clase práctica)}
+La práctica redefine el esquema privado $\pi=(\Gen,\Enc,\Dec)$ \emph{parametrizado por el
+nivel de seguridad} $n$:
+\[
+  k\leftarrow\Gen(1^n),\qquad c\leftarrow\Enc_k(m),\qquad m:=\Dec_k(c),
+\]
+y redefine el experimento de indistinguibilidad ante observadores como:
+\[
+  \Pr\!\big[\,\mathrm{PrivK}^{\mathrm{eav}}_{A,\pi}(n)=1\,\big]\;\le\;\tfrac12+\negl(n),
+\]
+donde la seguridad se exige solo frente a \textbf{adversarios eficientes} y con una
+\textbf{probabilidad de éxito despreciable}.
+\end{practbox}
+
+\begin{practbox}{Adversario eficiente (PPT) y función despreciable (clase práctica)}
+\begin{description}[leftmargin=0pt,style=nextline,itemsep=4pt]
+  \item[Adversario eficiente / PPT.] Dado un nivel de seguridad $n$, se espera que el
+        adversario corra algoritmos de orden $\mathrm{PPT}(n)$ —\emph{Probabilistic
+        Polynomial Time}—: \textbf{tiempo de ejecución polinómico} en $n$ (puede ser
+        $n^2$, $n^{40}$, no importa, pero \emph{polinómico}). Esto descarta
+        explícitamente al atacante que prueba las $2^n$ claves por fuerza bruta.
+  \item[Función despreciable.] La probabilidad de éxito $\varepsilon(n)$ debe ser
+        \textbf{despreciable} en $n$:
+        \[
+          \varepsilon(n)\ \text{es despreciable} \iff
+          \lim_{n\to\infty}\varepsilon(n) < \frac{1}{n^k}\quad\forall k,
+        \]
+        es decir, decrece más rápido que el inverso de cualquier polinomio.
+\end{description}
+\end{practbox}
+
+\begin{slidebox}
+\textbf{Nivel de seguridad $n$ (profe).} Es la cota sobre el orden de magnitud de la
+complejidad del adversario; en la práctica coincide con la \textbf{cantidad de bits de la
+clave} (con clave de $128$ bits, $n=128$). Hoy, juntando todas las computadoras del
+planeta, se pueden hacer $\sim 2^{76}$ operaciones por año; con $2^{128}$ claves haría
+falta \textbf{toda la vida del universo}. Por eso ponemos cota \emph{polinómica}: la
+fuerza bruta sistemática es ``fácil'' de volver impráctica.\\[3pt]
+\textbf{La cuña de las computadoras cuánticas:} para ciertos problemas existen algoritmos
+exponenciales en una máquina clásica que pasan a ser \emph{polinómicos} en una cuántica;
+ese cambio de categoría es lo que hace tambalear a algunos criptosistemas.
+\end{slidebox}
+
+%=====================================================================
+\section{Criptosistemas de flujo (stream ciphers)}
+%=====================================================================
+
+Los criptosistemas de flujo \textbf{toman la idea del OTP} pero relajan su condición más
+incómoda: \textbf{intercambian la clave del OTP por la salida de un generador
+pseudoaleatorio} $G$.
+
+\begin{defbox}{Criptosistema de flujo}
+\[
+\begin{aligned}
+  \Gen &:\ k \leftarrow \Kset\\
+  \E &:\ \E_k(m) = G(k)\xor m\\
+  \D &:\ \D_k(c) = G(k)\xor c
+\end{aligned}
+\]
+\end{defbox}
+
+\begin{notebox}
+\textbf{La gran diferencia:}\quad $|\Kset| \lll |\Mset|$.\\
+Por ejemplo: $|\Kset|=2^{128}$, $|\Mset| = |\Kset|^{128}$.
+\end{notebox}
+
+La idea (profe): se usa una clave \emph{pequeña} (típicamente $128$ bits) como
+\textbf{semilla} de un generador que produce tantos bits como tenga el mensaje, y se hace
+el XOR como en el OTP. ``Si queremos mandar una novela, la podemos cifrar con una clave de
+$8$ letras.'' Cifrar/descifrar siguen siendo invertibles. Pero ya \textbf{no} aplica el
+marco del secreto perfecto: hace falta otra definición de seguridad.
+
+\subsection{Generadores pseudoaleatorios (PRG)}
+
+\begin{slidebox}
+Los generadores pseudoaleatorios:
+\begin{itemize}[leftmargin=1.3em,itemsep=1pt]
+  \item Son \textbf{algoritmos determinísticos}.
+  \item Expanden una entrada llamada \textbf{semilla} (\emph{seed}).
+  \item \textbf{La salida parece aleatoria.}
+  \item Con la \textbf{misma semilla} generan la \textbf{misma secuencia}.
+\end{itemize}
+\end{slidebox}
+
+El ejemplo de la diapositiva es un \textbf{LFSR} (Linear Feedback Shift Register): un
+registro de desplazamiento cuya realimentación es el XOR de ciertas posiciones (\emph{taps}).
+
+% --- Diagrama LFSR ---
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\ttfamily\small,>={Stealth}]
+  \foreach \v [count=\i from 0] in {0,0,0,0,1,1,1,0}{
+    \node[draw,minimum size=6mm,
+          fill={\ifnum\i=2 itbaBlue\else\ifnum\i=4 itbaBlue\else\ifnum\i=7 itbaBlue\else white\fi\fi\fi}]
+          (b\i) at (\i*0.75,0) {\v};
+  }
+  % salida a la derecha
+  \draw[-{Stealth},thick] (b7.east) -- ++(0.7,0) node[right,font=\rmfamily\footnotesize]{salida};
+  % entrada por la izquierda (realimentacion)
+  \draw[-{Stealth},thick] (-1.3,0) -- (b0.west);
+  % XOR nodes
+  \node[draw,circle,red,thick,inner sep=1pt] (x1) at (2.6,-1.2) {$\xor$};
+  \node[draw,circle,red,thick,inner sep=1pt] (x2) at (3.6,-1.2) {$\xor$};
+  \draw[-{Stealth}] (b2.south) -- (x1.north);
+  \draw[-{Stealth}] (b4.south) |- (x2.west);
+  \draw[-{Stealth}] (b7.south) |- (x2.east);
+  \draw[-{Stealth}] (x2) -- (x1);
+  \draw[-{Stealth}] (x1.west) -| (-1.3,0);
+\end{tikzpicture}
+\caption{LFSR: la realimentación (entrada izquierda) es el XOR de las posiciones
+sombreadas (\emph{taps}); en cada paso se desplaza y emite un bit.
+\textit{(Recreación de la diapositiva.)}}
+\end{figure}
+
+\begin{defbox}{Generador pseudoaleatorio — definición formal}
+Sea $D=\{\,f:\bits^{\,n}\to\bits\,\}$ una \textbf{familia de funciones} (clasificadores
+o \emph{distinguishers}: dada una secuencia, la clasifican en $0$ o $1$).\\[3pt]
+$G:\bits^{\,s}\to\bits^{\,n}$, con $s<n$, es un \textbf{generador pseudoaleatorio} respecto
+de $D$ si:
+\[
+  \text{para toda } f\in D:\qquad
+  \Pr\big[\, f(G(r^s)) \neq f(r^n)\,\big] \;=\; \varepsilon,
+\]
+donde $r^s$ es la semilla, $r^n$ es una \textbf{secuencia realmente aleatoria}, y
+$\varepsilon$ es un \textbf{valor despreciable}.
+\end{defbox}
+
+\begin{slidebox}
+\textbf{Idea (profe).} Un PRG es determinístico pero su salida debe \emph{parecer}
+aleatoria. Formalmente: si juntamos \emph{todas} las funciones clasificadoras que
+existan, $G$ es pseudoaleatorio si para ninguna de ellas la salida del generador se
+clasifica distinto que una secuencia realmente aleatoria, salvo con probabilidad
+despreciable. Ejemplo de clasificador simple: contar ceros y unos y devolver $1$ si hay
+un sesgo (más ceros que unos) y $0$ si no.
+\end{slidebox}
+
+\begin{practbox}{Jerarquía de pseudoaleatoriedad (clase práctica)}
+La práctica organiza la \textbf{pseudoaleatoriedad} en tres objetos:
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize,>={Stealth},node distance=8mm]
+  \node[draw,rounded corners,fill=slideGray] (top) {\bfseries Pseudoaleatoriedad};
+  \node[draw,rounded corners,below left=10mm and 0mm of top] (cad)
+     {Cadena seudoaleatoria};
+  \node[draw,rounded corners,below=12mm of top] (gen)
+     {Generador seudoaleatorio \textcolor{blue}{$G$}};
+  \node[draw,rounded corners,below right=10mm and 0mm of top] (fun)
+     {Función seudoaleatoria \textcolor{practGreen}{$F_k$}};
+  \draw[-{Stealth}] (top) -- (cad);
+  \draw[-{Stealth}] (top) -- (gen);
+  \draw[-{Stealth}] (top) -- (fun);
+\end{tikzpicture}
+\end{center}
+\begin{description}[leftmargin=0pt,style=nextline,itemsep=3pt]
+  \item[Cadena seudoaleatoria.] \emph{Parece} una cadena con distribución uniforme
+        (aleatoria).
+  \item[Generador seudoaleatorio $G$.] Algoritmo determinístico que recibe una semilla
+        $s$ pequeña y aleatoria y la expande a una $r$ de longitud mayor y
+        seudoaleatoria $=$ \textbf{stream cipher}. Ej.: \textbf{RC4}, \textbf{LFSR}.
+        Formalmente $r:=G(s)$ con $|s|=n$ y $|r|=\ell(n)>n$. \emph{La semilla $s$ es el
+        secreto.}
+  \item[Función seudoaleatoria $F_k$.] Función indistinguible de una elegida al azar del
+        conjunto $F:\bits^{\,n}\to\bits^{\,n}$ $=$ \textbf{block ciphers} (ver
+        \S\ref{sec:bloque}).
+\end{description}
+\end{practbox}
+
+\begin{practbox}{OTP redefinido con $G$ (clase práctica) — seguro ante \emph{eavesdropping}}
+\[
+  k\leftarrow\Gen(1^n),\qquad c:=G(k)\xor m,\qquad m:=G(k)\xor c,
+  \qquad |k|=n,\quad |m|=\ell(n)>n.
+\]
+\textbf{Esquema seguro ante \emph{eavesdropping} para mensajes de longitud fija:}
+\[
+  \Pr\!\big[\,\mathrm{PrivK}^{\mathrm{eav}}_{A,\mathrm{OTP}}(n)=1\,\big]\;\le\;\tfrac12+\negl(n).
+\]
+\textcolor{attackRed}{\textbf{Pero el OTP (de flujo) NO es seguro para múltiples
+mensajes}} (vectores de mensajes) si se reutiliza la clave.
+\end{practbox}
+
+\subsection{Ejemplo de PRG (resuelto)}
+
+\begin{slidebox}
+\textbf{Enunciado.} Sea $s\in\{1,\dots,10\}$ y
+\[
+  G(s) = \{\,G_0\bmod 2,\ G_1\bmod 2,\ G_2\bmod 2,\dots\},\qquad
+  G_0 = s,\quad G_i = (G_{i-1}\cdot 3 + 1)\bmod 11.
+\]
+Generar $5$ bits con $s=2$ y con $s=6$.
+\end{slidebox}
+
+\paragraph{Con $s=2$.} Iteramos $G_i=(3G_{i-1}+1)\bmod 11$ y tomamos paridad:
+\[
+\begin{array}{c|ccccc}
+  i & 0 & 1 & 2 & 3 & 4\\\hline
+  G_i & 2 & 7 & 0 & 1 & 4\\
+  G_i\bmod 2 & 0 & 1 & 0 & 1 & 0
+\end{array}
+\]
+($G_1=3\cdot2+1=7$; $G_2=3\cdot7+1=22\bmod11=0$; $G_3=3\cdot0+1=1$;
+$G_4=3\cdot1+1=4$.)\quad Salida: $\boxed{01010}$.
+
+\paragraph{Con $s=6$.}
+\[
+\begin{array}{c|ccccc}
+  i & 0 & 1 & 2 & 3 & 4\\\hline
+  G_i & 6 & 8 & 3 & 10 & 9\\
+  G_i\bmod 2 & 0 & 0 & 1 & 0 & 1
+\end{array}
+\]
+($G_1=3\cdot6+1=19\bmod11=8$; $G_2=3\cdot8+1=25\bmod11=3$; $G_3=3\cdot3+1=10$;
+$G_4=3\cdot10+1=31\bmod11=9$.)\quad Salida: $\boxed{00101}$.
+
+\medskip
+Semillas distintas $\Rightarrow$ secuencias distintas; misma semilla $\Rightarrow$ misma
+secuencia. (Este $G$ de juguete es un generador congruencial lineal: \textbf{no} es
+criptográficamente seguro, sirve solo de ejemplo.)
+
+%=====================================================================
+\section{Pruebas de seguridad e indistinguibilidad}
+%=====================================================================
+
+\begin{defbox}{Pruebas de seguridad}
+Prueban características de un criptosistema. Son una \textbf{serie de pasos que ejecutan un
+algoritmo} (que representa un ataque). El atacante \textbf{gana o pierde} la prueba; se
+puede \textbf{repetir múltiples veces} $\Rightarrow$ interesa la \textbf{probabilidad de
+éxito} del atacante.
+\end{defbox}
+
+\begin{slidebox}
+\textbf{Aclaración del profe.} A diferencia de la demostración del OTP (matemática), las
+pruebas estadísticas son ``un \textbf{juego de guerra}'' entre dos actores: el
+criptosistema (un algoritmo / terna de algoritmos) y el atacante (\emph{cualquier}
+algoritmo). Repitiendo el juego muchas veces se obtiene una probabilidad de éxito y, a
+partir de ella, una noción \emph{condicional probabilística} de seguridad.
+\end{slidebox}
+
+\subsection{Prueba de indistinguibilidad ante observadores (EAV)}
+
+\begin{defbox}{Eavesdropping Indistinguishability test: $\mathrm{Eav}_{A,\Pi}$}
+Dado un adversario $A$ y un criptosistema $\Pi$:
+\begin{enumerate}[leftmargin=1.6em,itemsep=2pt]
+  \item $A$ genera $m_0$ y $m_1$ arbitrariamente.
+  \item Se genera una clave $k\leftarrow\Kset$.
+  \item Se genera $b\leftarrow\bits$.
+  \item $A$ recibe $c=\E_k(m_b)$.
+  \item $A$ emite $b'\in\bits$.
+\end{enumerate}
+$\mathrm{Eav}_{A,\Pi}=1$ si $b=b'$ ($A$ gana).\\[3pt]
+$\Pi$ es \textbf{indistinguible} si\quad
+$\Pr[\mathrm{Eav}_{A,\Pi}=1] = \tfrac12 + \varepsilon$, con $\varepsilon$ despreciable.\\[3pt]
+\textbf{Versión parametrizada} (nivel de seguridad): adversario $A(n)$, criptosistema
+$\Pi(n)$, y $\Pr[\mathrm{Eav}_{A,\Pi}=1]=\tfrac12+\varepsilon(n)$.
+\end{defbox}
+
+% --- Diagrama experimento EAV ---
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\footnotesize,>={Stealth},node distance=10mm]
+  \node[draw,rounded corners,fill=attackRed!12,minimum height=14mm] (A) at (0,0)
+     {\shortstack{Adversario\\ $A$}};
+  \node[draw,rounded corners,fill=itbaBlue!30,minimum height=14mm] (CH) at (6,0)
+     {\shortstack{Retador\\ ($k\leftarrow\Kset$, $b\leftarrow\bits$)}};
+  \draw[-{Stealth}] (A.north east) to[bend left=15]
+     node[above,font=\scriptsize]{$m_0,m_1$} (CH.north west);
+  \draw[-{Stealth}] (CH.south west) to[bend left=15]
+     node[below,font=\scriptsize]{$c=\E_k(m_b)$} (A.south east);
+  \node[font=\scriptsize] at (0,-1.5) {emite $b'$};
+  \node[font=\scriptsize,align=center] at (3,-2.4)
+     {gana si $b'=b$\quad$\Rightarrow$\quad
+      $\Pr[\mathrm{Eav}=1]\le\tfrac12+\negl(n)$};
+\end{tikzpicture}
+\caption{Experimento $\mathrm{PrivK}^{\mathrm{eav}}_{A,\Pi}$: el adversario elige los dos
+mensajes y debe distinguir cuál se cifró. \textit{(Recreación de la diapositiva.)}}
+\end{figure}
+
+\begin{slidebox}
+\textbf{Por qué $\tfrac12$ (profe).} Aunque $A$ no sepa nada del criptosistema, está
+obligado a emitir $b'$. Si tira al azar (o siempre $0$, o siempre $1$), \textbf{acierta
+la mitad de las veces} en promedio. La prueba reduce ``¿puede el adversario extraer
+información?'' a su \textbf{mínima expresión} y en el \textbf{mejor escenario para el
+atacante}: solo hay $2$ mensajes posibles y \emph{los elige el propio atacante}. Si $A$
+puede hacer algo mejor que adivinar (sesgar la respuesta por encima de $0.5$), es que
+\textbf{logró extraer información}.
+\end{slidebox}
+
+\begin{practbox}{Nivel de seguridad y la naturaleza de la prueba (profe)}
+\begin{itemize}[leftmargin=1.3em,itemsep=2pt]
+  \item Como es probabilística, la probabilidad ``nunca va a ser exactamente $0.5$''; por
+        eso aparece el $\varepsilon$ (debe estar a una cantidad \emph{despreciable} de
+        $\tfrac12$).
+  \item La prueba \textbf{no es absoluta}: pone a prueba el criptosistema contra
+        \emph{un} algoritmo adversario concreto. Que no \emph{conozcamos} un adversario
+        ganador no significa que no exista. En la práctica, ``indistinguible ante
+        \emph{eavesdropping}'' significa: con \textbf{todo el conocimiento colectivo} de
+        funciones adversariales inventadas hasta hoy, ninguna gana la prueba.
+  \item Queremos funciones \textbf{todo terreno} (que mantengan la propiedad para todo
+        tipo de mensajes), no funciones de uso hiperespecífico (``buenísima salvo si tus
+        mensajes son numéricos''), porque los sistemas mutan y los supuestos cambian.
+\end{itemize}
+\end{practbox}
+
+\begin{practbox}{Teorema: stream cipher con PRG es IND-EAV (slide + práctica)}
+\textbf{Teorema.} Si $G(\cdot)$ es un generador pseudoaleatorio, entonces el criptosistema
+de flujo $\Enc_k(m)=G(k)\xor m$ es \textbf{indistinguible ante observadores}.\\[4pt]
+\textbf{Ejercicio (slide).} Demostrar que \emph{si es posible distinguir $G(\cdot)$ de una
+secuencia aleatoria, un criptosistema de flujo basado en $G$ no pasa la prueba EAV.}\\[3pt]
+\emph{Idea de la demostración por reducción (profe):} si $G$ \textbf{no} es PRG entonces
+existe un distinguidor $f$; usando $f$ se construye un adversario $A$ que gana la prueba
+EAV. Contrarrecíproca: si $G$ es PRG, nadie gana $\Rightarrow$ el criptosistema es
+IND-EAV. (Demostración completa en Katz \& Lindell.)
+\end{practbox}
+
+\subsection{Múltiples cifrados (Mul)}
+
+\begin{defbox}{Multiple message eavesdropping test: $\mathrm{Mul}_{A,\Pi}$}
+Dado un adversario $A$ y un criptosistema $\Pi$:
+\begin{enumerate}[leftmargin=1.6em,itemsep=2pt]
+  \item $A$ genera dos \emph{vectores} de mensajes
+        $(m_{00},m_{01},\dots,m_{0i})$ y $(m_{10},m_{11},\dots,m_{1i})$.
+  \item Se genera una clave $k\leftarrow\Kset$.
+  \item Se genera $b\leftarrow\bits$.
+  \item $A$ recibe $(c_0,c_1,\dots,c_i)$, donde $c_j=\Enc_k(m_{bj})$.
+  \item $A$ emite $b'\in\bits$.
+\end{enumerate}
+$\mathrm{Mul}_{A,\Pi}=1$ si $b=b'$. $\Pi$ es indistinguible bajo múltiples cifrados si
+$\Pr[\mathrm{Mul}_{A,\Pi}=1]=\tfrac12+\varepsilon$.
+\end{defbox}
+
+\subsection{Los stream ciphers NO son seguros bajo múltiples cifrados}
+
+\begin{warnbox}{Ataque que gana la prueba Mul}
+Los criptosistemas de flujo \textbf{no} son seguros bajo múltiples cifrados, por la misma
+razón que el OTP con reúso de clave (¡no es casualidad!):
+\[
+  c_1 = m_1\xor G(s),\qquad c_2 = m_2\xor G(s)
+  \;\;\Longrightarrow\;\; c_1\xor c_2 = m_1\xor m_2.
+\]
+\end{warnbox}
+
+\begin{practbox}{Solución (ataque explícito de la slide)}
+Definir un algoritmo $A$ que gane la prueba de múltiples cifrados:
+\[
+  A \to \big(m_{00}=0\cdots0,\ m_{01}=0\cdots0\big),\ \big(m_{10}=0\cdots0,\ m_{11}=1\cdots1\big).
+\]
+$A$ obtiene $c_1,c_2$ y calcula $X = c_1\xor c_2 = m_1\xor m_2$:
+\begin{itemize}[leftmargin=1.3em,itemsep=1pt]
+  \item Si $X = 0\cdots0$ $\to$ los dos mensajes eran iguales $\to$ responde $b'=0$.
+  \item Si no $\to$ eran distintos $\to$ responde $b'=1$.
+\end{itemize}
+\textbf{Gana siempre.} Como en el primer vector ambos mensajes son iguales ($0\cdots0$),
+$c_1\xor c_2=0$; en el segundo son distintos ($0\cdots0$ vs.\ $1\cdots1$), $c_1\xor c_2\neq0$.
+\end{practbox}
+
+\begin{practbox}{¿El atacante extrae información ``real''? (pregunta de Tomás)}
+\emph{Tomás:} ganaste la prueba, pero ¿extraés información más allá de notar que se usa la
+misma clave? \emph{Profe:} en el peor caso, el atacante puede saber si \textbf{dos
+mensajes se repiten}. Ej.: un sensor que transmite temperatura cifrada con clave fija;
+sin recuperar el valor, el atacante puede deducir que ``la temperatura de ahora es la
+misma que hace 15 min''. \textbf{Una debilidad teórica vuelve el ataque muy plausible};
+es un tema de intereses (no la usarías para la cuenta bancaria de una corporación).
+\end{practbox}
+
+\subsection{Necesidad de cifrado probabilístico}
+
+\begin{warnbox}{Conclusión clave de la materia}
+\textbf{Si una función de cifrado es determinística, NO es segura bajo múltiples
+cifrados.} El adversario anterior aplica a \textbf{cualquier} criptosistema donde
+$\E_k(x)$ es constante (mapea siempre al mismo lugar).\\[4pt]
+$\Rightarrow$ \textbf{No se puede construir seguridad criptográfica seria con funciones
+determinísticas.} (Este error ha costado ``miles de millones de dólares'' en la historia.)
+A partir de acá, todo lo que veamos será \textbf{no determinístico}.
+\end{warnbox}
+
+\subsection{Evitar reutilizar la clave: nonce / IV}
+
+\begin{slidebox}
+Se agrega un valor a la función generadora. \textbf{Ese valor no debe repetirse para una
+misma clave} (se lo llama \textbf{nonce} o \textbf{IV} —vector de inicialización—).
+\textbf{Dos formas:}
+\end{slidebox}
+
+\begin{defbox}{IV / Nonce: diferencia con la clave}
+Un \textbf{IV} es una secuencia arbitraria de bits elegida \emph{aleatoriamente}. La única
+diferencia conceptual con una clave es que el IV es \textbf{información pública}: viaja
+con el texto cifrado (``lo publicamos en Internet''). Sirve para introducir el
+\textbf{no determinismo} que permite reutilizar la clave de forma segura.
+\end{defbox}
+
+% --- Diagrama: modo sincronizado vs no sincronizado ---
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\footnotesize,>={Stealth}]
+  % --- modo sincronizado ---
+  \node[font=\bfseries\small] at (0,1.2) {Modo sincronizado (un único IV)};
+  \node[draw,circle,fill=itbaCyan,minimum size=6mm] (Gs) at (0,0) {$G$};
+  \node[left=4mm of Gs,font=\scriptsize] {$k$};
+  \node[draw,fill=slideGray,below=4mm of Gs,minimum width=1cm] (iv) {IV};
+  \draw[-{Stealth}] (iv) -- (Gs);
+  \node[draw,fill=slideGray,right=8mm of Gs,minimum width=3.2cm] (GS) {$G(S)$};
+  \draw[-{Stealth}] (Gs) -- (GS);
+  \node[draw,fill=slideGray,below=8mm of GS.west,anchor=west,minimum width=1.3cm] (m0) {$M_0$};
+  \node[draw,fill=slideGray,right=4mm of m0,minimum width=1.3cm] (m1) {$M_1$};
+  \node[font=\large] at ($(GS.south west)!0.3!(m0.north)+(0cm,0.2cm)$) {$\xor$};
+  \node[font=\large] at ($(GS.south)!0.5!(m1.north)+(0.3cm,0.2cm)$) {$\xor$};
+\end{tikzpicture}
+
+\vspace{4mm}
+
+\begin{tikzpicture}[font=\footnotesize,>={Stealth}]
+  \node[font=\bfseries\small] at (0,1.2) {Modo no sincronizado (un IV por mensaje)};
+  % bloque 1
+  \node[draw,circle,fill=itbaCyan,minimum size=6mm] (G1) at (0,0) {$G$};
+  \node[left=3mm of G1,font=\scriptsize] {$k$};
+  \node[draw,fill=slideGray,below=4mm of G1,minimum width=1cm] (iv0) {IV0};
+  \draw[-{Stealth}] (iv0) -- (G1);
+  \node[draw,fill=slideGray,right=5mm of G1,minimum width=2cm] (GS1) {$G(S)$};
+  \draw[-{Stealth}] (G1) -- (GS1);
+  \node[draw,fill=slideGray,below=8mm of GS1,minimum width=1cm] (M0) {$M_0$};
+  \node[font=\large] at ($(GS1.south)!0.5!(M0.north)$) {$\xor$};
+  % bloque 2
+  \node[draw,circle,fill=itbaCyan,minimum size=6mm] (G2) at (5.4,0) {$G$};
+  \node[left=3mm of G2,font=\scriptsize] {$k$};
+  \node[draw,fill=slideGray,below=4mm of G2,minimum width=1cm] (iv1) {IV1};
+  \draw[-{Stealth}] (iv1) -- (G2);
+  \node[draw,fill=slideGray,right=5mm of G2,minimum width=2cm] (GS2) {$G(S')$};
+  \draw[-{Stealth}] (G2) -- (GS2);
+  \node[draw,fill=slideGray,below=8mm of GS2,minimum width=1cm] (M1b) {$M_1$};
+  \node[font=\large] at ($(GS2.south)!0.5!(M1b.north)$) {$\xor$};
+\end{tikzpicture}
+\caption{Sincronizado: un IV mezclado con $k$ como semilla. No sincronizado: un IV nuevo
+y aleatorio por mensaje (el IV viaja como parte del ciphertext).
+\textit{(Recreación de las diapositivas.)}}
+\end{figure}
+
+\begin{slidebox}
+\textbf{El \emph{catch} (profe).} Como el IV es necesario para descifrar (se requiere la
+misma semilla para reconstruir la secuencia), el texto cifrado debe \textbf{incluir el
+IV}. Esto rompe la simetría de tamaños: a un mensaje de $100$ bytes se le agregan, p.\
+ej., $16$ bytes de IV. En el \textbf{modo sincronizado} (asincrónico en la práctica) se
+emite un IV por mensaje (bueno para mensajes grandes); en otro modo se piensa la
+transmisión como un \textbf{continuo} y se sigue usando el generador desde donde se quedó
+(sin emitir IV en cada mensaje). Ambos logran el no determinismo.
+\end{slidebox}
+
+%=====================================================================
+\section{Ataques de texto plano escogido (CPA)}
+%=====================================================================
+
+\begin{defbox}{Chosen Plain Text indistinguishability: $\mathrm{CPA}_{A,\Pi}$}
+Dado un adversario $A$ y un criptosistema $\Pi$:
+\begin{enumerate}[leftmargin=1.6em,itemsep=2pt]
+  \item Se genera una clave $k\leftarrow\Kset$.
+  \item $A$ obtiene \textbf{acceso al oráculo} $f(x)=\E_k(x)$ y genera $(m_0,m_1)$.
+  \item Se genera $b\leftarrow\bits$.
+  \item $A$ recibe $c=\E_k(m_b)$ (\emph{challenge ciphertext}).
+  \item $A$ sigue con acceso al oráculo y emite $b'\in\bits$.
+\end{enumerate}
+$\mathrm{CPA}_{A,\Pi}=1$ si $b=b'$. $\Pi$ es \textbf{CPA-Secure} si
+$\Pr[\mathrm{CPA}_{A,\Pi}=1]=\tfrac12+\varepsilon$, con $\varepsilon$ despreciable.
+\end{defbox}
+
+% --- Diagrama experimento CPA con oraculo ---
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\footnotesize,>={Stealth}]
+  \node[draw,rounded corners,fill=attackRed!12,minimum height=16mm] (A) at (0,0)
+     {\shortstack{Adversario\\ $A$}};
+  \node[draw,rounded corners,fill=slideGray,minimum height=16mm] (O) at (5.2,0)
+     {\shortstack{Oráculo\\ $\E_k(\cdot)$}};
+  \draw[-{Stealth}] (A.north east) to[bend left=12]
+     node[above,font=\scriptsize]{$x$ (consulta libre)} (O.north west);
+  \draw[-{Stealth}] (O.south west) to[bend left=12]
+     node[below,font=\scriptsize]{$\E_k(x)$} (A.south east);
+  \node[font=\scriptsize,align=center] at (2.6,-2.0)
+     {luego $A$ envía $m_0,m_1$ y recibe $c=\E_k(m_b)$;\\ emite $b'$.
+      \quad CPA-Secure: $\le\tfrac12+\negl(n)$};
+\end{tikzpicture}
+\caption{En CPA el adversario tiene un \textbf{oráculo de cifrado}: puede cifrar todos los
+textos que quiera antes y después de recibir el desafío. \textit{(Recreación de la
+diapositiva.)}}
+\end{figure}
+
+\begin{defbox}{Propiedades CPA (slide)}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item Un criptosistema \textbf{determinístico no puede ser CPA-Secure} (el oráculo lo
+        delata: ciframos $m_0$ y comparamos).
+  \item Si un criptosistema es CPA-Secure \textbf{para un mensaje}, también lo es
+        \textbf{para múltiples}.
+  \item Un criptosistema CPA-Secure pero de \textbf{tamaño limitado} (cifra hasta $n$
+        bits) puede \textbf{extenderse arbitrariamente}: con
+        $m=m_0\Vert m_1\Vert\cdots\Vert m_i$ ($|m_j|=n$ bits),
+        \[
+          \Enc_k(m) = \Enc_k(m_0)\Vert \Enc_k(m_1)\Vert\cdots\Vert\Enc_k(m_i).
+        \]
+\end{itemize}
+\end{defbox}
+
+%=====================================================================
+\section{Primitivas de cifrado en bloque}\label{sec:bloque}
+%=====================================================================
+
+\begin{defbox}{Primitiva de cifrado en bloque (block cipher)}
+Definida para mensajes de \textbf{tamaño FIJO}:
+\[
+  \Kset=\bits^{\,n},\qquad \Cset=\Pset=\bits^{\,b},
+\]
+\[
+  \Gen:\ k\leftarrow\Kset,\qquad \Enc:\ \E_k(m)=c,\qquad \Dec:\ \D_k(c)=m.
+\]
+\textbf{Son funciones pseudoaleatorias} ($F_k$). Podrían ``usarse'' como criptosistemas,
+\textbf{pero son determinísticas} $\to$ \textbf{no pasan la prueba Mul}. Se combinan con
+\textbf{mecanismos de encadenamiento} para formar criptosistemas seguros.
+\end{defbox}
+
+\begin{practbox}{Esquema $\pi(\Gen,\Enc,\Dec)$ con función pseudoaleatoria $F_k$
+(clase práctica)}
+\[
+\begin{aligned}
+  \Gen &:\ k\leftarrow\bits^{\,n}\ (|k|=n)\\
+  \Enc &:\ \text{para } m \text{ con }|m|=n,\ \text{se elige } r\leftarrow\bits^{\,n};
+        \quad c:=\langle\, r,\ F_k(r)\xor m\,\rangle\\
+  \Dec &:\ \text{dado } \langle r,s\rangle,\quad m:=F_k(r)\xor s
+\end{aligned}
+\]
+\textbf{Esquema seguro ante CPA} (Chosen Plaintext Attack):
+$\Pr[\mathrm{PrivK}^{\mathrm{CPA}}_{A,\pi}(n)=1]\le\tfrac12+\negl(n)$.\\[4pt]
+La clave del esquema es el $r$ \emph{aleatorio por mensaje}: introduce el no determinismo
+que el block cipher puro (determinístico) no tiene.
+\end{practbox}
+
+% --- Diagrama del esquema CPA con r aleatorio (practica) ---
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\footnotesize,>={Stealth}]
+  \node[draw,fill=slideGray,minimum width=1.4cm] (m) at (0,0) {$m$};
+  \node[draw,fill=itbaCyan,minimum width=1.2cm] (F) at (3,1) {$F_k$};
+  \node[font=\large] (xor) at (3,0) {$\xor$};
+  \node[draw,fill=orange!40,minimum width=1cm] (r) at (5.6,1) {$r$};
+  \node[draw,fill=orange!40,minimum width=1cm] (s) at (5.6,0) {$s$};
+  \draw[-{Stealth}] (r) -- (F);
+  \draw[-{Stealth}] (F) -- (xor);
+  \draw[-{Stealth}] (m) -- (xor);
+  \draw[-{Stealth}] (xor) -- (s);
+  \node[draw,dashed,fit=(r)(s),inner sep=3pt,label=right:{$c=\langle r,s\rangle$}] {};
+\end{tikzpicture}
+\caption{Cifrado CPA-seguro a partir de una PRF $F_k$ y un $r$ aleatorio por mensaje:
+$c=\langle r,\,F_k(r)\xor m\rangle$. \textit{(Recreación de la diapositiva de la
+práctica.)}}
+\end{figure}
+
+\subsection{Extensión y encadenamiento}
+
+\begin{slidebox}
+\textbf{¿Y si el mensaje es más chico que el bloque?} Se lo extiende sistemáticamente
+(\emph{padding}):
+\begin{itemize}[leftmargin=1.3em,itemsep=1pt]
+  \item \textbf{Simple Pad:} completar con ceros. Es necesario conocer el tamaño real del
+        mensaje.
+  \item \textbf{DES Pad:} agregar un bit $1$ y luego bits en $0$. Puede agregar un bloque
+        completo de padding.
+\end{itemize}
+\textbf{¿Y si el mensaje es más grande que el bloque?} Se divide en bloques, se extiende
+el último y se transforma cada bloque según algún \textbf{modo de encadenamiento}. El
+objetivo de los modos es \textbf{extender una primitiva de bloque a mensajes mayores a su
+tamaño}; hay diversos modos con distintas propiedades (no todos aplican a cada problema).
+\end{slidebox}
+
+%=====================================================================
+\section{Modos de operación de block ciphers}
+%=====================================================================
+
+\subsection{ECB — Electronic Code Book}
+
+\begin{warnbox}{ECB — \textcolor{attackRed}{NO UTILIZAR}}
+Trata el mensaje original como un \textbf{conjunto de bloques independientes}; aplica la
+permutación pseudoaleatoria sobre cada bloque por separado.
+\[
+  m=m_1m_2\dots m_l,\qquad
+  c=\langle F_k(m_1),\,F_k(m_2),\dots,F_k(m_l)\rangle,\qquad
+  \text{Dec: } F_k^{-1}.
+\]
+\textbf{NO es CPA-Secure} (es determinístico: bloques iguales $\to$ cifrados iguales,
+revela patrones).
+\end{warnbox}
+
+% --- Diagrama ECB ---
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\footnotesize,>={Stealth},node distance=6mm]
+  \foreach \i in {1,2,3}{
+    \node[draw,fill=slideGray,minimum width=1.1cm] (m\i) at (\i*2.2,1.4) {$m_\i$};
+    \node[draw,fill=itbaCyan,minimum width=1.1cm] (F\i) at (\i*2.2,0) {$F_k$};
+    \node[draw,fill=slideGray,minimum width=1.1cm] (c\i) at (\i*2.2,-1.4) {$c_\i$};
+    \draw[-{Stealth}] (m\i) -- (F\i);
+    \draw[-{Stealth}] (F\i) -- (c\i);
+  }
+\end{tikzpicture}
+\caption{ECB: cada bloque se cifra de forma independiente. \textit{(Recreación de la
+diapositiva.)}}
+\end{figure}
+
+\subsection{CBC — Cipher Block Chaining}
+
+\begin{defbox}{CBC}
+Usa la salida de un bloque como entrada para el próximo. Disminuye el traspaso de
+información. \textbf{Requiere un IV ALEATORIO}.
+\[
+  m=m_1m_2\dots m_l:\qquad
+  c_0=\mathrm{IV},\qquad c_i = F_k(c_{i-1}\xor m_i).
+\]
+El IV va en plano. \textbf{Es seguro frente a CPA} (con IV aleatorio); su contra es la
+\textbf{encripción secuencial}.
+\end{defbox}
+
+% --- Diagrama CBC cifrado ---
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\footnotesize,>={Stealth}]
+  \node[font=\bfseries\small] at (0,2.4) {CBC — Cifrado};
+  \node[draw,fill=slideGray,minimum width=1.0cm] (iv) at (-2.2,0) {IV};
+  \foreach \i in {1,2,3}{
+    \node[draw,fill=slideGray,minimum width=1.0cm] (m\i) at (\i*2.4-2.4,1.8) {$m_\i$};
+    \node[font=\large] (x\i) at (\i*2.4-2.4,0.9) {$\xor$};
+    \node[draw,fill=itbaCyan,minimum width=1.0cm] (F\i) at (\i*2.4-2.4,0) {$F_k$};
+    \node[draw,fill=slideGray,minimum width=1.0cm] (c\i) at (\i*2.4-2.4,-1.3) {$c_\i$};
+    \draw[-{Stealth}] (m\i) -- (x\i);
+    \draw[-{Stealth}] (x\i) -- (F\i);
+    \draw[-{Stealth}] (F\i) -- (c\i);
+  }
+  \draw[-{Stealth}] (iv) |- (x1);
+  \draw[-{Stealth}] (c1.east) -- ++(0.5,0) |- (x2);
+  \draw[-{Stealth}] (c2.east) -- ++(0.5,0) |- (x3);
+\end{tikzpicture}
+
+\vspace{3mm}
+
+\begin{tikzpicture}[font=\footnotesize,>={Stealth}]
+  \node[font=\bfseries\small] at (0,2.4) {CBC — Descifrado: $m_i = F_k^{-1}(c_i)\xor c_{i-1}$};
+  \node[draw,fill=slideGray,minimum width=1.0cm] (iv) at (-2.2,-1.3) {IV};
+  \foreach \i in {1,2,3}{
+    \node[draw,fill=slideGray,minimum width=1.0cm] (c\i) at (\i*2.4-2.4,1.8) {$c_\i$};
+    \node[draw,fill=itbaCyan,minimum width=1.0cm] (F\i) at (\i*2.4-2.4,0.7) {$F_k^{-1}$};
+    \node[font=\large] (x\i) at (\i*2.4-2.4,-0.3) {$\xor$};
+    \node[draw,fill=slideGray,minimum width=1.0cm] (m\i) at (\i*2.4-2.4,-1.4) {$m_\i$};
+    \draw[-{Stealth}] (c\i) -- (F\i);
+    \draw[-{Stealth}] (F\i) -- (x\i);
+    \draw[-{Stealth}] (x\i) -- (m\i);
+  }
+  \draw[-{Stealth}] (iv) -| (x1);
+  \draw[-{Stealth}] (c1.west) -- ++(-0.5,0) |- (x2);
+  \draw[-{Stealth}] (c2.west) -- ++(-0.5,0) |- (x3);
+\end{tikzpicture}
+\caption{CBC: en cifrado cada bloque se XOR-ea con el cifrado anterior antes de pasar por
+$F_k$; en descifrado se aplica $F_k^{-1}$ y se XOR-ea con el cifrado anterior.
+\textit{(Recreación de las diapositivas.)}}
+\end{figure}
+
+\begin{warnbox}{Propagación de error en CBC}
+Como $m_i = F_k^{-1}(c_i)\xor c_{i-1}$, un error de transmisión en \textbf{un bloque
+cifrado} $c_i$ afecta exactamente a \textbf{dos bloques de texto plano}: el propio $m_i$
+(que se corrompe por completo) y $m_{i+1}$ (donde el error se traslada bit a bit vía el
+XOR con $c_i$). Los demás bloques se recuperan correctamente: \emph{el error no se
+propaga más allá de dos bloques}.
+\end{warnbox}
+
+% --- Diagrama propagacion de error CBC ---
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\footnotesize,>={Stealth}]
+  \foreach \i in {1,2,3,4}{
+    \node[draw,minimum width=1.1cm,
+          fill={\ifnum\i=2 attackRed!25\else slideGray\fi}] (c\i) at (\i*1.8,0) {$c_\i$};
+    \node[draw,minimum width=1.1cm,
+          fill={\ifnum\i=2 attackRed!25\else\ifnum\i=3 attackRed!12\else slideGray\fi\fi}]
+          (m\i) at (\i*1.8,-1.6) {$m_\i$};
+    \draw[-{Stealth}] (c\i) -- (m\i);
+  }
+  \node[attackRed,font=\scriptsize] at (2*1.8,0.7) {error};
+  \draw[-{Stealth},attackRed] (c2.south east) -- (m3.north west);
+  \node[font=\scriptsize,align=center,gray] at (5*1.8,-0.8)
+     {sólo $m_2$ y $m_3$\\ se corrompen};
+\end{tikzpicture}
+\caption{Un bit erróneo en $c_2$ corrompe $m_2$ (completo) y $m_3$ (bit a bit). El resto
+queda intacto.}
+\end{figure}
+
+\subsection{OFB — Output Feedback}
+
+\begin{defbox}{OFB}
+Construye una \textbf{transformación de flujo a partir de una de bloque}; usa
+\textbf{solo} la función $\Enc$ (menor complejidad para dispositivos embebidos). Permite
+\textbf{calcular los bits de la transformación por adelantado}.
+\[
+  r_0=\mathrm{IV},\qquad r_i = F_k(r_{i-1}),\qquad c_i = r_i\xor m_i.\qquad\text{(IV en plano.)}
+\]
+\textbf{Seguro frente a CPA}, \textbf{no requiere $F_k$ biyectiva}, los $r_i$ se pueden
+precalcular; su contra es la \textbf{encripción secuencial}.
+\end{defbox}
+
+% --- Diagrama OFB ---
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\footnotesize,>={Stealth}]
+  \node[draw,fill=slideGray,minimum width=1.0cm] (iv) at (-2.2,0.9) {IV};
+  \foreach \i in {1,2,3}{
+    \node[draw,fill=itbaCyan,minimum width=1.0cm] (F\i) at (\i*2.4-2.4,0.9) {$F_k$};
+    \node[draw,fill=slideGray,minimum width=1.0cm] (m\i) at (\i*2.4-2.4-0.0,-0.2) {$m_\i$};
+    \node[font=\large] (x\i) at (\i*2.4-2.4+0.0,-1.1) {$\xor$};
+    \node[draw,fill=slideGray,minimum width=1.0cm] (c\i) at (\i*2.4-2.4,-2.1) {$c_\i$};
+    \draw[-{Stealth}] (F\i.south) -- (x\i);
+    \draw[-{Stealth}] (m\i) -- (x\i);
+    \draw[-{Stealth}] (x\i) -- (c\i);
+  }
+  \draw[-{Stealth}] (iv) -- (F1);
+  \draw[-{Stealth}] (F1) -- (F2);
+  \draw[-{Stealth}] (F2) -- (F3);
+\end{tikzpicture}
+\caption{OFB: la cadena de claves $r_i=F_k(r_{i-1})$ se genera con solo $\Enc$ y se XOR-ea
+con el plano. \textit{(Recreación de la diapositiva.)}}
+\end{figure}
+
+\subsection{CTR — Counter}
+
+\begin{defbox}{CTR (Counter Code Mode)}
+Utiliza un \textbf{contador} para generar la secuencia de bits de clave; permite
+\textbf{acceso aleatorio} y es muy útil con \textbf{procesamiento paralelo}.
+\[
+  \mathrm{Ctr}=\mathrm{IV},\qquad r_i = F_k(\mathrm{Ctr}+i)\ (\text{suma módulo }2^n),
+  \qquad c_i = r_i\xor m_i.
+\]
+El contador se elige en forma aleatoria. \textbf{Seguro frente a CPA} (si no se repite
+$(k,\text{nonce})$), \textbf{no requiere $F_k$ biyectiva}, el stream se puede precalcular,
+permite cifrado/descifrado \textbf{en paralelo} y descifrar el bloque $i$-ésimo por
+separado.
+\end{defbox}
+
+% --- Diagrama CTR ---
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\footnotesize,>={Stealth}]
+  \foreach \i [count=\j from 0] in {1,2,3}{
+    \node[draw,fill=slideGray,minimum width=1.6cm] (ct\i) at (\i*2.6,1.6)
+        {\scriptsize nonce$\Vert$ctr+\j};
+    \node[draw,fill=itbaCyan,minimum width=1.1cm] (F\i) at (\i*2.6,0.4) {$F_k$};
+    \node[draw,fill=slideGray,minimum width=1.1cm] (m\i) at (\i*2.6-1.0,-0.6) {$m_\i$};
+    \node[font=\large] (x\i) at (\i*2.6,-0.6) {$\xor$};
+    \node[draw,fill=slideGray,minimum width=1.1cm] (c\i) at (\i*2.6,-1.7) {$c_\i$};
+    \draw[-{Stealth}] (ct\i) -- (F\i);
+    \draw[-{Stealth}] (F\i) -- (x\i);
+    \draw[-{Stealth}] (m\i) -- (x\i);
+    \draw[-{Stealth}] (x\i) -- (c\i);
+  }
+\end{tikzpicture}
+\caption{CTR: cada bloque cifra un contador independiente $\Rightarrow$ totalmente
+paralelizable y con acceso aleatorio. \textit{(Recreación de la diapositiva.)}}
+\end{figure}
+
+\subsection{CFB — Cipher Feedback}
+
+\begin{defbox}{CFB}
+Usa solo la función $\Enc$ y permite generar una transformación de \textbf{flujo} a partir
+de una de bloque (menor complejidad para embebidos).
+\[
+  r_0=\mathrm{IV},\quad c_1 = (F_k(r_0)\!\gg\! s)\xor m_1,\quad
+  r_i = (r_{i-1}\!\ll\! s)\,|\,c_{i-1},\quad c_i = (F_k(r_i)\!\gg\! s)\xor m_i,
+\]
+donde $s$ es el número de bits. Si $s=1$, \textbf{equivale a un stream cipher}. Es seguro
+frente a CPA con IV aleatorio.
+\end{defbox}
+
+% --- Diagrama CFB ---
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\footnotesize,>={Stealth}]
+  \node[draw,fill=slideGray,minimum width=1.0cm] (iv) at (-2.2,0.9) {IV};
+  \foreach \i in {1,2,3}{
+    \node[draw,fill=itbaCyan,minimum width=1.0cm] (F\i) at (\i*2.4-2.4,0.9) {$F_k$};
+    \node[draw,fill=slideGray,minimum width=1.0cm] (m\i) at (\i*2.4-2.4-0.0,-0.2) {$m_\i$};
+    \node[font=\large] (x\i) at (\i*2.4-2.4,-1.1) {$\xor$};
+    \node[draw,fill=slideGray,minimum width=1.0cm] (c\i) at (\i*2.4-2.4,-2.1) {$c_\i$};
+    \draw[-{Stealth}] (F\i.south) -- (x\i);
+    \draw[-{Stealth}] (m\i) -- (x\i);
+    \draw[-{Stealth}] (x\i) -- (c\i);
+  }
+  \draw[-{Stealth}] (iv) -- (F1);
+  \draw[-{Stealth}] (c1.east) -- ++(0.4,0) |- (F2.west);
+  \draw[-{Stealth}] (c2.east) -- ++(0.4,0) |- (F3.west);
+\end{tikzpicture}
+\caption{CFB: el cifrado anterior realimenta la entrada de $F_k$ del siguiente bloque.
+\textit{(Recreación de la diapositiva.)}}
+\end{figure}
+
+\subsection{Seguridad de los modos}
+
+\begin{defbox}{Seguridad de cifrado por bloques (resumen)}
+Las pruebas son \textbf{por reducción} a propiedades de la primitiva subyacente:
+requieren que la primitiva se comporte como una \textbf{función pseudoaleatoria}, es
+decir, que no sea posible distinguir $f(x)=\Enc_k(x)$ de una función tomada al azar del
+conjunto de funciones del mismo dominio. Si la primitiva es PRF:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{CBC} es CPA-Secure con IVs aleatorios.
+  \item \textbf{OFB, CFB} son CPA-Secure con IVs aleatorios.
+  \item \textbf{CTR} es CPA-Secure si no se repite $(k,\text{nonce})$.
+\end{itemize}
+\textbf{Salvedad:} no está demostrado que existan las funciones pseudoaleatorias.
+\end{defbox}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{>{\bfseries}l c c c c}
+\toprule
+Modo & CPA-Secure & $F_k$ biyectiva & Paralelizable & Precálculo del stream\\
+\midrule
+ECB & \textcolor{attackRed}{NO} & sí & sí & ---\\
+CBC & sí (IV aleat.) & sí ($F_k^{-1}$) & cifrado: no & no\\
+OFB & sí (IV aleat.) & no & no & sí\\
+CTR & sí ($k,$nonce únicos) & no & \textbf{sí} & sí\\
+CFB & sí (IV aleat.) & no & descifrado: sí & no\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%=====================================================================
+\section{DES — Data Encryption Standard}
+%=====================================================================
+
+\begin{defbox}{DES}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Método desarrollado por \textbf{IBM}, adoptado por el gobierno de EE.UU.\ como
+        estándar para usos no militares.
+  \item Fue la \textbf{primera función de cifrado pública apoyada por un gobierno};
+        alcanzó uso comercial masivo.
+  \item Trabaja con textos planos binarios. \textbf{Entrada: 64 bits. Clave: 64 bits
+        (56 efectivos). Salida: 64 bits.}
+\end{itemize}
+\end{defbox}
+
+\subsection{Estructura de Feistel}
+
+DES se basa en una \textbf{red de Feistel}: se parte el mensaje en dos mitades, se
+transforma una mitad con parte de la clave, se intercambian las dos mitades de lugar, y se
+repiten esos tres pasos (una ronda) \textbf{16 veces}.
+
+\begin{defbox}{Caja Feistel}
+\[
+  L_i = R_{i-1},\qquad R_i = L_{i-1}\xor F(R_{i-1}, K_{i}).
+\]
+Ventaja clave: el \textbf{descifrado usa la misma estructura} (con las subclaves en orden
+inverso), aunque $F$ \emph{no} sea invertible.
+\end{defbox}
+
+% --- Diagrama Feistel ---
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\footnotesize,>={Stealth}]
+  \node[draw,fill=orange!40,minimum width=2cm] (L0) at (0,3) {$L_{i-1}$ \scriptsize(32b)};
+  \node[draw,fill=orange!40,minimum width=2cm] (R0) at (3,3) {$R_{i-1}$ \scriptsize(32b)};
+  \node[draw,fill=purple!35,minimum width=1.2cm] (F) at (1.5,1.5) {$F$};
+  \node[draw,fill=red!30,minimum width=1.2cm] (K) at (4.6,1.5) {$K_{i}$ \scriptsize(48b)};
+  \node[font=\large] (x) at (0,0.6) {$\xor$};
+  \node[draw,fill=orange!40,minimum width=2cm] (L1) at (0,-0.6) {$L_i$};
+  \node[draw,fill=orange!40,minimum width=2cm] (R1) at (3,-0.6) {$R_i$};
+  \draw[-{Stealth}] (R0) -- (F);
+  \draw[-{Stealth}] (K) -- (F);
+  \draw[-{Stealth}] (F) -- (x);
+  \draw[-{Stealth}] (L0) -- (x);
+  % Cruce (swap): L_i = R_{i-1} ; R_i = L_{i-1} XOR F(R_{i-1},K_i)
+  \draw[-{Stealth}] (R0.south) to[out=-90,in=90] (L1.north);
+  \draw[-{Stealth}] (x.south) to[out=-90,in=90] (R1.north);
+\end{tikzpicture}
+\caption{Una ronda de Feistel (DES): $R_{i-1}$ pasa por $F$ con la subclave $K_i$, se
+XOR-ea con $L_{i-1}$, y las mitades se intercambian. \textit{(Recreación de la
+diapositiva.)}}
+\end{figure}
+
+\subsection{La función de transformación $F$ y la generación de subclaves}
+
+\begin{defbox}{Función $F(R_{i-1},K_i)$ — tres pasos}
+\begin{enumerate}[leftmargin=1.5em,itemsep=1pt]
+  \item \textbf{E — Expansión:} de $32$ a $48$ bits.
+  \item \textbf{S$_x$ — Sustituciones (S-boxes):} $8$ cajas que llevan de $6$ a $4$ bits.
+  \item \textbf{P — Permutación} (P-box).
+\end{enumerate}
+\end{defbox}
+
+\begin{defbox}{Generación de subclaves}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{PC1:} selección de $56$ bits (los $8$ restantes son de \emph{paridad}).
+  \item \textbf{PC2:} separación en dos mitades y generación de cada subclave
+        ($24$ bits de cada mitad $\to 48$ bits).
+  \item \textbf{$\lll$:} desplazamientos a nivel de bits entre rondas.
+\end{itemize}
+\end{defbox}
+
+\subsection{Claves débiles y semidébiles (clase práctica)}
+
+\begin{practbox}{Claves débiles y semidébiles}
+\begin{description}[leftmargin=0pt,style=nextline,itemsep=4pt]
+  \item[Claves débiles.] $E_k(m)=D_k(m)$, o sea $E_k(E_k(m))=m$ (el cifrado es su propia
+        inversa). En lugar de generar $16$ subclaves distintas, generan \textbf{una sola}.
+  \item[Claves semidébiles.] Vienen \emph{de a pares}: $E_{k_x}(E_{k_y}(m))=m$. En lugar
+        de $16$ subclaves distintas, generan $2$ o $4$.
+\end{description}
+\end{practbox}
+
+\subsection{Evolución de DES}
+
+\begin{slidebox}
+\begin{itemize}[leftmargin=1.3em,itemsep=1pt]
+  \item \textbf{Nivel teórico de seguridad: 56 bits} (fuerza bruta: probar $2^{56}$
+        claves).
+  \item Generó \textbf{desconfianza} por cuestiones de diseño confidenciales
+        (las sustituciones / S-boxes).
+  \item \textbf{1990 — Criptoanálisis diferencial:} ataca DES en $2^{47}$ intentos. Gran
+        parte del diseño de DES \emph{disminuye} el impacto de este ataque (otros sistemas
+        fueron quebrados de inmediato).
+  \item \textbf{1992 — Criptoanálisis lineal:} ataca DES en $2^{43}$ intentos.
+\end{itemize}
+\end{slidebox}
+
+\subsection{3-DES}
+
+\begin{defbox}{3-DES (variante fuerte de DES)}
+Selecciona 3 claves independientes y calcula
+\[
+  c = \Enc_{k_1}\!\big(\Dec_{k_2}(\Enc_{k_3}(p))\big).
+\]
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Brinda seguridad del orden de \textbf{112 bits} (menor a $168$ por el ataque
+        \emph{meet-in-the-middle}).
+  \item Es \textbf{inmune} a criptoanálisis diferencial y lineal.
+  \item Es \textbf{mucho más lenta} que DES ($\times 3$).
+\end{itemize}
+\end{defbox}
+
+%=====================================================================
+\section{AES — Advanced Encryption Standard}
+%=====================================================================
+
+\begin{defbox}{AES}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Reemplazo de DES}, seleccionado mediante un \textbf{concurso internacional
+        abierto} (5 años).
+  \item Orientado a bloques de \textbf{128 bits}; clave de \textbf{128, 192 o 256 bits}.
+  \item Es la \textbf{primitiva de cifrado recomendada} en la actualidad.
+\end{itemize}
+\end{defbox}
+
+\begin{defbox}{Esquema de funcionamiento — 4 etapas por ronda}
+\begin{description}[leftmargin=0pt,style=nextline,itemsep=2pt]
+  \item[Byte Sub.] Sustitución de valores según una tabla derivada de invertir una matriz
+        en el campo $GF(2^8)$.
+  \item[Shift Row.] Permutación de bits.
+  \item[Mix Column.] Transformación lineal invertible de cada byte en función de los $4$
+        que forman el mismo grupo.
+  \item[Add Round Key.] XOR con la parte de la clave derivada para la ronda en cuestión.
+\end{description}
+\textbf{Variaciones (asimetrías):} la \textbf{1.\textsuperscript{a} ronda} solo tiene
+\emph{Add Round Key}; la \textbf{última ronda} no tiene \emph{Mix Column}.
+\end{defbox}
+
+\begin{slidebox}
+\textbf{Round keys (128 bits).} Los primeros $16$ bytes corresponden a la clave original.
+Para los siguientes $16$ bytes: \textbf{(a)} generar máscara — tomar los últimos $4$
+bytes y rotarlos $8$ bits a la derecha, aplicar \emph{ByteSub} a cada byte, y al byte
+menos significativo XOR con $2^i$ (siendo $i$ el número de grupo de bytes a generar);
+\textbf{(b)} generar grupos de $4$ bytes — los primeros $4$: máscara XOR key-bytes
+generados $16$ posiciones antes; los siguientes: XOR entre los $4$ bytes generados y los
+generados $16$ posiciones antes.
+\end{slidebox}
+
+%=====================================================================
+\section{Elección de criptosistemas y estado de un criptosistema}
+%=====================================================================
+
+\begin{warnbox}{Criptosistemas en proyectos}
+Se considera \textbf{mala práctica desarrollar un criptosistema nuevo} para un proyecto.
+Existen funciones estudiadas por años hasta alcanzar un nivel de confianza adecuado, y
+continuamente se publican avances que afectan la seguridad de funciones existentes. La
+regla es \textbf{reusar primitivas estándar y bien estudiadas}.
+\end{warnbox}
+
+\begin{defbox}{Estado de un criptosistema}
+\begin{description}[leftmargin=0pt,style=nextline,itemsep=3pt]
+  \item[Seguro.] Cumple con las expectativas de su modelo de seguridad.
+  \item[Debilitado.] Existen adversarios con probabilidades no despreciables de éxito,
+        pero el esfuerzo es muy alto (ej.\ décadas) o las condiciones muy difíciles
+        (ej.\ disponer de $2^{80}$ mensajes).
+  \item[Quebrado.] Existen adversarios con probabilidades no despreciables de éxito en
+        \textbf{tiempos practicables}.
+\end{description}
+\textbf{Escenarios:} un criptosistema puede estar \emph{seguro y quebrado al mismo
+tiempo}: hay múltiples pruebas de seguridad y cada una prueba un escenario diferente.
+\end{defbox}
+
+\subsection{Criptosistemas recomendados}
+
+\begin{slidebox}
+\textbf{Criptosistemas de flujo (funciones $G$).} En desuso / quebrados:
+\sout{RC4} (https, WEP), \sout{CSS} (DVDs), \sout{A5/1, A5/2} (GSM), \sout{E0}
+(Bluetooth). Recomendados:
+\[
+\begin{aligned}
+  \text{Salsa20}&: \bits^{128\,\text{ó}\,256}\times\bits^{64}\to\bits^{\,n},\ n=2^{64}\cdot 2^9\\
+  \text{Rabbit}&: \bits^{128}\times\bits^{64}\to\bits^{\,n},\ n=2^{128}\qquad(\text{el }
+        \bits^{64}\text{ es el IV})
+\end{aligned}
+\]
+\end{slidebox}
+
+\begin{slidebox}
+\textbf{Criptosistemas de bloque.} En desuso: \sout{DES}$:\bits^{56}\times\bits^{64}\to\bits^{64}$.
+Otros:
+\[
+\begin{aligned}
+  \text{IDEA}&: \bits^{128}\times\bits^{64}\to\bits^{64}\quad(\text{IDEA-CBC, IDEA-CTR})\\
+  \text{3DES}&: \bits^{112\,\text{ó}\,168}\times\bits^{64}\to\bits^{64}\quad(\text{3DES-CBC, 3DES-CTR})\\
+  \textbf{AES}&: \bits^{128,192\,\text{ó}\,256}\times\bits^{128}\to\bits^{128}
+        \quad(\text{AES-CBC, AES-CTR})
+\end{aligned}
+\]
+\textbf{AES} es el \textbf{recomendado para proyectos nuevos}.
+\end{slidebox}
+
+\begin{notebox}
+\textbf{Cifrado de bloque — tamaños.} Espacios de clave: $>64$ bits (AES: $128/192/256$).
+Espacio de mensajes: $\ge 128$ bits.\\
+\textbf{Para comparar:} partículas en el universo $\sim 2^{88}$ átomos; edad estimada del
+universo $\sim 2^{58}$ segundos.
+\end{notebox}
+
+%=====================================================================
+\section*{Material complementario (clase práctica)}
+\addcontentsline{toc}{section}{Material complementario (clase práctica)}
+%=====================================================================
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Video sobre \textbf{LFSR}: \url{https://www.youtube.com/watch?v=vfq3onw-uiM}
+  \item Video sobre \textbf{RC4}: \url{https://www.youtube.com/watch?v=G3HajuqYH2U}
+  \item Video sobre \textbf{DES}: \url{https://www.youtube.com/watch?v=XwUOwqSHzyo}
+  \item Apunte e implementación de DES (y una implementación de AES): \emph{Material
+        Didáctico / Extra}.
+  \item Ejercicios a resolver: \textbf{5, 6, 7 y 8}.
+\end{itemize}
+
+%=====================================================================
+\section*{Lectura recomendada}
+\addcontentsline{toc}{section}{Lectura recomendada}
+%=====================================================================
+\begin{center}
+\begin{tcolorbox}[enhanced,colback=itbaBlue!20,colframe=itbaCyanDark,boxrule=1pt,
+  arc=3pt,width=0.85\textwidth,halign=center]
+\large\textbf{Capítulos 2 y 3}\\[4pt]
+\emph{Introduction to Modern Cryptography}\\[2pt]
+Katz \& Lindell
+\end{tcolorbox}
+\end{center}
+\noindent El cap.\ 2 cubre secreto perfecto y OTP; el cap.\ 3, la seguridad
+computacional, generadores pseudoaleatorios, las pruebas EAV/CPA/CCA y los modos de
+operación.
+
+\vfill
+\begin{center}\small\itshape\color{black!60}
+Apunte integral de la Clase 2 — Cifrado · Criptografía y Seguridad, ITBA.\\
+Síntesis de teoría (transcripciones + diapositivas) y práctica.
+\end{center}
+
+\end{document}

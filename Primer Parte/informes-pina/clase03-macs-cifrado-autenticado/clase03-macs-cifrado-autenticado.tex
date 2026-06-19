@@ -1,0 +1,1405 @@
+% !TEX program = lualatex
+%=====================================================================
+%  Criptografía y Seguridad - ITBA
+%  Clase 3 — MACs y Cifrado Autenticado
+%  Apunte integral: teoría + práctica
+%=====================================================================
+\documentclass[11pt,a4paper]{article}
+
+%---------------------------------------------------------------------
+%  Paquetes
+%---------------------------------------------------------------------
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+  \usepackage{lmodern}
+\else
+  \usepackage{fontspec}
+\fi
+\usepackage[spanish,es-tabla,es-noshorthands]{babel}
+\usepackage{microtype}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{geometry}
+\geometry{a4paper,margin=2.4cm,headheight=22pt}
+
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{caption}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,shapes.misc,shapes.symbols,arrows.meta,positioning,calc,
+                fit,backgrounds,decorations.pathmorphing,shadows.blur,chains,matrix}
+
+%---------------------------------------------------------------------
+%  Paleta de color (inspirada en las diapositivas de la cátedra)
+%---------------------------------------------------------------------
+\definecolor{itbaCyan}{HTML}{6EC6D9}
+\definecolor{itbaCyanDark}{HTML}{2E8B9E}
+\definecolor{itbaBlue}{HTML}{AEDCEA}
+\definecolor{boxBlue}{HTML}{BBD4F0}
+\definecolor{slideGray}{HTML}{ECECEC}
+\definecolor{practGreen}{HTML}{4F8A3D}
+\definecolor{practGreenL}{HTML}{E2EFD9}
+\definecolor{attackRed}{HTML}{C0392B}
+\definecolor{codeBg}{HTML}{F5F5F5}
+
+%---------------------------------------------------------------------
+%  Hipervínculos
+%---------------------------------------------------------------------
+\hypersetup{
+  colorlinks=true,
+  linkcolor=itbaCyanDark,
+  urlcolor=itbaCyanDark,
+  citecolor=itbaCyanDark,
+  pdftitle={Clase 3 - MACs y Cifrado Autenticado},
+  pdfauthor={Criptografia y Seguridad - ITBA}
+}
+
+%---------------------------------------------------------------------
+%  Encabezados y pies
+%---------------------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\textsc{Criptografía y Seguridad — ITBA}}
+\rhead{\small Clase 3 · MACs y Cifrado Autenticado}
+\cfoot{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{itbaCyanDark}\leaders\hrule height \headrulewidth\hfill}}
+
+%---------------------------------------------------------------------
+%  Títulos de sección con barra de color (estilo diapositiva)
+%---------------------------------------------------------------------
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{itbaCyanDark}}
+  {\thesection}{0.6em}{}
+  [\vspace{-0.4em}{\color{itbaCyan}\titlerule[2pt]}]
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{itbaCyanDark}}
+  {\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{black}}
+  {\thesubsubsection}{0.6em}{}
+
+%---------------------------------------------------------------------
+%  Cajas reutilizables
+%---------------------------------------------------------------------
+% Caja "diapositiva" (recuadro gris de las slides)
+\newtcolorbox{slidebox}[1][]{
+  enhanced, colback=slideGray, colframe=black!55, boxrule=0.5pt,
+  arc=1pt, left=6pt,right=6pt,top=4pt,bottom=4pt, #1}
+
+% Caja de definición
+\newtcolorbox{defbox}[1]{
+  enhanced, breakable, colback=itbaBlue!25, colframe=itbaCyanDark,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+% Caja de nota práctica
+\newtcolorbox{practbox}[1]{
+  enhanced, breakable, colback=practGreenL, colframe=practGreen,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+% Caja de atención / ataque
+\newtcolorbox{warnbox}[1]{
+  enhanced, breakable, colback=attackRed!8, colframe=attackRed,
+  boxrule=1pt, arc=2pt, left=8pt,right=8pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries, coltitle=white, title={#1}}
+
+%---------------------------------------------------------------------
+%  Estilo de código
+%---------------------------------------------------------------------
+\lstdefinestyle{plain}{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{codeBg},
+  keywordstyle=\color{itbaCyanDark}\bfseries,
+  commentstyle=\color{practGreen}\itshape,
+  stringstyle=\color{attackRed},
+  breaklines=true, frame=single, rulecolor=\color{black!30},
+  showstringspaces=false, columns=fullflexible, tabsize=2,
+  xleftmargin=10pt, framexleftmargin=8pt}
+
+%---------------------------------------------------------------------
+%  Macros matemáticos
+%---------------------------------------------------------------------
+\newcommand{\Kset}{\mathcal{K}}
+\newcommand{\Pset}{\mathcal{P}}
+\newcommand{\Cset}{\mathcal{C}}
+\newcommand{\Tset}{\mathcal{T}}
+\newcommand{\Sset}{\mathcal{S}}
+\newcommand{\xor}{\oplus}
+\newcommand{\concat}{\,\|\,}
+\newcommand{\Mac}{\mathsf{Mac}}
+\newcommand{\Vrfy}{\mathsf{Vrfy}}
+\newcommand{\Gen}{\mathsf{Gen}}
+\newcommand{\Enc}{\mathsf{Enc}}
+\newcommand{\Dec}{\mathsf{Dec}}
+\DeclareMathOperator{\negl}{negl}
+\DeclareMathOperator{\Trunc}{Truncate}
+
+%=====================================================================
+\begin{document}
+%=====================================================================
+
+%---------------------------------------------------------------------
+%  Portada
+%---------------------------------------------------------------------
+\begin{titlepage}
+\centering
+\vspace*{1.2cm}
+
+\begin{tikzpicture}
+  \node[rounded corners=2pt, fill=itbaCyan, text=black, inner sep=14pt,
+        minimum width=0.8\textwidth, align=center] (t)
+        {\Huge\bfseries Criptografía y Seguridad};
+\end{tikzpicture}
+
+\vspace{0.6cm}
+{\LARGE Integridad y autenticación de mensajes}\\[0.25cm]
+{\Huge\bfseries\color{itbaCyanDark} MACs y Cifrado Autenticado}
+
+\vspace{0.8cm}
+
+% Ilustración: bóveda / caja fuerte (recreación del icono de portada)
+\begin{tikzpicture}[scale=1.0]
+  \fill[black!12] (-3.2,-2.4) rectangle (3.2,2.8);
+  \draw[line width=2pt, black!55] (-3.2,-2.4) rectangle (3.2,2.8);
+  \fill[itbaCyanDark!75] (-2.4,-2.0) rectangle (2.4,2.4);
+  \draw[line width=3pt, black!70] (-2.4,-2.0) rectangle (2.4,2.4);
+  \draw[line width=1.2pt, itbaCyan] (-2.0,-1.6) rectangle (2.0,2.0);
+  \draw[line width=2pt, black!70] (0,-2.0) -- (0,2.4);
+  \foreach \a in {0,45,...,315}{
+    \draw[line width=2pt, black!70] (-1.1,0.2) -- ++(\a:0.6);
+  }
+  \draw[line width=2.5pt, black!70] (-1.1,0.2) circle (0.42);
+  \fill[itbaCyan] (-1.1,0.2) circle (0.16);
+  \draw[line width=2.5pt, black!70] (1.1,0.2) circle (0.42);
+  \fill[itbaCyan] (1.1,0.2) circle (0.16);
+  \foreach \y in {-1.2,-0.4,0.8,1.6}{
+     \fill[black!70] (-2.2,\y) circle (0.07);
+     \fill[black!70] (2.2,\y) circle (0.07);
+  }
+\end{tikzpicture}
+
+\vfill
+{\large Apunte integral — Teoría + Práctica}\\[0.2cm]
+{\normalsize Clase 3 \quad·\quad Capítulo 4, \emph{Introduction to Modern Cryptography} (Katz \& Lindell)}\\[0.4cm]
+{\small Instituto Tecnológico de Buenos Aires (ITBA)}
+
+\vspace{0.6cm}
+{\footnotesize\itshape Documento elaborado a partir de las transcripciones de la clase
+teórica (Prof.\ Pablo Abad) y de la clase práctica, junto con las diapositivas oficiales de ambas.}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+%=====================================================================
+\section{Motivación: del cifrado a la integridad}
+%=====================================================================
+
+Hasta esta clase la criptografía vista resolvía un único gran problema:
+\textbf{la confidencialidad} (cómo controlar la diseminación de la información). Esta clase
+abre un \textbf{nuevo campo}: el de la \textbf{integridad}, es decir, \emph{cómo confiar en
+que la información no fue modificada}, aun cuando provenga de una fuente confiable.
+
+\begin{slidebox}
+\textbf{Repaso — Criptosistema.} Es una terna de algoritmos
+$\langle \Gen, \Enc, \Dec\rangle$:
+\[
+  \Gen:()\to\Kset,\qquad \Enc:\Kset\times\Pset\to\Cset,\qquad \Dec:\Kset\times\Cset\to\Pset
+\]
+con la \textbf{propiedad básica} $\;d_k(e_k(m))=m\;$ para todo $m$ y $k$ válidos.
+Conjuntos: $\Kset$ (claves), $\Pset$ (planos), $\Cset$ (cifrados).
+\end{slidebox}
+
+\subsection{Recordatorio: el escenario CPA}
+El mejor escenario de seguridad visto hasta ahora era el de \textbf{ataque de texto plano
+escogido} (\emph{Chosen Plaintext Attack}). En su experimento de indistinguibilidad
+$\mathrm{CPA}_{A,\Pi}$, el adversario $A$ tiene acceso a un \textbf{oráculo de cifrado}
+$f(x)=e_k(x)$ (nunca conoce la clave):
+
+\begin{defbox}{Experimento $\mathrm{CPA}_{A,\Pi}$}
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item Se genera una clave $k\leftarrow \Kset$.
+  \item $A$ obtiene $f(x)=e_k(x)$ y genera $(m_0,m_1)$.
+  \item Se genera $b\leftarrow\{0,1\}$.
+  \item $A$ recibe $c=e_k(m_b)$.
+  \item $A$ emite $b'\in\{0,1\}$.
+\end{enumerate}
+$\mathrm{CPA}_{A,\Pi}=1$ si $b=b'$ (A gana). Si $\Pr[\mathrm{CPA}_{A,\Pi}=1]=\tfrac12+\varepsilon$
+con $\varepsilon$ despreciable, $\Pi$ es \textbf{CPA-secure} (indistinguible).
+\end{defbox}
+
+Los criptosistemas \textbf{CPA-secure} son no deterministas: incorporan un parámetro extra
+público y aleatorio, el \textbf{IV} (\emph{tweak}), que evita reutilizar la misma semilla del
+generador. Son CPA-secure los cifrados de flujo con IV y los de bloque con encadenamiento
+seguro (CBC, Counter, OFB, CFB) sobre primitivas seguras.
+
+%=====================================================================
+\section{Un nuevo tipo de ataque: maleabilidad}
+%=====================================================================
+
+\begin{slidebox}
+\textbf{Escenario.} Un sistema de RR.HH.\ guarda los sueldos de los empleados
+\emph{cifrados} en una base de datos, con un criptosistema de flujo CPA-secure, para que ni
+el administrador de la base pueda leerlos.
+\end{slidebox}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{c l}
+\toprule
+\textbf{empleado} & \textbf{sueldo (cifrado)}\\
+\midrule
+2542 & \texttt{0xEA26969AA3F61CDD9EC68498DF031CA935EFA9C}\\
+2678 & \texttt{0xF4933E107178B88D8EE00F40E43A9A3C9D2EDF79}\\
+2789 & \texttt{0x155BBBE7A5442CBBCAB8F57DACF7212255F3641C}\\
+2890 & \texttt{0x4D9B47D518F2ED7DE04D601F1856767969A328E8}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{La parte de cifrado es realmente segura.} El atacante no puede extraer información:
+ni aproximar un sueldo, ni saber si es alto o bajo, ni sacar el número. Aunque le revelen que
+\emph{uno} de los sueldos vale un millón, como el criptosistema es \textbf{no determinista},
+puede cifrar el valor ``un millón'' un millón de veces y nunca obtendrá ninguno de los cuatro
+textos cifrados de la tabla.
+
+\subsection{El ataque: no hace falta conocer el valor}
+A veces, \emph{para montar un ataque no se necesita conocer el valor}. Supóngase que el
+atacante conoce su propio legajo (2678) y el de su jefe (2890), y que normalmente el jefe
+cobra más. Entonces puede tomar el texto cifrado del jefe y hacer un \texttt{UPDATE}
+copiándolo sobre su propia fila:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{c l c}
+\toprule
+\textbf{empleado} & \textbf{sueldo (cifrado)} & \\
+\midrule
+2678 & \textcolor{attackRed}{\texttt{0x4D9B47D518F2ED7DE04D601F1856767969A328E8}}
+     & \textcolor{attackRed}{\textbf{¡Aumento!}}\\
+2890 & \texttt{0x4D9B47D518F2ED7DE04D601F1856767969A328E8} &\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent\textbf{Aumento de sueldo instantáneo}, sin haber roto la confidencialidad. Una
+solución ingenieril es cifrar el par \texttt{empleado}$\concat$\texttt{sueldo} y verificar, al
+descifrar, que el legajo coincide con la fila. \emph{Pero esto no alcanza.}
+
+\subsection{Modificaciones quirúrgicas: maleabilidad}
+
+\begin{defbox}{Maleabilidad}
+Un criptosistema es \textbf{maleable} cuando una modificación del \emph{texto cifrado} se
+propaga de forma \textbf{sistemática y controlable} al \emph{texto plano}. En su forma más
+simple: cambio un bit del cifrado y eso cambia un bit del plano.
+\end{defbox}
+
+Los cifrados de flujo son maleables. Si $\Enc_k(m)=G(k)\xor m=c$, y definimos $c'=c\xor x$,
+entonces:
+\[
+  \Dec_k(c') \;=\; G(k)\xor c' \;=\; G(k)\xor(c\xor x)\;=\;\bigl(G(k)\xor c\bigr)\xor x \;=\; m\xor x.
+\]
+La modificación $x$ se traslada \emph{directamente} al plano. El atacante conoce el formato:
+
+\begin{slidebox}
+\textbf{Formato del campo:} $\;\mathrm{IV}\concat \mathrm{empl}\concat \mathrm{sueldo}$,
+con $\mathrm{IV}=12$ bytes, $\mathrm{empl}=4$ bytes (int), $\mathrm{sueldo}=4$ bytes (int).
+\end{slidebox}
+
+\paragraph{Resolución del ejercicio del backstage.} El atacante conoce su propio sueldo en
+plano (le llega el recibo): $1\,2345$. Quiere cambiarlo a $100\,000$ operando \emph{solo}
+sobre el cifrado. Trabaja sobre los últimos 3 bytes (\texttt{2EDF79}). El procedimiento
+iterativo (que puede colapsarse en un único XOR triple) es:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{l l l l l}
+\toprule
+ & \multicolumn{3}{c}{representación binaria} & efecto al descifrar\\
+\midrule
+\texttt{2EDF79} & \texttt{00101110} & \texttt{11011111} & \texttt{01111001} & $\Dec_k(c)=12345$\\
+$\xor\ 12345$  & \texttt{00000000} & \texttt{00110000} & \texttt{00111001} & $\Rightarrow \Dec_k(c')=0\ldots00$\\
+$\xor\ 100000$ & \texttt{00000001} & \texttt{10000110} & \texttt{10100000} & $\Rightarrow \Dec_k(c'')=100000$\\
+\midrule
+$=$ \texttt{2F69F0} & \texttt{00101111} & \texttt{01101001} & \texttt{11110000} & (nuevo cifrado)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item Primer paso ($\xor\,12345$): \emph{anula} el plano dejándolo en ceros
+        ($12345\xor12345=0$). Es solo una ``plantilla'' de partida.
+  \item Segundo paso ($\xor\,100000$): a partir de los ceros, fija el valor deseado
+        ($0\xor100000=100000$).
+\end{itemize}
+El cifrado resultante \texttt{2F69F0} es una jeringoza que nadie entiende (no se tiene la
+clave), pero al descifrarse da \textbf{exactamente} $100\,000$, y \emph{pasa toda la
+verificación} del legajo. La maleabilidad es un problema de \textbf{integridad}, no
+resuelto por el cifrado.
+
+%=====================================================================
+\section{Ataques de texto cifrado escogido (CCA)}
+%=====================================================================
+
+El formalismo que captura ``protegernos de cualquier modificación del cifrado'' es el
+\textbf{ataque de texto cifrado escogido} (\emph{Chosen Ciphertext Attack}). Es una versión
+más paranoica de CPA: el adversario tiene ahora \textbf{también un oráculo de descifrado}.
+
+\begin{defbox}{Experimento $\mathrm{CCA}_{A,\Pi}$}
+Dado un nivel de seguridad $n$, un adversario $A$ y un criptosistema $\Pi(n)$:
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item Se genera una clave $k\leftarrow \Kset$.
+  \item $A$ obtiene $f(x)=e_k(x)$ \textbf{y} $g(x)=d_k(x)$, y genera $(m_0,m_1)$.
+  \item Se genera $b\leftarrow\{0,1\}$.
+  \item $A$ recibe $c=e_k(m_b)$, y \textbf{no puede calcular} $g(c)$
+        (sino el ataque sería trivial).
+  \item $A$ emite $b'\in\{0,1\}$.
+\end{enumerate}
+$\mathrm{CCA}_{A,\Pi}=1$ si $b=b'$. Si
+$\Pr[\mathrm{CCA}_{A,\Pi}=1]<\tfrac12+\negl(n)$, $\Pi$ es \textbf{CCA-secure}.
+\end{defbox}
+
+% ---- Diagrama: oráculos CPA vs CCA ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth,node distance=5mm]
+  \node[circle,draw,fill=itbaBlue,minimum size=1.1cm] (A) {$A$};
+  \node[draw,rounded corners,fill=boxBlue,right=3.4cm of A,minimum width=2.6cm,
+        minimum height=0.8cm] (enc) {$f(x)=e_k(x)$};
+  \node[draw,rounded corners,fill=attackRed!20,below=0.7cm of enc,minimum width=2.6cm,
+        minimum height=0.8cm] (dec) {$g(x)=d_k(x)$};
+  \draw[-{Stealth}] (A.east) to[bend left=12] node[above,font=\scriptsize]{$x$} (enc.west);
+  \draw[-{Stealth}] (enc.west) to[bend left=12] node[below,font=\scriptsize]{$e_k(x)$} (A.east);
+  \draw[-{Stealth}] (A.east) to[bend right=12] node[above,font=\scriptsize,pos=0.6]{$x$} (dec.west);
+  \draw[-{Stealth}] (dec.west) to[bend right=12] node[below,font=\scriptsize]{$d_k(x)$} (A.east);
+  \node[font=\scriptsize,practGreen] at ($(enc.east)+(1.7,0)$) {oráculo de cifrado (CPA)};
+  \node[font=\scriptsize,attackRed] at ($(dec.east)+(1.95,0)$) {oráculo de descifrado (solo CCA)};
+\end{tikzpicture}
+\caption{En CCA el adversario suma el \emph{oráculo de descifrado} $g$ al de cifrado $f$ del
+escenario CPA. \textit{(Recreación conceptual de las diapositivas.)}}
+\end{figure}
+
+\begin{warnbox}{Ningún criptosistema visto es CCA-secure}
+La buena noticia: CCA es una prueba \textbf{abarcativa} que cubre todas las familias de
+modificaciones del cifrado (no hay que jugar al gato y al ratón). La mala: \textbf{ninguno}
+de los criptosistemas vistos (ni los no vistos) la pasa, porque el cifrado está pensado para
+\emph{confidencialidad} (transferencia de información), no para \emph{integridad}
+(manipulación de la información).
+\end{warnbox}
+
+\begin{practbox}{Ejercicio (slide): el cifrado de flujo no es CCA-secure}
+\textbf{Enunciado.} Demostrar que el cifrado de flujo en general no es CCA-secure.
+\emph{Ayuda:} considerar $m_0=(0\ldots0)$ y $m_1=(1\ldots1)$ y verificar qué consultas se
+pueden hacer a $g(x)$ al recibir $c$.
+
+\medskip
+\textbf{Resolución.} El adversario propone $m_0=0^n$ y $m_1=1^n$ y recibe el challenge
+$c=e_k(m_b)=G(k)\xor m_b$. No puede preguntar $g(c)$, pero sí $g(c')$ para cualquier
+$c'\neq c$. Construye $c'=c\xor 1^n$ (flip de todos los bits). Por maleabilidad:
+\[
+  g(c')=\Dec_k(c\xor 1^n)=m_b\xor 1^n=\overline{m_b}.
+\]
+Si $b=0$ entonces $m_b=0^n$ y $g(c')=1^n$; si $b=1$ entonces $g(c')=0^n$. El adversario lee
+$g(c')$ y deduce $b$ con \textbf{probabilidad 1}. Como $c'\neq c$, la consulta es legal.
+$\blacksquare$
+\end{practbox}
+
+Esto requiere \textbf{control de integridad}: identificar adulteraciones. La primitiva
+criptográfica para ello es el \textbf{MAC} (\emph{Message Authentication Code}).
+
+%=====================================================================
+\section{Message Authentication Code (MAC)}
+%=====================================================================
+
+\begin{defbox}{Definición formal de MAC}
+Un MAC es una \textbf{terna de algoritmos} $\langle\Gen,\Mac,\Vrfy\rangle$:
+\[
+  \Gen:()\to\Kset \quad(\text{generador de clave}),\qquad
+  \Mac:\Kset\times\Pset\to\Tset \quad(\text{etiquetador}),
+\]
+\[
+  \Vrfy:\Kset\times\Pset\times\Tset\to\{0,1\} \quad(\text{verificador}).
+\]
+\textbf{Propiedad básica:} para todo $m$ y $k$ válidos,
+$\;\Vrfy_k\bigl(m,\Mac_k(m)\bigr)=1$.\\
+Conjuntos: $\Kset$ (claves), $\Pset$ (planos), $\Tset$ (etiquetas/\emph{tags}).
+\end{defbox}
+
+El emisor envía el par $\langle m,t\rangle$ con $t=\Mac_k(m)$; el receptor calcula
+$b=\Vrfy_k(m,t)$ y acepta si $b=1$. La función $\Mac$ parte de un mensaje plano arbitrario y
+una clave y genera una etiqueta; $\Vrfy$ recibe clave, mensaje y etiqueta y devuelve un
+booleano.
+
+% ---- Diagrama MAC gen/verif (recreación slide práctica) ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth,node distance=6mm]
+  % Emisor
+  \node[font=\bfseries,itbaCyanDark] (em) at (0,2.4) {Emisor};
+  \node[draw,fill=slideGray,minimum width=1.1cm,minimum height=0.7cm] (k1) at (-1.0,1.3) {$k$};
+  \node[draw,fill=slideGray,minimum width=2.4cm,minimum height=0.7cm] (m1) at (1.2,1.3) {$m$};
+  \node[draw,rounded corners,fill=itbaBlue,minimum width=1.4cm,minimum height=0.8cm] (mac) at (0.6,0.1) {$\Mac_k$};
+  \node[draw,fill=practGreenL,minimum width=1.1cm,minimum height=0.7cm] (t1) at (0.6,-1.0) {$t$};
+  \draw[-{Stealth}] (k1) |- (mac.west);
+  \draw[-{Stealth}] (m1) -- (mac);
+  \draw[-{Stealth}] (mac) -- (t1);
+  % canal
+  \node[draw,fill=practGreenL,minimum width=2.6cm,minimum height=0.8cm] (pair) at (5.2,0.1) {$\langle m,\,t\rangle$};
+  \draw[-{Stealth},thick,practGreen] (t1.east) to[bend right=15] node[below,font=\scriptsize]{canal} (pair.south west);
+  \draw[-{Stealth},thick,practGreen] (m1.east) to[bend left=10] (pair.north west);
+  % Receptor
+  \node[font=\bfseries,itbaCyanDark] (re) at (9.4,2.4) {Receptor};
+  \node[draw,fill=slideGray,minimum width=1.1cm,minimum height=0.7cm] (k2) at (8.4,1.3) {$k$};
+  \node[draw,rounded corners,fill=itbaBlue,minimum width=1.5cm,minimum height=0.8cm] (vrfy) at (9.4,0.1) {$\Vrfy_k$};
+  \node[draw,fill=slideGray,minimum width=2.1cm,minimum height=0.7cm] (b) at (9.4,-1.0) {$b\in\{0,1\}$};
+  \draw[-{Stealth}] (k2) -- (vrfy);
+  \draw[-{Stealth}] (pair.east) to[bend left=12] (vrfy.west);
+  \draw[-{Stealth}] (vrfy) -- (b);
+\end{tikzpicture}
+\caption{Generación y verificación de un MAC. El emisor adjunta $t=\Mac_k(m)$; el receptor
+acepta si $\Vrfy_k(m,t)=1$. \textit{(Recreación de las diapositivas teórica y práctica.)}}
+\end{figure}
+
+\begin{warnbox}{Aclaraciones del profesor}
+\begin{itemize}[leftmargin=1.3em,itemsep=2pt]
+  \item \textbf{Un MAC \emph{no} provee no-repudio.} La clave $k$ es \textbf{simétrica}
+        (compartida por emisor y receptor): cualquiera de los dos pudo generar la etiqueta,
+        así que ante un tercero no se puede probar \emph{quién} la emitió. El no-repudio
+        requiere firma digital (clave pública), que se ve más adelante.
+  \item \textbf{Un MAC \emph{no} protege contra ataques de \emph{replay}.} Una etiqueta
+        válida sigue siendo válida si se reenvía. Se mitiga incorporando un
+        \textbf{número de secuencia} o un \textbf{timestamp} dentro del mensaje autenticado.
+  \item \textbf{MAC ${\neq}$ dirección MAC} de redes: aquí es \emph{Message Authentication
+        Code}.
+\end{itemize}
+\end{warnbox}
+
+\subsection{Seguridad de un MAC: el experimento Mac-forge}
+
+\begin{defbox}{Experimento $\mathrm{Mac\text{-}forge}_{A,\Pi}$}
+Dado un nivel de seguridad $n$, un adversario $A$ y un esquema $\Pi(n)$:
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item Se genera una clave $k\leftarrow\Gen(1^n)$.
+  \item $A$ recibe $1^n$ y acceso al \textbf{oráculo} $f(x)=\Mac_k(x)$.
+        Realiza todas las evaluaciones que quiera (sea $Q$ el conjunto de consultas).
+  \item $A$ emite un par $\langle m,t\rangle$ con $m\notin Q$.
+\end{enumerate}
+$\mathrm{Mac\text{-}forge}_{A,\Pi}=1$ (\textbf{éxito}) si y solo si
+$\Vrfy_k(m,t)=1$ \textbf{y} $m\notin Q$.\\[2pt]
+El MAC es \textbf{seguro (infalsificable)} ante un ataque de mensaje elegido si y solo si,
+para todo adversario PPT $A$:
+\[
+  \Pr[\mathrm{Mac\text{-}forge}_{A,\Pi}(n)=1]\;\le\;\negl(n).
+\]
+\end{defbox}
+
+% ---- Diagrama del experimento Mac-forge ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth]
+  \node[circle,draw,fill=itbaBlue,minimum size=1.0cm] (A) at (0,0) {$A$};
+  \node[draw,rounded corners,fill=boxBlue,minimum width=2.6cm,minimum height=0.9cm]
+       (orac) at (4.2,0.6) {oráculo $\Mac_k(\cdot)$};
+  \node[draw,rounded corners,fill=practGreenL,minimum width=2.6cm,minimum height=0.9cm]
+       (out) at (4.2,-1.0) {emite $\langle m,t\rangle$};
+  \draw[-{Stealth}] (A.east) to[bend left=10] node[above,font=\scriptsize]{$x_i\in Q$} (orac.west);
+  \draw[-{Stealth}] (orac.west) to[bend left=10] node[below,font=\scriptsize]{$t_i$} (A.east);
+  \draw[-{Stealth}] (A.south east) -- (out.west);
+  \node[align=left,font=\scriptsize,anchor=west] at (7.0,-1.0)
+       {gana si $\Vrfy_k(m,t)=1$\\ \textbf{y} $m\notin Q$};
+\end{tikzpicture}
+\caption{El adversario consulta libremente el oráculo (conjunto $Q$) y debe forjar una
+etiqueta válida para un mensaje \textbf{nuevo} $m\notin Q$.}
+\end{figure}
+
+\begin{slidebox}
+\textbf{Observaciones.} (i) El adversario puede obtener un MAC para \emph{cualquier} mensaje
+que elija. (ii) Se considera \textbf{roto} el MAC si el adversario puede falsificar
+cualquier mensaje, \textbf{independientemente de si tiene sentido o no}.
+\end{slidebox}
+
+%=====================================================================
+\section{Ejercicio: ¿son seguros estos MACs?}
+%=====================================================================
+
+La siguiente serie de MACs ``ingenuos'' permite extraer las \textbf{propiedades que un MAC
+seguro debe cumplir}. Todos se rompen con Mac-forge. Resolvemos cada uno con el paso a paso
+de la clase.
+
+\begin{practbox}{(a) $\Mac_k(m)=G(k)\xor m$ — usar un cifrado de flujo como MAC}
+$G$ es un generador pseudoaleatorio: la etiqueta es tan larga como el mensaje y resulta de
+hacer XOR contra la secuencia $G(k)$.
+
+\medskip
+\textbf{Problema:} la salida $G(k)$ es \emph{determinística} (con la misma clave, el primer
+bloque del generador es siempre el mismo). Etiquetar es simplemente hacer XOR contra $G(k)$,
+así que si el adversario \textbf{averigua $G(k)$ puede etiquetar cualquier mensaje}.
+
+\medskip
+\textbf{Algoritmo atacante (Mac-forge):}
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item Consulta el oráculo con $m=0\ldots0$. Obtiene $t_0=\Mac_k(0)=G(k)\xor 0=\boxed{G(k)}$.
+        \emph{¡Recuperó la corriente de clave!}
+  \item Elige un mensaje nuevo $m'\neq 0$, por ejemplo $m'=1\ldots1$, y calcula
+        $t'=G(k)\xor m'$.
+  \item Emite $\langle m', t'\rangle$ con $m'\notin Q$: pasa la verificación. $\blacksquare$
+\end{enumerate}
+\end{practbox}
+
+\begin{practbox}{(b) $\Mac_k(m)=k\xor \mathrm{first\_k\_bits}(m)$}
+La etiqueta es el XOR de la clave (longitud fija) con los \emph{primeros} $|k|$ bits del
+mensaje. \emph{Hay dos falsificaciones distintas:}
+
+\medskip
+\textbf{Ataque 1 — recuperar la clave (la del curso).}
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item Consulta $m=0\ldots0$: $\;t=k\xor \mathrm{first\_k\_bits}(0)=k\xor 0=\boxed{k}$.
+        \emph{¡Recuperó la clave entera!}
+  \item Emite un mensaje nuevo, p.\ ej.\ $m'=1\ldots1$ con etiqueta
+        $t'=k\xor(\underbrace{1\ldots1}_{k\text{ bits}})$. Pasa la verificación. $\blacksquare$
+\end{enumerate}
+
+\medskip
+\textbf{Ataque 2 — más fácil aún (la lección buscada).} El MAC \textbf{ignora} todo el
+mensaje salvo sus primeros $|k|$ bits. Entonces:
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item Consulta un mensaje $m$ y obtiene su etiqueta $t$.
+  \item Emite $\langle m\concat\texttt{<carácter extra>},\ t\rangle$: el sufijo agregado cae
+        fuera de los primeros $|k|$ bits, así que la \textbf{misma etiqueta} sigue siendo
+        válida para un mensaje distinto. $\blacksquare$
+\end{enumerate}
+\textbf{Lección:} \emph{un MAC que no considera la totalidad del mensaje es trivialmente
+falsificable.} Si ignora algún bit, basta modificar ese bit y reusar la etiqueta.
+\end{practbox}
+
+\begin{practbox}{(c) $\Mac_k(m)=\Enc_k(|m|)$ con $\Enc$ CPA-secure}
+La etiqueta cifra \textbf{solo la longitud} del mensaje, no su contenido.
+
+\medskip
+\textbf{Verificación:} hay que descifrar la etiqueta y ver si la longitud coincide.
+\textbf{Problema:} la etiqueta \emph{no depende del contenido}.
+
+\medskip
+\textbf{Algoritmo atacante:}
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item Pide el etiquetado de un mensaje $m_A$ de longitud $L$: obtiene $t_A$.
+  \item Toma cualquier \emph{otro} mensaje $m_B\neq m_A$ de la \textbf{misma longitud} $L$.
+  \item Emite $\langle m_B, t_A\rangle$. Al verificar, se descifra $t_A\Rightarrow L$, que
+        coincide con $|m_B|$: \textbf{válido}. $\blacksquare$
+\end{enumerate}
+\emph{(Como $\Enc$ es no determinista, $t_A\neq t_B$ aunque $|m_A|=|m_B|$; pero ambos
+descifran a la misma longitud, así que las etiquetas son intercambiables.)}
+\end{practbox}
+
+\begin{slidebox}
+\textbf{Conclusión.} Un MAC robusto/infalsificable es \emph{siempre} el resultado de
+procesar la \textbf{totalidad del contenido} del mensaje, sin determinismos triviales
+extraíbles ni partes ignoradas.
+\end{slidebox}
+
+%=====================================================================
+\section{Cómo construir un MAC: CBC-MAC}
+%=====================================================================
+
+Primera familia de construcciones: \textbf{a partir de una primitiva de cifrado de bloque}.
+Sea $F$ una función pseudoaleatoria ($F_k:\{0,1\}^n\to\{0,1\}^n$).
+
+\subsection{Construcción para mensajes de longitud fija}
+
+\begin{defbox}{MAC seguro para mensajes de longitud fija $n$}
+\textbf{Gen:} $k\leftarrow\{0,1\}^n$. \quad
+\textbf{Mac:} $t\leftarrow F_k(m)$ con $|m|=|k|=n$. \quad
+\textbf{Vrfy:} si $|m|\neq|k|\Rightarrow 0$; si $F_k(m)==t\Rightarrow 1$.
+\end{defbox}
+
+Como $F_k$ es una PRF de $n$ bits a $n$ bits que procesa \emph{todo} el bloque, esta
+construcción es infalsificable \textbf{para mensajes de longitud fija}.
+
+\subsection{CBC-MAC (para mensajes más largos, longitud fija)}
+
+\begin{defbox}{CBC-MAC}
+\textbf{Gen:} $k\leftarrow\{0,1\}^n$.\quad \textbf{Mac:} dado $m=m_1\concat m_2\concat
+\cdots\concat m_\ell$ (bloques de $n$ bits), con $t_0=0^n$:
+\[
+  t_i = F_k\bigl(t_{i-1}\xor m_i\bigr),\qquad \Mac_k(m)=t_\ell.
+\]
+\textbf{Vrfy:} $\Vrfy_k(m,t)=1 \iff t=\Mac_k(m)$.
+\end{defbox}
+
+A diferencia del CBC \emph{de cifrado}, aquí se emite \textbf{una sola etiqueta} (la del
+último bloque) y \textbf{no hay IV} (el estado inicial es fijo en $0^n$). Se encadena un
+bloque con el siguiente; importa el orden y los estados intermedios $t_1,\dots,t_{\ell-1}$
+\textbf{se descartan}.
+
+% ---- Diagrama CBC-MAC ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth,node distance=4mm,
+   blk/.style={draw,fill=slideGray,minimum width=1.2cm,minimum height=0.7cm},
+   F/.style={draw,rounded corners,fill=itbaBlue,minimum width=1.0cm,minimum height=0.8cm},
+   xo/.style={circle,draw,inner sep=1.2pt}]
+  % mensajes
+  \node[blk] (m1) at (0,2.4) {$m_1$};
+  \node[blk] (m2) at (2.4,2.4) {$m_2$};
+  \node[blk] (md) at (4.8,2.4) {$\cdots$};
+  \node[blk] (ml) at (7.2,2.4) {$m_\ell$};
+  % t0
+  \node[blk] (t0) at (-2.0,0.9) {$0^n$};
+  % xor row
+  \node[xo] (x1) at (0,0.9) {$\xor$};
+  \node[xo] (x2) at (2.4,0.9) {$\xor$};
+  \node[xo] (x3) at (4.8,0.9) {$\xor$};
+  \node[xo] (x4) at (7.2,0.9) {$\xor$};
+  % F row
+  \node[F] (F1) at (0,-0.4) {$F_k$};
+  \node[F] (F2) at (2.4,-0.4) {$F_k$};
+  \node[draw,minimum width=1.0cm,minimum height=0.8cm] (F3) at (4.8,-0.4) {$\cdots$};
+  \node[F] (F4) at (7.2,-0.4) {$F_k$};
+  % outputs
+  \node[font=\scriptsize] (o0) at (-2.0,-1.4) {$t_0$};
+  \node[font=\scriptsize] (o1) at (0,-1.4) {$t_1$};
+  \node[font=\scriptsize] (o2) at (2.4,-1.4) {$t_2$};
+  \node[draw,fill=practGreenL,minimum width=1.0cm] (tl) at (7.2,-1.6) {$t_\ell$};
+  % wires
+  \draw[-{Stealth}] (m1)--(x1); \draw[-{Stealth}] (m2)--(x2);
+  \draw[-{Stealth}] (md)--(x3); \draw[-{Stealth}] (ml)--(x4);
+  \draw[-{Stealth}] (t0)--(x1);
+  \draw[-{Stealth}] (x1)--(F1); \draw[-{Stealth}] (x2)--(F2);
+  \draw[-{Stealth}] (x3)--(F3); \draw[-{Stealth}] (x4)--(F4);
+  \draw[-{Stealth}] (F1) |- (o1.west) ; \draw[-{Stealth}] (F1.east) -| (x2);
+  \draw[-{Stealth}] (F2.east) -| (x3);
+  \draw[-{Stealth}] (F3.east) -| (x4);
+  \draw[-{Stealth}] (F4) -- (tl);
+\end{tikzpicture}
+\caption{CBC-MAC: encadenamiento $t_i=F_k(t_{i-1}\xor m_i)$ con $t_0=0^n$; la etiqueta es el
+\textbf{último} $t_\ell$. \textit{(Recreación de las diapositivas.)}}
+\end{figure}
+
+\begin{warnbox}{Aclaración clave del profesor}
+La construcción CBC-MAC anterior es \textbf{infalsificable SOLO si se permiten mensajes de
+una misma longitud}. Con mensajes de \textbf{longitud variable} es falsificable.
+\end{warnbox}
+
+\subsection{Ataque a CBC-MAC con longitud variable}
+El atacante explota que los \textbf{estados intermedios} ($t_1,\dots$) se descartan, pero
+puede recalcularlos: el estado tras procesar dos bloques, $F_k(\cdot)\xor m_3$, le permite
+``empalmar'' mensajes.
+
+\begin{practbox}{Ataque (slide teórica): forja con longitud variable}
+\begin{enumerate}[leftmargin=1.6em,itemsep=2pt]
+  \item Crear dos bloques aleatorios $A$ y $B$. Definir
+        $m_1=A\concat B$ \;y\; $m_2=A$.
+  \item Consultar el oráculo: $t_1=f(m_1)$, $\;t_2=f(m_2)$.
+  \item \textbf{Observar:} $t_2=F_k(0^n\xor A)=F_k(A)$, y
+        $t_1=F_k\bigl(F_k(A)\xor B\bigr)=F_k(t_2\xor B)$.
+  \item Emitir el mensaje de \textbf{tres} bloques
+        $\;m^\ast = A\concat B\concat (A\xor t_1)\;$ con etiqueta $\;t_2$.
+\end{enumerate}
+\textbf{Por qué funciona.} Calculamos $\Mac_k(m^\ast)$ paso a paso:
+\[
+\begin{aligned}
+  s_1 &= F_k(0^n\xor A)=F_k(A)=t_2,\\
+  s_2 &= F_k(s_1\xor B)=F_k(t_2\xor B)=t_1,\\
+  s_3 &= F_k\bigl(s_2\xor (A\xor t_1)\bigr)=F_k\bigl(t_1\xor A\xor t_1\bigr)=F_k(A)=t_2.
+\end{aligned}
+\]
+Luego $\Mac_k(m^\ast)=s_3=t_2$, que es justamente la etiqueta emitida, y $m^\ast\notin Q$.
+\textbf{Falsificación válida.} $\blacksquare$
+\end{practbox}
+
+\subsection{Extensiones seguras de CBC-MAC para longitud arbitraria}
+Para autenticar mensajes de \textbf{cualquier} longitud existen tres opciones seguras (y una
+insegura para descartar):
+
+\begin{defbox}{Opciones seguras}
+\begin{description}[leftmargin=2.2em,style=nextline,itemsep=4pt]
+  \item[Opción 1 — derivar clave de la longitud]
+        $\;k'=F_k(|m|)\;$ y $\;t\leftarrow \text{CBC-MAC}_{k'}(m).$
+        \emph{(Cada longitud usa una clave distinta.)}
+  \item[Opción 2 — longitud como \underline{prefijo}]
+        $\;m'=|m|\concat m\;$ y $\;t\leftarrow\text{CBC-MAC}_k(m').$
+        \emph{La longitud debe ir al principio, no al final.}
+  \item[Opción 3 — doble clave]
+        $\;k_1,k_2\leftarrow\{0,1\}^n;\;\;t\leftarrow\text{CBC-MAC}_{k_1}(m);\;\;
+        \hat t\leftarrow F_{k_2}(t).$
+\end{description}
+\end{defbox}
+
+\begin{warnbox}{La longitud como \emph{sufijo} NO es segura}
+Si $m'=m\concat |m|$ y $\Mac_k(m)=\text{CBC-MAC}_k(m')$, hay un ataque. Con bloques
+aleatorios $A,B,C$:
+\[
+\begin{aligned}
+  m_1=AAA &\to m_1'=AAA3, & t_1&=f(m_1)\\
+  m_2=BBB &\to m_2'=BBB3, & t_2&=f(m_2)\\
+  m_3=AAA3CC &\to m_3'=AAA3CC6, & t_3&=f(m_3)\\
+  &\text{Sea } X=t_1\xor t_2\xor C; &&\text{emitir } (BBB3XC,\ t_3).
+\end{aligned}
+\]
+La etiqueta $t_3$ resulta válida para un mensaje no consultado. \emph{Por eso la longitud va
+como prefijo.} \textit{(Notación de la slide; $3,6$ representan los sufijos de longitud.)}
+\end{warnbox}
+
+%=====================================================================
+\section{Práctica: construcciones para mensajes de longitud variable}
+%=====================================================================
+
+La clase práctica desarrolla \textbf{en detalle} por qué las construcciones ``naturales''
+para extender un MAC de bloque fijo $\Mac'$ a mensajes de longitud variable fallan, antes de
+llegar a la solución (ineficiente pero segura) y, finalmente, a CBC-MAC.
+
+\begin{practbox}{Sugerencia 1 — XOR de los bloques y autenticar el resultado}
+\[
+  t := \Mac'_k\Bigl(\bigoplus_i m_i\Bigr),\qquad \text{emitir } \langle m_1,m_2,\ldots,m_d;\ t\rangle.
+\]
+\textbf{Falla.} El adversario puede falsificar un tag válido sobre un \emph{nuevo} mensaje
+cambiando el mensaje original \textbf{de modo que el XOR de los bloques no cambie}. Por
+ejemplo, mueve un bit de un bloque a otro: si el XOR total da lo mismo, la etiqueta sigue
+siendo válida y $m'\neq m$. $\blacksquare$
+\end{practbox}
+
+\begin{practbox}{Sugerencia 2 — autenticar cada bloque por separado}
+\[
+  t_i := \Mac'_k(m_i),\qquad \text{emitir } \langle m_1,m_2,\ldots,m_d;\ t_1,t_2,\ldots,t_d\rangle.
+\]
+\textbf{Falla.} El adversario consulta cada bloque por separado ($\Mac'$ de $m_1$, de
+$m_2$\ldots) y luego \textbf{reordena/permuta} los bloques con sus etiquetas. Por ejemplo, de
+$\langle m_1,m_2,\ldots; t_1,t_2,\ldots\rangle$ arma
+$\langle m_2,m_1,m_3; t_2,t_1,t_3\rangle$: cada par $(m_i,t_i)$ valida bien, así que el
+mensaje permutado pasa. También puede \textbf{mezclar bloques de mensajes distintos}.
+$\blacksquare$
+\end{practbox}
+
+\begin{practbox}{Sugerencia 3 — autenticar cada bloque con su número de secuencia}
+\[
+  t_i := \Mac'_k(i\concat m_i),\qquad \text{emitir } \langle m_1,\ldots,m_d;\ t_1,\ldots,t_d\rangle.
+\]
+\textbf{Mejora pero aún falla.} El número de secuencia impide reordenar (ahora cada $t_i$
+depende de la posición $i$). \textbf{Pero} el adversario todavía puede \textbf{mezclar
+bloques de mensajes diferentes que estén en la misma posición}: si consulta dos mensajes y
+toma $m_1$ del primero, $m'_2$ del segundo, $m_3$ del primero\ldots\ cada $(i\concat m)$
+sigue correspondiendo a su tag válido $\Rightarrow$ el mensaje híbrido valida. $\blacksquare$
+\end{practbox}
+
+\begin{practbox}{Construcción segura (ineficiente): random + longitud + secuencia + bloque}
+A partir de $\Mac'=\langle\Gen',\Mac',\Vrfy'\rangle$ para mensajes de longitud $n$:
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Gen:} $\Gen'$, con $|k|=n$.
+  \item \textbf{Mac:} para $|m|=L<2^{n/4}$, se parte $m$ en $d$ bloques de $n/4$ bits (se
+        completa con ceros) y se elige $r\leftarrow\{0,1\}^{n/4}$:
+        \[
+          t_i = \Mac'_k\bigl(r\concat L\concat i\concat m_i\bigr),\quad i=1,\ldots,d,
+          \qquad \text{emitir } \langle r,\,t_1,\ldots,t_d\rangle.
+        \]
+\end{itemize}
+\textbf{Por qué es seguro:}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{El número $r$ aleatorio} es el \emph{mismo} para todos los bloques de un mismo
+        mensaje y \emph{distinto} entre mensajes. No se pueden \textbf{mezclar bloques de
+        mensajes distintos}: tendrían valores de $r$ que no coinciden y la verificación falla
+        (al armar un mensaje híbrido, ¿qué $r$ emitir en el tag? No hay uno que sirva para
+        todos).
+  \item \textbf{La longitud $L$} hace saber cuántos bloques deben llegar (impide
+        truncamientos/extensiones).
+  \item \textbf{El número de secuencia $i$} mantiene el orden (impide permutar).
+\end{itemize}
+\textbf{Problema: ¡ineficiente!} Emite \emph{todos} los tags por separado (una barbaridad de
+pedacitos) y además parte el mensaje en bloques de $n/4$. Es seguro pero poco práctico
+$\Rightarrow$ se usa \textbf{CBC-MAC}, que emite una sola etiqueta.
+\end{practbox}
+
+%=====================================================================
+\section{Funciones de hash criptográficas}
+%=====================================================================
+
+\begin{defbox}{Función de hash}
+Son \textbf{pares de algoritmos} $\langle\Gen,H\rangle$:
+\[
+  \Gen:s\leftarrow\Sset,\qquad h=H^s(m)\in\{0,1\}^L,
+\]
+con $L$ la longitud (\textbf{fija}) del hash. \textbf{Comprimen} una entrada de longitud
+arbitraria a una salida de longitud fija (por eso, \emph{funciones de resumen / digest}).
+\end{defbox}
+
+\begin{slidebox}
+\textbf{Diferencia importante con un MAC.} $s$ \textbf{no es una clave}: es un mero
+\emph{selector} (público) de la función dentro de la familia. En muchas implementaciones
+$\Sset=\{s_0\}$ (hay una única función). Las funciones de hash son \textbf{análogas a los
+MACs, pero sin clave}.
+\end{slidebox}
+
+\subsection{Colisiones y la propiedad fundamental}
+\begin{defbox}{Colisión}
+Una \textbf{colisión} es un par $x\neq x'$ con $H(x)=H(x')$.\\
+\textbf{Principio del palomar:} si hay $n+1$ mensajes y $n$ valores de salida posibles,
+existe al menos una colisión. \emph{Las colisiones van a existir siempre} (la entrada es más
+grande que la salida); el objetivo es que sean \textbf{computacionalmente difíciles} de
+encontrar.
+\end{defbox}
+
+\subsection{Las tres propiedades (niveles de seguridad)}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\bfseries}p{4.2cm} p{9.2cm}}
+\toprule
+Resistencia a preimágenes & Dado $y$, es computacionalmente imposible hallar $x$ tal que
+$h(x)=y$. (\emph{One-way}.)\\
+Resistencia a segundas preimágenes & Dado $x$, es imposible hallar $x'\neq x$ con
+$h(x')=h(x)$.\\
+Resistencia a colisiones & Es imposible hallar \emph{cualquier} par $x,x'$ con $h(x)=h(x')$ y
+$x\neq x'$.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ---- Diagrama: los tres niveles de seguridad ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\scriptsize,>=Stealth,
+   dom/.style={draw,ellipse,minimum width=2.0cm,minimum height=2.6cm},
+   img/.style={draw,ellipse,minimum width=1.6cm,minimum height=2.6cm}]
+  % colisiones
+  \begin{scope}[xshift=0cm]
+    \node[font=\bfseries\normalsize,itbaCyanDark] at (0.6,2.0) {Colisiones};
+    \node[dom] (d) at (0,0) {}; \node[img] (i) at (2.4,0) {};
+    \fill (d.center)++(0,0.5) circle (1.6pt) coordinate (a);
+    \fill (d.center)++(0,-0.5) circle (1.6pt) coordinate (b);
+    \fill (i.center) circle (1.6pt) coordinate (c);
+    \draw[-{Stealth}] (a)--(c); \draw[-{Stealth}] (b)--(c);
+    \node at (0.6,-1.9) {hallar $x\neq x'$};
+  \end{scope}
+  % segundas preimagenes
+  \begin{scope}[xshift=5.4cm]
+    \node[font=\bfseries\normalsize,itbaCyanDark] at (0.9,2.0) {2.ª preimagen};
+    \node[dom] (d2) at (0,0) {}; \node[img] (i2) at (2.4,0) {};
+    \fill[attackRed] (d2.center)++(0,0.5) circle (1.8pt) coordinate (a2);
+    \node[attackRed] at ($(d2.center)+(-0.55,0.5)$) {$x$ dado};
+    \fill (d2.center)++(0,-0.5) circle (1.6pt) coordinate (b2);
+    \fill (i2.center) circle (1.6pt) coordinate (c2);
+    \draw[-{Stealth},attackRed] (a2)--(c2); \draw[-{Stealth}] (b2)--(c2);
+    \node at (0.9,-1.9) {dado $x$, hallar $x'$};
+  \end{scope}
+  % preimagenes
+  \begin{scope}[xshift=10.8cm]
+    \node[font=\bfseries\normalsize,itbaCyanDark] at (0.9,2.0) {Preimagen};
+    \node[dom] (d3) at (0,0) {}; \node[img] (i3) at (2.4,0) {};
+    \fill (d3.center) circle (1.6pt) coordinate (a3);
+    \fill[attackRed] (i3.center) circle (1.8pt) coordinate (c3);
+    \node[attackRed] at ($(i3.center)+(0.0,0.9)$) {$y$ dado};
+    \draw[-{Stealth}] (a3)--(c3);
+    \node at (0.9,-1.9) {dado $y$, hallar $x$};
+  \end{scope}
+\end{tikzpicture}
+\caption{Los tres niveles de seguridad. La \textbf{resistencia a colisiones} es donde el
+atacante tiene \emph{mayor} ventaja (mayor grado de libertad: elige ambos $x,x'$); implica
+las otras dos. \textit{(Recreación de las diapositivas.)}}
+\end{figure}
+
+\begin{defbox}{Experimento $\mathrm{Hash\text{-}Coll}_{A,H}$}
+Dado un nivel $n$, un adversario $A$ y una familia $H^s(n)$:
+\begin{enumerate}[leftmargin=1.6em,itemsep=1pt]
+  \item Se selecciona una función $s\leftarrow\Sset$.
+  \item $A$ obtiene acceso a $H(x)=H^s(x)$.
+  \item $A$ emite $x,x'$.
+\end{enumerate}
+$\mathrm{Hash\text{-}Coll}_{A,H}=1$ si $x\neq x'$ y $H(x)=H(x')$. Si
+$\Pr[\mathrm{Hash\text{-}Coll}_{A,H}=1]<\negl(n)$, $H$ es \textbf{libre de colisiones}.
+\textbf{El desafío:} $s$ se fija en el momento, nada precalculado, y en tiempo polinómico hay
+que materializar dos mensajes que colisionen.
+\end{defbox}
+
+\subsection{La paradoja del cumpleaños}
+\begin{defbox}{Costo de los ataques por fuerza bruta. Sea $h:A\to B$.}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Preimágenes:} requiere $|B|$ intentos (en promedio).
+  \item \textbf{Segundas imágenes:} requiere $|B|$ intentos.
+  \item \textbf{Colisiones:} requiere solo $|B|^{1/2}$ intentos. \textbf{Paradoja del
+        cumpleaños.}
+\end{itemize}
+\end{defbox}
+
+\textbf{¿Por qué la raíz cuadrada?} Buscando una colisión arbitraria, el atacante genera un
+mensaje, lo compara contra \emph{todos} los anteriores; genera otro y lo compara con todos
+los previos\ldots\ Cada nuevo mensaje se chequea contra el conjunto acumulado, de modo que la
+cantidad de \emph{pares} crece cuadráticamente. La complejidad cae a
+$\sqrt{|B|}$: medido en bits, es \textbf{la mitad del nivel de seguridad} que las otras
+propiedades. Es la misma optimización que en probabilidad: una cosa es la chance de que
+alguien coincida con \emph{una} fecha fija, otra es que \emph{cualquiera} coincida con
+\emph{cualquiera} en un grupo.
+
+% ---- Diagrama paradoja del cumpleaños ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\scriptsize,>=Stealth]
+  \foreach \i/\x in {1/0,2/1.2,3/2.4,4/3.6,5/4.8}{
+     \node[draw,circle,fill=itbaBlue,minimum size=0.55cm] (n\i) at (\x,0) {$x_\i$};
+  }
+  \node[font=\itshape] at (6.3,0) {\dots};
+  \foreach \a/\b in {1/2,1/3,2/3,1/4,2/4,3/4,1/5,2/5,3/5,4/5}{
+     \draw[gray!55] (n\a) to[bend left=22] (n\b);
+  }
+  \node[align=center,font=\small] at (2.4,-1.6)
+     {Cada nuevo mensaje se compara con \emph{todos} los anteriores:\\
+      $\sim\binom{q}{2}$ pares $\Rightarrow$ colisión esperada con $q\approx\sqrt{|B|}$.};
+\end{tikzpicture}
+\caption{Paradoja del cumpleaños: la cantidad de pares crece como $q^2$, reduciendo el costo
+de hallar una colisión a $\sqrt{|B|}$. \textit{(Recreación conceptual.)}}
+\end{figure}
+
+\subsection{El modelo iterativo: Merkle-Damgård}
+Propuesto por \textbf{Merkle (1989)} y usado por muchas funciones. Procesa entradas de
+longitud arbitraria a partir de una función de \textbf{compresión} $h^s$ de bloque pequeño.
+
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+  \item \textbf{Preprocesamiento:} ajustar el tamaño del mensaje (\emph{padding}) y agregar
+        un bloque con la \textbf{longitud}.
+  \item \textbf{Función de compresión $f$:} similar al hash pero sobre bloques pequeños;
+        \textbf{la seguridad del esquema está dada por la función de compresión} (si $h^s$ es
+        mala, todo el esquema es malo).
+\end{itemize}
+
+% ---- Diagrama Merkle-Damgard ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\scriptsize,>=Stealth,
+   tr/.style={draw,trapezium,trapezium left angle=70,trapezium right angle=110,
+              fill=itbaBlue!60,minimum width=1.6cm,minimum height=1.0cm,shape border rotate=180},
+   blk/.style={draw,fill=slideGray,minimum width=1.7cm,minimum height=0.55cm},
+   nout/.style={draw,fill=white,minimum width=0.9cm,minimum height=0.5cm}]
+  \node[font=\itshape] (z0) at (-1.9,1.5) {$z_0=0^\ell$};
+  % three compression stages
+  \node[blk] (b1) at (0,1.5) {$0^\ell\concat x_1$};
+  \node[tr]  (h1) at (0,0.4) {$h^s$};
+  \node[nout] (o1) at (0,-0.9) {$z_1$};
+  \node[blk] (b2) at (2.9,1.5) {$z_1\concat x_2$};
+  \node[tr]  (h2) at (2.9,0.4) {$h^s$};
+  \node[nout] (o2) at (2.9,-0.9) {$z_2$};
+  \node at (5.0,0.4) {$\cdots$};
+  \node[blk] (b3) at (7.6,1.5) {$z_{B}\concat x_{B+1}$};
+  \node[tr]  (h3) at (7.6,0.4) {$h^s$};
+  \node[nout,fill=practGreenL] (o3) at (7.6,-0.9) {$z_{B+1}$};
+  \node[font=\itshape] at (7.6,2.3) {$x_{B+1}=|x|$};
+  % wires
+  \draw[-{Stealth}] (b1)--(h1); \draw[-{Stealth}] (h1)--(o1);
+  \draw[-{Stealth}] (b2)--(h2); \draw[-{Stealth}] (h2)--(o2);
+  \draw[-{Stealth}] (b3)--(h3); \draw[-{Stealth}] (h3)--(o3);
+  \draw[-{Stealth}] (o1) -| (1.45,1.1) |- (b2.west);
+  \draw[-{Stealth}] (o2) -| (4.3,1.1) -- (4.9,1.1);
+  \draw[-{Stealth}] (5.3,1.1) -| (6.1,1.1) |- (b3.west);
+  \node[draw,fill=practGreenL,minimum width=1.0cm] at (9.3,-0.9) {$H^s(x)$};
+  \draw[-{Stealth}] (o3) -- (8.75,-0.9);
+\end{tikzpicture}
+\caption{Transformación de Merkle-Damg\aa rd: $z_i=h^s(z_{i-1}\concat x_i)$, con $z_0=0^\ell$
+y el bloque final $x_{B+1}=|x|$. \textbf{Una colisión en $H^s$ solo puede ocurrir si hay una
+colisión en $h^s$.} \textit{(Recreación de las diapositivas.)}}
+\end{figure}
+
+\subsection{Primitivas concretas}
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{>{\bfseries}l c p{6.6cm}}
+\toprule
+Primitiva & Salida & Notas \\
+\midrule
+MD5   & 128 bits & \textcolor{attackRed}{Quebrada}; aún aparece en protocolos viejos.\\
+SHA-1 & 160 bits & Se construye sobre MD5; \emph{al borde}, complicada.\\
+SHA-2 & 256/384/512 bits & Estándar durante mucho tiempo.\\
+SHA-3 & 224/256/384/512 bits & Estandarizado por NIST (2013), antes \emph{Keccak}; usa
+\textbf{modelo esponja}. \textbf{Recomendado} para proyectos nuevos.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{slidebox}
+\textbf{Ejemplos (entrada $\to$ digest hex).}\\[2pt]
+{\footnotesize\ttfamily
+MD5:\ \ ""\,$\to$\,d41d8cd98f00b204e9800998ecf8427e;\quad "abc"\,$\to$\,900150983cd24fb0d6963f7d28e17f72\\
+SHA-1: ""\,$\to$\,da39a3ee5e6b4b0d3255bfef95601890afd80709;\ "abc"\,$\to$\,a9993e364706816aba3e25717850c26c9cd0d89d}
+\end{slidebox}
+
+\begin{warnbox}{Tamaño mínimo en la práctica}
+El tamaño mínimo de salida usado hoy es \textbf{160 bits}, para que la búsqueda de colisiones
+requiera más de $2^{80}$ operaciones (preimágenes/2.ª imágenes: $2^{160}$).
+\textbf{Condición necesaria pero NO suficiente:} aunque la salida sea grande, si la función
+es mala el esquema es inseguro. Las funciones se miden por el nivel de seguridad de la
+\emph{resistencia a colisiones} (la mitad de los bits).
+\end{warnbox}
+
+%=====================================================================
+\section{MACs a partir de funciones de hash: HMAC y NMAC}
+%=====================================================================
+
+Segunda familia de construcciones de MAC: \textbf{a partir de una función de hash} libre de
+colisiones. Ventaja sobre CBC-MAC: las funciones de hash están diseñadas para procesar
+volúmenes grandes de datos muy rápido. Un MAC basado en hash suele ser \textbf{1 o 2 órdenes
+de magnitud más rápido} que un CBC-MAC.
+
+\subsection{NMAC (Nested MAC)}
+\begin{defbox}{NMAC}
+\textbf{Gen:} emite $(s,k_1,k_2)$ con $|k_1|=|k_2|=n$.\quad
+\textbf{Mac:} para $m=m_1m_2\cdots m_B$ con $|m|=L$,
+\[
+  t := h^s_{k_1}\bigl(H^s_{k_2}(m)\bigr).
+\]
+\end{defbox}
+Se hace el hash con clave del mensaje (clave $k_2$ y la longitud $L$ como bloque final)
+obteniendo $z=H^s_{k_2}(m)$, y luego un \emph{último} paso con la otra clave $k_1$:
+$t=h^s_{k_1}(z)$.
+
+% ---- Diagrama NMAC ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\scriptsize,>=Stealth,
+   tr/.style={draw,trapezium,trapezium left angle=70,trapezium right angle=110,
+              fill=itbaBlue!50,minimum width=1.5cm,minimum height=0.95cm,shape border rotate=180},
+   blk/.style={draw,fill=slideGray,minimum width=1.5cm,minimum height=0.5cm},
+   nout/.style={draw,fill=white,minimum width=0.8cm,minimum height=0.45cm}]
+  \node[blk](b1) at (0,1.4){$k_2\concat m_1$};
+  \node[tr](h1) at (0,0.35){$h^s$}; \node[nout](z1) at (0,-0.75){$z_1$};
+  \node[blk](b2) at (2.6,1.4){$z_1\concat m_2$};
+  \node[tr](h2) at (2.6,0.35){$h^s$}; \node[nout](z2) at (2.6,-0.75){$z_2$};
+  \node at (4.3,0.35){$\cdots$};
+  \node[blk](b3) at (6.0,1.4){$z_{B-1}\concat m_B$};
+  \node[tr](h3) at (6.0,0.35){$h^s$}; \node[nout](zB) at (6.0,-0.75){$z_B$};
+  \node[blk](b4) at (8.4,1.4){$z_B\concat L$};
+  \node[tr](h4) at (8.4,0.35){$h^s$}; \node[nout,fill=itbaBlue!25](z) at (8.4,-0.75){$z$};
+  \node[blk](b5) at (10.8,1.4){$k_1\concat z$};
+  \node[tr](h5) at (10.8,0.35){$h^s$};
+  \node[draw,fill=practGreenL,minimum width=0.8cm](t) at (10.8,-0.75){$t$};
+  \foreach \b/\h in {b1/h1,b2/h2,b3/h3,b4/h4,b5/h5}{\draw[-{Stealth}](\b)--(\h);}
+  \draw[-{Stealth}](h1)--(z1);\draw[-{Stealth}](h2)--(z2);\draw[-{Stealth}](h3)--(zB);
+  \draw[-{Stealth}](h4)--(z);\draw[-{Stealth}](h5)--(t);
+  \draw[-{Stealth}](z1)-|(1.3,1.05)|-(b2.west);
+  \draw[-{Stealth}](zB)-|(7.2,1.05)|-(b4.west);
+  \draw[-{Stealth}](z)-|(9.6,1.05)|-(b5.west);
+  \node[itbaCyanDark] at (4.3,-1.6){$H^s_{k_2}(m)=z$};
+  \node[itbaCyanDark] at (10.8,-1.6){$h^s_{k_1}(z)=t$};
+\end{tikzpicture}
+\caption{NMAC: hash con clave $k_2$ (y la longitud $L$ como bloque final) seguido de un paso
+con $k_1$. \textit{(Recreación de la diapositiva práctica.)}}
+\end{figure}
+
+\subsection{HMAC (hash-based MAC)}
+La construcción de HMAC está especificada en una RFC y es la más usada.
+
+\begin{defbox}{HMAC}
+\textbf{Gen:} emite $(s,k)$ con $|k|=n$.\quad
+\[
+  t := H^s_{\mathrm{IV}}\Bigl((k\xor\mathrm{opad})\concat
+        H^s_{\mathrm{IV}}\bigl((k\xor\mathrm{ipad})\concat m\bigr)\Bigr),
+\]
+con $\mathrm{ipad}=\texttt{0x36}\cdots\texttt{36}$, $\mathrm{opad}=\texttt{0x5c}\cdots
+\texttt{5c}$ (constantes de $n$ bytes) e $\mathrm{IV}$ una constante fija de longitud $n$.\\
+\textbf{Es infalsificable (Mac-forge)} si $H$ es libre de colisiones.
+\end{defbox}
+
+\begin{slidebox}
+\textbf{Eficiencia.} Aunque a primera vista parezca que se procesa el mensaje dos veces, en
+realidad $m$ se procesa \textbf{una sola vez} en el hash interno; el paso externo (con
+$\mathrm{opad}$) solo procesa la etiqueta intermedia $z$ (longitud fija). Por eso es muy
+eficiente. El prefijo $k\xor\mathrm{ipad}$ \textbf{rompe el patrón} entre mensajes iguales y
+los estados intermedios.
+\end{slidebox}
+
+% ---- Diagrama HMAC ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\scriptsize,>=Stealth,
+   tr/.style={draw,trapezium,trapezium left angle=70,trapezium right angle=110,
+              fill=itbaBlue!50,minimum width=1.5cm,minimum height=0.9cm,shape border rotate=180},
+   blk/.style={draw,fill=slideGray,minimum width=1.7cm,minimum height=0.5cm},
+   nout/.style={draw,fill=white,minimum width=0.8cm,minimum height=0.45cm}]
+  % inner
+  \node[blk](i0) at (0,1.4){$\mathrm{IV}\concat(k\xor\mathrm{ipad})$};
+  \node[tr](hi0) at (0,0.4){$h^s$};\node[nout](z0) at (0,-0.65){$z_0$};
+  \node[blk](i1) at (2.9,1.4){$z_0\concat m_1$};
+  \node[tr](hi1) at (2.9,0.4){$h^s$};\node[nout](z1) at (2.9,-0.65){$z_1$};
+  \node at (4.6,0.4){$\cdots$};
+  \node[blk](i2) at (6.2,1.4){$z_{B}\concat L$};
+  \node[tr](hi2) at (6.2,0.4){$h^s$};\node[nout,fill=itbaBlue!25](z) at (6.2,-0.65){$z$};
+  \foreach \b/\h in {i0/hi0,i1/hi1,i2/hi2}{\draw[-{Stealth}](\b)--(\h);}
+  \draw[-{Stealth}](hi0)--(z0);\draw[-{Stealth}](hi1)--(z1);\draw[-{Stealth}](hi2)--(z);
+  \draw[-{Stealth}](z0)-|(1.45,1.05)|-(i1.west);
+  \draw[-{Stealth}](z1)-|(4.6,1.05)--(4.6,1.05);
+  \draw[-{Stealth}](4.85,1.05)-|(5.35,1.05)|-(i2.west);
+  \node[itbaCyanDark,align=left] at (8.6,0.0){$H^s_{\mathrm{IV}}\bigl((k\xor\mathrm{ipad})\concat m\bigr)$\\$=z$};
+  % outer
+  \node[blk](o0) at (0,-2.4){$\mathrm{IV}\concat(k\xor\mathrm{opad})$};
+  \node[tr](ho0) at (0,-3.4){$h^s$};\node[nout](w0) at (0,-4.45){$z_0$};
+  \node[blk](o1) at (2.9,-2.4){$z_0\concat z$};
+  \node[tr](ho1) at (2.9,-3.4){$h^s$};
+  \node[draw,fill=practGreenL,minimum width=0.8cm](t) at (2.9,-4.45){$t$};
+  \draw[-{Stealth}](o0)--(ho0);\draw[-{Stealth}](ho0)--(w0);
+  \draw[-{Stealth}](o1)--(ho1);\draw[-{Stealth}](ho1)--(t);
+  \draw[-{Stealth}](w0)-|(1.45,-2.75)|-(o1.west);
+  \draw[-{Stealth},practGreen,thick](z.south)--(6.2,-1.65)-|(o1.north);
+  \node[itbaCyanDark,align=left] at (6.6,-4.0){$H^s_{\mathrm{IV}}\bigl((k\xor\mathrm{opad})\concat z\bigr)=t$};
+\end{tikzpicture}
+\caption{HMAC: hash interno sobre $(k\xor\mathrm{ipad})\concat m$ produce $z$; hash externo
+sobre $(k\xor\mathrm{opad})\concat z$ produce la etiqueta $t$.
+\textit{(Recreación de la diapositiva práctica.)}}
+\end{figure}
+
+%=====================================================================
+\section{Privacidad e integridad: combinarlas}
+%=====================================================================
+
+Para lograr \textbf{privacidad e integridad} a la vez hay que \emph{combinar} cifrado y
+etiquetado. Hay \textbf{tres formas}, pero \textbf{solo dos son seguras}.
+
+% ---- Diagrama semaforo de las 3 combinaciones ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth,node distance=4mm]
+  \node[draw,rounded corners,fill=slideGray,minimum width=8.6cm,align=left] (c1)
+    {\textbf{1. Cifrar y autenticar (por separado):}\quad
+     $c\leftarrow\Enc_{k_1}(m),\ \ t\leftarrow\Mac_{k_2}(m)$\quad emite $\langle c,t\rangle$};
+  \node[circle,fill=attackRed,minimum size=0.7cm,right=0.5cm of c1] (l1) {};
+  \node[font=\scriptsize,right=1mm of l1,align=left] {\textbf{INSEGURO}\\ $t$ puede dar info de $m$};
+
+  \node[draw,rounded corners,fill=slideGray,minimum width=8.6cm,align=left,below=4mm of c1] (c2)
+    {\textbf{2. Autenticar, luego cifrar:}\quad
+     $c\leftarrow\Enc_{k_1}\bigl(m\concat\Mac_{k_2}(m)\bigr)$};
+  \node[circle,fill=yellow!80!orange,minimum size=0.7cm,right=0.5cm of c2] (l2) {};
+  \node[font=\scriptsize,right=1mm of l2,align=left] {\textbf{Puede} ser seguro\\ requiere prueba (p.\,ej.\ \emph{padding})};
+
+  \node[draw,rounded corners,fill=slideGray,minimum width=8.6cm,align=left,below=4mm of c2] (c3)
+    {\textbf{3. Cifrar, luego autenticar:}\quad
+     $c\leftarrow\Enc_{k_1}(m),\ \ t\leftarrow\Mac_{k_2}(c)$\quad emite $\langle c,t\rangle$};
+  \node[circle,fill=practGreen,minimum size=0.7cm,right=0.5cm of c3] (l3) {};
+  \node[font=\scriptsize,right=1mm of l3,align=left] {\textbf{SEGURO}\\ si ambos lo son y $k_1\neq k_2$};
+\end{tikzpicture}
+\caption{Las tres combinaciones de cifrado y autenticación, con su ``semáforo'' de
+seguridad. \textit{(Recreación de las diapositivas teórica y práctica.)}}
+\end{figure}
+
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{(1) Cifrar y autenticar} ($\Mac$ sobre el \emph{plano}): \textcolor{attackRed}{
+        \textbf{inseguro}}. La etiqueta $t$ puede brindar información sobre $m$ (un MAC no
+        garantiza confidencialidad de su entrada; dos mensajes iguales podrían dar la misma
+        etiqueta).
+  \item \textbf{(2) Autenticar luego cifrar} ($\Mac$ sobre el plano, todo cifrado):
+        \textbf{puede ser seguro}, pero requiere prueba (problemas tipo \emph{padding}).
+  \item \textbf{(3) Cifrar luego autenticar} ($\Mac$ sobre el \emph{cifrado}): \textcolor{
+        practGreen}{\textbf{siempre seguro}}, siempre que los algoritmos de cifrado y MAC lo
+        sean y las claves $k_1,k_2$ sean \textbf{independientes}. (Con claves iguales el
+        esquema puede ser susceptible a ataques.)
+\end{itemize}
+
+%=====================================================================
+\section{Cifrado Autenticado}
+%=====================================================================
+
+\begin{defbox}{Construcción de cifrado autenticado (encrypt-then-MAC)}
+Sean $\Pi_e=(\Gen_e,\Enc,\Dec)$ un criptosistema \textbf{CPA-secure} y
+$\Pi_m=(\Gen_m,\Mac,\Vrfy)$ un MAC \textbf{infalsificable} (con etiquetas únicas: para todo
+$k,m$ hay un único $t$ con $\Vrfy_k(m,t)=1$). Se define:
+\begin{align*}
+  \textbf{Gen:}\ & k_1\leftarrow\Gen_e,\quad k_2\leftarrow\Gen_m \quad(\textbf{independientes})\\
+  \textbf{Enc:}\ & c\leftarrow\Enc_{k_1}(m),\quad t\leftarrow\Mac_{k_2}(c) \quad\text{emitir }\langle c,t\rangle\\
+  \textbf{Dec:}\ & \text{si } \Vrfy_{k_2}(c,t)=1 \to m=\Dec_{k_1}(c);\quad \text{si no } \to \perp\ (\text{fallo})
+\end{align*}
+\textbf{El criptosistema resultante es CCA-secure.} (Ver Teorema 4.20, Katz \& Lindell.) La
+idea de la prueba es mostrar que el oráculo de descifrado \textbf{no le sirve de nada} al
+adversario (cualquier $c$ adulterado falla la verificación del MAC).
+\end{defbox}
+
+% ---- Diagrama cifrado autenticado ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth,node distance=5mm,
+   bx/.style={draw,rounded corners,minimum width=1.5cm,minimum height=0.8cm}]
+  \node[bx,fill=slideGray] (m) at (0,0) {$m$};
+  \node[bx,fill=itbaBlue] (enc) at (2.4,0) {$\Enc_{k_1}$};
+  \node[bx,fill=slideGray] (c) at (4.8,0) {$c$};
+  \node[bx,fill=practGreenL] (mac) at (7.2,0.0) {$\Mac_{k_2}$};
+  \node[bx,fill=practGreenL] (t) at (7.2,-1.4) {$t$};
+  \node[bx,fill=slideGray,minimum width=2.4cm] (pair) at (10.3,-0.7) {$\langle c,\,t\rangle$};
+  \draw[-{Stealth}] (m)--(enc); \draw[-{Stealth}] (enc)--(c);
+  \draw[-{Stealth}] (c)--(mac); \draw[-{Stealth}] (mac)--(t);
+  \draw[-{Stealth}] (c.south) |- (pair.west);
+  \draw[-{Stealth}] (t.east) -| (pair.south);
+\end{tikzpicture}
+\caption{Cifrado autenticado = \emph{encrypt-then-MAC}: privacidad ($\Enc$ CPA-secure) +
+integridad ($\Mac$ infalsificable) $\Rightarrow$ \textbf{CCA-secure + MAC-forge secure}.}
+\end{figure}
+
+\begin{slidebox}
+\textbf{Cifrado autenticado (Secure message transmission):}
+\[
+  \textbf{Privacidad} + \textbf{integridad} \;=\; \text{CCA-Secure} + \text{MAC-forge Secure}.
+\]
+\end{slidebox}
+
+\subsection{Encadenamiento CCM}
+\begin{defbox}{CCM — Counter with CBC-MAC}
+Modo ``\textbf{Authenticate-then-encrypt}'':
+\[
+  e_k\bigl(\text{cbc-mac}_k(M)\concat m\bigr).
+\]
+Existe una \textbf{prueba de seguridad específica}: si el IV y el \emph{nonce} \textbf{no
+coinciden ni se reutilizan}, la construcción es \textbf{CCA-secure usando LA MISMA CLAVE}.
+\emph{(Ejercicio de la slide: esquematizar un cifrado usando AES-CCM.)}
+\end{defbox}
+
+\subsection{Encadenamiento GCM}
+\begin{defbox}{GCM — Galois/Counter Mode}
+Forma de encadenar un criptosistema de bloque que \textbf{provee cifrado autenticado}. El
+cifrado es en \textbf{modo counter}; la etiqueta de autenticación (MAC) se calcula con
+\textbf{GHASH} sobre $\mathrm{GF}(2^{128})$:
+\[
+  H=E_k(0^{128}),\qquad \mathrm{Mult}_h(x)=\mathrm{Mult}(x,h),\qquad
+  \mathrm{Mult}(x,y)=x\cdot y \bmod \bigl(x^{128}+x^7+x^2+x+1\bigr).
+\]
+\end{defbox}
+
+% ---- Diagrama GCM ----
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\scriptsize,>=Stealth,
+   ctr/.style={draw,fill=white,minimum width=1.5cm,minimum height=0.5cm},
+   ek/.style={draw,rounded corners,fill=itbaCyan,minimum width=1.1cm,minimum height=0.7cm},
+   mh/.style={draw,rounded corners,fill=itbaCyan,minimum width=1.1cm,minimum height=0.6cm},
+   xo/.style={circle,draw,inner sep=1.2pt},
+   inc/.style={draw,rounded corners,fill=itbaCyan,minimum size=0.45cm}]
+  % counters
+  \node[ctr](c0) at (0,3.0){Counter 0};
+  \node[inc](i0) at (1.6,3.0){incr};
+  \node[ctr](c1) at (3.2,3.0){Counter 1};
+  \node[inc](i1) at (4.8,3.0){incr};
+  \node[ctr](c2) at (6.4,3.0){Counter 2};
+  \draw[-{Stealth}](c0)--(i0);\draw[-{Stealth}](i0)--(c1);
+  \draw[-{Stealth}](c1)--(i1);\draw[-{Stealth}](i1)--(c2);
+  % E_k
+  \node[ek](e0) at (0,2.0){$E_k$};\node[ek](e1) at (3.2,2.0){$E_k$};\node[ek](e2) at (6.4,2.0){$E_k$};
+  \draw[-{Stealth}](c0)--(e0);\draw[-{Stealth}](c1)--(e1);\draw[-{Stealth}](c2)--(e2);
+  % plaintext xor
+  \node[ctr](p1) at (2.0,1.1){Plaintext 1};
+  \node[xo](xp1) at (3.2,1.1){$\xor$};
+  \node[ctr](p2) at (5.2,1.1){Plaintext 2};
+  \node[xo](xp2) at (6.4,1.1){$\xor$};
+  \draw[-{Stealth}](e1)--(xp1);\draw[-{Stealth}](p1)--(xp1);
+  \draw[-{Stealth}](e2)--(xp2);\draw[-{Stealth}](p2)--(xp2);
+  % ciphertext
+  \node[ctr](ct1) at (3.2,0.2){Ciphertext 1};
+  \node[ctr](ct2) at (6.4,0.2){Ciphertext 2};
+  \draw[-{Stealth}](xp1)--(ct1);\draw[-{Stealth}](xp2)--(ct2);
+  % GHASH chain
+  \node[mh](m0) at (1.2,-0.9){$\mathrm{mult}_H$};
+  \node[xo](g0) at (1.2,0.2){$\xor$};
+  \node[mh](m1) at (3.2,-1.6){$\mathrm{mult}_H$};
+  \node[xo](g1) at (3.2,-0.9){$\xor$};
+  \node[mh](m2) at (6.4,-0.9){$\mathrm{mult}_H$};
+  \node[xo](g2) at (6.4,-0.2){$\xor$};
+  \node[ctr](ad) at (-0.4,-0.9){Auth Data 1};
+  \node[ctr](len) at (5.0,-1.6){len(A)$\|$len(C)};
+  \draw[-{Stealth}](ad)--(m0);
+  \draw[-{Stealth}](g0)--(m0.north);
+  \draw[-{Stealth}](m0)|-(2.4,-1.6)--(m1.west);
+  \draw[-{Stealth}](ct1)--(g1);\draw[-{Stealth}](g1)--(m1);
+  \draw[-{Stealth}](ct2)--(g2);\draw[-{Stealth}](g2)--(m2);
+  \draw[-{Stealth}](m1)|-(4.4,-2.1)-|(g2.south);
+  \draw[-{Stealth}](len)--(m2.west);
+  \node[ctr,fill=practGreenL](at) at (6.4,-2.4){Auth Tag};
+  \draw[-{Stealth}](m2)--(at);
+\end{tikzpicture}
+\caption{GCM: cifrado en modo counter más cadena GHASH (multiplicaciones en
+$\mathrm{GF}(2^{128})$) que produce el \emph{Auth Tag}. \textit{(Recreación de la
+diapositiva.)}}
+\end{figure}
+
+\begin{practbox}{Ejercicio (slide práctica): claves iguales rompen encrypt-then-MAC}
+\textbf{Enunciado.} Considerar $F$ una función pseudoaleatoria biyectiva fuerte,
+$\Enc_k(m)=F_k(m\concat r)$ y $\Mac_k(c)=F^{-1}_k(c)$ (pasa Mac-forge). Probar que el esquema
+\emph{cifrar y luego autenticar} \textbf{no es resistente a CCA por tener claves iguales}.
+
+\medskip
+\textbf{Idea de la resolución.} Como $\Mac_k=F^{-1}_k$ y $\Enc_k=F_k(\cdot)$ usan
+\emph{la misma} clave $k$, el tag $t=F^{-1}_k(c)=F^{-1}_k(F_k(m\concat r))=m\concat r$
+\textbf{revela el plano} (más el random). El adversario, al recibir el challenge
+$\langle c,t\rangle$, lee $t$ y obtiene directamente $m\concat r$, distinguiendo $m_0$ de
+$m_1$ \emph{sin} siquiera usar el oráculo de descifrado. La moraleja confirma la condición de
+la slide: \textbf{las claves $k_1$ y $k_2$ deben ser independientes}.
+\end{practbox}
+
+%=====================================================================
+\section{Aplicaciones prácticas}
+%=====================================================================
+
+\begin{slidebox}
+\begin{itemize}[leftmargin=1.3em,itemsep=2pt]
+  \item En términos generales, \textbf{usar solo cifrado autenticado} en sistemas reales.
+  \item El cifrado ``normal'' puede ser \textbf{manipulado} (maleabilidad).
+  \item En aplicaciones reales, el requerimiento de \textbf{privacidad lleva implícito el de
+        integridad}.
+  \item Muy pocas veces se tiene control sobre el material que va a ser cifrado y descifrado:
+        la solución debe funcionar \textbf{independientemente} de eso.
+\end{itemize}
+\end{slidebox}
+
+%=====================================================================
+\section*{Cross-check teoría vs.\ práctica}
+\addcontentsline{toc}{section}{Cross-check teoría vs.\ práctica}
+%=====================================================================
+\begin{practbox}{Qué agrega la clase práctica}
+\begin{itemize}[leftmargin=1.4em,itemsep=3pt]
+  \item \textbf{Mac-forge explícito sobre los 3 MACs inseguros:} la práctica (y la teórica)
+        resuelven \emph{paso a paso} cómo se rompe $G(k)\xor m$, $k\xor\mathrm{first\_k\_bits}
+        (m)$ y $\Enc_k(|m|)$, destilando las propiedades de un MAC seguro (procesar todo el
+        mensaje, sin determinismos extraíbles).
+  \item \textbf{Análisis de las 3 sugerencias para longitud variable} (XOR de bloques, tag
+        por bloque, tag con número de secuencia) con el ataque concreto de cada una
+        (anular el XOR, permutar bloques, mezclar bloques de mensajes distintos en la misma
+        posición). Esto es desarrollo \emph{propio de la práctica}, no de las slides
+        teóricas.
+  \item \textbf{Construcción segura $r\concat L\concat i\concat m_i$} y la justificación
+        intuitiva de por qué el random $r$ impide mezclar mensajes (no hay un único $r$ que
+        sirva para un tag híbrido), más la observación de que es \textbf{ineficiente}.
+  \item \textbf{Ataque a CBC-MAC de longitud variable} explicado vía estados intermedios
+        ($t_1,t_2$ que se descartan pero se recalculan).
+  \item \textbf{Aclaraciones del profesor} ausentes en las slides: el MAC \textbf{no provee
+        no-repudio} (clave simétrica) y \textbf{no protege contra replay} (usar número de
+        secuencia o timestamp).
+  \item \textbf{Ejercicio CCA con claves iguales} ($\Enc_k(m)=F_k(m\concat r)$,
+        $\Mac_k(c)=F^{-1}_k(c)$) que motiva la independencia de claves.
+\end{itemize}
+\end{practbox}
+
+%=====================================================================
+\section*{Lectura recomendada}
+\addcontentsline{toc}{section}{Lectura recomendada}
+%=====================================================================
+\begin{center}
+\begin{tcolorbox}[enhanced,colback=itbaBlue!20,colframe=itbaCyanDark,boxrule=1pt,
+  arc=3pt,width=0.85\textwidth,halign=center]
+\large\textbf{Capítulo 4}\\[4pt]
+\emph{Introduction to Modern Cryptography}\\[2pt]
+Katz \& Lindell
+\end{tcolorbox}
+\end{center}
+
+\noindent\textbf{Guías de práctica:} se sugiere avanzar hasta la \textbf{guía 3}.
+
+%---------------------------------------------------------------------
+\vfill
+\begin{center}\small\itshape\color{black!60}
+Apunte integral de la Clase 3 — MACs y Cifrado Autenticado · Criptografía y Seguridad, ITBA.\\
+Síntesis de teoría (transcripciones + diapositivas) y práctica.
+\end{center}
+
+\end{document}
