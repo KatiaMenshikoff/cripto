@@ -1,0 +1,455 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% Colors
+\definecolor{itbaBlue}{HTML}{003366}
+\definecolor{itbaCyan}{HTML}{6EC6D9}
+\definecolor{tipGreen}{HTML}{2E7D32}
+\definecolor{tipGreenLight}{HTML}{E8F5E9}
+\definecolor{consignaBlue}{HTML}{E3F2FD}
+\definecolor{consignaBlueDark}{HTML}{1565C0}
+\definecolor{warnOrange}{HTML}{E65100}
+\definecolor{warnOrangeLight}{HTML}{FFF3E0}
+\definecolor{theoremPurple}{HTML}{4A148C}
+\definecolor{theoremPurpleLight}{HTML}{F3E5F5}
+
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{consignabox}{
+  enhanced, breakable,
+  colback=consignaBlue, colframe=consignaBlueDark,
+  boxrule=1.5pt, arc=4pt,
+  title={\textbf{Consigna}},
+  fonttitle=\bfseries\color{white},
+  attach boxed title to top left={yshift=-2mm, xshift=4mm},
+  boxed title style={colback=consignaBlueDark, arc=2pt, boxrule=0pt}
+}
+
+\newtcolorbox{tipsbox}{
+  enhanced, breakable,
+  colback=tipGreenLight, colframe=tipGreen,
+  boxrule=1.5pt, arc=4pt,
+  title={\textbf{Tips y Anotaciones}},
+  fonttitle=\bfseries\color{white},
+  attach boxed title to top left={yshift=-2mm, xshift=4mm},
+  boxed title style={colback=tipGreen, arc=2pt, boxrule=0pt}
+}
+
+\newtcolorbox{teoriabox}[1]{
+  enhanced, breakable,
+  colback=theoremPurpleLight, colframe=theoremPurple,
+  boxrule=1.5pt, arc=4pt,
+  title={\textbf{#1}},
+  fonttitle=\bfseries\color{white},
+  attach boxed title to top left={yshift=-2mm, xshift=4mm},
+  boxed title style={colback=theoremPurple, arc=2pt, boxrule=0pt}
+}
+
+\newtcolorbox{warnbox}[1]{
+  enhanced, breakable,
+  colback=warnOrangeLight, colframe=warnOrange,
+  boxrule=1.5pt, arc=4pt,
+  title={\textbf{#1}},
+  fonttitle=\bfseries\color{white},
+  attach boxed title to top left={yshift=-2mm, xshift=4mm},
+  boxed title style={colback=warnOrange, arc=2pt, boxrule=0pt}
+}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=itbaBlue,
+  urlcolor=itbaCyan,
+  pdftitle={Ejercicios RSA -- ITBA Criptografía},
+  pdfauthor={ITBA Criptografía y Seguridad}
+}
+
+\title{
+  \vspace{-1cm}
+  {\color{itbaBlue}\rule{\linewidth}{2pt}}\\[0.3cm]
+  {\Huge\bfseries\color{itbaBlue} RSA: Clave Pública y Firma Digital}\\[0.2cm]
+  {\large\color{itbaCyan} Ejercicios de Parciales -- ITBA Criptografía y Seguridad (72.44)}\\[0.2cm]
+  {\color{itbaBlue}\rule{\linewidth}{2pt}}
+}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+%=============================================================
+\section{Teoría: RSA}
+%=============================================================
+
+\subsection{Generación de claves (GenRSA)}
+
+\begin{teoriabox}{GenRSA --- Generación de claves RSA}
+\begin{enumerate}
+  \item Elegir $p, q$ primos. Calcular $n = p \cdot q$ (el ``módulo'').
+  \item $\varphi(n) = (p-1)(q-1)$ (función de Euler).
+  \item Elegir $e$ tal que $1 < e < \varphi(n)$ y $\gcd(e, \varphi(n)) = 1$ (coprimo).
+  \item Calcular $d$ tal que $e \cdot d \equiv 1 \pmod{\varphi(n)}$ (inverso modular, Euclides extendido).
+  \item \textbf{Clave pública:} $pk = \langle n, e \rangle$. \quad \textbf{Clave privada:} $sk = \langle n, d \rangle$.
+\end{enumerate}
+\[
+  \text{Cifrar: } c = m^e \bmod n, \qquad \text{Descifrar: } m = c^d \bmod n.
+\]
+\end{teoriabox}
+
+\subsection{¿Por qué funciona? (Teorema de Euler)}
+
+\begin{teoriabox}{Corrección de RSA (Euler/Fermat)}
+Como $d \equiv e^{-1} \pmod{\varphi(n)}$, existe $k$ entero tal que $ed = 1 + k\varphi(n)$. Entonces:
+\[
+  c^d \bmod n = (m^e)^d \bmod n = m^{ed} \bmod n = m^{1+k\varphi(n)} \bmod n = m \cdot (m^{\varphi(n)})^k \bmod n.
+\]
+Por el \textbf{teorema de Euler}: $m^{\varphi(n)} \equiv 1 \pmod{n}$ (cuando $\gcd(m,n)=1$). Luego $c^d \equiv m \pmod{n}$. Cifrado y descifrado son funciones inversas con el par de claves correcto.
+\end{teoriabox}
+
+\subsection{Problemas del Textbook RSA}
+
+\begin{warnbox}{Problemas del Textbook RSA (sin padding)}
+\begin{itemize}
+  \item \textbf{Es determinístico:} el mismo $m$ con el mismo $pk$ siempre da el mismo $c$. No es CPA-Secure (el atacante puede probar mensajes).
+  \item \textbf{$e$ y $m$ pequeños:} si $m^e < n$, no hay reducción modular y se puede calcular $\sqrt[e]{c}$ directamente (raíz $e$-ésima entera).
+  \item \textbf{Módulos repetidos:} si dos pares comparten el mismo $n$, pueden factorizarlo.
+  \item \textbf{Ataque de texto plano elegido (CCA):} Textbook RSA es homomórfico ($E(m_1)\cdot E(m_2) = E(m_1\cdot m_2)$), lo que permite ataques sofisticados.
+\end{itemize}
+\end{warnbox}
+
+\subsection{PKCS \#1 v1.5: Padding aleatorio}
+
+\begin{teoriabox}{PKCS \#1 v1.5 --- Making RSA Non-Deterministic}
+Sea $k$ la longitud de $n$ en bytes. Se construye el mensaje con padding:
+\[
+  m' = \texttt{00}\,\|\,\texttt{02}\,\|\,r\,\|\,\texttt{00}\,\|\,m
+\]
+donde $r$ son bytes aleatorios $\ne 0$ (longitud $k - |m| - 3$). Luego se cifra $m'$.
+\begin{itemize}
+  \item \textbf{El padding aporta no-determinismo:} cada cifrado es diferente aunque el mensaje sea el mismo.
+  \item \textbf{Se cree que es CPA-Secure}, pero no es CCA-Secure (existen ataques como Bleichenbacher).
+  \item En la práctica, \textbf{siempre usar padding} (PKCS o OAEP). Nunca ``textbook RSA''.
+\end{itemize}
+\end{teoriabox}
+
+\subsection{Firma digital RSA}
+
+\begin{teoriabox}{RSA como esquema de firma}
+En cifrado: la clave \textbf{pública} cifra, la \textbf{privada} descifra.
+
+En firma: la clave \textbf{privada} firma, la \textbf{pública} verifica. Las claves tienen roles diferentes.
+
+\medskip
+\textbf{Firma estándar (Textbook RSA sign):}
+\begin{itemize}
+  \item $\text{Sign}_{sk}(m) = m^d \bmod n = s$ (la firma).
+  \item $\text{Vrfy}_{pk}(m, s) = [s^e \bmod n \stackrel{?}{=} m]$.
+\end{itemize}
+
+\textbf{Firma con hash (RSA-FDH / Hashed RSA):}
+\begin{itemize}
+  \item $\text{Sign}_{sk}(m) = [H(m)]^d \bmod n = s$.
+  \item $\text{Vrfy}_{pk}(m, s)$: calcular $s^e \bmod n$ y verificar que $= H(m)$.
+  \item \textbf{Por qué hashear:} (1) RSA solo puede firmar mensajes del tamaño del módulo; (2) el hash evita ataques existenciales (falsificación sin conocer el mensaje).
+\end{itemize}
+\end{teoriabox}
+
+\subsection{PKI y Certificados}
+
+\begin{teoriabox}{Infraestructura de Clave Pública (PKI)}
+El problema de la clave pública: ¿cómo sé que la clave pública que recibo realmente pertenece a quien dice ser?
+
+\textbf{Solución:} \textbf{Certificados digitales} y \textbf{Autoridades de Certificación (CA)}.
+\begin{itemize}
+  \item Una CA firma un certificado que asocia identidad $\leftrightarrow$ clave pública.
+  \item El certificado contiene: nombre del titular, clave pública, fecha de vencimiento, firma de la CA.
+  \item Para confiar en un certificado, hay que confiar en la CA que lo firmó (cadena de confianza).
+\end{itemize}
+\end{teoriabox}
+
+\subsection{Resumen de roles de las claves}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{lll}
+\toprule
+\textbf{Operación} & \textbf{Clave que actúa} & \textbf{Clave que verifica/deshace} \\
+\midrule
+Cifrado & Pública (del destinatario) & Privada (del destinatario) \\
+Firma digital & Privada (del firmante) & Pública (del firmante) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{warnbox}{Trampa clásica de parcial}
+``Los sistemas de cifrado de clave pública utilizan una clave para cifrar y otra para firmar.'' \textbf{FALSO.} En cifrado: la pública cifra, la privada descifra. En firma: la privada firma, la pública verifica. Las claves no están asignadas a una operación específica (cifrar vs. firmar) sino a un \emph{rol} (quién las usa). Esta distinción es clave en los parciales.
+\end{warnbox}
+
+%=============================================================
+\section{Parcial 2015 -- Ejercicio 4 (Primera parte)}
+\label{sec:rsa2015a}
+%=============================================================
+
+\begin{consignabox}
+En un esquema de clave pública, seleccionar la opción correcta:
+\begin{enumerate}[label=(\alph*)]
+  \item La clave pública se mantiene en secreto y la clave privada se distribuye autenticada.
+  \item La clave privada se mantiene en secreto y la clave pública se distribuye autenticada.
+  \item La clave privada se mantiene en secreto y la clave pública también.
+  \item La clave privada se mantiene en secreto y la clave pública se mantiene en un KDC.
+\end{enumerate}
+\end{consignabox}
+
+\paragraph{Resolución.}
+
+\textbf{Respuesta: (b).}
+
+En un esquema de clave pública (asimétrico):
+\begin{itemize}
+  \item La \textbf{clave privada} se mantiene \textbf{en secreto} --- solo el dueño la conoce.
+  \item La \textbf{clave pública} se \textbf{distribuye} libremente, pero debe ser \textbf{autenticada} (para evitar ataques de suplantación de identidad). Esto es exactamente el rol de los certificados digitales y la PKI.
+\end{itemize}
+
+\emph{Por qué las demás son falsas:}
+\begin{itemize}
+  \item \textbf{(a)} Invierte los roles: la pública es la que se distribuye.
+  \item \textbf{(c)} Ambas en secreto sería un sistema simétrico, no asimétrico.
+  \item \textbf{(d)} La clave pública en un KDC (Key Distribution Center) es el modelo de Kerberos (clave simétrica), no de clave pública.
+\end{itemize}
+
+\begin{tipsbox}
+\textbf{Patrón:} cuando el enunciado pregunte sobre la distribución de claves en criptografía asimétrica, la respuesta es siempre: \textbf{privada = secreta, pública = distribuida autenticada}. La palabra ``autenticada'' es clave: si distribuyo la clave pública sin autenticar, un atacante puede hacer un ataque MitM suplantando la identidad.
+\end{tipsbox}
+
+%=============================================================
+\section{Parcial 2015 -- Ejercicio 4 (Segunda parte)}
+\label{sec:rsa2015b}
+%=============================================================
+
+\begin{consignabox}
+Para reducir ciertos ataques en el esquema de firma RSA se sugiere usar $\pi = (\text{Gen}, \text{Sign}, \text{Vrfy})$ donde $s$ (la firma) se calcula como $s := [H(m)]^d \bmod N$, siendo $(N,d) = sk$ y $H$ una función de hash resistente a colisiones. Para verificar la firma, ¿cuál es el proceso correcto que debe seguir Vrfy?
+
+\begin{enumerate}[label=(\alph*)]
+  \item Vrfy debe recibir $s$ y efectuar $s^e \bmod N$ y $H(s^e \bmod N)$.
+  \item Vrfy debe recibir $s$ y efectuar $s^{(-1)^e} \bmod N$.
+  \item Vrfy debe recibir $m$ y $s$ y efectuar $s^e \bmod N$ y comparar con $H(m)$.
+  \item Vrfy debe recibir $m$ y $s$ y efectuar $m^e \bmod N$ y comparar con $H(s)$.
+\end{enumerate}
+\end{consignabox}
+
+\paragraph{Resolución.}
+
+\textbf{Respuesta: (c).}
+
+El proceso es:
+\begin{enumerate}
+  \item \textbf{Firma (Sign):} $s = [H(m)]^d \bmod N$.
+  \item \textbf{Verificación (Vrfy):} dado $(m, s)$:
+  \begin{itemize}
+    \item Calcular $s^e \bmod N$ --- esto ``deshace'' la firma con la clave pública.
+    \item Calcular $H(m)$ --- el hash del mensaje recibido.
+    \item Verificar que $s^e \bmod N \stackrel{?}{=} H(m)$.
+  \end{itemize}
+\end{enumerate}
+
+\emph{Por qué las demás son falsas:}
+\begin{itemize}
+  \item \textbf{(a)} Solo recibe $s$, no $m$: no puede calcular $H(m)$ para comparar.
+  \item \textbf{(b)} $s^{(-1)^e}$ no tiene sentido algebraico en este contexto.
+  \item \textbf{(d)} $m^e$ cifra el mensaje original, no está relacionado con la firma; $H(s)$ tampoco tiene sentido.
+\end{itemize}
+
+\begin{tipsbox}
+\textbf{Mnemotecnia para firma RSA con hash:}
+
+\medskip
+``\textbf{Sign priva-da, Hash primero; Vrfy publi-ca, descifra y compara con Hash del mensaje.}''
+
+\medskip
+\begin{itemize}
+  \item \textbf{Sign:} toma $m$ $\to$ hashea $\to$ eleva a la $d$ (privada) $\to$ produce $s$.
+  \item \textbf{Vrfy:} toma $(m, s)$ $\to$ eleva $s$ a la $e$ (pública) $\to$ compara con $H(m)$.
+  \item \textbf{Key insight:} $s^e = [H(m)^d]^e = H(m)^{de} = H(m)^{1+k\varphi(n)} = H(m)$ (por Euler). Por eso la comparación funciona.
+  \item \textbf{Por qué hashear y no firmar $m$ directamente:} (1) RSA solo firma mensajes $< n$; (2) sin hash, el adversario puede fabricar firmas válidas para mensajes que no eligió (ataque existencial).
+\end{itemize}
+\end{tipsbox}
+
+%=============================================================
+\section{Parcial 2015 -- Ejercicio 5}
+\label{sec:rsa2015c}
+%=============================================================
+
+\begin{consignabox}
+\textbf{Protocolo de autenticación RSA.} El siguiente protocolo de autenticación mutua usa certificados y firmas RSA:
+\begin{enumerate}
+  \item $A \to B$: $n_A$ (nonce de A)
+  \item $B \to A$: $\text{Cert}_B$, $n_B$, $\text{Sign}_B(n_A, n_B)$
+  \item $A \to B$: $\text{Cert}_A$, $\text{Sign}_A(n_B, n_A)$
+\end{enumerate}
+\textbf{Mostrar cómo un adversario $C$ puede autenticarse como $A$ ante $B$.}
+\end{consignabox}
+
+\paragraph{Resolución.}
+
+Este protocolo tiene una vulnerabilidad de \textbf{ataque de reflexión} (o ataque de entrelazado). El adversario $C$ puede autenticarse como $A$ ante $B$ sin conocer la clave privada de $A$:
+
+\textbf{Sesión 1 (C ataca a B fingiendo ser A):}
+\begin{enumerate}
+  \item $C \to B$: $n_C$ (C inicia, fingiendo ser A, con un nonce propio)
+  \item $B \to C$: $\text{Cert}_B$, $n_B$, $\text{Sign}_B(n_C, n_B)$
+\end{enumerate}
+Ahora $C$ necesita $\text{Sign}_A(n_B, n_C)$ para completar el paso 3. $C$ abre una \textbf{sesión paralela}:
+
+\textbf{Sesión 2 (C ataca a B abriendo otra sesión):}
+\begin{enumerate}
+  \item $C \to B$: \textbf{$n_B$} (C envía el nonce de B como su nonce inicial)
+  \item $B \to C$: $\text{Cert}_B$, $n_{B'}$, $\text{Sign}_B(n_B, n_{B'})$
+\end{enumerate}
+Pero $C$ necesita que B le devuelva $\text{Sign}_A(n_B, n_C)$\ldots\ El ataque es posible si $A=B$ (sesión de reflexión) o si $B$ es convencido de firmar lo necesario.
+
+\textbf{En la variante más directa (C se hace pasar por A ante B):}
+\begin{itemize}
+  \item $C$ inicia sesión con $B$ enviando $n_A$ (copiando o eligiendo un nonce).
+  \item $B$ responde con $\text{Sign}_B(n_A, n_B)$: el desafío es $n_B$.
+  \item $C$ necesita $\text{Sign}_A(n_B, n_A)$. Si $C$ puede inducir a $A$ a firmar eso (por ejemplo, abriendo una sesión con $A$ donde $A$ firme el nonce $n_B$), $C$ puede completar la autenticación.
+  \item El protocolo \textbf{no incluye el nombre del destinatario dentro de lo firmado}, por lo que la misma firma puede usarse en diferentes contextos.
+\end{itemize}
+
+\textbf{Defensa:} incluir la identidad del destinatario en el mensaje firmado:
+\begin{itemize}
+  \item Paso 2: $\text{Sign}_B(A, n_A, n_B)$ (incluir el nombre del interlocutor).
+  \item Paso 3: $\text{Sign}_A(B, n_B, n_A)$ (idem).
+\end{itemize}
+Así una firma obtenida en una sesión no puede reutilizarse en otra.
+
+\begin{tipsbox}
+\textbf{Análisis de protocolos de autenticación --- checklist:}
+\begin{itemize}
+  \item \textbf{¿Los mensajes firmados incluyen la identidad del interlocutor?} Si no, son vulnerables a ataque de reflexión.
+  \item \textbf{¿Los nonces son suficientemente aleatorios?} Si no, hay ataques de replay.
+  \item \textbf{¿El protocolo autentica ambas partes?} Un protocolo unilateral no da autenticación mutua.
+  \item \textbf{¿Los certificados están verificados?} Si el certificado no se valida, hay MitM.
+  \item \textbf{Nonce = Number used once:} aleatorio, para demostrar ``freshness'' (que el mensaje es reciente, no un replay).
+  \item La vulnerabilidad de reflexión es un clásico: el adversario abre dos sesiones en paralelo y usa la firma de una para completar la otra.
+\end{itemize}
+\end{tipsbox}
+
+%=============================================================
+\section{Parcial 2025 Q1 -- Ejercicio 5b}
+\label{sec:rsa2025Q1}
+%=============================================================
+
+\begin{consignabox}
+\textbf{Verdadero o Falso (justificar):} ``Los sistemas de encripción basados en clave pública utilizan una de las claves para encriptar/desencriptar y la otra para firmar.''
+\end{consignabox}
+
+\paragraph{Resolución.}
+
+\textbf{FALSO.}
+
+La afirmación mezcla incorrectamente las operaciones. La correcta distinción es:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{lll}
+\toprule
+\textbf{Operación} & \textbf{Usa clave} & \textbf{Verifica/deshace con} \\
+\midrule
+Cifrado & Pública (del destinatario) & Privada (del destinatario) \\
+Descifrado & Privada (del destinatario) & -- \\
+Firma & Privada (del firmante) & -- \\
+Verificación de firma & -- & Pública (del firmante) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+No hay ``una clave para cifrar/descifrar'' y ``otra para firmar''. Las claves tienen roles determinados por su naturaleza (pública vs. privada):
+\begin{itemize}
+  \item La \textbf{clave privada} se usa para: descifrar mensajes dirigidos a uno mismo, y firmar mensajes propios.
+  \item La \textbf{clave pública} se usa para: cifrar mensajes dirigidos al dueño, y verificar firmas del dueño.
+\end{itemize}
+
+\begin{tipsbox}
+\textbf{Este es un ejercicio de comprensión conceptual pura.} El error del enunciado es pensar en las claves como ``una para X y otra para Y'', cuando en realidad cada clave aparece en dos operaciones distintas (una como agente, otra como verificador). Recordar: \emph{la clave que ``actúa'' siempre es la privada (descifrar, firmar); la que ``verifica'' siempre es la pública (cifrar para alguien, verificar su firma)}.
+\end{tipsbox}
+
+%=============================================================
+\section{Parcial 2025 Q2 -- Ejercicio 5c}
+\label{sec:rsa2025Q2}
+%=============================================================
+
+\begin{consignabox}
+\textbf{Verdadero o Falso (justificar):} ``El uso de padding aleatorio en la implementación del algoritmo de clave pública de RSA es para que el algoritmo sea seguro a ataque de textos cifrados elegidos.''
+\end{consignabox}
+
+\paragraph{Resolución.}
+
+\textbf{FALSO.}
+
+El padding aleatorio (PKCS \#1 v1.5 y OAEP) convierte al RSA determinístico en \textbf{no-determinístico}, lo que lo hace \textbf{CPA-Secure} (seguro ante ataque de texto plano elegido), \textbf{no} CCA-Secure (seguro ante ataque de texto cifrado elegido).
+
+La distinción:
+\begin{itemize}
+  \item \textbf{CPA (Chosen Plaintext Attack):} el atacante elige plaintexts y ve sus cifrados. El RSA textbook (determinístico) falla porque el mismo $m$ siempre da el mismo $c$. El padding aleatorio hace que el mismo $m$ dé distintos $c$ $\Rightarrow$ CPA-Secure.
+  \item \textbf{CCA (Chosen Ciphertext Attack):} el atacante elige ciphertexts y ve sus descifrados. PKCS \#1 v1.5 \textbf{no} protege contra CCA: existen ataques como el de \textbf{Bleichenbacher (1998)} que explotan el oráculo de descifrado para recuperar el texto plano.
+  \item Para CCA-Security se necesita \textbf{OAEP} (Optimal Asymmetric Encryption Padding) u otras construcciones probablemente seguras bajo CCA.
+\end{itemize}
+
+\begin{tipsbox}
+\textbf{Jerarquía de seguridad que hay que recordar:}
+
+\medskip
+\noindent CCA-Secure $\Rightarrow$ CPA-Secure $\Rightarrow$ Secure against eavesdropping
+
+\medskip
+\begin{itemize}
+  \item \textbf{RSA Textbook (sin padding):} solo seguro si el atacante no puede ver ningún cifrado (poco útil en la práctica).
+  \item \textbf{RSA + PKCS \#1 v1.5:} CPA-Secure (no determinístico), pero Bleichenbacher mostró que NO es CCA-Secure.
+  \item \textbf{RSA + OAEP:} se demuestra CCA-Secure bajo suposiciones criptográficas estándar.
+  \item \textbf{Trampa del enunciado:} la afirmación dice ``CCA'' pero el padding solo da ``CPA''. Esta confusión entre CPA y CCA es uno de los errores más penalizados en parciales de criptografía.
+\end{itemize}
+\end{tipsbox}
+
+%=============================================================
+\section{Resumen y Tabla de Ejercicios RSA}
+%=============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{llll}
+\toprule
+\textbf{Año} & \textbf{Ej.} & \textbf{Tema} & \textbf{Respuesta} \\
+\midrule
+2015 & 4a & Distribución de claves en PKI & (b): privada secreta, pública autenticada \\
+2015 & 4b & Verificación de firma RSA con hash & (c): Vrfy recibe $(m,s)$, calcula $s^e$ y $H(m)$ \\
+2015 & 5 & Ataque a protocolo de autenticación RSA & Ataque de reflexión / entrelazado \\
+2025 Q1 & 5b & Roles de las claves (V/F) & FALSO: claves no se asignan a operaciones \\
+2025 Q2 & 5c & Padding y CPA/CCA (V/F) & FALSO: padding da CPA-Secure, no CCA-Secure \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{warnbox}{Trampas frecuentes en RSA}
+\begin{enumerate}
+  \item \textbf{CPA vs CCA:} el padding aleatorio hace RSA CPA-Secure. Para CCA-Secure se necesita OAEP u otras construcciones.
+  \item \textbf{Roles de las claves:} la privada descifra y firma; la pública cifra y verifica. No hay ``una para cifrar/descifrar y otra para firmar''.
+  \item \textbf{Firma RSA hashed:} Sign calcula $[H(m)]^d$; Vrfy recibe $(m,s)$ y compara $s^e$ con $H(m)$.
+  \item \textbf{Verificación requiere el mensaje $m$:} en hashed RSA, Vrfy no puede funcionar solo con $s$ (necesita $m$ para calcular $H(m)$).
+  \item \textbf{Protocolo de autenticación:} si lo firmado no incluye la identidad del destinatario, hay vulnerabilidad de reflexión.
+  \item \textbf{$e$ y $d$ se usan en módulo $\varphi(n)$:} $e \cdot d \equiv 1 \pmod{\varphi(n)}$, no módulo $n$.
+\end{enumerate}
+\end{warnbox}
+
+\end{document}

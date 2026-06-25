@@ -1,0 +1,620 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[top=2cm,bottom=2cm,left=2cm,right=2cm]{geometry}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{microtype}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+\usepackage{hyperref}
+
+%-- Colores -------------------------------------------------------------------
+\definecolor{mainblue}{RGB}{0,70,127}
+\definecolor{darkgray}{RGB}{60,60,60}
+\definecolor{lightgray}{RGB}{240,240,240}
+\definecolor{accentgreen}{RGB}{0,120,80}
+\definecolor{warnorange}{RGB}{180,80,0}
+
+%-- Cajas personalizadas ------------------------------------------------------
+\tcbuselibrary{skins,breakable,theorems}
+
+\newtcolorbox{definicion}[1]{
+  enhanced, breakable,
+  colback=mainblue!6, colframe=mainblue,
+  fonttitle=\bfseries\small, title={#1},
+  left=4pt, right=4pt, top=3pt, bottom=3pt
+}
+
+\newtcolorbox{ojo}{
+  enhanced, breakable,
+  colback=warnorange!8, colframe=warnorange,
+  fonttitle=\bfseries\small, title={!`OJO!},
+  left=4pt, right=4pt, top=3pt, bottom=3pt
+}
+
+\newtcolorbox{destacado}{
+  enhanced, breakable,
+  colback=accentgreen!7, colframe=accentgreen,
+  left=4pt, right=4pt, top=3pt, bottom=3pt
+}
+
+\newtcolorbox{examen}{
+  enhanced, breakable,
+  colback=lightgray, colframe=darkgray,
+  fonttitle=\bfseries\small, title={[Examen]},
+  left=4pt, right=4pt, top=3pt, bottom=3pt
+}
+
+%-- Macro diagrama ------------------------------------------------------------
+\newcommand{\diagcaption}[1]{\begin{center}\small\textit{#1}\end{center}}
+
+%-- Hyperref ------------------------------------------------------------------
+\hypersetup{colorlinks=true,linkcolor=mainblue,urlcolor=mainblue}
+
+%==============================================================================
+\begin{document}
+
+\begin{center}
+  {\Large\bfseries\color{mainblue} Modos de Cifrado en Bloque}\\[4pt]
+  {\normalsize Criptograf\'ia y Seguridad (72.44) --- ITBA \quad|\quad Gu\'ia de estudio para parcial}
+\end{center}
+\vspace{-4pt}
+\hrule
+\vspace{8pt}
+
+%==============================================================================
+\section{Introducci\'on: por qu\'e se necesitan modos}
+
+Un cifrador de bloque opera sobre bloques de tama\~no fijo $n$ (p.\,ej.\ 128
+bits en AES). En la pr\'actica los mensajes suelen ser m\'as grandes (o m\'as
+peque\~nos) que un bloque:
+
+\begin{itemize}[nosep]
+  \item \textbf{Mensaje m\'as peque\~no que un bloque} --- se aplica
+    \emph{padding}. Dos esquemas comunes:
+    \begin{itemize}[nosep]
+      \item \emph{Simple Pad}: completar con ceros (el receptor debe conocer
+        el largo real del mensaje).
+      \item \emph{Des Pad} (ISO/IEC 9797-1 M2): agregar un bit 1 y luego
+        ceros; puede requerir un bloque adicional completo.
+    \end{itemize}
+  \item \textbf{Mensaje m\'as grande que un bloque} --- dividir en bloques
+    $M_1, M_2, \ldots, M_\ell$, aplicar padding al \'ultimo si necesario y
+    transformar cada bloque seg\'un un \textbf{modo de encadenamiento}.
+\end{itemize}
+
+\begin{destacado}
+  \textbf{Objetivo de un modo}: extender una primitiva de bloque (que solo
+  maneja $n$ bits) a mensajes de longitud arbitraria, preservando propiedades
+  de seguridad como CPA-Security.
+\end{destacado}
+
+Hay varios modos con propiedades distintas; elegir el incorrecto puede romper
+la seguridad aunque la primitiva subyacente sea segura.
+
+%==============================================================================
+\section{ECB (Electronic Codebook)}
+
+\begin{definicion}{Definici\'on ECB}
+  Trata cada bloque de forma \textbf{independiente}:
+  \[
+    C_i = E_k(M_i), \qquad i = 1, \ldots, \ell.
+  \]
+  No usa IV ni encadenamiento. El cifrado es \textbf{determinista}.
+\end{definicion}
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\small,
+  enc/.style={draw, rounded corners=1pt, minimum width=15mm, minimum height=10mm, fill=blue!6},
+  msg/.style={draw, minimum width=15mm, minimum height=7mm},
+  arrow/.style={-{Stealth}}
+]
+  \foreach \i in {1,2,3}{
+    \node[msg] (m\i) at (\i*3,0) {$M_{\i}$};
+    \node[enc] (e\i) at (\i*3,-1.5) {$E_k$};
+    \node[msg] (c\i) at (\i*3,-3) {$C_{\i}$};
+    \draw[arrow] (m\i) -- (e\i);
+    \draw[arrow] (e\i) -- (c\i);
+  }
+  % bloque duplicado
+  \node[msg, fill=red!15] (m4) at (12,0) {$M_{1}$};
+  \node[enc] (e4) at (12,-1.5) {$E_k$};
+  \node[msg, fill=red!15] (c4) at (12,-3) {$C_{1}$};
+  \draw[arrow] (m4) -- (e4);
+  \draw[arrow] (e4) -- (c4);
+  \node[font=\footnotesize, text width=2.5cm, align=center] at (12,-4.1)
+    {igual a $M_1$\\$\Rightarrow$ cifrado \textbf{igual}};
+\end{tikzpicture}
+\end{center}
+\diagcaption{ECB: cada bloque $M_i$ se cifra independientemente con $E_k$.
+  Dos bloques de texto plano iguales producen cifrados iguales (revelando
+  patrones).}
+
+\begin{ojo}
+  \textbf{ECB NO es CPA-Secure. No utilizar en ning\'un sistema real.}
+  Al ser determinista, bloques de texto plano \emph{iguales} $\Rightarrow$
+  cifrados \emph{iguales}: se revelan patrones en el mensaje. El ejemplo cl\'asico
+  es la imagen del ping\"uino de Linux cifrada con ECB, donde la silueta del
+  animal sigue siendo visible. Esto se pregunta en recuperatorios (2025):
+  identificar por qu\'e ECB filtra estructura.
+\end{ojo}
+
+%==============================================================================
+\section{CBC (Cipher Block Chaining)}
+
+\begin{definicion}{Definici\'on CBC}
+  Usa la salida del bloque anterior como entrada del siguiente. Requiere un
+  \textbf{vector de inicializaci\'on} $C_0 = IV$ elegido aleatoriamente.\\[4pt]
+  \textbf{Cifrado:}
+  \[
+    C_i = E_k\!\left(M_i \oplus C_{i-1}\right), \qquad C_0 = IV.
+  \]
+  \textbf{Descifrado:} despejando $M_i$ (aplicar $D_k$ y deshacer el XOR):
+  \[
+    M_i = D_k(C_i) \oplus C_{i-1}.
+  \]
+\end{definicion}
+
+\subsection*{Diagrama de cifrado CBC}
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\small,
+  enc/.style={draw, rounded corners=1pt, minimum width=14mm, minimum height=9mm, fill=blue!6},
+  msg/.style={draw, minimum width=14mm, minimum height=7mm},
+  iv/.style={draw, minimum width=14mm, minimum height=7mm, fill=gray!14},
+  xor/.style={draw, circle, inner sep=0pt, minimum size=5.5mm},
+  arrow/.style={-{Stealth}}
+]
+  \node[iv] (iv) at (-2.6,-1.6) {$C_0{=}IV$};
+  \foreach \i in {1,2,3}{
+    \node[msg] (m\i) at (\i*3,0) {$M_{\i}$};
+    \node[xor] (x\i) at (\i*3,-1.6) {$\oplus$};
+    \node[enc] (e\i) at (\i*3,-3.1) {$E_k$};
+    \node[msg] (c\i) at (\i*3,-4.6) {$C_{\i}$};
+    \draw[arrow] (m\i) -- (x\i);
+    \draw[arrow] (x\i) -- (e\i);
+    \draw[arrow] (e\i) -- (c\i);
+  }
+  \draw[arrow] (iv) -- (x1);
+  \draw[arrow] (c1) -| (4.0,-1.6) -- (x2);
+  \draw[arrow] (c2) -| (7.0,-1.6) -- (x3);
+\end{tikzpicture}
+\end{center}
+\diagcaption{CBC (cifrado): $C_i=E_k(M_i\oplus C_{i-1})$ con $C_0=IV$. Cada
+  bloque de texto plano se XOR-ea con el cifrado anterior antes de pasar por
+  $E_k$.}
+
+\subsection*{Diagrama de descifrado CBC}
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\small,
+  dec/.style={draw, rounded corners=1pt, minimum width=14mm, minimum height=9mm, fill=green!8},
+  msg/.style={draw, minimum width=14mm, minimum height=7mm},
+  iv/.style={draw, minimum width=14mm, minimum height=7mm, fill=gray!14},
+  xor/.style={draw, circle, inner sep=0pt, minimum size=5.5mm},
+  arrow/.style={-{Stealth}}
+]
+  \node[iv] (iv) at (-2.6,-3.1) {$C_0{=}IV$};
+  \foreach \i in {1,2,3}{
+    \node[msg] (c\i) at (\i*3,0) {$C_{\i}$};
+    \node[dec] (d\i) at (\i*3,-1.6) {$D_k$};
+    \node[xor] (x\i) at (\i*3,-3.1) {$\oplus$};
+    \node[msg] (m\i) at (\i*3,-4.6) {$M_{\i}$};
+    \draw[arrow] (c\i) -- (d\i);
+    \draw[arrow] (d\i) -- (x\i);
+    \draw[arrow] (x\i) -- (m\i);
+  }
+  \draw[arrow] (iv) -- (x1);
+  \draw[arrow] (c1) -| (4.0,-3.1) -- (x2);
+  \draw[arrow] (c2) -| (7.0,-3.1) -- (x3);
+\end{tikzpicture}
+\end{center}
+\diagcaption{CBC (descifrado): $M_i=D_k(C_i)\oplus C_{i-1}$. El cifrado pasa
+  por $D_k$ y luego se deshace el XOR con $C_{i-1}$.}
+
+\begin{destacado}
+  CBC con una primitiva pseudoaleatoria (PRP) e IV \textbf{aleatorio} (no
+  predecible) es \textbf{CPA-Secure}. Si el IV es predecible, la seguridad se
+  rompe (ataque BEAST en TLS 1.0).
+\end{destacado}
+
+%==============================================================================
+\section{CFB (Cipher Feedback)}
+
+\begin{definicion}{Definici\'on CFB}
+  Convierte el cifrador de bloque en un cifrador de flujo, usando \textbf{solo
+  $E_k$} (no requiere $D_k$). Opera realimentando el \emph{cifrado} anterior:
+  \[
+    C_i = E_k(C_{i-1}) \oplus M_i, \qquad C_0 = IV.
+  \]
+\end{definicion}
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\small,
+  enc/.style={draw, rounded corners=1pt, minimum width=14mm, minimum height=9mm, fill=blue!6},
+  blk/.style={draw, minimum width=14mm, minimum height=7mm},
+  iv/.style={draw, minimum width=14mm, minimum height=7mm, fill=gray!14},
+  xor/.style={draw, circle, inner sep=0pt, minimum size=5.5mm},
+  arrow/.style={-{Stealth}}
+]
+  \node[iv] (iv) at (-2.6,0) {$IV$};
+  \foreach \i in {1,2,3}{
+    \node[enc] (e\i) at (\i*3,0) {$E_k$};
+    \node[xor] (x\i) at (\i*3,-1.6) {$\oplus$};
+    \node[blk] (m\i) at (\i*3-1.7,-1.6) {$M_{\i}$};
+    \node[blk] (c\i) at (\i*3,-3.0) {$C_{\i}$};
+    \draw[arrow] (e\i) -- (x\i);
+    \draw[arrow] (m\i) -- (x\i);
+    \draw[arrow] (x\i) -- (c\i);
+  }
+  \draw[arrow] (iv) -- (e1);
+  \draw[arrow] (c1) -| (4.0,0.7) -- (4.0,0.0) -- (e2);
+  \draw[arrow] (c2) -| (7.0,0.7) -- (7.0,0.0) -- (e3);
+\end{tikzpicture}
+\end{center}
+\diagcaption{CFB: usa solo $E_k$. Se cifra el bloque anterior ($IV$ el
+  primero, luego $C_{i-1}$) y la salida se XOR-ea con $M_i$.}
+
+\begin{destacado}
+  CFB es \textbf{CPA-Secure} con IV aleatorio. \'Util en dispositivos
+  embebidos donde no se puede implementar $D_k$.
+\end{destacado}
+
+%==============================================================================
+\section{OFB (Output Feedback)}
+
+\begin{definicion}{Definici\'on OFB}
+  La \emph{salida} de $E_k$ (keystream) se realimenta a la entrada del
+  bloque siguiente, \textbf{sin depender del texto}:
+  \[
+    S_i = E_k(S_{i-1}), \quad S_0 = IV; \qquad C_i = S_i \oplus M_i.
+  \]
+\end{definicion}
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\small,
+  enc/.style={draw, rounded corners=1pt, minimum width=14mm, minimum height=9mm, fill=blue!6},
+  blk/.style={draw, minimum width=14mm, minimum height=7mm},
+  iv/.style={draw, minimum width=14mm, minimum height=7mm, fill=gray!14},
+  xor/.style={draw, circle, inner sep=0pt, minimum size=5.5mm},
+  arrow/.style={-{Stealth}}
+]
+  \node[iv] (iv) at (-2.6,0) {$IV$};
+  \foreach \i in {1,2,3}{
+    \node[enc] (e\i) at (\i*3,0) {$E_k$};
+    \node[xor] (x\i) at (\i*3,-1.6) {$\oplus$};
+    \node[blk] (m\i) at (\i*3-1.7,-1.6) {$M_{\i}$};
+    \node[blk] (c\i) at (\i*3,-3.0) {$C_{\i}$};
+    \draw[arrow] (e\i) -- (x\i);
+    \draw[arrow] (m\i) -- (x\i);
+    \draw[arrow] (x\i) -- (c\i);
+  }
+  \draw[arrow] (iv) -- (e1);
+  \draw[arrow] (e1) -- (4.5,0) -- (e2);
+  \draw[arrow] (e2) -- (7.5,0) -- (e3);
+\end{tikzpicture}
+\end{center}
+\diagcaption{OFB: la \emph{salida} de $E_k$ (el keystream $S_i$) se
+  realimenta a la entrada del bloque siguiente. A diferencia de CFB, no es
+  el cifrado $C_i$ sino el keystream $S_i$ lo que se retroalimenta.}
+
+\begin{destacado}
+  \textbf{Clave}: el keystream $S_1, S_2, \ldots$ puede \textbf{precalcularse}
+  antes de conocer el texto plano (no depende de $M_i$). OFB es
+  \textbf{CPA-Secure} con IV aleatorio.
+\end{destacado}
+
+%==============================================================================
+\section{CTR (Counter Mode)}
+
+\begin{definicion}{Definici\'on CTR}
+  Genera el keystream cifrando un \textbf{contador} (nonce concatenado con un
+  \'indice creciente):
+  \[
+    C_i = E_k(\mathrm{nonce} \| i) \oplus M_i.
+  \]
+  El descifrado usa exactamente la misma operaci\'on:
+  $M_i = E_k(\mathrm{nonce} \| i) \oplus C_i$.
+\end{definicion}
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\small,
+  enc/.style={draw, rounded corners=1pt, minimum width=14mm, minimum height=9mm, fill=blue!6},
+  ctr/.style={draw, minimum width=18mm, minimum height=8mm, fill=gray!14,
+              align=center, font=\scriptsize},
+  msg/.style={draw, minimum width=14mm, minimum height=7mm},
+  xor/.style={draw, circle, inner sep=0pt, minimum size=5.5mm},
+  arrow/.style={-{Stealth}}
+]
+  \foreach \i [count=\j from 0] in {1,2,3}{
+    \node[ctr] (n\i) at (\i*3.3,0) {nonce\,$\|$\,\j};
+    \node[enc] (e\i) at (\i*3.3,-1.6) {$E_k$};
+    \node[xor] (x\i) at (\i*3.3,-3.1) {$\oplus$};
+    \node[msg] (m\i) at (\i*3.3-1.7,-3.1) {$M_{\i}$};
+    \node[msg] (c\i) at (\i*3.3,-4.5) {$C_{\i}$};
+    \draw[arrow] (n\i) -- (e\i);
+    \draw[arrow] (e\i) -- (x\i);
+    \draw[arrow] (m\i) -- (x\i);
+    \draw[arrow] (x\i) -- (c\i);
+  }
+\end{tikzpicture}
+\end{center}
+\diagcaption{CTR: cada bloque es independiente. El keystream se genera
+  cifrando \textup{nonce}\,$\|i$; luego se XOR-ea con $M_i$. Totalmente
+  paralelizable y con acceso aleatorio. Nunca usa $D_k$.}
+
+\begin{examen}
+  \textbf{CTR nunca usa $D_k$ (pregunta 2023).} Como cifrado y descifrado
+  aplican la misma operaci\'on ($E_k(\mathrm{nonce}\|i)\oplus\cdot$), CTR es
+  v\'alido incluso si la primitiva \textbf{no es invertible}. Lo mismo aplica
+  a OFB y CFB. Este es un punto fino que suele preguntarse.
+\end{examen}
+
+\begin{destacado}
+  CTR es \textbf{CPA-Secure} siempre que no se repita el par
+  $(k, \mathrm{nonce})$. Si se reutiliza, XOR-ear dos cifrados revela el XOR
+  de los textos planos.
+\end{destacado}
+
+%==============================================================================
+\section{Tabla resumen de modos}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lcccp{5.2cm}@{}}
+\toprule
+\textbf{Modo} & \textbf{CPA-Secure} & \textbf{Usa $D_k$} &
+\textbf{Paralelizable} & \textbf{Notas clave} \\
+\midrule
+ECB & \textbf{No} & S\'i & S\'i (enc+dec)
+    & Determinista; revela patrones; \textbf{nunca usar} \\
+CBC & S\'i (IV aleat.) & S\'i (dec) & Solo descifrado
+    & Encadena; IV predecible $\Rightarrow$ inseguro \\
+CFB & S\'i (IV aleat.) & No & No (enc); s\'i (dec)
+    & Solo $E_k$; flujo a partir de bloque \\
+OFB & S\'i (IV aleat.) & No & S\'i (keystream)
+    & Keystream precalculable; no depende del texto \\
+CTR & S\'i (nonce \'unico) & No & S\'i (enc+dec)
+    & Acceso aleatorio; nunca $D_k$; muy eficiente \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%==============================================================================
+\section{Propagaci\'on de errores en CBC (n\'ucleo de examen)}
+
+\begin{examen}
+  \textbf{Metodolog\'ia general (aparece casi todos los a\~nos: 2015 PCBC, 2016
+  FSM, 2018/2023 CBC, 2025-1, 2025-2):}
+  \begin{enumerate}[nosep]
+    \item \textbf{Escribir la recurrencia de cifrado} del esquema dado y
+      \textbf{despejar $M_i$}: aplicar $D_k$ e invertir los XOR.
+    \item \textbf{Analizar un bit de error en $C_j$}: determinar qu\'e bloques
+      descifrados quedan corruptos y en qu\'e medida.
+    \item \textbf{Analizar borrado/inserci\'on de bloques}: ver qu\'e se
+      desincroniza.
+  \end{enumerate}
+\end{examen}
+
+\subsection{CBC est\'andar: un bit de error en $C_j$}
+
+La ecuaci\'on de descifrado es $M_i = D_k(C_i) \oplus C_{i-1}$. Un bit
+erróneo en $C_j$ aparece en dos ecuaciones:
+
+\begin{itemize}[nosep]
+  \item $M_j = D_k(\mathbf{C_j}) \oplus C_{j-1}$: el $C_j$ corrupto
+    \textbf{pasa por $D_k$} $\Rightarrow$ corrompe \textbf{todo el bloque
+    $M_j$} (un bit de entrada de un bloque produce salida completamente
+    distinta por el efecto avalancha).
+  \item $M_{j+1} = D_k(C_{j+1}) \oplus \mathbf{C_j}$: aqu\'i $C_j$ entra
+    por \textbf{XOR directo} $\Rightarrow$ corrompe \textbf{solo el bit
+    correspondiente} en $M_{j+1}$.
+  \item $M_{j+2}$ y siguientes: $C_j$ ya no aparece $\Rightarrow$
+    \textbf{intactos}.
+\end{itemize}
+
+\begin{destacado}
+  En CBC est\'andar el error es \textbf{autolimitado a 2 bloques}: bloque
+  $M_j$ corrupto entero + un bit de $M_{j+1}$.
+\end{destacado}
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\small,
+  dec/.style={draw, rounded corners=1pt, minimum width=14mm, minimum height=9mm, fill=green!8},
+  msg/.style={draw, minimum width=14mm, minimum height=7mm},
+  bad/.style={draw, minimum width=14mm, minimum height=7mm, fill=red!18},
+  badall/.style={draw, minimum width=14mm, minimum height=7mm, fill=red!35},
+  xor/.style={draw, circle, inner sep=0pt, minimum size=5.5mm},
+  arrow/.style={-{Stealth}}
+]
+  \node[msg]    (cm1) at (0,0)  {$C_{j-1}$};
+  \node[bad]    (cj)  at (3,0)  {$C_j^{\;\bigstar}$};
+  \node[msg]    (cj1) at (6,0)  {$C_{j+1}$};
+  \node[msg]    (cj2) at (9,0)  {$C_{j+2}$};
+
+  \node[dec]    (dj)  at (3,-1.6)  {$D_k$};
+  \node[dec]    (dj1) at (6,-1.6)  {$D_k$};
+  \node[dec]    (dj2) at (9,-1.6)  {$D_k$};
+  \draw[arrow] (cj)  -- (dj);
+  \draw[arrow] (cj1) -- (dj1);
+  \draw[arrow] (cj2) -- (dj2);
+
+  \node[xor]    (xj)  at (3,-3.0)  {$\oplus$};
+  \node[xor]    (xj1) at (6,-3.0)  {$\oplus$};
+  \node[xor]    (xj2) at (9,-3.0)  {$\oplus$};
+  \draw[arrow] (dj)  -- (xj);
+  \draw[arrow] (dj1) -- (xj1);
+  \draw[arrow] (dj2) -- (xj2);
+
+  \draw[arrow]       (cm1) |- (1.6,-3.0) -- (xj);
+  \draw[arrow, red]  (cj)  -- (3,-0.7) -| (4.6,-3.0) -- (xj1);
+  \draw[arrow]       (cj1) |- (7.6,-3.0) -- (xj2);
+
+  \node[badall] (mj)  at (3,-4.4)  {$M_j$};
+  \node[bad]    (mj1) at (6,-4.4)  {$M_{j+1}$};
+  \node[msg]    (mj2) at (9,-4.4)  {$M_{j+2}$};
+  \draw[arrow] (xj)  -- (mj);
+  \draw[arrow] (xj1) -- (mj1);
+  \draw[arrow] (xj2) -- (mj2);
+
+  \node[font=\scriptsize, align=center] at (3,-5.3)  {todo\\\textbf{corrupto}};
+  \node[font=\scriptsize, align=center] at (6,-5.3)  {un\\\textbf{bit}};
+  \node[font=\scriptsize, align=center] at (9,-5.3)  {\textbf{intacto}};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Propagaci\'on de error en CBC: un bit erróneo en $C_j$
+  ($\bigstar$) pasa por $D_k$ y corrompe \textbf{todo} $M_j$; adem\'as entra
+  por XOR en $M_{j+1}$ corrompiendo \textbf{solo ese bit}. Desde $M_{j+2}$
+  todo queda intacto.}
+
+\subsection{PCBC (Propagating CBC) --- parcial 2015}
+
+En PCBC el encadenamiento incluye tambi\'en el texto plano anterior:
+\[
+  C_i = E_k(M_i \oplus C_{i-1} \oplus M_{i-1}).
+\]
+Despejando:
+\[
+  M_i = D_k(C_i) \oplus C_{i-1} \oplus M_{i-1}.
+\]
+Un error en $C_j$ afecta $M_j$ (pasa por $D_k$); el $M_j$ corrupto entra
+como $M_{i-1}$ en la ecuaci\'on de $M_{j+1}$, que a su vez contamina
+$M_{j+2}$, y as\'i sucesivamente. El error \textbf{se propaga a todos los
+bloques siguientes} (nunca se autolimita).
+
+\begin{ojo}
+  \textbf{PCBC} es la variante \emph{no autolimitada}: un \'unico bit de
+  error en cualquier $C_j$ destruye el descifrado desde $j$ en adelante.
+  Contrastar con CBC est\'andar (solo 2 bloques afectados).
+\end{ojo}
+
+\subsection{Borrado e inserci\'on de bloques en CBC}
+
+\begin{itemize}[nosep]
+  \item \textbf{Borrar $C_0 = IV$}: como $M_1 = D_k(C_1)\oplus C_0$, se
+    pierde la referencia para $M_1$ (desincronizaci\'on); los dem\'as bloques
+    se descifran con un corrimiento de \'indice.
+  \item \textbf{Borrar el \'ultimo bloque $C_\ell$}: se pierde \textbf{solo
+    $M_\ell$}; todos los bloques anteriores quedan intactos.
+  \item \textbf{Insertar un bloque falso}: el bloque falso y el siguiente
+    quedan corruptos; desde ahí el descifrado se recupera.
+\end{itemize}
+
+\begin{ojo}
+  El error m\'as com\'un en estos ejercicios es no distinguir el camino del
+  bloque corrupto: \textbf{pasar por $D_k$ corrompe el bloque entero}
+  (efecto avalancha); \textbf{entrar por XOR corrompe solo ese bit}.
+  Siempre contabilizar en cuntos bloques aparece $C_j$ en las ecuaciones
+  de descifrado.
+\end{ojo}
+
+%==============================================================================
+\section{Memory hooks: mnem\'onicos para el parcial}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Modo} & \textbf{Regla mnem\'onica} \\
+\midrule
+ECB & \textbf{E}stupido --- \textbf{C}opia tu \textbf{B}loque: igual entrada = igual salida. \\
+CBC & \textbf{C}adena de \textbf{B}loques \textbf{C}ompartidos: XOR con el anterior. \\
+CFB & \textbf{C}ifrado \textbf{F}eedback: el \textbf{C}ifrado alimenta al siguiente. \\
+OFB & \textbf{O}utput: el keystream se \textbf{O}btiene antes del texto (precalculable). \\
+CTR & \textbf{C}on\textbf{T}ado\textbf{R}: nonce + contador, todo paralelo, nunca $D_k$. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{itemize}[nosep]
+  \item \textbf{``Solo $E_k$''}: CFB, OFB, CTR. (CBC y ECB necesitan $D_k$
+    para descifrar.)
+  \item \textbf{Paralelizable en cifrado}: ECB, CTR. (CBC, CFB, OFB no,
+    por dependencia secuencial.)
+  \item \textbf{Keystream independiente del texto}: OFB y CTR. (CFB y CBC
+    dependen del texto cifrado anterior.)
+  \item \textbf{Error autolimitado en CBC}: 2 bloques (el $j$ entero + 1
+    bit del $j+1$). PCBC: ilimitado.
+\end{itemize}
+
+%==============================================================================
+\section{Ejercicios tipo examen con respuesta}
+
+\begin{examen}
+\textbf{Ejercicio 1 --- V/F/Justificar (estilo 2015 PCBC).}\\
+``En PCBC, si se produce un error de un bit en $C_3$, entonces $M_4$ queda
+correctamente descifrado.''
+
+\medskip
+\textbf{Respuesta: FALSO.} La ecuaci\'on de descifrado PCBC es
+$M_i = D_k(C_i)\oplus C_{i-1}\oplus M_{i-1}$. Un error en $C_3$ corrompe
+$M_3$ (pasa por $D_k$, efecto avalancha). El $M_3$ corrupto entra como
+$M_{i-1}$ en la ecuaci\'on de $M_4$, corrompiendo $M_4$ tambi\'en. El error
+se propaga indefinidamente: $M_3, M_4, M_5, \ldots$ quedan todos corruptos.
+\end{examen}
+
+\begin{examen}
+\textbf{Ejercicio 2 --- V/F/Justificar (estilo 2023 CBC con error).}\\
+``En CBC est\'andar, si hay un error de un bit en $C_5$, entonces $M_7$ se
+descifra correctamente.''
+
+\medskip
+\textbf{Respuesta: VERDADERO.} La ecuaci\'on es $M_i = D_k(C_i)\oplus
+C_{i-1}$. El bloque corrupto $C_5$ aparece como:
+\begin{itemize}[nosep]
+  \item Entrada a $D_k$ en $M_5$: todo $M_5$ corrupto.
+  \item XOR directo en $M_6$: solo el bit correspondiente de $M_6$ corrupto.
+  \item $C_5$ \textbf{no aparece} en la ecuaci\'on de $M_7 = D_k(C_7)\oplus
+    C_6$: $M_7$ intacto.
+\end{itemize}
+El error se autolimita a 2 bloques: $M_5$ (entero) y $M_6$ (1 bit).
+\end{examen}
+
+\begin{examen}
+\textbf{Ejercicio 3 --- V/F/Justificar (estilo 2025 CTR).}\\
+``Para descifrar con CTR se necesita implementar la funci\'on de descifrado
+$D_k$ del cifrador de bloque subyacente.''
+
+\medskip
+\textbf{Respuesta: FALSO.} En CTR el descifrado es
+$M_i = E_k(\mathrm{nonce}\|i)\oplus C_i$, id\'entico al cifrado. \textbf{Solo
+se usa $E_k$}. Esto significa que CTR (al igual que OFB y CFB) es v\'alido
+incluso si la primitiva de bloque subyacente no es invertible. No se requiere
+ni implementa $D_k$ en ninguno de los modos de flujo (CFB, OFB, CTR).
+\end{examen}
+
+\begin{examen}
+\textbf{Ejercicio 4 --- Pregunta abierta (propagaci\'on en CBC).}\\
+En un mensaje de 5 bloques cifrado con CBC, el tercer bloque de cifrado
+($C_3$) se corrompe durante la transmisi\'on. \textbf{Indicar cu\'ales bloques
+de texto plano se descifran incorrectamente y por qu\'e.}
+
+\medskip
+\textbf{Respuesta.} Usando $M_i = D_k(C_i)\oplus C_{i-1}$:
+\begin{itemize}[nosep]
+  \item $M_3 = D_k(C_3)\oplus C_2$: $C_3$ corrupto pasa por $D_k$
+    $\Rightarrow$ \textbf{$M_3$ entero corrupto}.
+  \item $M_4 = D_k(C_4)\oplus C_3$: $C_3$ corrupto entra por XOR
+    $\Rightarrow$ \textbf{un bit de $M_4$ corrupto}.
+  \item $M_1, M_2, M_5$: \textbf{intactos}.
+\end{itemize}
+Conclusi\'on: bloques afectados son \textbf{$M_3$ (completo) y $M_4$ (1 bit)}.
+\end{examen}
+
+\end{document}

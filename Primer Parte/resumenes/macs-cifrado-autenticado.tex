@@ -1,0 +1,726 @@
+\documentclass[11pt,a4paper]{article}
+
+%% ── Packages ──────────────────────────────────────────────────────────────
+\usepackage[top=2cm,bottom=2cm,left=2cm,right=2cm]{geometry}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[most,breakable]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{microtype}
+\tikzset{>=Stealth}
+\usepackage[hidelinks,colorlinks=true,linkcolor=mainblue,urlcolor=mainblue]{hyperref}
+
+%% ── Colors ────────────────────────────────────────────────────────────────
+\definecolor{mainblue}{RGB}{0,70,127}
+\definecolor{darkgray}{RGB}{60,60,60}
+\definecolor{lightgray}{RGB}{240,240,240}
+\definecolor{accentgreen}{RGB}{0,120,80}
+\definecolor{warnorange}{RGB}{180,80,0}
+
+%% ── tcolorbox environments ────────────────────────────────────────────────
+\tcbset{
+  defstyle/.style={
+    enhanced, breakable,
+    colback=mainblue!8, colframe=mainblue, coltitle=white,
+    fonttitle=\bfseries\small, arc=4pt,
+    boxrule=1pt, left=6pt, right=6pt, top=4pt, bottom=4pt,
+    attach boxed title to top left={yshift=-2mm,xshift=6mm},
+    boxed title style={colback=mainblue, arc=3pt, boxrule=0pt}
+  },
+  ojostyle/.style={
+    enhanced, breakable,
+    colback=warnorange!8, colframe=warnorange, coltitle=white,
+    fonttitle=\bfseries\small, arc=4pt,
+    boxrule=1pt, left=6pt, right=6pt, top=4pt, bottom=4pt,
+    attach boxed title to top left={yshift=-2mm,xshift=6mm},
+    boxed title style={colback=warnorange, arc=3pt, boxrule=0pt}
+  },
+  destacadostyle/.style={
+    enhanced, breakable,
+    colback=accentgreen!8, colframe=accentgreen, coltitle=white,
+    fonttitle=\bfseries\small, arc=4pt,
+    boxrule=1pt, left=6pt, right=6pt, top=4pt, bottom=4pt,
+    attach boxed title to top left={yshift=-2mm,xshift=6mm},
+    boxed title style={colback=accentgreen, arc=3pt, boxrule=0pt}
+  },
+  examenstyle/.style={
+    enhanced, breakable,
+    colback=lightgray, colframe=darkgray!60, coltitle=white,
+    fonttitle=\bfseries\small, arc=4pt,
+    boxrule=1pt, left=6pt, right=6pt, top=4pt, bottom=4pt,
+    attach boxed title to top left={yshift=-2mm,xshift=6mm},
+    boxed title style={colback=darkgray!80, arc=3pt, boxrule=0pt}
+  },
+}
+
+\newtcolorbox{definicion}[1]{defstyle, title={#1}}
+\newtcolorbox{ojo}{ojostyle, title={!`OJO!}}
+\newtcolorbox{destacado}{destacadostyle, title={Destacado}}
+\newtcolorbox{examen}{examenstyle, title={[Examen]}}
+
+%% ── Helper commands ───────────────────────────────────────────────────────
+\newcommand{\diagcaption}[1]{\begin{center}\small\textit{#1}\end{center}}
+
+%% ── Header / Footer ───────────────────────────────────────────────────────
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small\color{darkgray} Criptograf\'ia y Seguridad 72.44 --- ITBA}
+\lhead{\small\color{darkgray} MACs y Cifrado Autenticado}
+\cfoot{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+%% ── Document ──────────────────────────────────────────────────────────────
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries\color{mainblue} MACs y Cifrado Autenticado}\\[4pt]
+  {\large Gu\'ia de Estudio --- Criptograf\'ia y Seguridad (72.44) --- ITBA}\\[2pt]
+  {\small\color{darkgray} Unidad 3: Integridad, CBC-MAC, HMAC, Cifrado Autenticado}
+\end{center}
+\vspace{2pt}
+\hrule height 1.5pt
+\vspace{8pt}
+
+\tableofcontents
+\vspace{6pt}
+\hrule
+\vspace{10pt}
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{?`Qu\'e es un MAC?}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+\begin{definicion}{MAC (Message Authentication Code)}
+Terna de algoritmos $(\mathrm{Gen},\,\mathrm{Mac},\,\mathrm{Vrfy})$:
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item $\mathrm{Gen}: () \to K$ \quad --- generador de clave.
+  \item $\mathrm{Mac}: K \times \mathcal{M} \to \mathcal{T}$ \quad --- etiquetador
+        (genera la \emph{etiqueta}/tag $t$).
+  \item $\mathrm{Vrfy}: K \times \mathcal{M} \times \mathcal{T} \to \{0,1\}$ \quad ---
+        verificador.
+\end{itemize}
+\textbf{Correctitud:} para todo $m$ y clave v\'alida $k$:
+$\mathrm{Vrfy}_k(m,\,\mathrm{Mac}_k(m))=1$.
+\end{definicion}
+
+\paragraph{Objetivo: integridad sin (necesariamente) confidencialidad.}
+El MAC \emph{no} cifra el mensaje; protege contra modificaciones no autorizadas.
+A diferencia de un hash criptogr\'afico, \textbf{el MAC tiene clave}: sin la clave
+$k$ nadie puede generar un tag v\'alido.  A diferencia de un criptosistema, no hay
+cifrado/descifrado, solo etiquetado y verificaci\'on.
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  box/.style={draw,rounded corners,minimum height=8mm,minimum width=14mm,align=center},
+]
+  \node (m)    at (0,0)     {$m$};
+  \node[box,fill=mainblue!10] (mac) at (0,-1.4)   {$\mathrm{Mac}_k$};
+  \node (t)    at (0,-2.8)  {$t$};
+  \draw[->] (m) -- (mac);
+  \draw[->] (mac) -- (t);
+  \node[above=2pt of m] {\textbf{Emisor}};
+  \node[draw,dashed,rounded corners,minimum width=24mm,minimum height=8mm]
+        (canal) at (3.5,-1.4) {$(m,t)$};
+  \draw[->] (m)  to[out=0,in=150] (canal.west);
+  \draw[->] (t)  to[out=0,in=210] (canal.west);
+  \node[box,fill=mainblue!10] (vrfy) at (7,-1.4) {$\mathrm{Vrfy}_k$};
+  \node (out) at (9.4,-1.4) {$\{0,1\}$};
+  \draw[->] (canal.east) -- (vrfy);
+  \draw[->] (vrfy) -- (out) node[midway,above]{$1/0$};
+  \node[above=2pt of vrfy] {\textbf{Receptor}};
+  \node[draw,fill=yellow!30,rounded corners] (k) at (3.5,1)
+        {clave compartida $k$};
+  \draw[->,gray] (k) to[out=200,in=90] (mac.north);
+  \draw[->,gray] (k) to[out=340,in=90] (vrfy.north);
+\end{tikzpicture}
+\end{center}
+\diagcaption{Emisor calcula $t=\mathrm{Mac}_k(m)$ y env\'ia $(m,t)$; receptor
+corre $\mathrm{Vrfy}_k(m,t)$ y obtiene $1$ (\'integro) o $0$ (alterado).
+La misma clave $k$ se comparte entre ambos.}
+
+\begin{destacado}
+\textbf{Diferencia clave MAC vs.\ hash:}
+un hash es p\'ublico (sin clave); cualquiera puede calcularlo.
+Un MAC requiere la clave $k$: sin ella, no se puede generar ni verificar una
+etiqueta v\'alida.  Por eso el MAC da \emph{autenticaci\'on de origen} y no
+solo integridad.
+\end{destacado}
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{Experimento Mac-Forge}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+\begin{definicion}{Experimento $\mathrm{Mac\text{-}Forge}_{A,\Pi}(n)$}
+Dado nivel de seguridad $n$, adversario $A$ y MAC $\Pi$:
+\begin{enumerate}[leftmargin=1.6em,nosep]
+  \item Se genera $k \leftarrow K$.
+  \item $A$ recibe acceso a un \textbf{or\'aculo de etiquetado} $f(x)=\mathrm{Mac}_k(x)$
+        (caja negra; nunca ve $k$).
+  \item $A$ realiza todas las consultas que desee.  Sea $Q$ el conjunto de mensajes
+        consultados.
+  \item $A$ emite $(m^*,t^*)$ con $m^* \notin Q$.
+\end{enumerate}
+El experimento vale $1$ (\emph{falsificaci\'on}) si $\mathrm{Vrfy}_k(m^*,t^*)=1$.\\[2pt]
+$\Pi$ es \textbf{infalsificable} (EUF-CMA) si
+$\Pr[\mathrm{Mac\text{-}Forge}_{A,\Pi}(n)=1] \le \mathrm{neg}(n)$
+para todo PPT $A$.
+\end{definicion}
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  box/.style={draw,rounded corners,fill=lightgray,minimum height=7mm,
+              minimum width=22mm,align=center},
+]
+  \node[box] (exp)  at (0,0)    {Experimentador\\genera $k$};
+  \node[box] (adv)  at (5,0)    {Adversario $A$};
+  \node[box] (ora)  at (0,-2.5) {Or\'aculo $f(x)=\mathrm{Mac}_k(x)$};
+  % flechas protocolo
+  \draw[->] (adv.west) to[out=180,in=0]
+      node[midway,above]{consultas $x_1,x_2,\ldots$} (ora.east);
+  \draw[->] (ora.east) to[out=0,in=180]
+      node[midway,below]{tags $t_1,t_2,\ldots$}      (adv.west);
+  \draw[->,thick] (adv.north) -- ++(0,0.9)
+      node[above,align=center]{emite $(m^*,t^*)$ con $m^*\notin Q$};
+  \draw[->,thick,darkgray] (exp.south) -- (ora.north)
+      node[midway,left]{$k$ (oculta)};
+  \node[draw,fill=accentgreen!15,rounded corners,align=center] at (5,-2.5)
+        {\'Exito si\\$\mathrm{Vrfy}_k(m^*,t^*)=1$};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Protocolo del experimento Mac-Forge.  El adversario puede consultar el
+or\'aculo libremente, pero su falsificaci\'on debe ser sobre un mensaje \emph{nuevo}.}
+
+\paragraph{?`Por qu\'e necesita el or\'aculo?}  En un ataque real el adversario ve
+muchos pares $(m_i, t_i)$ en tr\'ansito (mensajes leg\'itimos).  El or\'aculo modela
+eso.  Sin or\'aculo, la definici\'on ser\'ia demasiado d\'ebil: bastar\'ia resistir
+solo el caso en que el atacante no observa ning\'un par.
+
+\paragraph{Diferencia con CPA.}  En CPA el adversario quiere distinguir entre dos
+cifrados; en Mac-Forge quiere \emph{crear} un par v\'alido nuevo.  CPA trabaja sobre
+confidencialidad; Mac-Forge trabaja sobre integridad.  Adem\'as, en CPA el oponente
+elige los dos mensajes candidatos y luego recibe uno; en Mac-Forge puede consultar
+cualquier mensaje antes de emitir la falsificaci\'on.
+
+\begin{ojo}
+La restricci\'on $m^* \notin Q$ evita el ataque trivial de reusar un tag ya
+obtenido.  Una falsificaci\'on v\'alida exige generar un tag \emph{para un mensaje
+nunca consultado}, sin conocer $k$.
+\end{ojo}
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{CBC-MAC (longitud fija)}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+\begin{definicion}{CBC-MAC (longitud de mensaje fija)}
+Sea $F_k$ una funci\'on pseudoaleatoria (PRF).  Para mensaje $m=m_1\|m_2\|\cdots\|m_\ell$:
+\[
+  t_0 = 0\ldots0, \qquad
+  t_i = F_k(t_{i-1} \oplus m_i), \qquad
+  \mathrm{Mac}_k(m) = t_\ell.
+\]
+Verificaci\'on: recalcular y comparar (determinista).
+\end{definicion}
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  arrow/.style={-{Stealth}},
+  box/.style={draw,fill=mainblue!10,minimum height=8mm,minimum width=12mm},
+  xor/.style={draw,circle,inner sep=2pt}]
+  \node (m1) at (0,0)   {$m_1$};
+  \node (m2) at (2.8,0) {$m_2$};
+  \node (m3) at (5.6,0) {$\cdots$};
+  \node (ml) at (8.4,0) {$m_\ell$};
+  \node[xor] (x1) at (0,-1)    {$\oplus$};
+  \node[xor] (x2) at (2.8,-1)  {$\oplus$};
+  \node[xor] (x3) at (5.6,-1)  {$\oplus$};
+  \node[xor] (xl) at (8.4,-1)  {$\oplus$};
+  \node[box] (f1) at (0,-2.2)   {$F_k$};
+  \node[box] (f2) at (2.8,-2.2) {$F_k$};
+  \node[box] (f3) at (5.6,-2.2) {$F_k$};
+  \node[box] (fl) at (8.4,-2.2) {$F_k$};
+  \node (iv) at (-2.4,-1) {$t_0{=}00\ldots0$};
+  \draw[arrow] (iv) -- (x1);
+  \draw[arrow] (m1) -- (x1);  \draw[arrow] (m2) -- (x2);
+  \draw[arrow] (m3) -- (x3);  \draw[arrow] (ml) -- (xl);
+  \draw[arrow] (x1) -- (f1);  \draw[arrow] (x2) -- (f2);
+  \draw[arrow] (x3) -- (f3);  \draw[arrow] (xl) -- (fl);
+  \draw[arrow] (f1) -| (2.8,-1.6) node[midway,below]{$t_1$} -- (x2);
+  \draw[arrow] (f2) -| (5.6,-1.6) node[midway,below]{$t_2$} -- (x3);
+  \draw[arrow] (f3) -| (8.4,-1.6) node[midway,below]{$t_{\ell-1}$} -- (xl);
+  \node[draw,fill=yellow!30,rounded corners] (tag) at (11,-2.2)
+        {$t=\mathrm{Mac}_k(m)$};
+  \draw[arrow] (fl) -- (tag) node[midway,above]{$t_\ell$};
+\end{tikzpicture}
+\end{center}
+\diagcaption{CBC-MAC: IV fijo en cero, encadenamiento $t_i=F_k(t_{i-1}\oplus m_i)$,
+se descartan los intermedios y se emite solo $t_\ell$.}
+
+\paragraph{?`Por qu\'e IV~$=0$?}  En cifrado CBC el IV debe ser aleatorio para que
+el cifrado sea no determinista (necesario para CPA-Security).  En CBC-MAC
+\emph{no nos interesa} no determinismo: queremos que la misma clave y el mismo
+mensaje siempre den el mismo tag (necesario para la verificaci\'on).  Por eso el IV
+es constante (cero).
+
+\paragraph{Seguro \emph{solo} para longitud fija.}
+La prueba de seguridad de CBC-MAC asume que todos los mensajes tienen exactamente
+$\ell$ bloques.  Si se permiten mensajes de distinta longitud, aparecen ataques de
+extensi\'on.
+
+\subsection{Ataque de extensi\'on (longitud variable)}
+
+\begin{examen}
+\textbf{Construcci\'on de la falsificaci\'on de 3~bloques (parcial 2016):}
+\begin{enumerate}[leftmargin=1.6em]
+  \item Consultar $t_A = f(A)$ (MAC del bloque \'unico $A$).
+  \item Consultar $t_{AB} = f(A\|B)$ (MAC del mensaje de 2~bloques $A\|B$).
+  \item \textbf{Emitir} el mensaje de 3~bloques
+        $\;m^* = A \;\|\; B \;\|\; (A \oplus t_A)$
+        con tag $t^* = t_{AB}$.
+\end{enumerate}
+\textbf{Por qu\'e valida:}
+al procesar $m^*$, el estado despu\'es del segundo bloque es $t_A$ (igual que el
+MAC de $A$ consultado).  El tercer bloque entra como
+$F_k\!\bigl(t_A \oplus (A\oplus t_A)\bigr)=F_k(A)=t_A$.
+Luego el estado final es $F_k(t_A) = t_{AB}$ (el MAC de $A\|B$ ya conocido).
+Falsificaci\'on v\'alida sin conocer $k$, con $m^* \notin Q$.
+\end{examen}
+
+\subsection{Extensiones seguras para longitud variable}
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item \textbf{Clave dependiente de la longitud.}
+        Derivar $k' = F_k(|m|)$ y usar $k'$ para CBC-MAC.  Mensajes de distinta
+        longitud usan claves distintas; no se aprenden estados intermedios.
+        Requiere conocer $|m|$ antes de comenzar.
+  \item \textbf{Longitud como prefijo.}
+        $\mathrm{Mac}_k(m) = \mathrm{CBC\text{-}MAC}_k(|m|\,\|\,m)$.
+        Un mensaje no puede ser prefijo de otro (distinta longitud, distinto primer
+        bloque).  Tambi\'en requiere conocer $|m|$ a priori.
+  \item \textbf{Doble clave (EMAC).}
+        Calcular $t' = \mathrm{CBC\text{-}MAC}_{k_1}(m)$ y luego $t = F_{k_2}(t')$.
+        No requiere conocer $|m|$ de antemano; usa el doble de material de clave.
+\end{enumerate}
+
+\begin{ojo}
+Agregar $|m|$ como \textbf{sufijo} (al final del mensaje) \textbf{NO es seguro}:
+el atacante ya proces\'o todos los bloques antes de llegar a la longitud, y puede
+explotar eso con un ataque similar al de extensi\'on.
+\end{ojo}
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{Funciones de Hash}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+\begin{definicion}{Funci\'on de hash criptogr\'afica}
+Par de algoritmos $(S,H)$: $S$ selecciona una funci\'on de una familia
+(par\'ametro \textbf{p\'ublico}, sin clave); $H$ convierte un mensaje de longitud
+arbitraria en una etiqueta (digest) de tama\~no \textbf{fijo y reducido}.
+\textbf{No tiene clave} --- diferencia fundamental con MAC y criptosistemas.
+\end{definicion}
+
+\begin{definicion}{Tres propiedades de resistencia}
+Sea $b$ la cantidad de bits de salida.
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \textbf{Resistencia a preimagen.}  Dado $y$, imposible hallar $x$ con $h(x)=y$.
+        Costo fuerza bruta: $\sim 2^{b}$.
+  \item \textbf{Resistencia a segunda preimagen.}  Dado $x$, imposible hallar $x'\neq x$
+        con $h(x')=h(x)$.  Costo: $\sim 2^{b}$.
+  \item \textbf{Resistencia a colisi\'on.}  Imposible hallar cualquier par $x\neq x'$
+        con $h(x)=h(x')$.  Costo: $\sim 2^{b/2}$ (\emph{paradoja del cumplea\~nos}).
+        Es la m\'as fuerte: implica las otras dos.
+\end{itemize}
+\end{definicion}
+
+\paragraph{Paradoja del cumplea\~nos.}  Al buscar una colisi\'on se compara cada
+hash nuevo contra \emph{todos} los anteriores, no contra un objetivo fijo.  La
+probabilidad de colisi\'on crece como la ra\'iz cuadrada del espacio; con $b$ bits
+de salida basta generar $\sim 2^{b/2}$ mensajes.  Por eso el nivel de seguridad
+efectivo frente a colisiones es \textbf{la mitad de los bits de salida}.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{llc}
+\toprule
+\textbf{Propiedad}       & \textbf{Objetivo}                            & \textbf{Costo FB} \\
+\midrule
+Preimagen                & dado $y$, hallar $x$: $h(x)=y$              & $\sim 2^{b}$      \\
+2.\textsuperscript{a} preimagen & dado $x$, hallar $x'\neq x$ con igual hash & $\sim 2^{b}$      \\
+Colisi\'on               & hallar cualquier par $x\neq x'$ colisionante & $\sim 2^{b/2}$    \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Construcci\'on de Merkle-Damg\aa rd.}
+La mayor\'ia de las funciones cl\'asicas (MD5, SHA-1, SHA-2) siguen este esquema:
+preprocesamiento (padding~+~bloque con la longitud) seguido de iteraci\'on de una
+funci\'on de compresi\'on $f$ encadenando estados desde $H_0=IV$.
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  arrow/.style={-{Stealth}},
+  f/.style={draw,fill=mainblue!10,minimum height=9mm,minimum width=11mm}]
+  \node (iv) at (-2,0) {$H_0{=}IV$};
+  \node[f] (f1) at (0,0)   {$f$};
+  \node[f] (f2) at (2.4,0) {$f$};
+  \node[f] (f3) at (4.8,0) {$f$};
+  \node    (d)  at (6.8,0) {$\cdots$};
+  \node[f] (ft) at (8.4,0) {$f$};
+  \node[draw,minimum height=7mm] (g) at (10.6,0) {$g$};
+  \node[draw,fill=yellow!30,rounded corners] (out) at (10.6,-1.6) {$h(x)$};
+  \draw[arrow] (iv) -- (f1);
+  \draw[arrow] (f1) -- (f2) node[midway,above]{$H_1$};
+  \draw[arrow] (f2) -- (f3) node[midway,above]{$H_2$};
+  \draw[arrow] (f3) -- (d);
+  \draw[arrow] (d)  -- (ft);
+  \draw[arrow] (ft) -- (g) node[midway,above]{$H_t$};
+  \draw[arrow] (g)  -- (out);
+  \node (x1) at (0,1.4)   {$x_1$};
+  \node (x2) at (2.4,1.4) {$x_2$};
+  \node (x3) at (4.8,1.4) {$x_3$};
+  \node (xt) at (8.4,1.4) {$x_t$};
+  \draw[arrow] (x1) -- (f1);
+  \draw[arrow] (x2) -- (f2);
+  \draw[arrow] (x3) -- (f3);
+  \draw[arrow] (xt) -- (ft);
+\end{tikzpicture}
+\end{center}
+\diagcaption{Merkle-Damg\aa rd: mensaje $x=x_1\cdots x_t$ procesado bloque a bloque
+por $f$; transformaci\'on final $g$ produce $h(x)=g(H_t)$.}
+
+\paragraph{Funciones en la pr\'actica.}
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \textbf{MD5} (128 bits): \emph{rota}, no usar.
+  \item \textbf{SHA-1} (160 bits): borderline, complicada.
+  \item \textbf{SHA-2} (224/256/384/512 bits): est\'andar durante a\~nos; $\sim1$
+        orden de magnitud m\'as lenta que SHA-1.
+  \item \textbf{SHA-3/Keccak}: ganador del concurso abierto NIST; mismos tama\~nos
+        que SHA-2, velocidad de SHA-1, estructura completamente distinta.
+        \textbf{Est\'andar recomendado hoy}; 256~bits alcanza y sobra.
+\end{itemize}
+
+\begin{ojo}
+Errores t\'ipicos de V/F (parciales 2025):
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \textit{``Un hash sirve para encriptar''} $\to$ \textbf{FALSO}.
+        El hash no es reversible; no permite recuperar el mensaje.
+  \item \textit{``MD5 es un criptosistema asim\'etrico''} $\to$ \textbf{FALSO}.
+        MD5 es una funci\'on de hash, sin clave y sin descifrado.
+\end{itemize}
+\end{ojo}
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{HMAC}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+\begin{definicion}{HMAC (RFC 2104)}
+Dada una funci\'on de hash $H$, clave $k$ y constantes p\'ublicas
+\texttt{ipad}, \texttt{opad}:
+\[
+  \mathrm{HMAC}_k(m)
+  = H\!\bigl((k\oplus\texttt{opad})\;\|\;
+             H((k\oplus\texttt{ipad})\;\|\;m)\bigr).
+\]
+\end{definicion}
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  arrow/.style={-{Stealth}},
+  xor/.style={draw,circle,inner sep=2pt},
+  h/.style={draw,fill=mainblue!10,minimum height=8mm,minimum width=13mm}]
+  % hash interno
+  \node[xor] (xi)   at (0,0)   {$\oplus$};
+  \node (ki)        at (-1.8,0.4)  {$k$};
+  \node (ipad)      at (-1.8,-0.4) {\texttt{ipad}};
+  \draw[arrow] (ki)   -- (xi);
+  \draw[arrow] (ipad) -- (xi);
+  \node (m)         at (0,1.4)  {$m$};
+  \node[h] (hin)    at (2.2,0)  {$H$};
+  \draw[arrow] (xi) -- (hin) node[midway,above]{$\|$};
+  \draw[arrow] (m) -| (1.6,0.6) -- (hin);
+  % hash externo
+  \node[xor] (xo)   at (5,0)   {$\oplus$};
+  \node (ko)        at (5,1.0)  {$k$};
+  \node (opad)      at (5,-1.0) {\texttt{opad}};
+  \draw[arrow] (ko)   -- (xo);
+  \draw[arrow] (opad) -- (xo);
+  \node[h] (hout)   at (7.4,0) {$H$};
+  \draw[arrow] (hin) -- (hout)  node[midway,above]{interno};
+  \draw[arrow] (xo) -- (hout)   node[midway,above]{$\|$};
+  \node[draw,fill=yellow!30,rounded corners] (t) at (10,0)
+        {$\mathrm{HMAC}_k(m)$};
+  \draw[arrow] (hout) -- (t);
+\end{tikzpicture}
+\end{center}
+\diagcaption{HMAC: hash interno $H((k\oplus\texttt{ipad})\,\|\,m)$ encapsuladodentro
+del hash externo $H((k\oplus\texttt{opad})\,\|\,(\cdot))$.  El mensaje se procesa
+una sola vez, de ah\'i la eficiencia.}
+
+\paragraph{Por qu\'e es m\'as r\'apido que CBC-MAC.}
+Las funciones de hash est\'an dise\~nadas para procesar grandes vol\'umenes de datos
+muy r\'apido (operaciones simples de bit).  CBC-MAC requiere una evaluaci\'on de
+cifrado de bloque por bloque de mensaje; HMAC solo dos pasadas de hash (y el hash
+externo solo toca la etiqueta interna, no el mensaje completo).
+
+\paragraph{Demostraci\'on formal.}  Si $H$ es resistente a colisiones, HMAC es
+infalsificable.  En sistemas reales: HMAC-SHA256, HMAC-SHA3-256.  Evitar HMAC-MD5
+y HMAC-SHA1 en dise\~nos nuevos.
+
+\begin{examen}
+\textbf{Validar sin exponer el secreto (parcial 2017, caso CVV).}
+Se quiere verificar un dato sensible (ej.\ el CVV de una tarjeta) sin almacenarlo
+ni transmitirlo en claro: se almacena/compara un HMAC con clave sim\'etrica.
+Quien no tiene la clave no puede generar ni validar el tag.
+\end{examen}
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{Cifrado Autenticado: las 3 construcciones}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4.4cm}p{6cm}p{2.4cm}}
+\toprule
+\textbf{Construcci\'on}        & \textbf{Idea}                              & \textbf{?`Seguro?} \\
+\midrule
+\textbf{Encrypt-and-MAC} (paralelo) &
+  Cifrar $m$ y etiquetar $m$ en paralelo; salida $(c,t)$         & \textbf{NO} \\
+\textbf{MAC-then-Encrypt}           &
+  Etiquetar $m$, luego cifrar $(m\|t)$; salida $c$               & \emph{Puede} \\
+\textbf{Encrypt-then-MAC}           &
+  Cifrar $m$ obteniendo $c$; luego etiquetar $c$; salida $(c,t)$ & \textbf{S\'I} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  arrow/.style={-{Stealth}},
+  enc/.style={draw,fill=mainblue!10,minimum height=6mm,minimum width=12mm},
+  mac/.style={draw,fill=accentgreen!10,minimum height=6mm,minimum width=12mm}]
+
+  %% ---- Encrypt-and-MAC ----
+  \node[font=\bfseries] at (0,1.5) {Encrypt-and-MAC};
+  \node[font=\bfseries\scriptsize,red] at (0,1.0) {INSEGURO};
+  \node (m1) at (0,0.3) {$m$};
+  \node[enc] (e1) at (-1.2,-0.8) {$\mathrm{Enc}_{k_1}$};
+  \node[mac] (mc1) at (1.2,-0.8) {$\mathrm{Mac}_{k_2}$};
+  \draw[arrow] (m1) -- (e1);
+  \draw[arrow] (m1) -- (mc1);
+  \node (c1) at (-1.2,-1.9) {$c$};
+  \node (t1) at (1.2,-1.9)  {$t$};
+  \draw[arrow] (e1) -- (c1);
+  \draw[arrow] (mc1) -- (t1);
+  \node[align=center,font=\scriptsize] at (0,-2.7)
+        {salida $(c,t)$\\ $t$ puede filtrar $m$};
+
+  %% ---- MAC-then-Encrypt ----
+  \node[font=\bfseries] at (5,1.5) {MAC-then-Encrypt};
+  \node[font=\bfseries\scriptsize] at (5,1.0) {puede ser seguro};
+  \node (m2) at (5,0.3) {$m$};
+  \node[mac] (mc2) at (5,-0.7) {$\mathrm{Mac}_{k_2}$};
+  \draw[arrow] (m2) -- (mc2);
+  \node[enc] (e2) at (5,-1.8) {$\mathrm{Enc}_{k_1}$};
+  \draw[arrow] (mc2) -- (e2) node[midway,right]{$m\,\|\,t$};
+  \node (c2) at (5,-2.9) {$c$};
+  \draw[arrow] (e2) -- (c2);
+
+  %% ---- Encrypt-then-MAC ----
+  \node[font=\bfseries] at (10,1.5) {Encrypt-then-MAC};
+  \node[font=\bfseries\scriptsize,accentgreen] at (10,1.0)
+        {\textbf{S\'I} (cifrado autenticado)};
+  \node (m3) at (10,0.3) {$m$};
+  \node[enc] (e3) at (10,-0.7) {$\mathrm{Enc}_{k_1}$};
+  \draw[arrow] (m3) -- (e3);
+  \node[mac] (mc3) at (10,-1.8) {$\mathrm{Mac}_{k_2}$};
+  \draw[arrow] (e3) -- (mc3) node[midway,right]{$c$};
+  \node (t3) at (10,-2.9) {salida $(c,t)$};
+  \draw[arrow] (mc3) -- (t3);
+  \node[draw,rounded corners,fill=yellow!25,align=center,font=\scriptsize]
+        at (10,-3.8) {MAC sobre el cifrado $c$\\ claves $k_1\neq k_2$};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Las tres construcciones.  \textbf{Encrypt-and-MAC}: inseguro; el tag de
+$m$ puede filtrar informaci\'on.  \textbf{MAC-then-Encrypt}: sin prueba gen\'erica.
+\textbf{Encrypt-then-MAC}: siempre seguro; es el ``cifrado autenticado''.}
+
+\subsection{Definici\'on formal de Encrypt-then-MAC}
+
+\begin{definicion}{Cifrado autenticado (Encrypt-then-MAC)}
+Requiere: un criptosistema \textbf{CPA-Secure} y un MAC \textbf{infalsificable},
+con \textbf{claves independientes} $k_1 \neq k_2$.
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item $\mathrm{Gen}$: genera $(k_1, k_2)$ independientemente.
+  \item Cifrado: $c \leftarrow \mathrm{Enc}_{k_1}(m)$; salida $(c,\; t=\mathrm{Mac}_{k_2}(c))$.
+  \item Descifrado: \textbf{primero} verificar $\mathrm{Vrfy}_{k_2}(c,t)$; si falla,
+        rechazar (error/excepci\'on); si pasa, devolver $\mathrm{Dec}_{k_1}(c)$.
+\end{itemize}
+\end{definicion}
+
+\begin{destacado}
+\textbf{Clave: MAC sobre el CIFRADO $c$, con claves independientes $k_1\neq k_2$.}
+Aparece en parciales 2016, 2018, 2023.  Si alguien manipula el texto cifrado,
+la verificaci\'on \textbf{falla} (antes de descifrar), eliminando los ataques de
+maleabilidad.
+\end{destacado}
+
+\subsection{Modos AEAD en la pr\'actica}
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{CCM} (Counter with CBC-MAC): variante MAC-then-Encrypt (prueba
+        espec\'ifica).  Calcula el CBC-MAC y lo cifra junto al mensaje en modo
+        contador.  Una sola clave; dos pasadas l\'ogicas por el mensaje.
+        Seguro si IV y nonce no se repiten.
+  \item \textbf{GCM} (Galois Counter Mode): cifrado en modo contador + GHASH
+        (aritm\'etica de polinomios sobre $\mathrm{GF}(2^{128})$).
+        Mucho m\'as r\'apido que CCM.
+        \textbf{AES-GCM} es la recomendaci\'on pr\'actica: r\'apido,
+        estandarizado, libre de patentes, en todas las librer\'ias serias.
+\end{itemize}
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{No-repudio: por qu\'e los MACs no lo dan}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+\begin{ojo}
+\textbf{ERROR T\'IPICO MUY IMPORTANTE (parciales 2025-1 Ej.3d, 2025-2 Ej.5b):}
+afirmar que un \textbf{MAC/HMAC da no-repudio}.\\[4pt]
+\textbf{NO lo da.}  La clave sim\'etrica es \emph{compartida}: ambas partes
+(emisor y receptor) tienen la misma $k$ y \emph{ambas} pueden generar un tag
+v\'alido.  Por lo tanto, el receptor no puede probar ante un tercero que el
+mensaje lo origin\'o el emisor (\'el mismo pudo haberlo generado).\\[4pt]
+El MAC da \textbf{integridad} y \textbf{autenticaci\'on de origen} entre las partes
+que comparten la clave, pero \textbf{no da no-repudio}.\\[4pt]
+El \textbf{no-repudio requiere firma digital} (criptograf\'ia
+\textbf{asim\'etrica}: clave privada que solo posee el firmante).
+\end{ojo}
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{Memory hooks}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+\begin{destacado}
+\textbf{Mn\'emonicos para el examen:}
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Mac-Forge}: ``\emph{Falsificar = inventar un tag nuevo para un
+        mensaje nuevo}''.  El or\'aculo modela los pares $(m,t)$ que el atacante
+        observa en tr\'ansito; la restricci\'on $m^*\notin Q$ cierra el ataque trivial.
+  \item \textbf{CBC-MAC IV=0}: ``\emph{No ciframos, no necesitamos IV aleatorio}''.
+        El encadenamiento hace que $t_\ell$ dependa de todos los bloques; no importa
+        el valor inicial siempre que sea fijo y conocido.
+  \item \textbf{CBC-MAC = solo longitud fija}: ``\emph{Longitud variable
+        $\Rightarrow$ ataque de extensi\'on}''.  El truco: prefijo + XOR del estado
+        intermedio.
+  \item \textbf{Las 3 construcciones}: \textbf{E\&M} (en paralelo) = \textbf{N}O,
+        \textbf{M}t\textbf{E} = \textbf{P}uede, \textbf{E}t\textbf{M} = \textbf{S}\'i.
+        Regla: ``\emph{el MAC siempre sobre el cifrado, con claves distintas}''.
+  \item \textbf{No-repudio}: ``\emph{Sim\'etrico $\Rightarrow$ ambos pueden forjar
+        $\Rightarrow$ ninguno puede repudiar al otro ante terceros}''.  Solo la firma
+        digital (asim\'etrica) lo resuelve.
+\end{itemize}
+\end{destacado}
+
+%% ═══════════════════════════════════════════════════════════════════════════
+\section{Ejercicios tipo examen con respuesta}
+%% ═══════════════════════════════════════════════════════════════════════════
+
+\subsection{V/F: hash, MAC y cifrado (parciales 2016/2018/2023/2025)}
+
+\begin{examen}
+\textbf{1. ``Un hash y un MAC son lo mismo''} $\to$ \textbf{FALSO}.
+El hash no tiene clave; el MAC s\'i.  El hash no da autenticaci\'on; el MAC s\'i.
+
+\textbf{2. ``Un MAC garantiza confidencialidad''} $\to$ \textbf{FALSO}.
+El MAC etiqueta el \emph{plano}: el mensaje viaja en claro.  No hay cifrado.
+
+\textbf{3. ``Encrypt-and-MAC con $k_1=k_2$ es seguro''} $\to$
+\textbf{FALSO} (parciales 2016, 2018, 2023).
+Incluso con claves distintas Encrypt-and-MAC no es seguro en general; adem\'as,
+usar la misma clave para cifrado y MAC introduce vulnerabilidades adicionales.
+
+\textbf{4. ``MAC-then-Encrypt siempre es seguro''} $\to$ \textbf{FALSO}.
+No hay prueba gen\'erica; solo pruebas para combinaciones concretas.
+
+\textbf{5. ``Encrypt-then-MAC siempre es seguro si el cifrado es CPA y el MAC es
+EUF-CMA''} $\to$ \textbf{VERDADERO}.  Hay prueba formal gen\'erica.
+\end{examen}
+
+\subsection{Encrypt-and-MAC inseguro (parciales 2016/2018/2023)}
+
+\begin{examen}
+\textbf{?`Por qu\'e Encrypt-and-MAC es inseguro?}\\
+La definici\'on de MAC cubre infalsificabilidad (integridad), no
+confidencialidad.  El tag $t = \mathrm{Mac}_k(m)$ es una funci\'on determinista
+del plano $m$ (muchos MACs son deterministas).  Publicar $t$ junto al cifrado
+puede filtrar informaci\'on sobre $m$: por ejemplo, si el adversario conoce algunos
+candidatos a $m$, puede calcular el tag de cada uno y compararlo con $t$ para
+identificar el plano.
+
+\textbf{Contraejemplo concreto:} sea $\mathrm{Mac}_k(m) = F_k(m)$ (PRF aplicada
+al plano).  El tag $t = F_k(m)$ es determinista en $m$; el adversario puede
+distinguir entre $m_0$ y $m_1$ comparando tags.  La construcci\'on falla CPA para
+el sistema combinado aunque el cifrado sea CPA-Secure.
+\end{examen}
+
+\subsection{HMAC para CVV (parcial 2017)}
+
+\begin{examen}
+\textbf{Se quiere verificar un CVV sin almacenarlo.  ?`Qu\'e construcci\'on usar?}\\
+Almacenar $\mathrm{HMAC}_k(\text{CVV})$ en lugar del CVV en claro.
+Al verificar: recalcular $\mathrm{HMAC}_k(\text{CVV recibido})$ y comparar.
+Si coincide, el CVV es correcto.
+
+\textbf{Propiedades:}
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item Quien no tiene $k$ no puede generar un HMAC v\'alido (infalsificabilidad).
+  \item Si la base de datos se filtra, los CVV no quedan expuestos (resistencia a
+        preimagen del hash subyacente m\'as la clave del HMAC).
+  \item \textbf{No da no-repudio} (clave sim\'etrica compartida entre el sistema
+        emisor y el verificador).
+\end{itemize}
+\end{examen}
+
+\subsection{Construcci\'on $c = E_{k_1}(m\,\|\,H(k_2\|m))$ (parcial 2025-1)}
+
+\begin{examen}
+\textbf{?`Qu\'e hace el receptor?  ?`Qu\'e garantiza la construcci\'on?}
+\begin{enumerate}[leftmargin=1.6em]
+  \item Descifrar: $m\|h' \leftarrow \mathrm{Dec}_{k_1}(c)$.
+  \item Recomputar: $h = H(k_2\|m)$.
+  \item Comparar: si $h = h'$, el mensaje es \'integro y autenticado; si no,
+        rechazar.
+\end{enumerate}
+
+\textbf{Garantiza:}
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \textbf{Confidencialidad}: $E_{k_1}$ cifra todo (mensaje y hash).
+  \item \textbf{Integridad y autenticaci\'on}: $H(k_2\|m)$ es esencialmente un
+        ``HMAC casero'' (MAC de clave prefijo); solo quien tiene $k_2$ puede
+        generarlo.
+\end{itemize}
+
+\textbf{NO garantiza:}  \textbf{no-repudio} (clave sim\'etrica compartida $k_2$;
+el receptor tambi\'en puede construir $H(k_2\|m)$).
+
+\textbf{?`Es Encrypt-then-MAC?}  Casi: el MAC es ``MAC-then-Encrypt'' porque se
+calcula $H(k_2\|m)$ sobre el plano y luego se cifra todo.  Comparte las
+propiedades de seguridad de MAC-then-Encrypt (prueba espec\'ifica, no gen\'erica),
+no la prueba gen\'erica de Encrypt-then-MAC puro.
+\end{examen}
+
+\end{document}

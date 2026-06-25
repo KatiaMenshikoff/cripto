@@ -1,0 +1,636 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% Colors
+\definecolor{itbaBlue}{HTML}{003366}
+\definecolor{itbaCyan}{HTML}{6EC6D9}
+\definecolor{tipGreen}{HTML}{2E7D32}
+\definecolor{tipGreenLight}{HTML}{E8F5E9}
+\definecolor{consignaBlue}{HTML}{E3F2FD}
+\definecolor{consignaBlueDark}{HTML}{1565C0}
+\definecolor{warnOrange}{HTML}{E65100}
+\definecolor{warnOrangeLight}{HTML}{FFF3E0}
+\definecolor{theoremPurple}{HTML}{4A148C}
+\definecolor{theoremPurpleLight}{HTML}{F3E5F5}
+
+% tcolorbox styles
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{consignabox}{
+  enhanced, breakable,
+  colback=consignaBlue, colframe=consignaBlueDark,
+  boxrule=1.5pt, arc=4pt,
+  title={\textbf{Consigna}},
+  fonttitle=\bfseries\color{white},
+  attach boxed title to top left={yshift=-2mm, xshift=4mm},
+  boxed title style={colback=consignaBlueDark, arc=2pt, boxrule=0pt}
+}
+
+\newtcolorbox{tipsbox}{
+  enhanced, breakable,
+  colback=tipGreenLight, colframe=tipGreen,
+  boxrule=1.5pt, arc=4pt,
+  title={\textbf{Tips y Anotaciones}},
+  fonttitle=\bfseries\color{white},
+  attach boxed title to top left={yshift=-2mm, xshift=4mm},
+  boxed title style={colback=tipGreen, arc=2pt, boxrule=0pt}
+}
+
+\newtcolorbox{teoriabox}[1]{
+  enhanced, breakable,
+  colback=theoremPurpleLight, colframe=theoremPurple,
+  boxrule=1.5pt, arc=4pt,
+  title={\textbf{#1}},
+  fonttitle=\bfseries\color{white},
+  attach boxed title to top left={yshift=-2mm, xshift=4mm},
+  boxed title style={colback=theoremPurple, arc=2pt, boxrule=0pt}
+}
+
+\newtcolorbox{warnbox}[1]{
+  enhanced, breakable,
+  colback=warnOrangeLight, colframe=warnOrange,
+  boxrule=1.5pt, arc=4pt,
+  title={\textbf{#1}},
+  fonttitle=\bfseries\color{white},
+  attach boxed title to top left={yshift=-2mm, xshift=4mm},
+  boxed title style={colback=warnOrange, arc=2pt, boxrule=0pt}
+}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=itbaBlue,
+  urlcolor=itbaCyan,
+  pdftitle={Ejercicios Shamir -- ITBA Criptografía},
+  pdfauthor={ITBA Criptografía y Seguridad}
+}
+
+\title{
+  \vspace{-1cm}
+  {\color{itbaBlue}\rule{\linewidth}{2pt}}\\[0.3cm]
+  {\Huge\bfseries\color{itbaBlue} Secreto Compartido de Shamir}\\[0.2cm]
+  {\large\color{itbaCyan} Ejercicios de Parciales -- ITBA Criptografía y Seguridad (72.44)}\\[0.2cm]
+  {\color{itbaBlue}\rule{\linewidth}{2pt}}
+}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+%=============================================================
+\section{Teoría: Secreto Compartido de Shamir}
+%=============================================================
+
+\subsection{¿Qué es un esquema umbral $(t,n)$?}
+
+\begin{teoriabox}{Definición: Esquema de Secreto Compartido Umbral $(t,n)$}
+Un \textbf{sistema de secreto compartido de umbral $(t,n)$} reparte un secreto $s$ en $n$ \emph{sombras} (\emph{shares}) entre $n$ participantes de modo que:
+\begin{itemize}
+  \item Con \textbf{$t$ o más} sombras se puede \textbf{reconstruir} $s$.
+  \item Con \textbf{menos de $t$} sombras \textbf{no se obtiene ninguna información} sobre $s$ (la entropía de $s$ no disminuye).
+\end{itemize}
+El esquema umbral por excelencia es el \textbf{esquema de Shamir} (basado en interpolación polinómica sobre $\mathbb{Z}_p$).
+\end{teoriabox}
+
+\subsection{El esquema de Shamir: construcción}
+
+\begin{teoriabox}{Construcción del esquema Shamir $(t,n)$ sobre $\mathbb{Z}_p$}
+\textbf{Repartir el secreto $S$:}
+\begin{enumerate}
+  \item Elegir $p$ primo tal que $p > S$ y $p > n$.
+  \item Elegir un polinomio $f$ de grado $t-1$ con coeficientes en $\mathbb{Z}_p$:
+  \[
+    f(x) = a_0 + a_1 x + a_2 x^2 + \dots + a_{t-1} x^{t-1} \pmod{p}
+  \]
+  donde $a_0 = S$ (el secreto es el término independiente) y $a_1, \dots, a_{t-1}$ se eligen al azar en $\mathbb{Z}_p$.
+  \item Distribuir la sombra $i$-ésima: $(i,\, f(i))$ al participante $i$, para $i = 1, \dots, n$.
+\end{enumerate}
+\textbf{Reconstruir el secreto:} con cualquier subconjunto de $t$ sombras $\{(x_1,y_1), \dots, (x_t,y_t)\}$, aplicar interpolación de Lagrange para recuperar $f(0) = S$.
+\end{teoriabox}
+
+\subsection{Interpolación de Lagrange}
+
+\begin{teoriabox}{Fórmula de Lagrange para recuperar el secreto}
+Dado un conjunto de $t$ puntos $(x_1,y_1),\dots,(x_t,y_t)$ con $x_i$ distintos, existe un único polinomio de grado $\le t-1$ que los interpola. Evaluado en $x=0$:
+\[
+  S = f(0) = \sum_{i=1}^{t} y_i \cdot L_i(0) \pmod{p}
+\]
+donde los \textbf{coeficientes de Lagrange evaluados en 0} son:
+\[
+  L_i(0) = \prod_{j=1,\, j\neq i}^{t} \frac{0 - x_j}{x_i - x_j} = \prod_{j \neq i} \frac{-x_j}{x_i - x_j} \pmod{p}
+\]
+Las divisiones son multiplicaciones por inverso modular: $a/b \equiv a \cdot b^{p-2} \pmod{p}$ (Pequeño Teorema de Fermat).
+\end{teoriabox}
+
+\subsection{Seguridad en términos de entropía}
+
+\begin{teoriabox}{Validez del esquema $(t,n)$ vía entropía}
+En el esquema $(t,n)$ de Shamir hay $n$ sombras y se necesitan \textbf{al menos $t$} para recuperar el secreto $S$. La seguridad se demuestra vía entropía:
+\[
+\begin{aligned}
+  H(S \mid S_1) &= H(S) & &\text{(1 sombra: no sé nada más)}\\
+  H(S \mid S_1, S_2) &= H(S) & &\text{(2 sombras: tampoco)}\\
+  &\vdots \\
+  H(S \mid S_1, \dots, S_{t-1}) &= H(S) & &\text{($t{-}1$ sombras: sin información)}\\
+  H(S \mid S_1, \dots, S_t) &= 0 & &\text{($t$ sombras: tengo toda la información)}
+\end{aligned}
+\]
+Con menos de $t$ sombras \textbf{no hay flujo de información} ($H$ se mantiene). Con $t$ o más, $H \to 0$ y se recupera el secreto. Hay \textbf{flujo de información} de $x$ a $y$ cuando $H(x \mid y) < H(x)$.
+\end{teoriabox}
+
+\subsection{Método paso a paso para resolver ejercicios}
+
+\begin{tipsbox}
+\textbf{Algoritmo para resolver un ejercicio de Shamir en el parcial:}
+
+\medskip
+\textbf{Para hallar el secreto (Lagrange directo en $x=0$):}
+\begin{enumerate}
+  \item Tomar $t$ sombras cualesquiera del conjunto $C$.
+  \item Para cada sombra $i$, calcular $L_i(0) = \prod_{j \neq i} \frac{-x_j}{x_i - x_j} \pmod{p}$.
+  \item Computar $S = \sum_i y_i \cdot L_i(0) \pmod{p}$.
+\end{enumerate}
+
+\textbf{Para hallar el polinomio (sistema de ecuaciones):}
+\begin{enumerate}
+  \item Plantear $f(x) = a_0 + a_1 x + \dots + a_{t-1} x^{t-1}$.
+  \item Usar $t$ sombras para armar el sistema: $f(x_1) = y_1$, \dots, $f(x_t) = y_t$.
+  \item Resolver el sistema lineal módulo $p$. El secreto es $a_0 = f(0)$.
+\end{enumerate}
+
+\textbf{Inverso modular en $\mathbb{Z}_p$:} $a^{-1} \equiv a^{p-2} \pmod{p}$ (Fermat). Para $p=7$: $2^{-1}=4,\ 3^{-1}=5,\ 4^{-1}=2,\ 5^{-1}=3,\ 6^{-1}=6$. Para $p=11$: $2^{-1}=6,\ 3^{-1}=4,\ 4^{-1}=3,\ 5^{-1}=9,\ 6^{-1}=2$.
+
+\textbf{Verificación:} evaluar el polinomio en todas las sombras (incluyendo las no usadas). Si coinciden, el resultado es correcto.
+\end{tipsbox}
+
+%=============================================================
+\section{Parcial 2013 -- Ejercicio 3}
+\label{sec:2013}
+%=============================================================
+
+\begin{consignabox}
+\begin{enumerate}
+  \item ¿A qué se denomina \textbf{sistema de secreto compartido de umbral $(t,n)$}? Dar el nombre de algún sistema de secreto compartido de tipo umbral.
+  \item Considerar el siguiente esquema de secreto compartido:
+  \begin{quote}
+  Para compartir un secreto $s \in \{0,1\}^m$ entre $n$ personas, se eligen $n-1$ valores $a_1, a_2, \ldots, a_{n-1}$ en forma aleatoria e independiente, donde cada $a_i \in \{0,1\}^m$. Se selecciona $a_n = s \oplus a_1 \oplus a_2 \oplus \cdots \oplus a_{n-1}$. Luego se distribuye $a_i$ a la $i$-ésima persona del grupo.
+  \end{quote}
+  Mostrar que este esquema cumple las características de un sistema de secreto compartido umbral de tipo $(n,n)$ utilizando el concepto de \textbf{entropía}. (Demostrarlo para $n = 3$.)
+\end{enumerate}
+\end{consignabox}
+
+\paragraph{Resolución.}
+\textbf{1) Definición.} Un \textbf{sistema de secreto compartido de umbral $(t,n)$} reparte un secreto $s$ en $n$ sombras entre $n$ participantes de modo que: con \textbf{$t$ o más} sombras se puede \textbf{reconstruir} $s$; con \textbf{menos de $t$} sombras \textbf{no se obtiene ninguna información} sobre $s$ (la entropía de $s$ no disminuye).
+Ejemplo de tipo umbral: el \textbf{esquema de Shamir} (basado en interpolación de polinomios, $(t,n)$ general). El esquema del enunciado es un \textbf{$(n,n)$ por XOR}.
+
+\medskip
+\textbf{2) Demostración para $n=3$ (esquema $(3,3)$).} Sea $s\in\{0,1\}^m$ con distribución \textbf{uniforme}:
+\[
+  H(S) = \log_2 2^m = m \text{ bits}.
+\]
+Se eligen $a_1, a_2$ uniformes e independientes en $\{0,1\}^m$ y se define $a_3 = s \oplus a_1 \oplus a_2$.
+
+\medskip
+\noindent\textbf{(i) Con las 3 sombras: $H(S\mid a_1,a_2,a_3)=0$.} Como $a_1 \oplus a_2 \oplus a_3 = s$, el secreto queda \textbf{determinado}; no hay incertidumbre.
+
+\medskip
+\noindent\textbf{(ii) Con 2 sombras: la entropía no cambia.}
+
+\emph{Caso $\{a_1,a_2\}$:} $a_1,a_2$ se eligieron independientemente de $s$. No aparecen en ninguna ecuación que ligue a $s$ directamente. Luego:
+\[
+  H(S \mid a_1, a_2) = H(S) = m.
+\]
+
+\emph{Caso $\{a_1,a_3\}$:} conocemos $a_1$ y $a_3 = s\oplus a_1\oplus a_2$. Para despejar $s = a_1\oplus a_2\oplus a_3$ \textbf{falta} $a_2$, que es uniforme e independiente. Como $a_2\in\{0,1\}^m$ es uniforme, $s = (a_1\oplus a_3)\oplus a_2$ es la suma XOR de una constante conocida con una variable uniforme, entonces $s$ queda \textbf{uniforme} para el observador:
+\[
+  H(S \mid a_1, a_3) = H(a_2) = m = H(S).
+\]
+
+\medskip
+\noindent\textbf{Conclusión:}
+\begin{align*}
+  H(S \mid a_1) &= H(S) = m & &\text{(1 sombra: no sé nada más)}\\
+  H(S \mid a_1, a_2) &= H(S) = m & &\text{(2 sombras: tampoco)}\\
+  H(S \mid a_1, a_2, a_3) &= 0 & &\text{(3 sombras: tengo toda la información)}
+\end{align*}
+Con $<n=3$ sombras \textbf{no hay flujo de información}; con las 3, $H\to 0$ y se reconstruye $s$. El esquema es un secreto compartido umbral de tipo $(n,n)=(3,3)$. $\square$
+
+\begin{tipsbox}
+\textbf{Patrón:} Este tipo de ejercicio pide demostrar que un esquema XOR es un $(n,n)$. La clave es:
+\begin{itemize}
+  \item \textbf{Con $n$ sombras:} XOR de todas da $s$ (reconstrucción trivial).
+  \item \textbf{Con $<n$ sombras:} siempre falta una $a_i$ que es uniforme e independiente. Eso hace que $s$ siga siendo uniforme (XOR con uniforme preserva la distribución uniforme — mismo principio que el One-Time-Pad).
+  \item \textbf{Error frecuente:} olvidar analizar todos los casos (pares como $\{a_1,a_3\}$, no solo $\{a_1,a_2\}$). La entropía debe mantenerse en $H(S)$ para \emph{cualquier} subconjunto propio.
+  \item \textbf{Conexión:} el XOR multi-parte es un caso especial de Shamir con $t=n$. El esquema de Shamir generaliza esto a cualquier $t \le n$.
+\end{itemize}
+\end{tipsbox}
+
+%=============================================================
+\section{Parcial 2015 -- Ejercicio 3}
+\label{sec:2015}
+%=============================================================
+
+\begin{consignabox}
+Considerar el conjunto $C$ de sombras para un esquema de secreto compartido de Shamir $(k,n)$, donde $k=3$ y $n=4$ sobre $\mathbb{Z}_p$ (se asume $p=7$):
+\[
+  C = \{(1,6),(2,1),(3,0),(4,3)\}.
+\]
+\begin{enumerate}
+  \item Obtener el secreto.
+  \item Obtener el polinomio utilizado para obtener el conjunto de sombras.
+  \item Expresar el significado de un esquema de secreto umbral $(3,n)$ utilizando el concepto de entropía.
+\end{enumerate}
+\end{consignabox}
+
+\paragraph{Resolución.}
+
+\textbf{(b) Polinomio.} Buscamos $f(x)=a_2x^2+a_1x+a_0$ sobre $\mathbb{Z}_7$ con $f(1)=6,\ f(2)=1,\ f(3)=0$:
+\begin{align*}
+  a_0+a_1+a_2 &\equiv 6 \pmod 7,\\
+  a_0+2a_1+4a_2 &\equiv 1 \pmod 7,\\
+  a_0+3a_1+2a_2 &\equiv 0 \pmod 7 \quad (9\equiv 2 \pmod 7).
+\end{align*}
+Restando la 1ra a la 2da: $a_1+3a_2\equiv 2 \pmod 7$. Restando la 1ra a la 3ra: $2a_1+a_2\equiv 1 \pmod 7$. De la primera ecuación resultante, $a_1\equiv 2-3a_2$; sustituyendo: $2(2-3a_2)+a_2\equiv 1 \Rightarrow 4-5a_2\equiv 1 \Rightarrow 2a_2\equiv 4 \Rightarrow a_2\equiv 2$. Entonces $a_1\equiv 2-6\equiv 3$ y $a_0\equiv 6-3-2 = 1$.
+\[
+  \boxed{f(x) = 2x^2 + 3x + 1 \pmod 7}
+\]
+\emph{Verificación:} $f(1)=6$, $f(2)=15\equiv 1$, $f(3)=28\equiv 0$, $f(4)=45\equiv 3$. Las cuatro sombras coinciden.
+
+\textbf{(a) Secreto.}
+\[
+  s = f(0) = a_0 = \boxed{1}
+\]
+
+\textbf{(c) Significado con entropía.} Sea $S$ la variable aleatoria del secreto. Un esquema umbral $(3,n)$ significa:
+\begin{align*}
+  H(S \mid S_{i_1}) &= H(S) & &\text{(1 sombra: no reduce incertidumbre)}\\
+  H(S \mid S_{i_1}, S_{i_2}) &= H(S) & &\text{(2 sombras: tampoco hay flujo)}\\
+  H(S \mid S_{i_1}, S_{i_2}, S_{i_3}) &= 0 & &\text{(3 sombras: $S$ queda determinado)}
+\end{align*}
+Con menos de 3 sombras \textbf{no hay flujo de información} ($H$ permanece en su máximo, $\log_2 7$ bits si $S$ es uniforme en $\mathbb{Z}_7$); al alcanzar el umbral la incertidumbre colapsa a 0.
+
+\begin{tipsbox}
+\textbf{Datos importantes de este ejercicio:}
+\begin{itemize}
+  \item El ejercicio aparece \textbf{idéntico} en parciales 2015, 2016 y 2017 --- memorizarlo es rentable.
+  \item \textbf{El cuerpo:} si no se da $p$ explícitamente, buscar el primo más chico que contenga todos los valores de las sombras. Con $C=\{(1,6),(2,1),(3,0),(4,3)\}$ los valores van hasta 6, entonces $p=7$.
+  \item \textbf{Truco:} con $k=3$ sombras y $p=7$, el polinomio de grado 2 siempre da $a_2=2, a_1=3, a_0=1$. Verificar con la 4ta sombra: $f(4)=45\equiv 3$. Siempre verificar.
+  \item \textbf{Para inciso (c):} la frase canónica es ``con $<k$ sombras $H(S\mid\text{obs})=H(S)$ (no hay flujo); con $\ge k$ sombras $H(S\mid\text{obs})=0$ (certeza).''. La razón: con $\le k-1$ puntos hay exactamente $p$ polinomios de grado $k-1$ que los interpolan (uno por cada valor de $a_0$), así que el secreto sigue uniforme.
+  \item \textbf{Cuando el enunciado pide ``usando entropía'':} escribir las tres líneas de la tabla $H(S|S_1)=H(S)$, $H(S|S_1,S_2)=H(S)$, $H(S|S_1,S_2,S_3)=0$ y explicar brevemente el porqué.
+\end{itemize}
+\end{tipsbox}
+
+%=============================================================
+\section{Parcial 2016 -- Ejercicio 3}
+\label{sec:2016}
+%=============================================================
+
+\begin{consignabox}
+Considerar el conjunto $C$ de sombras para un esquema de secreto compartido de Shamir $(k,n)$, donde $k=3$ y $n=4$ sobre $\mathbb{Z}_7$:
+\[
+  C = \{(1,6),(2,1),(3,0),(4,3)\}
+\]
+\begin{enumerate}[label=\textbf{\alph*)}]
+  \item Obtener el secreto.
+  \item Obtener el polinomio utilizado para obtener el conjunto de sombras.
+  \item Expresar el significado de un esquema de secreto umbral $(3,n)$ utilizando el concepto de entropía.
+\end{enumerate}
+\end{consignabox}
+
+\paragraph{Resolución.}
+
+\textbf{(a) Secreto.} Interpolación de Lagrange en $x=0$ con $(1,6),(2,1),(3,0)$ sobre $\mathbb{Z}_7$:
+\begin{align*}
+  L_1(0) &= \frac{(0-2)(0-3)}{(1-2)(1-3)} = \frac{6}{2} = 3, \\
+  L_2(0) &= \frac{(0-1)(0-3)}{(2-1)(2-3)} = \frac{3}{-1} \equiv 3\cdot 6 \equiv 4 \pmod 7, \\
+  L_3(0) &= \frac{(0-1)(0-2)}{(3-1)(3-2)} = \frac{2}{2} = 1.
+\end{align*}
+\[
+  S = f(0) = 6\cdot 3 + 1\cdot 4 + 0\cdot 1 = 22 \equiv \boxed{1} \pmod 7.
+\]
+
+\textbf{(b) Polinomio.} Con $a_0=1$ conocido y las sombras restantes:
+\begin{align*}
+  1 + a_1 + a_2 &\equiv 6 \Rightarrow a_1 + a_2 \equiv 5 \pmod 7,\\
+  1 + 2a_1 + 4a_2 &\equiv 1 \Rightarrow a_1 + 2a_2 \equiv 0 \pmod 7.
+\end{align*}
+Restando: $a_2 \equiv -5 \equiv 2$, $a_1 \equiv 3$. El polinomio es:
+\[
+  \boxed{f(x) = 1 + 3x + 2x^2 \pmod 7}
+\]
+
+\textbf{(c) Significado con entropía.} Ídem al parcial 2015 (ver Sección~\ref{sec:2015}).
+
+\begin{tipsbox}
+\textbf{Notas del parcial 2016:}
+\begin{itemize}
+  \item El enunciado es \textbf{exactamente el mismo} que en 2015 (mismas sombras, mismo $p=7$, mismos incisos). La respuesta es idéntica.
+  \item \textbf{Dos métodos para el secreto:} Lagrange directo en $x=0$ (rápido) o sistema de ecuaciones (más explícito). Ambos son válidos. Lagrange es más directo cuando el enunciado pide primero el secreto.
+  \item \textbf{Inverso de $-1 \equiv 6$:} en $\mathbb{Z}_7$, $-1 \equiv 6$ y $6^{-1} = 6$ (pues $6\cdot 6=36\equiv 1$). Así $3/(-1) = 3\cdot 6 = 18 \equiv 4$.
+\end{itemize}
+\end{tipsbox}
+
+%=============================================================
+\section{Parcial 2017 -- Ejercicio 3}
+\label{sec:2017}
+%=============================================================
+
+\begin{consignabox}
+Considerar el conjunto $C$ de sombras para un esquema de secreto compartido de Shamir $(k,n)$, donde $k=3$ y $n=4$ sobre $\mathbb{Z}_7$:
+\[
+  C = \{(1,6),(2,1),(3,0),(4,3)\}
+\]
+\begin{enumerate}[label=\alph*)]
+  \item Obtener el secreto.
+  \item Obtener el polinomio utilizado para obtener el conjunto de sombras.
+  \item Expresar el significado de un esquema de secreto umbral $(3,n)$ utilizando el concepto de entropía.
+\end{enumerate}
+\end{consignabox}
+
+\paragraph{Resolución.}
+Mismas sombras y mismo $p=7$ que 2015 y 2016. El resultado es idéntico:
+\[
+  \boxed{f(x) = 1 + 3x + 2x^2 \pmod 7}, \qquad S = f(0) = \boxed{1}.
+\]
+Para el inciso (c):
+\begin{align*}
+  H(S \mid S_{i_1}) &= H(S) & &\text{(1 sombra: la incertidumbre no baja)}\\
+  H(S \mid S_{i_1}, S_{i_2}) &= H(S) & &\text{(2 sombras: tampoco hay flujo)}\\
+  H(S \mid S_{i_1}, S_{i_2}, S_{i_3}) &= 0 & &\text{(3 sombras: $S$ queda determinado)}
+\end{align*}
+Con menos de $T=3$ sombras \textbf{no hay flujo de información} hacia el atacante ($H$ permanece en $\log_2 7$ bits si $S$ es uniforme en $\mathbb{Z}_7$); al alcanzar el umbral la incertidumbre colapsa a 0.
+
+\begin{tipsbox}
+\textbf{¿Por qué repite este ejercicio?} La cátedra lo usa como ejercicio de evaluación de la comprensión del concepto de entropía aplicado a Shamir. Tres años consecutivos (2015--2017) con el mismo enunciado. Con $(3,4)$ sobre $\mathbb{Z}_7$ y esas sombras, el polinomio es siempre $f(x)=2x^2+3x+1$ y el secreto $S=1$. Vale la pena tenerlo memorizado.
+\end{tipsbox}
+
+%=============================================================
+\section{Parcial 2018 Q1 -- Ejercicio 1}
+\label{sec:2018}
+%=============================================================
+
+\begin{consignabox}
+Considerar un esquema de secreto compartido de Shamir $(3,3)$ en $\mathbb{Z}_{11}$, con el conjunto de sombras $C = \{(1,2),(2,6),(3,5)\}$.
+\begin{enumerate}[label=\alph*)]
+  \item Recuperar el secreto.
+  \item Se desea, manteniendo las sombras existentes, repartir más sombras que permitan recuperar el secreto.
+  \begin{enumerate}[label=\roman*.]
+    \item Generar una sombra nueva.
+    \item ¿Cuántas distintas se pueden generar?
+  \end{enumerate}
+\end{enumerate}
+\end{consignabox}
+
+\paragraph{Resolución.}
+\textbf{a) Recuperar el secreto.} Polinomio de grado $T-1=2$. Lagrange en $x=0$ con $(1,2),(2,6),(3,5)$ sobre $\mathbb{Z}_{11}$:
+\begin{align*}
+  L_1(0) &= \frac{(0-2)(0-3)}{(1-2)(1-3)} = \frac{6}{2} = 3, \\
+  L_2(0) &= \frac{(0-1)(0-3)}{(2-1)(2-3)} = \frac{3}{-1} \equiv 3\cdot 10 \equiv 8 \pmod{11}, \\
+  L_3(0) &= \frac{(0-1)(0-2)}{(3-1)(3-2)} = \frac{2}{2} = 1.
+\end{align*}
+\[
+  S = 2\cdot 3 + 6\cdot 8 + 5\cdot 1 = 6 + 48 + 5 = 59 \equiv \boxed{4} \pmod{11}.
+\]
+\emph{Verificación (polinomio completo):} $f(x)=4+6x+3x^2 \bmod 11$, da $f(1)=13\equiv2$, $f(2)=28\equiv6$, $f(3)=49\equiv5$. \checkmark
+
+\medskip
+\textbf{b.i) Generar una sombra nueva.} Usar el mismo polinomio $f(x)=4+6x+3x^2 \bmod 11$ en un $x$ no usado, por ejemplo $x=4$:
+\[
+  f(4) = 4 + 6\cdot4 + 3\cdot16 = 4 + 24 + 48 = 76 \equiv \boxed{10} \pmod{11}.
+\]
+Una nueva sombra válida es $(4, 10)$.
+
+\medskip
+\textbf{b.ii) ¿Cuántas distintas?} Quedan excluidos $x=0$ (es el secreto) y $x\in\{1,2,3\}$ (ya repartidas). Restan:
+\[
+  11 - 1 - 3 = \boxed{7} \text{ sombras nuevas distintas} \quad (x \in \{4,5,6,7,8,9,10\}).
+\]
+
+\begin{tipsbox}
+\textbf{Novedad en este ejercicio:} pide generar sombras nuevas. Conceptos clave:
+\begin{itemize}
+  \item \textbf{Para generar nuevas sombras:} usar el mismo polinomio (ya determinado por las sombras existentes), evaluar en un $x$ nuevo.
+  \item \textbf{$x=0$ está excluido:} porque $f(0)=S$ es el secreto mismo. Distribuirlo como sombra sería revelar directamente el secreto.
+  \item \textbf{Cantidad de sombras posibles:} en $\mathbb{Z}_p$ hay $p$ valores, menos 1 (el 0) menos los ya usados. Con $p=11$ y 3 sombras usadas: $11-1-3=7$.
+  \item \textbf{Para $p=11$:} $(-1)^{-1} \equiv 10 \pmod{11}$ porque $(-1)\cdot 10 = -10 \equiv 1$. Así $3/(-1) = 3\cdot 10 = 30 \equiv 8$.
+  \item \textbf{Diferencia con ejercicios $(3,3)$ vs $(3,4)$:} en el $(3,3)$ hacen falta \emph{exactamente} las tres sombras; aquí se puede generar más porque el polinomio ya está determinado.
+\end{itemize}
+\end{tipsbox}
+
+%=============================================================
+\section{Recuperatorio 2023 Q1 -- Ejercicio 2}
+\label{sec:2023}
+%=============================================================
+
+\begin{consignabox}
+Considerar un esquema de secreto compartido de Shamir $(3,4)$ en $\mathbb{Z}_7$, con el conjunto de 4 sombras $C = \{(1,4),(2,1),(3,1),(5,3)\}$.
+\begin{enumerate}
+  \item[a)] Recuperar el secreto.
+  \item[b)] Indicar el polinomio utilizado para obtener el conjunto de sombras.
+\end{enumerate}
+\end{consignabox}
+
+\paragraph{Resolución.}
+
+\textbf{(a) Secreto.} Lagrange en $x=0$ con $(1,4),(2,1),(3,1)$ sobre $\mathbb{Z}_7$ (inversos: $2^{-1}\equiv 4,\ 6^{-1}\equiv 6$):
+\begin{align*}
+  L_1(0) &= \frac{(0-2)(0-3)}{(1-2)(1-3)} = \frac{6}{2} \equiv 6\cdot 4 \equiv 3 \pmod 7,\\
+  L_2(0) &= \frac{(0-1)(0-3)}{(2-1)(2-3)} = \frac{3}{-1} \equiv 3\cdot 6 \equiv 4 \pmod 7,\\
+  L_3(0) &= \frac{(0-1)(0-2)}{(3-1)(3-2)} = \frac{2}{2} \equiv 1 \pmod 7.
+\end{align*}
+\[
+  S = 4\cdot 3 + 1\cdot 4 + 1\cdot 1 = 12 + 4 + 1 = 17 \equiv \boxed{3} \pmod 7.
+\]
+
+\textbf{(b) Polinomio.} Con $a_0=3$:
+\begin{align*}
+  f(1)=4 &\Rightarrow a_1 + a_2 \equiv 1 \pmod 7,\\
+  f(2)=1 &\Rightarrow 2a_1 + 4a_2 \equiv -2 \equiv 5 \pmod 7.
+\end{align*}
+De la primera, $a_1 \equiv 1-a_2$. Sustituyendo: $2(1-a_2)+4a_2\equiv 5 \Rightarrow 2+2a_2\equiv 5 \Rightarrow a_2\equiv 3\cdot 4\equiv 12\equiv 5$, y $a_1\equiv 1-5\equiv 3$.
+\[
+  \boxed{f(x) = 3 + 3x + 5x^2 \pmod 7}
+\]
+\emph{Verificación:} $f(1)=11\equiv4$, $f(2)=3+6+20=29\equiv1$, $f(3)=3+9+45=57\equiv1$, $f(5)=3+15+125=143\equiv3$. \checkmark
+
+\begin{tipsbox}
+\textbf{Puntos a notar:}
+\begin{itemize}
+  \item Sombra $x=5$ (no $x=4$) --- recordar que las abscisas no tienen por qué ser consecutivas.
+  \item \textbf{Siempre verificar con la sombra sobrante:} con 4 sombras y $k=3$, la 4ta sirve de checksum. Si el polinomio no pasa por ella, hay un error de cálculo.
+  \item Con $p=7$, $5^{-1}=3$ (pues $5\cdot3=15\equiv1$). Útil para la sustitución.
+\end{itemize}
+\end{tipsbox}
+
+%=============================================================
+\section{Parcial 2025 Q1 -- Ejercicio 4}
+\label{sec:2025Q1}
+%=============================================================
+
+\begin{consignabox}
+Considerar un esquema de secreto compartido de Shamir $(k,n)=(3,4)$ en $\mathbb{Z}_7$, con el conjunto de sombras $C=\{(1,6),(2,1),(3,0),(4,3)\}$.
+\begin{enumerate}
+  \item[a)] Recuperar el secreto.
+  \item[b)] ¿Cuál es el polinomio generador?
+  \item[c)] Analizar el esquema desde la perspectiva del análisis de entropía y flujo de información.
+\end{enumerate}
+\end{consignabox}
+
+\paragraph{Resolución.}
+Mismas sombras y $p=7$ que 2015/2016/2017. El polinomio es $f(x)=2x^2+3x+1 \pmod 7$ y $S=1$.
+
+\textbf{c) Análisis por entropía y flujo de información.} Sea $S$ uniforme en $\mathbb{Z}_7$, con $H(S)=\log_2 7 \approx 2{,}807$ bits. El esquema $(3,4)$ es válido sii con $<k=3$ sombras no hay flujo:
+\begin{align*}
+  H(S \mid S_1) &= H(S) & &\text{(1 sombra: no reduce incertidumbre)}\\
+  H(S \mid S_1,S_2) &= H(S) & &\text{(2 sombras: tampoco)}\\
+  H(S \mid S_1,S_2,S_3) &= 0 & &\text{(3 sombras: el secreto queda determinado)}
+\end{align*}
+La razón: con $\le 2$ puntos hay exactamente 7 polinomios de grado 2 (uno por cada valor posible de $a_0$) que pasan por ellos, así que cada valor de $S$ sigue siendo equiprobable: \textbf{no hay flujo de información}. Al llegar a $k=3$ sombras el polinomio queda unívocamente determinado, $H\to 0$: \emph{ahí} ocurre el flujo y se revela $S$.
+
+\begin{tipsbox}
+\textbf{La novedad en 2025 es la justificación formal del inciso (c):} el enunciado pide ``analizar desde la perspectiva de entropía y flujo de información'', no solo escribir las ecuaciones. Hay que explicar \emph{por qué} con $<k$ sombras $H$ no cambia: la razón es que por $k-1$ puntos pasan exactamente $p$ polinomios de grado $k-1$ (uno por cada posible valor del secreto $a_0 \in \mathbb{Z}_p$), así el secreto sigue uniforme.
+\end{tipsbox}
+
+%=============================================================
+\section{Recuperatorio 2025 Q1 -- Ejercicio 1}
+\label{sec:recup2025Q1}
+%=============================================================
+
+\begin{consignabox}
+Considerar un esquema de secreto compartido de Shamir $(3,3)$ en $\mathbb{Z}_{11}$, con el conjunto de sombras $C = \{(1,2),(2,5),(3,5)\}$.
+\begin{enumerate}
+  \item[a)] Recuperar el secreto.
+  \item[b)] ¿Cuál es el polinomio generador?
+\end{enumerate}
+\end{consignabox}
+
+\paragraph{Resolución.}
+Inversos en $\mathbb{Z}_{11}$: $2^{-1}\equiv 6$, $(-1)^{-1}\equiv 10$.
+
+\textbf{(a) Secreto.} Lagrange en $x=0$ con $(1,2),(2,5),(3,5)$:
+\begin{align*}
+  L_1(0) &= \frac{(-2)(-3)}{(-1)(-2)} = \frac{6}{2} \equiv 6\cdot 6 \equiv 3 \pmod{11},\\
+  L_2(0) &= \frac{(-1)(-3)}{(1)(-1)} = \frac{3}{-1} \equiv 3\cdot 10 \equiv 8 \pmod{11},\\
+  L_3(0) &= \frac{(-1)(-2)}{(2)(1)} = \frac{2}{2} \equiv 1 \pmod{11}.
+\end{align*}
+\[
+  S = 2\cdot 3 + 5\cdot 8 + 5\cdot 1 = 6 + 40 + 5 = 51 \equiv \boxed{7} \pmod{11}.
+\]
+
+\textbf{(b) Polinomio.} Con $a_0=7$:
+\begin{align*}
+  f(1)=2 &\Rightarrow a_2 + a_1 \equiv 2-7 \equiv -5 \equiv 6 \pmod{11},\\
+  f(2)=5 &\Rightarrow 4a_2 + 2a_1 \equiv 5-7 \equiv 9 \pmod{11}.
+\end{align*}
+De $a_1\equiv 6-a_2$: $4a_2+2(6-a_2)=2a_2+12\equiv 9 \Rightarrow 2a_2\equiv -3\equiv 8 \Rightarrow a_2\equiv 8\cdot 6\equiv 48\equiv 4$. Luego $a_1\equiv 6-4=2$.
+\[
+  \boxed{f(x) = 4x^2 + 2x + 7 \pmod{11}}
+\]
+\emph{Verificación:} $f(1)=13\equiv 2$, $f(2)=27\equiv 5$, $f(3)=49\equiv 5$. \checkmark
+
+\begin{tipsbox}
+\textbf{Notas de este ejercicio (Recup 2025 Q1):}
+\begin{itemize}
+  \item Las sombras $(1,2),(2,5),(3,5)$ son diferentes a las del 2018 Q1 que tenía $(1,2),(2,6),(3,5)$: la segunda sombra cambió de $(2,6)$ a $(2,5)$. Un pequeño cambio que da un secreto diferente ($S=7$ acá vs $S=4$ en 2018).
+  \item Para $p=11$: el inverso de $2$ es $6$, y $6\cdot 6=36\equiv 3\pmod{11}$ (no olvidar reducir módulo $p$).
+  \item \textbf{Patrón de los $L_i(0)$}: para sombras con $x_1=1, x_2=2, x_3=3$, los $L_i(0)$ siempre resultan en la misma fórmula. Con $p=7$: $L_1=3, L_2=4, L_3=1$. Con $p=11$: $L_1=3, L_2=8, L_3=1$. Memorizar estos valores ahorra tiempo.
+\end{itemize}
+\end{tipsbox}
+
+%=============================================================
+\section{Parcial 2025 Q2 -- Ejercicio 4}
+\label{sec:2025Q2}
+%=============================================================
+
+\begin{consignabox}
+Considerar un esquema de secreto compartido de Shamir $(k,n)=(3,5)$ en $\mathbb{Z}_7$, con el conjunto de sombras $C = \{(1,2),\ (2,2),\ (3,3),\ (4,5),\ (5,1)\}$.
+\begin{enumerate}
+  \item[a)] Recuperar el secreto.
+  \item[b)] Cuál es el polinomio generador.
+  \item[c)] Considerar el anillo de polinomios $\mathbb{F}_2[x]$ y el campo de extensión $\mathbb{F}_{2^3} \cong \mathbb{F}_2[x]/(p(x))$, $p(x)=x^3+x+1$. Se define un esquema de Shamir $(k,n)=(3,4)$ sobre $\mathbb{F}_{2^3}$. Detallar por qué razón el algoritmo de secreto compartido de Shamir puede plantearse de esta manera.
+\end{enumerate}
+\end{consignabox}
+
+\paragraph{Resolución.}
+
+\textbf{(a) y (b).} Sistema con $(1,2),(2,2),(3,3)$ en $\mathbb{Z}_7$:
+\begin{align*}
+  a_0 + a_1 + a_2 &\equiv 2 \pmod 7,\\
+  a_0 + 2a_1 + 4a_2 &\equiv 2 \pmod 7,\\
+  a_0 + 3a_1 + 2a_2 &\equiv 3 \pmod 7.
+\end{align*}
+Resolviendo (Gauss mod 7): $a_0 = 3,\ a_1 = 2,\ a_2 = 4$.
+\[
+  \boxed{p(x) = 4x^2 + 2x + 3 \pmod 7}, \qquad S = p(0) = \boxed{3}.
+\]
+\emph{Verificación:} $p(1)=9\equiv2$, $p(2)=23\equiv2$, $p(3)=45\equiv3$, $p(4)=75\equiv5$, $p(5)=113\equiv1$. \checkmark
+
+\medskip
+\textbf{(c) ¿Por qué funciona en $\mathbb{F}_{2^3}$?}
+El algoritmo de Shamir \textbf{no depende de trabajar en $\mathbb{Z}_p$ con $p$ primo}: lo único que usa es que las coordenadas vivan en un \textbf{cuerpo (campo)}. La interpolación de Lagrange requiere sumar, restar, multiplicar y \textbf{dividir} --- y dividir solo es posible si todo elemento no nulo tiene inverso multiplicativo, que es la propiedad que define a un cuerpo.
+
+$\mathbb{F}_{2^3}\cong\mathbb{F}_2[x]/(x^3+x+1)$ con $x^3+x+1$ irreducible sobre $\mathbb{F}_2$ es un cuerpo finito de $2^3=8$ elementos, con inversos para todo elemento no nulo. Por lo tanto:
+\begin{itemize}
+  \item Se puede definir un polinomio secreto de grado $T-1=2$ con coeficientes en $\mathbb{F}_{2^3}$, evaluarlo en $N=4$ puntos distintos, y
+  \item recuperar el secreto $S=f(0)$ con la misma fórmula de Lagrange, con aritmética de $\mathbb{F}_{2^3}$.
+\end{itemize}
+Shamir se plantea idénticamente sobre cualquier cuerpo finito $\mathbb{F}_q$ (sea $q$ primo como $\mathbb{Z}_7$, o potencia de primo como $\mathbb{F}_{2^3}$). Usar $\mathbb{F}_{2^n}$ es natural cuando los secretos son cadenas de bits, como en AES.
+
+\begin{tipsbox}
+\textbf{Novedad del 2025 Q2:}
+\begin{itemize}
+  \item El inciso (c) es nuevo y requiere entender \emph{por qué} Shamir funciona: la respuesta es ``porque $\mathbb{F}_{2^3}$ es un cuerpo y Lagrange solo necesita un cuerpo''.
+  \item Las cinco sombras forman un $(3,5)$: hay 2 sombras redundantes. Cualquier subconjunto de 3 sombras da el mismo polinomio y secreto.
+  \item \textbf{Tabla de inversos en $\mathbb{Z}_7$}: $1^{-1}=1$, $2^{-1}=4$, $3^{-1}=5$, $4^{-1}=2$, $5^{-1}=3$, $6^{-1}=6$.
+  \item Conexión con la Primera Parte: $\mathbb{F}_{2^8}$ es el cuerpo de AES (GF(256)), y los polinomios irreducibles sobre $\mathbb{F}_2$ son el corazón de esa construcción.
+\end{itemize}
+\end{tipsbox}
+
+%=============================================================
+\section{Resumen y Tabla de Ejercicios}
+%=============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{llllll}
+\toprule
+\textbf{Año} & \textbf{Ej.} & \textbf{Cuerpo} & \textbf{$(k,n)$} & \textbf{Secreto} & \textbf{Polinomio} \\
+\midrule
+2013 & 3 & $\{0,1\}^m$ & $(n,n)$ XOR & $a_1\oplus\dots\oplus a_n$ & -- \\
+2015 & 3 & $\mathbb{Z}_7$ & $(3,4)$ & 1 & $2x^2+3x+1$ \\
+2016 & 3 & $\mathbb{Z}_7$ & $(3,4)$ & 1 & $2x^2+3x+1$ \\
+2017 & 3 & $\mathbb{Z}_7$ & $(3,4)$ & 1 & $2x^2+3x+1$ \\
+2018 Q1 & 1 & $\mathbb{Z}_{11}$ & $(3,3)$ & 4 & $3x^2+6x+4$ \\
+2023 Q1 recup & 2 & $\mathbb{Z}_7$ & $(3,4)$ & 3 & $5x^2+3x+3$ \\
+2025 Q1 & 4 & $\mathbb{Z}_7$ & $(3,4)$ & 1 & $2x^2+3x+1$ \\
+2025 Q1 recup & 1 & $\mathbb{Z}_{11}$ & $(3,3)$ & 7 & $4x^2+2x+7$ \\
+2025 Q2 & 4 & $\mathbb{Z}_7$ & $(3,5)$ & 3 & $4x^2+2x+3$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{warnbox}{Trampas frecuentes en Shamir}
+\begin{enumerate}
+  \item \textbf{No verificar con la sombra sobrante}: en ejercicios $(3,4)$ o $(3,5)$, evaluar el polinomio en todas las sombras, especialmente las no usadas.
+  \item \textbf{Olvidar que el secreto es $f(0)$, no una de las sombras}: $f(0)=a_0$ es el término independiente.
+  \item \textbf{División como inverso}: en $\mathbb{Z}_p$, $a/b = a \cdot b^{-1} \pmod p$. No dividir ``directamente''.
+  \item \textbf{$9 \pmod 7 = 2$}: recordar reducir antes de usarlo como coeficiente ($x^2$ evaluado en 3 da 9, que en $\mathbb{Z}_7$ es 2).
+  \item \textbf{El salt no ayuda en Shamir}: el esquema ya es perfecto por construcción; no necesita salt ni padding.
+  \item \textbf{Entropía y flujo}: cuando digan ``demostrar que el esquema es seguro usando entropía'', escribir la tabla de tres líneas con $H(S|S_1)=H(S)$, $H(S|S_1,S_2)=H(S)$, $H(S|S_1,S_2,S_3)=0$ y justificar que con $k-1$ puntos hay $p$ polinomios posibles (uno por cada secreto posible).
+\end{enumerate}
+\end{warnbox}
+
+\end{document}

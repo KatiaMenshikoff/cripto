@@ -1,0 +1,800 @@
+\documentclass[11pt,a4paper]{article}
+
+%% ── Packages ──────────────────────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[top=2cm,bottom=2cm,left=2cm,right=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{xcolor}
+\usepackage[most,breakable]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{microtype}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+\usepackage[hidelinks,colorlinks=true,linkcolor=mainblue,urlcolor=mainblue]{hyperref}
+
+%% ── Colors ────────────────────────────────────────────────────────────────
+\definecolor{mainblue}{RGB}{0,70,127}
+\definecolor{darkgray}{RGB}{60,60,60}
+\definecolor{lightgray}{RGB}{240,240,240}
+\definecolor{accentgreen}{RGB}{0,120,80}
+\definecolor{warnorange}{RGB}{180,80,0}
+
+%% ── tcolorbox environments ────────────────────────────────────────────────
+\tcbuselibrary{skins,breakable,theorems}
+
+\newtcolorbox{definicion}[1]{
+  enhanced, breakable,
+  colback=mainblue!7, colframe=mainblue, coltitle=white,
+  fonttitle=\bfseries\small, arc=4pt, boxrule=1pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt,
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=mainblue, arc=3pt, boxrule=0pt},
+  title={Definición: #1}
+}
+
+\newtcolorbox{ojo}{
+  enhanced, breakable,
+  colback=warnorange!8, colframe=warnorange, coltitle=white,
+  fonttitle=\bfseries\small, arc=4pt, boxrule=1.2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt,
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=warnorange, arc=3pt, boxrule=0pt},
+  title={¡OJO!}
+}
+
+\newtcolorbox{destacado}{
+  enhanced, breakable,
+  colback=accentgreen!8, colframe=accentgreen, coltitle=white,
+  fonttitle=\bfseries\small, arc=4pt, boxrule=1.2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt,
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=accentgreen, arc=3pt, boxrule=0pt},
+  title={Destacado}
+}
+
+\newtcolorbox{examen}{
+  enhanced, breakable,
+  colback=lightgray, colframe=darkgray!60, coltitle=white,
+  fonttitle=\bfseries\small, arc=4pt, boxrule=1pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt,
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=darkgray!80, arc=3pt, boxrule=0pt},
+  title={[Examen]}
+}
+
+%% ── Utility ───────────────────────────────────────────────────────────────
+\newcommand{\diagcaption}[1]{\begin{center}\small\textit{#1}\end{center}}
+
+%% ── Hyperref ──────────────────────────────────────────────────────────────
+\hypersetup{
+  pdftitle={Diffie-Hellman y Clave Publica -- Criptografia y Seguridad (72.44)},
+  pdfauthor={ITBA},
+}
+
+%% ── Pagestyle ─────────────────────────────────────────────────────────────
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead[L]{\small\textcolor{darkgray}{ITBA -- Criptografía y Seguridad (72.44)}}
+\fancyhead[R]{\small\textcolor{darkgray}{Diffie-Hellman y Clave Pública}}
+\fancyfoot[C]{\small\textcolor{darkgray}{\thepage}}
+
+%%%============================================================
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries\color{mainblue} Diffie-Hellman y Criptografía de Clave Pública}\\[4pt]
+  {\large Criptografía y Seguridad -- 72.44 \quad ITBA}\\[2pt]
+  {\small Guía de estudio para examen}
+\end{center}
+\vspace{-4pt}
+\hrule height 1.5pt \color{mainblue}
+\vspace{8pt}
+
+\tableofcontents
+\vspace{8pt}
+
+%%%------------------------------------------------------------
+\section{Protocolo de intercambio de claves}
+%%%------------------------------------------------------------
+
+\begin{definicion}{Protocolo de intercambio de claves}
+Protocolo $\Pi(n)$ ejecutado por dos partes, sin entrada salvo el parámetro de
+seguridad $n$. Su salida es:
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item Una \textbf{transcripción} (todos los mensajes intercambiados; el atacante
+  pasivo la conoce).
+  \item Una clave $k_a$ que deriva la primera parte y $k_b$ que deriva la segunda,
+  cada una solo con la información de su propio extremo.
+\end{itemize}
+\textbf{Condición fundamental:} $k_a = k_b$ (la misma clave, derivada de forma
+independiente por ambas partes).
+\end{definicion}
+
+\subsection{Experimento KE (ataques pasivos)}
+
+El experimento $\mathrm{KE}_{A,\Pi}$ comprueba que el atacante no obtiene
+\emph{ninguna} información sobre la clave negociada:
+
+\begin{enumerate}[leftmargin=1.6em,nosep]
+  \item Se ejecuta $\Pi$; sea $k = k_a = k_b$ la clave resultante.
+  \item Se genera $b \leftarrow \{0,1\}$ uniformemente.
+  \item Si $b=0$: se toma $k' \leftarrow \{0,1\}^n$ (completamente aleatoria);\quad
+        si $b=1$: $k' = k$ (la clave real).
+  \item El atacante $A$ recibe la transcripción $\mathrm{Trans}$ y $k'$, y emite $b' \in \{0,1\}$.
+\end{enumerate}
+
+$\mathrm{KE}_{A,\Pi} = 1$ si $b = b'$. Si $\Pr[\mathrm{KE}_{A,\Pi}=1] < \tfrac12 + \varepsilon$,
+el protocolo $\Pi$ es seguro contra ataques pasivos.
+
+\begin{destacado}
+No se le pide al atacante \emph{adivinar} la clave, sino \emph{distinguir} la clave
+real de una aleatoria. Adivinar al azar o sesgar levemente da $\approx 0{,}5$; si
+llega a $\sim 0{,}6$ es que encontró información parcial y el protocolo falla.
+\end{destacado}
+
+%%%------------------------------------------------------------
+\section{Protocolo Diffie-Hellman}
+%%%------------------------------------------------------------
+
+\subsection{Descripción paso a paso}
+
+\begin{enumerate}[leftmargin=1.6em]
+  \item Alice define $(G, q, g)$: $G$ grupo cíclico, $q$ su orden (\textbf{primo}),
+        $g$ un generador. Esta información es \textbf{pública} (parte de la
+        transcripción; el espía la conoce).
+  \item Alice elige $x \leftarrow \mathbb{Z}_q$ en secreto y calcula $h_1 = g^x \bmod p$.
+  \item Alice envía a Bob: $(G, q, g,\; h_1 = g^x)$.
+  \item Bob elige $y \leftarrow \mathbb{Z}_q$ en secreto y calcula $h_2 = g^y \bmod p$.
+  \item Bob envía a Alice: $h_2 = g^y$.
+  \item Alice calcula $k_a = h_2^{\,x} = (g^y)^x \bmod p$.
+  \item Bob calcula $k_b = h_1^{\,y} = (g^x)^y \bmod p$.
+\end{enumerate}
+
+La clave de sesión común es:
+\[
+  k_s = (g^x)^y \bmod p = (g^y)^x \bmod p = g^{xy} \bmod p,
+\]
+pues la exponenciación sucesiva es conmutativa. Lo que viaja por el canal es
+$g^x$ y $g^y$; \textbf{$x$ nunca sale de Alice} y \textbf{$y$ nunca sale de Bob}.
+
+\subsection{Diagrama de intercambio}
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  arrow/.style={-{Stealth}, thick},
+  box/.style={align=center}
+]
+  \node[box, font=\bfseries] (ah) at (0,4.2) {Alice};
+  \node[box, font=\bfseries] (bh) at (8,4.2) {Bob};
+  \draw[thick] (0,3.9) -- (0,-1.8);
+  \draw[thick] (8,3.9) -- (8,-1.8);
+
+  \node[box, anchor=north] at (0,3.8) {elige $x\leftarrow\mathbb{Z}_q$\\ calcula $g^x \bmod p$};
+  \node[box, anchor=north] at (8,3.8) {elige $y\leftarrow\mathbb{Z}_q$\\ calcula $g^y \bmod p$};
+
+  \draw[arrow] (0,2.4) -- node[above]{$(G,\,q,\,g,\; g^x)$} (8,2.4);
+  \draw[arrow] (8,1.4) -- node[above]{$g^y$} (0,1.4);
+
+  \node[box, anchor=north] at (0,0.9) {$k_a = (g^y)^x \bmod p$};
+  \node[box, anchor=north] at (8,0.9) {$k_b = (g^x)^y \bmod p$};
+
+  \node[box, font=\bfseries, text=mainblue] at (4,-0.6)
+        {Clave común: $k_s = g^{xy} \bmod p$};
+
+  % Espía
+  \node[draw, rounded corners, dashed, align=center, font=\scriptsize,
+        fill=lightgray] (eve) at (4,2.35) {Espía ve\\ $g^x,\ g^y$\\ \textbf{no puede} obtener $x, y$ ni $g^{xy}$\\ (problema del logaritmo discreto)};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Diffie-Hellman: Alice y Bob intercambian $g^x$ y $g^y$ y derivan
+independientemente la clave $g^{xy}$. El espía ve los valores públicos pero no
+puede recuperar $x$, $y$ ni $g^{xy}$ (DLP).}
+
+\subsection{Por qué es difícil: problema del logaritmo discreto (DLP)}
+
+En campos \emph{infinitos} calcular logaritmos es eficiente (logaritmo natural, series
+de Taylor). En campos \emph{finitos} (módulo $p$), el \textbf{efecto de envolvente
+modular} rompe esa estructura: $3^2 \bmod 7 = 2$ (no $9$). Dado $g^x \bmod p$,
+recuperar el exponente $x$ es el \textbf{problema del logaritmo discreto}, abierto
+por más de un siglo sin solución eficiente conocida.
+
+Para la seguridad de DH se necesita además la \textbf{conjetura de decisión DH
+(DDH)}: dados $g, g^x, g^y$, un adversario no puede distinguir $g^{xy}$ de un
+valor aleatorio.
+
+\begin{examen}
+Preguntas típicas de parcial sobre DH:
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \textbf{Detallar el protocolo:} parámetros $(G, q, g)$, Alice elige $x \to
+  g^x$, Bob elige $y \to g^y$, clave común $g^{xy}$.
+  \item \textbf{V/F ``DH permite \emph{enviar} una clave a Bob''} $\to$ \textbf{FALSO.}
+  DH \textbf{acuerda/deriva} una clave compartida; \textbf{no transporta} una clave
+  preexistente. (2018, 2023.) No confundir \emph{acuerdo de clave} con
+  \emph{transporte de clave}.
+  \item \textbf{Seguridad = problema del logaritmo discreto.} Dado $g^x$ y $g^y$
+  no se puede obtener $x$, $y$ ni $g^{xy}$.
+  \item \textbf{¿Por qué $q$ debe ser primo?} Se trabaja con grupos multiplicativos;
+  $q$ primo garantiza que todos los elementos del grupo son coprimos entre sí,
+  evitando subgrupos con estructura factorizable. (Recup 2025, 2025-1.)
+\end{itemize}
+\end{examen}
+
+\subsection{Ataque Man-in-the-Middle (MiTM)}
+
+\begin{ojo}
+\textbf{DH puro no tiene autenticación.} Solo es seguro frente a atacantes
+\textbf{pasivos}. Un atacante \textbf{activo} que intercepta y modifica mensajes
+en tránsito realiza un ataque \textbf{Man-in-the-Middle (MiTM)}: negocia claves
+separadas con Alice y con Bob, y puede descifrar y reenviar todo el tráfico.
+\end{ojo}
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  arrow/.style={-{Stealth}, thick},
+  party/.style={draw, rounded corners, minimum width=1.8cm, minimum height=0.85cm,
+                align=center, thick}
+]
+  \node[party] (a) at (0,0) {Alice\\ \scriptsize($x$)};
+  \node[party, fill=red!10] (m) at (5,0) {Atacante\\ \scriptsize($m_1,\,m_2$)};
+  \node[party] (b) at (10,0) {Bob\\ \scriptsize($y$)};
+
+  \draw[arrow] (a) -- node[above]{$g^x$} (m);
+  \draw[arrow] (m) -- node[above]{$g^{m_2}$} (b);
+  \draw[arrow] (b) to[bend left=20] node[below]{$g^y$} (m);
+  \draw[arrow] (m) to[bend left=20] node[below]{$g^{m_1}$} (a);
+
+  \node[align=center, font=\scriptsize, below=1.4cm of a]
+        {clave Alice--atacante:\\ $g^{x \cdot m_1}$};
+  \node[align=center, font=\scriptsize, below=1.4cm of b]
+        {clave Bob--atacante:\\ $g^{y \cdot m_2}$};
+\end{tikzpicture}
+\end{center}
+\diagcaption{MiTM sobre DH puro (sin autenticación): el atacante sustituye los
+valores $g^x$ y $g^y$ y negocia claves separadas con cada parte. Alice y Bob creen
+hablar entre sí pero todo pasa por el atacante. Solución: complementar DH con MACs
+o firmas digitales.}
+
+%%%------------------------------------------------------------
+\section{Criptosistema asimétrico}
+%%%------------------------------------------------------------
+
+\begin{definicion}{Criptosistema asimétrico}
+Terna de algoritmos eficientes:
+\begin{align*}
+\mathrm{Gen} &: () \to PK \times SK
+  &&\text{(genera \textbf{par} de claves pública/privada)}\\
+\mathrm{Enc} &: PK \times \mathcal{M} \to \mathcal{C}
+  &&\text{(cifra con la \textbf{pública})}\\
+\mathrm{Dec} &: SK \times \mathcal{C} \to \mathcal{M}
+  &&\text{(descifra con la \textbf{privada})}
+\end{align*}
+\textbf{Propiedad básica:} $\mathrm{Dec}_{sk}(\mathrm{Enc}_{pk}(m)) = m$ para todo
+$m$ y todo par $(pk, sk)$ válido.
+\end{definicion}
+
+\subsection{Prueba de indistinguibilidad}
+
+Igual que en el mundo simétrico, pero se le entrega la clave \textbf{pública} al
+adversario:
+
+\begin{enumerate}[leftmargin=1.6em,nosep]
+  \item $(pk, sk) \leftarrow \mathrm{Gen}$.
+  \item El adversario $A$ recibe $pk$ y genera $(m_0, m_1)$.
+  \item $b \leftarrow \{0,1\}$; se le entrega $c = \mathrm{Enc}_{pk}(m_b)$.
+  \item $A$ emite $b'$; gana si $b = b'$.
+\end{enumerate}
+
+\begin{destacado}
+Como $A$ conoce $pk$, puede cifrar cualquier mensaje \emph{él mismo}: tiene acceso
+gratuito al oráculo de cifrado. Por eso:
+\[
+  \text{indistinguible (pasivo)} \;\Leftrightarrow\; \text{CPA-Secure}
+\]
+Y como CPA-Secure \textbf{requiere no determinismo}, \textbf{no existen
+criptosistemas asimétricos seguros que sean determinísticos}.
+\end{destacado}
+
+%%%------------------------------------------------------------
+\section{RSA (Rivest, Shamir, Adleman)}
+%%%------------------------------------------------------------
+
+\subsection{Generación de claves}
+
+\begin{align*}
+&\text{Elegir } p, q \text{ primos fuertes grandes}, \quad n = p \cdot q.\\
+&\Phi(n) = (p-1)(q-1).\\
+&\text{Elegir } e \in (1, \Phi(n)) \text{ con } \gcd(e, \Phi(n)) = 1.\\
+&\text{Calcular } d = e^{-1} \bmod \Phi(n)
+  \quad\text{(Euclides extendido)}.\\
+&pk = (n, e), \qquad sk = (n, d).
+\end{align*}
+
+\subsection{Cifrado y descifrado}
+
+\[
+  \mathrm{Enc}_{pk}(m) = m^e \bmod n, \qquad
+  \mathrm{Dec}_{sk}(c) = c^d \bmod n.
+\]
+
+Los exponentes se calculan con \textbf{exponenciación rápida} (cuadrado y multiplica),
+reduciendo módulo $n$ en cada paso para no manejar números de tamaño $m^e$.
+
+\subsection{Por qué funciona: Teorema de Euler}
+
+\begin{align*}
+\mathrm{Dec}(\mathrm{Enc}(m))
+  &= (m^e)^d \bmod n = m^{ed} \bmod n.\\
+e \cdot d \equiv 1 \bmod \Phi(n)
+  &\;\Rightarrow\; e \cdot d = c \cdot \Phi(n) + 1 \text{ (para algún entero } c\text{)}.\\
+m^{ed} = m^{c\Phi(n)+1}
+  &= \bigl(m^{\Phi(n)}\bigr)^c \cdot m \bmod n.\\
+\text{Euler: } m^{\Phi(n)} \equiv 1 \bmod n
+  &\;\Rightarrow\; m^{ed} \equiv 1^c \cdot m = m \bmod n.
+\end{align*}
+
+\subsection{Diagrama de generación, cifrado y descifrado}
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  arrow/.style={-{Stealth}, thick},
+  rsabox/.style={draw, rounded corners, align=center, minimum height=0.9cm,
+                 minimum width=2.2cm, thick}
+]
+  % Generación
+  \node[rsabox] (pq) at (0,0) {$p,\,q$ primos};
+  \node[rsabox] (n)  at (3.2,0) {$n=p\!\cdot\!q$\\ $\Phi(n)=(p{-}1)(q{-}1)$};
+  \node[rsabox] (e)  at (6.8,0) {$e$: coprimo\\ con $\Phi(n)$};
+  \node[rsabox] (d)  at (10.2,0) {$d=e^{-1}$\\ $\bmod\,\Phi(n)$};
+  \draw[arrow] (pq) -- (n);
+  \draw[arrow] (n)  -- (e);
+  \draw[arrow] (e)  -- (d);
+  \node[font=\scriptsize, below=4pt of n] {$pk=(n,e)$};
+  \node[font=\scriptsize, below=4pt of d] {$sk=(n,d)$};
+
+  % Cifrado / descifrado
+  \node[rsabox, fill=mainblue!8] (m1) at (1.2,-2.6) {$m$};
+  \node[rsabox, fill=mainblue!8] (c)  at (5.0,-2.6) {$c = m^e \bmod n$};
+  \node[rsabox, fill=mainblue!8] (m2) at (9.2,-2.6) {$m = c^d \bmod n$};
+  \draw[arrow] (m1) -- node[above, font=\scriptsize]{cifra con $pk$} (c);
+  \draw[arrow] (c)  -- node[above, font=\scriptsize]{descifra con $sk$} (m2);
+\end{tikzpicture}
+\end{center}
+\diagcaption{Arriba: generación de claves RSA. Abajo: cifrado con la clave pública
+$(n,e)$ y descifrado con la clave privada $(n,d)$.}
+
+\subsection{Problemas del textbook RSA}
+
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \textbf{Determinístico:} mismo mensaje siempre produce el mismo cifrado
+  $\Rightarrow$ no pasa la prueba de indistinguibilidad (no es CPA-Secure).
+  \item \textbf{$e$ y $m$ chicos:} si $m^e < n$, la reducción modular no actúa y
+  $c = m^e$ exactamente; basta con calcular la raíz $e$-ésima real. Históricamente
+  $e = 3$ era popular.
+  \item \textbf{Módulos repetidos:} si dos pares de claves comparten el mismo $n$,
+  un atacante puede factorizarlo y recuperar las claves privadas.
+  \item Los primos $p, q$ deben ser ``\textbf{primos fuertes}'' (no cualquier primo).
+\end{itemize}
+
+\subsection{PKCS\,\#1 v1.5: padding aleatorio}
+
+Estándar que hace RSA no determinístico. Sea $k$ la longitud de $n$ en bytes; solo
+se cifran mensajes de hasta $k - 11$ bytes. Estructura del mensaje con padding:
+\[
+  m' = \underbrace{00000000}_{\text{byte 0}}
+       \;\|\; \underbrace{00000010}_{\text{byte 2}}
+       \;\|\; \underbrace{r}_{\ge 8 \text{ bytes aleatorios}, r_i \ne 0}
+       \;\|\; \underbrace{00000000}_{\text{separador}}
+       \;\|\; m.
+\]
+Al menos 8 bytes aleatorios $\Rightarrow \ge 2^{64}$ variantes por mensaje.
+Al descifrar se obtiene $m'$ y se quita el padding buscando el byte $00$.
+
+\begin{examen}
+\textbf{RSA con padding aleatorio} (PKCS\,\#1 v1.5) se cree \textbf{CPA-Secure},
+pero \textbf{no es CCA-Secure}: se encontraron ataques de texto cifrado elegido
+(el cifrado es manipulable). (2025-2.) El padding aleatorio resuelve CPA, no CCA.
+\end{examen}
+
+\subsection{Tamaño de claves y uso práctico}
+
+La seguridad de RSA es relativa al tamaño de $n = pq$. Como factorizar y el
+logaritmo discreto son \emph{sub-exponenciales} (más rápidos que fuerza bruta),
+se necesitan claves grandes: hoy se recomiendan $\ge 2048$ bits para $n$.
+RSA es 1--2 órdenes de magnitud \textbf{más lento que AES} y solo cifra mensajes
+de tamaño acotado por $n$, por eso en la práctica se usa para cifrar una
+\textbf{clave simétrica}, que luego cifra el mensaje largo.
+
+\begin{examen}
+\textbf{RSA: preguntas de parcial centrales.}
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item Generación: $n=pq$, $\Phi(n)=(p-1)(q-1)$, $e$ coprimo con $\Phi(n)$,
+  $d=e^{-1}\bmod\Phi(n)$.
+  \item Cifrado: $c=m^e\bmod n$.\qquad Descifrado: $m=c^d\bmod n$.
+  \item Por qué funciona: Euler $m^{\Phi(n)}\equiv 1\bmod n$.
+\end{itemize}
+\end{examen}
+
+%%%------------------------------------------------------------
+\section{ElGamal (basado en DH)}
+%%%------------------------------------------------------------
+
+ElGamal es un Diffie-Hellman ``desacoplado en el tiempo'' convertido en criptosistema.
+
+\begin{align*}
+\textbf{Gen:} &\quad
+  \text{Elegir } G, q, g;\quad x \leftarrow \mathbb{Z}_q;\quad h = g^x.\\
+  &\quad pk = (G, q, g, h),\quad sk = (G, q, g, x).\\[4pt]
+\textbf{Enc}_{pk}(m): &\quad
+  y \leftarrow \mathbb{Z}_q;\quad c = (c_1, c_2) = (g^y,\; h^y \cdot m).\\[4pt]
+\textbf{Dec}_{sk}(c): &\quad
+  m = c_2 / c_1^{\,x}.
+\end{align*}
+
+$c_1 = g^y$ es la ``segunda parte de DH''; $h^y = (g^x)^y = g^{xy}$ enmascara a $m$
+como un one-time pad. Al descifrar, $c_1^x = g^{yx}$ cancela la máscara.
+
+\begin{destacado}
+\textbf{Por qué es CPA-Secure:} si el problema de decisión DH (DDH) es difícil en
+$G$, entonces ElGamal es CPA-Secure. ElGamal es probabilístico por naturaleza (elige
+$y$ al azar en cada cifrado) sin necesitar padding externo.
+\end{destacado}
+
+\subsection{Curvas elípticas (ECC)}
+
+ElGamal funciona sobre cualquier grupo donde DDH sea difícil, incluyendo grupos de
+\textbf{curvas elípticas}. Ventaja clave:
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+Algoritmo & Seguridad (bits) & Tamaño de clave \\
+\midrule
+RSA-2048  & $\approx 112$ & 2048 bits \\
+ECC-256   & $\approx 128$ & 256 bits  \\
+ECC-320   & $\approx 160$ & 320 bits  \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Misma seguridad con claves mucho más chicas $\Rightarrow$ operaciones más rápidas,
+certificados más compactos. Todo algoritmo de clave pública prefijado con ``EC''
+suele ser ElGamal o DSA sobre una curva elíptica (ECDH, ECDSA).
+
+%%%------------------------------------------------------------
+\section{Firmas digitales}
+%%%------------------------------------------------------------
+
+\begin{definicion}{Firma digital}
+Terna de algoritmos:
+\begin{align*}
+\mathrm{Gen}  &: () \to PK \times SK\\
+\mathrm{Sign} &: SK \times \mathcal{M} \to \mathcal{S}
+  &&\text{(firma con la \textbf{privada})}\\
+\mathrm{Vrfy} &: PK \times \mathcal{M} \times \mathcal{S} \to \{0,1\}
+  &&\text{(verifica con la \textbf{pública})}
+\end{align*}
+\textbf{Propiedad básica:} $\mathrm{Vrfy}_{pk}(m,\, \mathrm{Sign}_{sk}(m)) = 1$.
+\end{definicion}
+
+\begin{destacado}
+El rol de las claves está \textbf{al revés} que en el cifrado:\\
+\begin{tabular}{lll}
+Operación & Clave usada & Objetivo\\
+\hline
+Cifrar & \textbf{pública} del destinatario & confidencialidad\\
+Descifrar & \textbf{privada} del destinatario & (recuperar el mensaje)\\
+Firmar & \textbf{privada} del emisor & integridad / autenticación\\
+Verificar & \textbf{pública} del emisor & cualquiera puede verificar\\
+\end{tabular}
+\end{destacado}
+
+\subsection{Ventajas sobre los MACs}
+
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \textbf{Públicamente verificables:} cualquier parte que tenga la clave pública
+  puede verificar la firma. Un MAC necesita la clave secreta para verificar.
+  \item \textbf{Transferibles:} la firma puede reenviarse a múltiples destinatarios o
+  por una cadena; cada eslabón puede verificar.
+  \item \textbf{No repudio:} quien firmó no puede negar haberlo hecho. La única forma
+  de generar la firma es con la clave privada (nunca compartida). En Argentina hay ley
+  de firma digital; un organismo del Estado valida que el dueño de la clave privada es
+  tal persona real.
+\end{itemize}
+
+\subsection{Experimento Sig-Forge (infalsificabilidad)}
+
+Análogo a Mac-Forge, pero el adversario también conoce $pk$:
+
+\begin{enumerate}[leftmargin=1.6em,nosep]
+  \item $(sk, pk) \leftarrow \mathrm{Gen}$.
+  \item El adversario $A$ recibe $pk$ y acceso al oráculo de firma $f(x) = \mathrm{Sign}_{sk}(x)$.
+  \item $A$ realiza las consultas que quiera (conjunto $Q$).
+  \item $A$ emite $(m, s)$ con $m \notin Q$.
+\end{enumerate}
+
+$\mathrm{Sig\text{-}forge}_{A,\Pi} = 1$ si $\mathrm{Vrfy}_{pk}(m, s) = 1$ y $m \notin Q$.
+Si ningún adversario eficiente gana con probabilidad no despreciable, la firma es
+\textbf{existencialmente infalsificable (EUF-CMA)}.
+
+\subsection{RSA-Signature básico y sus ataques}
+
+Idéntico a RSA-Encryption pero invirtiendo los roles de las claves:
+\[
+  \mathrm{Sign}_{sk}(m) = m^d \bmod n, \qquad
+  \mathrm{Vrfy}_{pk}(m, s): \overset{?}{s^e \equiv m \pmod{n}}.
+\]
+
+\begin{ojo}
+\textbf{RSA-Signature básico (sin hash) es INSEGURO.} Dos ataques de falsificación:
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item Elegir $s \leftarrow S$ al azar, calcular $m = s^e \bmod n$, publicar
+  $(m, s)$: \textbf{pasa la verificación}.
+  \item \textbf{Maleabilidad:} dados $(m_1, s_1)$ y $(m_2, s_2)$ válidos,
+  el par $(m_1 \cdot m_2,\; s_1 \cdot s_2)$ también verifica
+  ($RSA$ es multiplicativamente homomórfico).
+\end{itemize}
+\end{ojo}
+
+\subsection{Hashed RSA: la firma que se usa en la práctica}
+
+\[
+  \mathrm{Sign}_{sk}(m) = H(m)^d \bmod n, \qquad
+  \mathrm{Vrfy}_{pk}(m, \sigma): \overset{?}{\sigma^e \equiv H(m) \pmod{n}}.
+\]
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  arrow/.style={-{Stealth}, thick},
+  party/.style={draw, rounded corners, minimum width=2.2cm, minimum height=0.9cm,
+                align=center, thick}
+]
+  \node[party] (f) at (0,0) {Firmante};
+  \node[party] (v) at (8.5,0) {Verificador};
+  \draw[arrow] (f) -- node[above, align=center]{$(m,\; \sigma)$} (v);
+  \node[align=center, font=\scriptsize, below=6pt of f, text width=3.4cm]
+    {$\sigma = H(m)^d \bmod n$\\ usa su \textbf{privada} $sk=(n,d)$};
+  \node[align=center, font=\scriptsize, below=6pt of v, text width=3.8cm]
+    {$\sigma^e \bmod n \overset{?}{=} H(m)$\\ usa la \textbf{pública} $pk=(n,e)$ del firmante};
+\end{tikzpicture}
+\end{center}
+\diagcaption{Hashed RSA: el firmante aplica hash y firma con su privada; el
+verificador rehash el mensaje recibido y compara con $\sigma^e \bmod n$.}
+
+\begin{examen}
+\textbf{¿Por qué se firma el HASH y no el mensaje directo?} (Parcial 2015)
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \textbf{Resistencia a preimagen} del hash evita el primer ataque: no se puede
+  partir de $s$ elegido y construir un $m = H^{-1}(s^e)$ válido.
+  \item \textbf{No predecibilidad de $H(m)$} evita el ataque de maleabilidad.
+  \item \textbf{Bonus:} el hash tiene tamaño fijo (e.g.\ 256 bits), así la firma es
+  de tamaño fijo independientemente del tamaño del mensaje; RSA básico solo puede
+  firmar mensajes menores que $n$.
+\end{itemize}
+Hashed RSA no tiene prueba de seguridad estándar; se demuestra seguros en el
+\emph{modelo de oráculo aleatorio} (ROM).
+\end{examen}
+
+\subsection{DSS / ECDSA}
+
+Algoritmo de firma basado en ElGamal. Genera claves $(p, q, g, y)/(p, q, g, x)$ con
+$q$ primo, $p$ primo tal que $q \mid p-1$, $g$ generador de orden $q$ en
+$\mathbb{Z}_p^*$, $x \leftarrow \mathbb{Z}_q$, $y = g^x \bmod p$.
+
+Firma $(r, s)$:
+\[
+  r = (g^k \bmod p) \bmod q, \qquad
+  s = [H(m) + x \cdot r] \cdot k^{-1} \bmod q.
+\]
+
+ECDSA es la variante sobre curvas elípticas: firmas más compactas con claves más
+chicas, ampliamente usado en TLS, SSH y certificados modernos.
+
+%%%------------------------------------------------------------
+\section{PKI y certificados digitales}
+%%%------------------------------------------------------------
+
+El cifrado asimétrico resuelve la confidencialidad pero \emph{traslada} el problema:
+hay que distribuir la clave pública de forma \textbf{autenticada} (saber que la
+pública de Bob es realmente de Bob, si no un MiTM publica la suya). Esto lo
+resuelve la \textbf{PKI} (Public Key Infrastructure).
+
+\begin{definicion}{Certificado digital}
+Documento que asocia una \textbf{identidad} (nombre del titular) con su
+\textbf{clave pública}, y está \textbf{firmado} por una \textbf{Autoridad de
+Certificación (CA)} con la clave privada de la CA.
+\end{definicion}
+
+\subsection{Cadena de confianza}
+
+Se confía en la CA raíz (cuya clave pública viene preinstalada en el SO/navegador).
+La CA raíz firma certificados de CAs intermedias, y estas a su vez firman
+certificados de titulares finales.
+
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  arrow/.style={-{Stealth}, thick},
+  cert/.style={draw, rounded corners, align=center, minimum width=2.6cm,
+               minimum height=1.1cm, thick}
+]
+  \node[cert, fill=accentgreen!12] (root) at (0,0)
+        {\textbf{CA raíz}\\ \scriptsize confianza\\ \scriptsize preinstalada};
+  \node[cert] (inter) at (5,0)
+        {\textbf{CA intermedia}\\ \scriptsize $pk$ + firma de raíz};
+  \node[cert] (site) at (10,0)
+        {\textbf{Cert.\ del sitio}\\ \scriptsize $pk$ del titular\\ \scriptsize + firma de interm.};
+
+  \draw[arrow] (root) -- node[above, font=\scriptsize, align=center]
+        {firma con\\ $sk_{\text{raíz}}$} (inter);
+  \draw[arrow] (inter) -- node[above, font=\scriptsize, align=center]
+        {firma con\\ $sk_{\text{interm.}}$} (site);
+
+  % validación
+  \draw[arrow, dashed] (site.south) to[bend left=28]
+        node[below, font=\scriptsize]{verifica con $pk_{\text{interm.}}$} (inter.south);
+  \draw[arrow, dashed] (inter.south) to[bend left=28]
+        node[below, font=\scriptsize]{verifica con $pk_{\text{raíz}}$} (root.south);
+\end{tikzpicture}
+\end{center}
+\diagcaption{Cadena de certificados: cada nivel firma el certificado del siguiente
+con su clave privada. Validar = verificar las firmas hacia arriba hasta la CA raíz,
+cuya clave pública se conoce de antemano.}
+
+\begin{examen}
+\textbf{Certificados en parciales:}
+\begin{itemize}[leftmargin=1.4em,nosep]
+  \item \textbf{Validar un certificado = verificar la FIRMA de la CA} con la clave
+  \textbf{pública de la CA}. (2018, 2017.)
+  \item Un certificado contiene la clave \textbf{PÚBLICA del titular}, \textbf{no}
+  la clave privada de la CA.
+  \item \textbf{V/F ``el certificado contiene la clave privada de la CA''} $\to$
+  \textbf{FALSO.} (2025-1, 2025-2.)
+  \item La clave privada se mantiene \textbf{secreta}; la clave pública se
+  distribuye de forma \textbf{autenticada} (para eso sirve el certificado). (2015, 2025-1.)
+\end{itemize}
+\end{examen}
+
+%%%------------------------------------------------------------
+\section{TLS handshake (resumen)}
+%%%------------------------------------------------------------
+
+TLS combina todos los elementos vistos:
+
+\begin{enumerate}[leftmargin=1.6em,nosep]
+  \item \textbf{Autenticación del servidor:} el servidor presenta su \textbf{certificado
+  digital} (clave pública + firma de la CA). El cliente valida la cadena de
+  certificados.
+  \item \textbf{Acuerdo de clave de sesión:} se ejecuta \textbf{ECDH} (Diffie-Hellman
+  sobre curva elíptica) para derivar una clave de sesión efímera. No es posible
+  descifrar tráfico pasado aunque se comprometa la clave privada del servidor
+  (Forward Secrecy).
+  \item \textbf{Cifrado simétrico autenticado:} toda la comunicación posterior se
+  cifra con \textbf{AES-GCM} usando la clave de sesión (confidencialidad +
+  integridad en un solo paso).
+\end{enumerate}
+
+%%%------------------------------------------------------------
+\section{Tabla comparativa: MAC vs Firma digital}
+%%%------------------------------------------------------------
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Propiedad} & \textbf{MAC} & \textbf{Firma digital}\\
+\midrule
+Confidencialidad     & No & No \\
+Integridad           & Sí & Sí \\
+Autenticación        & Sí (clave compartida) & Sí (clave privada) \\
+No repudio           & \textbf{No} & \textbf{Sí} \\
+Verificación pública & \textbf{No} (necesita sk compartida) & \textbf{Sí} (basta pk) \\
+Transferible         & No & Sí \\
+Clave requerida      & Simétrica (compartida) & Par asimétrico \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%%%------------------------------------------------------------
+\section{Ganchos mnemónicos}
+%%%------------------------------------------------------------
+
+\begin{tcolorbox}[
+  enhanced, breakable,
+  colback=warnorange!6, colframe=warnorange,
+  leftrule=5pt, toprule=0pt, bottomrule=0pt, rightrule=0pt,
+  arc=0pt, left=8pt, right=6pt, top=6pt, bottom=6pt,
+  fonttitle=\bfseries\small\color{warnorange},
+  title={Ganchos mnemónicos -- Examen}
+]
+\textbf{DH:} ``Alice sube, Bob baja, se encuentran en $g^{xy}$.'' Alice envía
+$g^x$, Bob envía $g^y$; cada uno eleva al exponente del otro. La clave no viaja:
+se \emph{acuerda}.
+
+\medskip
+\textbf{RSA gen:} ``$n=pq$, Fi de $n$, $e$ coprimo, $d$ inverso.'' $(p-1)(q-1)$,
+$\gcd(e,\Phi)=1$, $d=e^{-1}\bmod\Phi$.
+
+\medskip
+\textbf{RSA operaciones:} Cifro con la \textbf{p}ública ($m^e$) = pública $\to$
+cifrado. Descifro con la pri\textbf{v}ada ($c^d$). Firmo con la pri\textbf{v}ada
+($H(m)^d$). Verifico con la \textbf{p}ública ($\sigma^e$).
+
+\medskip
+\textbf{Certificado:} ``CA firma el DNI de Bob.'' El DNI contiene la foto de Bob
+(= clave pública de Bob), no la tarjeta de crédito de la CA (= su privada).
+
+\medskip
+\textbf{MAC vs Firma:} MAC es ``acuerdo de socios'' (solo entre los dos).
+Firma es ``sello notarial'' (cualquiera puede verificar, tiene validez legal).
+\end{tcolorbox}
+
+%%%------------------------------------------------------------
+\section{Ejercicios tipo examen con respuesta}
+%%%------------------------------------------------------------
+
+\begin{examen}
+\textbf{1.} (2018, 2023) V/F: ``Diffie-Hellman permite enviar de forma segura una
+clave a Bob.''
+
+\textbf{Respuesta: FALSO.} DH \textbf{acuerda/deriva} una clave compartida en
+línea; no \emph{transporta} una clave preexistente. Ambas partes derivan la misma
+clave $g^{xy}$ sin que ninguno la haya elegido previamente ni enviado.
+\end{examen}
+
+\begin{examen}
+\textbf{2.} (2025-1, 2025-2) V/F: ``Un certificado digital contiene la clave
+privada de la CA.''
+
+\textbf{Respuesta: FALSO.} Un certificado contiene la \textbf{clave pública del
+titular} (e.g.\ del servidor web), firmada por la CA con la clave \emph{privada} de
+la CA. Nunca contiene ninguna clave privada.
+\end{examen}
+
+\begin{examen}
+\textbf{3.} (Múltiples años) ¿Con qué clave se firma? ¿Con qué clave se verifica?
+
+\textbf{Respuesta:} Se firma con la clave \textbf{privada} del emisor. Se verifica
+con la clave \textbf{pública} del emisor (inverso al cifrado). Confundirlos es error
+clásico de parcial.
+\end{examen}
+
+\begin{examen}
+\textbf{4.} (2025-2) ¿RSA-PKCS\,\#1 v1.5 es CCA-Secure?
+
+\textbf{Respuesta: NO.} El padding aleatorio lo hace CPA-Secure (el cifrado es no
+determinístico). Sin embargo, el cifrado RSA es \textbf{manipulable}; existen ataques
+de texto cifrado elegido (Bleichenbacher 1998). No provee integridad ni es cifrado
+autenticado. Para CCA-Secure se necesita OAEP + RSA, u otro esquema CCA-Secure.
+\end{examen}
+
+\begin{examen}
+\textbf{5.} (Recup 2025) ¿Por qué se elige $q$ primo en DH?
+
+\textbf{Respuesta:} En los grupos multiplicativos usados en DH, si $q$ no fuera primo
+podría tener factores que generan subgrupos propios de orden menor. Trabajar con
+$q$ primo garantiza que todos los elementos no nulos del grupo $\mathbb{Z}_q^*$ son
+coprimos entre sí, y no existen subgrupos ``débiles'' que el atacante pueda explotar
+para reducir el problema del logaritmo discreto.
+\end{examen}
+
+\begin{examen}
+\textbf{6.} (2017) Un proveedor de software quiere garantizar que sus binarios no
+fueron modificados. ¿Qué mecanismo usa y por qué?
+
+\textbf{Respuesta:} \textbf{Firma digital hashed RSA (o ECDSA).} El proveedor firma
+$H(\text{binario})$ con su clave privada. Cualquier usuario verifica la firma con la
+clave pública del proveedor (públicamente verificable, sin compartir secretos). Esto
+garantiza integridad (el binario no fue modificado) y autenticación de origen.
+\end{examen}
+
+\end{document}
