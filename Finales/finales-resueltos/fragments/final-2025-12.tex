@@ -1,0 +1,458 @@
+%=====================================================================
+\section{Final --- Diciembre 2025}
+%=====================================================================
+
+\begin{ojo}
+Este final trae, escrita a mano en la carátula, una nota de puntajes parciales del
+alumno rendido (Ej.\,1: 0/3, Ej.\,2: 0,5/3, Ej.\,3: 1/4, nota final 2) pero \textbf{no}
+trae desarrollo de respuestas: es prácticamente solo el enunciado. Las resoluciones de
+esta sección se elaboraron desde cero contra el material de la materia.
+\end{ojo}
+
+% =====================================================================
+\subsection{Ejercicio 1 --- Control de entradas por QR con MAC simétrico (Patova SAS)}
+% =====================================================================
+
+\begin{consigna}
+La empresa Patova SAS ofrece sistemas de control de entradas para eventos (recitales,
+partidos, etc.). Uno de sus sistemas utiliza tickets impresos o digitales con un código QR.
+
+El QR de cada entrada contiene la siguiente información: (event\_id, tipo\_de\_entrada,
+\#ticket, mac), donde event\_id es un identificador único por evento, tipo\_de\_entrada
+indica la zona (palco, vip, campo, etc.), \#ticket es un número único que identifica a
+cada ticket, y mac = mac$_{k\_evento}$(event\_id $\|$ \#ticket). Finalmente k\_event es una
+clave simétrica de 128 bits definida para cada evento, conocida por el servidor y los
+lectores de QR.
+
+En un escenario de mucha concentración de personas es normal que la señal de red funcione
+irregularmente, así que los lectores que se utilizan en cada acceso están pensados para
+poder operar incluso sin estar conectados al servidor.
+
+El lector decodifica el QR y verifica el mac. Si la verificación es exitosa, revisa que
+tipo\_de\_entrada corresponda al lugar de ingreso (por ejemplo, el lector usado en los
+ingresos vip solo permite tickets de ese tipo), avisa al servidor por un canal seguro para
+confirmar el acceso y si el servidor da el ok permite avanzar. El servidor verifica que
+corresponda a un ticket emitido, y que no haya sido utilizado. Si no puede hacerse la
+conexión, o si no llega respuesta a tiempo para rechazar usos subsiguientes del mismo
+ticket. Una vez retomada la conexión, enviará los números de ticket procesados al servidor.
+
+\begin{enumerate}
+  \item[a)] Debido a la autenticación del mac, un atacante no puede inventar números de serie de
+  tickets. Explicar qué tipo de fraude si podría realizar abusando de fallas en el control de
+  integridad, y explicar cómo evitarlo. (1 pto.)
+  \item[b)] Si un atacante consigue un lector y extrae la clave del evento, puede falsificar las
+  entradas que quiera. Proponer un cambio para evitar que la extracción de claves del lector no
+  permita este tipo de ataque. (1 pto.)
+  \item[c)] En un evento hay 4 entradas a diferentes secciones, un lector en cada una. Explicar
+  cómo minimizar el problema de que dos personas utilicen la misma entrada en dos puertas
+  distintas en un escenario de inestabilidad de la red. (1 pto.)
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 3 --- MACs y Cifrado Autenticado (\S Qué es un MAC; \S Seguridad de un MAC:
+infalsificabilidad Mac-forge; \S método para romper un MAC inseguro cuando no procesa todo
+el mensaje; \S CBC-MAC / HMAC); Clase 5 --- Protocolos (\S Nonce y frescura; \S Replay).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{MAC (Message Authentication Code):} terna $(\mathrm{Gen},\mathrm{Mac},\mathrm{Vrfy})$
+  con clave simétrica compartida $k$. Da \textbf{integridad + autenticidad}: si
+  $\mathrm{Vrfy}_k(m,t)=1$ el receptor sabe que $m$ fue generado por alguien que conoce $k$
+  y no fue alterado en tránsito. \textbf{No impide la modificación} (un atacante en el medio
+  puede alterar bits), solo permite \textbf{detectarla}.
+  \item \textbf{Infalsificabilidad (Mac-forge):} un MAC es seguro si ningún adversario con
+  acceso a un oráculo $f(x)=\mathrm{Mac}_k(x)$ (sin ver $k$) puede producir $(m,t)$ válido con
+  $m$ no consultado, salvo con probabilidad despreciable. Como aquí $\mathrm{mac}=
+  \mathrm{Mac}_{k\_evento}(\text{event\_id}\|\text{\#ticket})$ con clave de 128 bits, un
+  atacante \textbf{no puede} generar un mac válido para un \#ticket inventado sin conocer
+  $k\_evento$: no puede fabricar tickets nuevos ni alterar event\_id/\#ticket de uno
+  existente sin invalidar el mac.
+  \item \textbf{Lo que el MAC NO cubre:} el esquema solo autentica $(\text{event\_id},
+  \#\text{ticket})$; no dice nada sobre \emph{cuántas veces} se usa ese par. La detección de
+  reutilización (``ticket ya usado'') depende exclusivamente de que el servidor la registre
+  y de que los lectores estén sincronizados con él --- y el enunciado aclara que en modo
+  degradado (sin conexión) el lector \textbf{no puede rechazar usos subsiguientes del mismo
+  ticket} hasta reconectarse.
+  \item \textbf{Riesgo de la clave simétrica compartida:} en un MAC (a diferencia de una
+  firma digital, Clase 4) \textbf{todos} los verificadores (todos los lectores del evento)
+  deben conocer la misma clave $k\_evento$ para poder verificar. Cualquier lector es, por
+  diseño, un punto donde la clave está disponible en claro (o debe estarlo para operar);
+  extraerla de un lector comprometido da la capacidad de \textbf{generar} macs válidos, no
+  solo de verificarlos --- el mismo problema estructural de compartir clave que motiva pasar
+  a firma digital (clave privada solo del lado que firma) cuando hay muchos verificadores.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+Este ejercicio aplica directamente la definición de MAC/CBC-MAC/HMAC de la Clase 3 (la
+integridad autenticada no impide la modificación, solo la detecta) y el problema de
+\emph{replay} de la Clase 5 (reutilizar el mismo mensaje/ticket varias veces mientras no hay
+frescura verificada). El punto b) es el mismo argumento por el cual, cuando hay muchos
+verificadores independientes, conviene una \textbf{firma digital} (Clase 4): solo quien firma
+necesita el secreto ($sk$), todos los demás solo necesitan la clave \textbf{pública} $pk$, así
+que comprometer un verificador no permite forjar.
+
+\paragraph{Resolución.}
+
+\textbf{a)} El fraude posible es el \textbf{reuso del mismo ticket (doble uso / ``ticket
+compartido'')}: aunque el atacante no puede inventar un \#ticket ni un event\_id nuevos (el
+mac se lo impide), \textbf{sí puede reutilizar un QR válido ya emitido} (fotografiarlo,
+copiarlo, distribuirlo) porque el mac de $(\text{event\_id}\|\#\text{ticket})$ es siempre el
+mismo para ese par: el esquema \textbf{no incluye ningún elemento de frescura} (nonce,
+contador de usos, timestamp) que distinga ``primer uso'' de ``uso repetido''. Esto es
+particularmente explotable en el \textbf{modo degradado sin conexión}: el enunciado dice
+explícitamente que si no llega respuesta del servidor a tiempo \textbf{no se puede rechazar
+el uso subsiguiente del mismo ticket}, así que dos (o más) personas con copias del mismo QR
+pueden entrar mientras algún lector esté offline. Cómo evitarlo: el control de unicidad no
+puede vivir solo en el mac (que es determinístico e idéntico en cada verificación); hay que
+que cada lector \textbf{mantenga localmente la lista de \#tickets ya vistos} en ese evento
+(incluso offline) y rechace inmediatamente una repetición local, además de sincronizar esa
+lista entre lectores apenas se recupera la conexión (tal como el enunciado ya prevé el envío
+de los números procesados al reconectar) para cerrar la ventana de doble uso entre lectores
+distintos.
+
+\textbf{b)} El problema de fondo es que $k\_evento$ es una \textbf{clave simétrica
+compartida por todos los verificadores} (todos los lectores del evento): quien la posee no
+solo puede \emph{verificar} macs, sino también \emph{generar} macs válidos para cualquier
+$(\text{event\_id}\|\#\text{ticket})$ que quiera, incluidos tickets inexistentes. Extraer la
+clave de un único lector comprometido rompe la seguridad de \textbf{todo} el evento.
+Propuesta de cambio: reemplazar el esquema por \textbf{firma digital} (Clase 4,
+$\mathrm{Sign}_{sk}/\mathrm{Vrfy}_{pk}$): el servidor (o el emisor de tickets) firma
+$(\text{event\_id}\|\#\text{ticket})$ con su clave \textbf{privada} $sk$, y cada lector solo
+necesita la clave \textbf{pública} $pk$ correspondiente para verificar ($\mathrm{Vrfy}_{pk}$).
+Con esto, extraer la clave almacenada en un lector comprometido solo da la clave
+\emph{pública} (que ya es pública por definición) y \textbf{no permite falsificar} nuevas
+entradas, porque la capacidad de \emph{firmar} queda concentrada del lado del emisor y nunca
+viaja a los lectores de campo. Alternativa más acotada sin cambiar de esquema: si se quiere
+mantener MAC simétrico, usar HSM en cada lector para que $k\_evento$ nunca salga en claro del
+hardware (el lector solo pide la operación de verificación, sin exponer la clave), aunque
+esto no elimina el riesgo tan bien como pasar a un esquema asimétrico.
+
+\textbf{c)} Con 4 puertas/secciones y lectores potencialmente desconectados entre sí, el
+riesgo es que el mismo \#ticket sea aceptado en dos lectores distintos antes de que se
+enteren mutuamente (inestabilidad de red = no hay una única fuente de verdad en tiempo
+real). Para minimizarlo:
+\begin{itemize}
+  \item Igual que en a), cada lector debe llevar su \textbf{propio historial local} de
+  \#tickets vistos y, apenas recupere conectividad, \textbf{sincronizar} esa lista con el
+  servidor y con los demás lectores (el enunciado ya prevé el envío de los números
+  procesados al reconectar), de forma que la ventana de doble uso quede acotada al tiempo
+  sin conexión, no indefinida.
+  \item Reducir esa ventana: reconectar/sincronizar con la mayor frecuencia posible (o usar
+  un canal secundario de baja velocidad pero disponible) en vez de esperar a que vuelva la
+  conectividad completa, para minimizar el tiempo en que dos lectores pueden aceptar el mismo
+  ticket sin saberlo.
+  \item Si tipo\_de\_entrada ya restringe cada \#ticket a una única sección/puerta (como
+  ocurre con el ticket vip en el lector vip), un ticket de sección A no debería poder
+  aceptarse nunca en el lector de la sección B --- reforzar esa validación de zona en todos
+  los lectores reduce a la mitad (o a un cuarto, con 4 puertas) las combinaciones de doble
+  uso posibles, aunque no elimina el reuso dentro de la misma puerta.
+\end{itemize}
+\begin{ojo}
+El enunciado no detalla ningún mecanismo de sincronización entre lectores más allá de ``una
+vez retomada la conexión enviará los números de ticket procesados al servidor''; la solución
+propuesta arriba (historial local + sincronización) es una extensión razonable a partir de
+ese texto, pero el material de la materia no describe un protocolo específico de
+sincronización distribuida entre lectores de control de acceso, así que esta parte se
+resuelve con los principios generales de frescura/anti-replay (Clase 5) aplicados al
+escenario, no con una técnica puntual de la materia.
+\end{ojo}
+
+% =====================================================================
+\subsection{Ejercicio 2 --- SSO con IdP y firma digital}
+% =====================================================================
+
+\begin{consigna}
+Copérnico SRL posee varias aplicaciones web internas y está diseñando un sistema de login
+unificado (SSO), que permita a sus empleados autenticarse una vez y poder utilizar todas las
+aplicaciones a las cuales tenga acceso.
+
+Para eso ha decidido instalar un Proveedor de Identidad (IdP) que ofrece una aplicación web
+donde los usuarios pueden autenticarse. El IdP posee un par de claves (sk, pk) utilizadas
+para realizar firmas digitales. Todas las aplicaciones web conocen la clave pública pk.
+
+Cuando un usuario llega a cualquier aplicación, si no posee una sesión válida, la aplicación
+redirige al usuario al IdP, donde se autentica. Cuando el proceso es exitoso (o si el usuario
+tiene una sesión ya activa en el IdP), el IdP construye un token T=(id\_usuario, servicio),
+donde ``servicio'' es el identificador del servicio que solicitó el login.
+
+Luego calcula S=Sign$_{sk}$(H(T)), donde Sign es una firma digital resistente a
+falsificaciones y H(.) es una función de hash libre de colisiones. Finalmente redirige al
+usuario a la página del servicio, enviando T y S como parámetros.
+
+Los distintos servicios, ante la presencia de los parámetros T y S, verifican la firma S y si
+es válida y el servicio mencionado en el token en el que está validando la firma, crean una
+sesión para el usuario.
+
+\begin{enumerate}
+  \item[a)] Explicar por qué cada servicio no necesita conocer la contraseña del usuario para
+  poder crearle una sesión y eso no tiene un impacto negativo en seguridad. (1 pto.)
+  \item[b)] ¿Cómo se puede mejorar el protocolo para evitar el escenario donde un atacante
+  consiga de algún modo un par T, S válido e impersone al usuario que los generó en primer
+  momento? (1 pto.)
+  \item[c)] Un desarrollador propone optimizar el sistema eliminando el campo ``servicio'' del
+  token. Desarrollar un ataque que explote esta modificación para ganar acceso a un sistema
+  w' robando un par de T,S que permiten acceder al sistema w. Asumir que las comunicaciones
+  entre partes están correctamente protegidas por un canal TLS, y explicar un posible
+  escenario que le permita ``robar'' esos tokens. (1 pto.)
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 4 --- Cifrado Asimétrico y Firma Digital (\S Firmas digitales; \S por qué se firma el
+hash y no el mensaje; \S infalsificabilidad); Clase 5 --- Protocolos (\S Nonce y frescura;
+\S Replay); Segunda Parte, Clase 2 --- Autenticación (\S Autenticación remota SSO/OpenID
+Connect).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{Firma digital:} $\mathrm{Sign}: SK\times P\to S$ con la clave
+  \textbf{privada}, $\mathrm{Vrfy}: PK\times P\times S\to\{0,1\}$ con la clave
+  \textbf{pública}; da integridad, autenticación y \textbf{no repudio} (solo quien tiene
+  $sk$ pudo firmar). Se firma el \textbf{hash} $H(m)$ (libre de colisiones) y no el mensaje
+  directamente: entre otras razones, por eficiencia/tamaño fijo de la firma y por evitar
+  ataques de falsificación existencial sobre RSA-Signature sin hash.
+  \item \textbf{SSO (Single Sign-On):} delegar la autenticación a un sistema externo (el
+  IdP) con el cual hay una relación de confianza; conviene cuando ese tercero autentica de
+  forma más robusta. Las aplicaciones (``servicios'') confían en el IdP porque pueden
+  \textbf{verificar la firma} con la clave pública $pk$, sin necesitar ver jamás la
+  contraseña del usuario.
+  \item \textbf{Nonce y frescura (Clase 5):} un nonce (número aleatorio de un solo uso)
+  permite detectar/evitar \textbf{replays} (reenvío de un mensaje/token viejo). Sin un
+  elemento de frescura ni de identidad de destinatario, un par firmado válido puede
+  reenviarse o reusarse tal cual en otro contexto.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+El esquema es una aplicación directa de firma digital (Clase 4) al problema de SSO (Segunda
+Parte, Clase 2): el IdP firma con su privada, cada servicio verifica con la pública ---
+exactamente el patrón ``firmante/verificador'' de la Clase 4, con la ventaja de que el
+servicio nunca necesita la contraseña. Las partes b) y c) son, en el fondo, el mismo problema
+de \textbf{replay/falta de frescura y de ligazón (binding) del token a un contexto} que
+aparece en los protocolos de Needham--Schroeder de la Clase 5: un mensaje firmado/cifrado que
+no ata explícitamente todos los datos relevantes (destinatario, tiempo, canal) puede
+reutilizarse fuera de su contexto original.
+
+\paragraph{Resolución.}
+
+\textbf{a)} Cada servicio no necesita conocer la contraseña del usuario porque la
+\textbf{autenticación queda delegada por completo en el IdP}: el usuario solo ingresa su
+contraseña una vez, en el IdP (el único que la conoce/valida), y lo que recibe cada servicio
+es un \textbf{token firmado} $T=(\text{id\_usuario},\text{servicio})$ con
+$S=\mathrm{Sign}_{sk}(H(T))$. Como la firma es \textbf{resistente a falsificaciones}, ningún
+servicio (ni un atacante) puede producir un par $(T,S)$ válido sin conocer $sk$, que solo
+tiene el IdP; verificar $S$ con la clave \textbf{pública} $pk$ le alcanza a cada servicio
+para confiar en que ese $T$ fue efectivamente emitido por el IdP para ese usuario y ese
+servicio. Esto no tiene impacto negativo en seguridad porque: (1) la contraseña nunca se
+disemina entre las aplicaciones (menos superficie de ataque: si un servicio se compromete, no
+se filtra la contraseña real del usuario, solo se puede leer/verificar tokens ya emitidos);
+(2) el modelo de confianza es el mismo que en cualquier esquema firmante/verificador de la
+Clase 4: solo el que firma ($sk$, el IdP) puede generar sesiones válidas, y eso es
+exactamente lo que se quiere (no repudio/autenticidad respecto del IdP).
+
+\textbf{b)} El riesgo es que un par $(T,S)$ válido, una vez obtenido por un atacante (por
+ejemplo interceptándolo o reenviándolo), \textbf{siga siendo válido indefinidamente y en
+cualquier contexto}: no hay nada en el esquema que ate ese par a un momento (frescura) ni a
+un canal/sesión concretos, de modo que reenviarlo (\emph{replay}) alcanza para impersonar.
+Mejora: incorporar al token $T$ (antes de firmarlo) un elemento de \textbf{frescura tipo
+nonce/timestamp} (Clase 5), por ejemplo $T=(\text{id\_usuario},\text{servicio},\text{nonce o
+timestamp de emisión})$, y que cada servicio (a) verifique que el token no está
+\textbf{expirado} (ventana de validez corta) y (b) \textbf{registre/invalide} el nonce ya
+usado, de forma que un mismo $(T,S)$ no pueda reutilizarse dos veces ni fuera de su ventana
+temporal. Esto convierte el token en un ``desafío-respuesta con vencimiento'' en vez de un
+secreto reusable indefinidamente, igual que los nonces $r_1,r_2$ evitan el replay de la clave
+de sesión en Needham--Schroeder.
+
+\textbf{c)} Si se elimina el campo \texttt{servicio} del token, éste queda como
+$T=(\text{id\_usuario})$, y $S=\mathrm{Sign}_{sk}(H(T))$ ya \textbf{no ata el token a ningún
+servicio en particular}: la firma certifica ``el IdP autenticó a id\_usuario'', pero no
+certifica \emph{para qué servicio}. Ataque: un atacante que controla (o compromete) el
+sistema $w'$ hace que un usuario legítimo inicie sesión en $w'$ vía el mismo IdP; el IdP
+genera un $(T,S)$ válido (firma legítima del IdP para ese id\_usuario) que $w'$ recibe como
+parte del flujo normal de redirección. Como el canal TLS protege la confidencialidad e
+integridad \emph{en tránsito}, pero \textbf{no impide que el propio destino $w'$, que es
+quien recibe $T,S$ en la práctica, los reutilice él mismo}: el operador (o código malicioso)
+de $w'$ toma ese mismo $(T,S)$ --- que ya no menciona ningún servicio destino --- y lo
+reenvía como parámetros a $w$ (el sistema real que el atacante quiere atacar). Como $w$ solo
+verifica $\mathrm{Vrfy}_{pk}(H(T),S)=1$ y ya no puede comparar ningún campo ``servicio''
+contra sí mismo (porque ese campo no existe), acepta el token y crea una sesión para
+id\_usuario en $w$, aun cuando el usuario nunca intentó autenticarse contra $w$. En síntesis:
+sin el campo \texttt{servicio} el token deja de estar \textbf{ligado a su destino} y
+cualquier servicio que reciba honestamente un $(T,S)$ puede reutilizarlo (``confused deputy''
+entre servicios) para autenticarse ante \emph{cualquier otro} servicio que confíe en la misma
+$pk$ --- el TLS protege el transporte, no la reutilización del mismo mensaje firmado en un
+contexto distinto para el cual no fue emitido.
+
+% =====================================================================
+\subsection{Ejercicio 3 --- Hipótesis de falla para la app CriptoTotal}
+% =====================================================================
+
+\begin{consigna}
+La empresa CriptoTotal ofrece una aplicación web y móvil para que los usuarios puedan ver,
+en un solo lugar, sus inversiones en distintas criptomonedas realizadas en múltiples
+exchanges.
+
+El registro se hace con email y contraseña, con opción de activar un segundo factor de
+autenticación que envía códigos de uso único por SMS.
+
+El usuario puede vincular cuentas de distintos exchanges (por ejemplo Trinance, Saken,
+Rupio) cargando sus API keys y secret keys. La documentación comercial afirma que ``las
+claves se almacenan cifradas en nuestra base de datos''.
+
+Periódicamente, un servicio backend consulta las APIs de los exchanges vinculados,
+descarga balances y movimientos y los guarda en una base de datos relacional.
+
+La aplicación utiliza tokens JWT para manejar la sesión del usuario. El frontend (Single
+page app en JavaScript, que corre en el navegador de cada usuario) almacena el JWT en
+localStorage y lo envía en el header Authorization: Bearer\ldots en cada request API REST.
+
+Existe un panel de administración al que acceden empleados de soporte para ver el estado de
+las cuentas, saldos agregados, últimos accesos y errores de sincronización.
+
+La versión ``premium'' de la app se paga por suscripción mensual a través de un proveedor de
+pagos -- la app redirige al proveedor y este último controla todo el flujo de checkout,
+captura de información de pago y ejecución. Al confirmarse el pago, se marca en una tabla la
+cuenta del usuario como premium = true y se habilitan funciones adicionales (reportes
+históricos, alertas por precio, etc.).
+
+En función de la descripción del sistema, establecer 4 hipótesis de falla plausibles
+siguiendo la metodología de pentesting. Por cada hipótesis definir una prueba siguiendo los
+lineamientos de la metodología. (1 pto. c/u.)
+
+Aclaración: No utilizar problemas genéricos como hipótesis de falla. Plantear situaciones y
+lugares concretos donde podría estar el problema. Por ejemplo, en lugar de decir ``puede
+haber un buffer overflow'', decir ``es probable que haya un buffer overflow en la lectura del
+parámetro x que debe interpretarse como número y puede tener un buffer pequeño dado que los
+números esperados tienen menos de 4 dígitos''.
+\end{consigna}
+
+\begin{ojo}
+El PDF del examen trae, escritas a mano al lado de cada párrafo del enunciado, anotaciones
+breves (``Sensitive Data Exposure'', ``Exposure/Improper authentication'', ``DoS'',
+``Missing auth'', ``Interception''). No forman parte del enunciado tipeado del examen ni
+están desarrolladas: parecen una guía de corrección del docente, no una respuesta del
+alumno. Se las tuvo en cuenta como pista de \emph{dónde} mirar, pero las 4 hipótesis de abajo
+se construyen y justifican exclusivamente con los conceptos y terminología del material de la
+materia (no se usa terminología externa como ``OWASP API Top 10'' salvo que ya figure en los
+resúmenes).
+\end{ojo}
+
+\paragraph{Temas.}
+Clase 6 --- Pentesting (\S Metodología de Hipótesis de Falla completa: Recolección $\to$
+Hipótesis $\to$ Prueba $\to$ Generalización $\to$ Eliminación); Segunda Parte, Clase 2 ---
+Autenticación (\S Multifactor y multicanal: independencia de factores y entrelazamiento);
+Clase 3 --- Principios de Diseño y Vulnerabilidades (\S XSS CWE-79; \S Mínimo privilegio /
+separación de privilegios); Clase 7 --- Protección de Datos (\S Encripción at-rest: HSM,
+Keystore, esquema KEK/DEK).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{Metodología de hipótesis de falla (memorizar el orden):} Recolección de
+  información $\to$ \textbf{Planteo de hipótesis de falla} $\to$ Prueba $\to$ Generalización
+  $\to$ Eliminación (opcional). El paso de \textbf{Hipótesis} exige suponer la existencia de
+  una vulnerabilidad concreta en una parte concreta del sistema (no genérica). El paso de
+  \textbf{Prueba} debe diseñarse lo menos intrusivo posible, ser \textbf{repetible y
+  concluyente}, y hoy se asume que hay que \textbf{intentar explotar} la vulnerabilidad para
+  demostrarla (salvo que analizar documentación/comportamiento ya alcance).
+  \item \textbf{Independencia de factores / entrelazamiento (2FA):} el multifactor es más
+  seguro porque obliga a comprometer \textbf{varios canales independientes}; si los factores
+  quedan \textbf{entrelazados} (p.\ ej.\ poder recuperar/reiniciar el primer factor usando el
+  segundo canal) se pierde esa independencia --- ``dos llaves para la misma cerradura''.
+  \item \textbf{XSS (CWE-79):} inyección de código JS que termina \textbf{ejecutado por el
+  navegador de la víctima}, aprovechando la confianza del sitio; permite \textbf{robar la
+  sesión}. Un JWT guardado en \texttt{localStorage} es accesible por \emph{cualquier} script
+  que corra en esa página, a diferencia de una cookie con flag \texttt{HttpOnly} (no
+  mencionado explícitamente en el material, pero la propiedad de que localStorage es legible
+  por JS sí lo está vía la definición de XSS).
+  \item \textbf{Mínimo privilegio / separación de privilegios:} dar a cada sujeto solo los
+  permisos mínimos necesarios (``por default, no tener acceso a nada''); una tarea crítica no
+  debería quedar bajo un solo sujeto sin controles.
+  \item \textbf{Encripción at-rest y esquema KEK/DEK:} para proteger secretos guardados
+  (como las API keys/secret keys de los exchanges) se recomienda \textbf{HSM} (opera sin
+  exponer la clave) o, en software, un \textbf{Keystore} con clave máster, o directamente el
+  esquema por capas \textbf{KEK/DEK} (una \emph{Key Encryption Key} cifra la \emph{Data
+  Encryption Key}, que a su vez cifra los datos). Decir simplemente ``las claves se
+  almacenan cifradas'' no especifica si existe esa separación de capas ni dónde vive la
+  clave que las descifra.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+Es la aplicación directa de la metodología de hipótesis de falla (Clase 6) a un sistema
+descrito en detalle, con la restricción explícita del enunciado de no usar hipótesis
+genéricas. Cada hipótesis abajo señala un lugar concreto (una línea del enunciado) y una
+prueba puntual, repetible y poco intrusiva, siguiendo el Paso 3 de la metodología.
+
+\paragraph{Resolución.}
+
+\textbf{Hipótesis 1 --- Entrelazamiento del segundo factor SMS con la recuperación de
+contraseña.} Lugar concreto: el flujo de \emph{recuperación de cuenta} de CriptoTotal, que
+probablemente usa el mismo canal (email o el propio SMS) para resetear la contraseña. Es
+probable que, si el usuario activó 2FA por SMS, el flujo de ``olvidé mi contraseña'' permita
+recuperar el acceso con \textbf{solo el código SMS} (sin la contraseña original), lo cual
+\textbf{entrelaza} el primer factor (contraseña) con el segundo (SMS): quien controla el
+número de teléfono (p.\ ej.\ mediante SIM swapping o intercepción del SMS) termina teniendo
+``dos llaves para la misma cerradura'' y puede tomar la cuenta completa sin conocer nunca la
+contraseña real. Prueba: registrar una cuenta de prueba con 2FA por SMS activo, iniciar el
+flujo de recuperación de contraseña y verificar si el sistema permite fijar una contraseña
+nueva usando únicamente el código recibido por SMS (sin pedir ningún dato adicional
+independiente del canal SMS); si es así, queda demostrado el entrelazamiento entre ambos
+factores.
+
+\textbf{Hipótesis 2 --- Ausencia de capas KEK/DEK en el cifrado de las API keys/secret keys
+de los exchanges.} Lugar concreto: la frase de la documentación comercial ``las claves se
+almacenan cifradas en nuestra base de datos'', sin especificar dónde vive la clave que
+descifra esas API keys. Es probable que exista una \textbf{única clave máster} (o ninguna
+separación KEK/DEK) que cifra directamente todas las secret keys de todos los usuarios, y que
+esa clave máster resida accesible desde el mismo backend que hace las consultas periódicas a
+los exchanges (mismo proceso/config/variable de entorno); si esa clave máster se compromete
+(o se filtra junto con la base de datos, por ejemplo en un backup), \textbf{todas} las secret
+keys de todos los usuarios de todos los exchanges quedan expuestas de una sola vez. Prueba:
+en un ambiente de prueba, revisar la configuración/infraestructura del servicio backend que
+descifra las secret keys para consultar los exchanges y verificar si existe una separación
+KEK/DEK (rotación de la clave que cifra sin re-cifrar los datos) o un HSM/Keystore, o si en
+cambio hay una única clave estática embebida junto al mismo servicio que accede a la base de
+datos --- si la misma credencial que abre la base de datos alcanza para descifrar las secret
+keys, la hipótesis queda confirmada.
+
+\textbf{Hipótesis 3 --- Robo del JWT de sesión vía XSS por estar en localStorage.} Lugar
+concreto: el frontend (SPA en JavaScript) guarda el JWT en \texttt{localStorage} y lo reenvía
+en el header \texttt{Authorization: Bearer\ldots}. Es probable que exista algún punto de
+entrada de datos no sanitizado en la SPA (por ejemplo, un campo donde se muestra el nombre de
+un exchange vinculado, un comentario o cualquier dato reflejado en la interfaz sin escapar)
+que permita inyectar JavaScript (XSS, CWE-79); dado que \texttt{localStorage} es legible por
+\emph{cualquier} script que corra en el origen de la página, un XSS exitoso permite leer el
+JWT y exfiltrarlo, dando control completo de la sesión (incluyendo ver inversiones y
+potencialmente operar sobre cuentas vinculadas) sin necesitar la contraseña ni el 2FA.
+Prueba: identificar un campo de entrada de usuario que se refleje en la UI de la SPA (nombre
+de cuenta, alias de un exchange vinculado, etc.), intentar inyectar una carga XSS de prueba
+inocua (por ejemplo que solo lea \texttt{localStorage.getItem('token')} y lo muestre en un
+\texttt{alert} o lo envíe a un endpoint de control propio) y verificar si se ejecuta en el
+navegador; si el script corre y logra leer el JWT, la hipótesis queda confirmada de forma
+repetible.
+
+\textbf{Hipótesis 4 --- Panel de administración de soporte sin mínimo privilegio (acceso a
+saldos agregados de cualquier usuario).} Lugar concreto: ``existe un panel de administración
+al que acceden empleados de soporte para ver el estado de las cuentas, saldos agregados,
+últimos accesos y errores de sincronización''. Es probable que ese panel no aplique
+\textbf{mínimo privilegio}: en lugar de que cada agente de soporte solo pueda ver los datos
+del/de los ticket(s) de soporte que tiene asignados, es probable que cualquier cuenta de
+soporte pueda consultar saldos agregados y datos de \emph{cualquier} usuario del sistema sin
+una necesidad de negocio puntual ni un registro/auditoría de qué usuario consultó a qué otro
+usuario, violando el principio de dar a cada sujeto ``solo los permisos mínimos necesarios''.
+Prueba: con una cuenta de soporte de prueba con permisos mínimos asignados, intentar consultar
+en el panel los saldos agregados y últimos accesos de un usuario \textbf{no relacionado} con
+ningún caso de soporte abierto por esa cuenta (por ejemplo cambiando el identificador de
+usuario en la URL o parámetro de la consulta del panel) y verificar si el panel entrega esos
+datos sin restricción ni quedar registrado como acceso fuera de alcance; si el acceso se
+concede igual, la hipótesis queda confirmada.
+
+\begin{ojo}
+El enunciado también describe el flujo de pago premium delegado a un proveedor externo
+(``el proveedor de pagos controla todo el flujo de checkout... al confirmarse el pago se
+marca premium=true''), que sugiere una posible quinta hipótesis (validar cómo se confirma
+el pago hacia la propia app y si ese aviso podría falsificarse). No se desarrolla como una
+de las 4 hipótesis pedidas porque el material de la materia no cubre en detalle los mecanismos
+de confirmación de pagos de un proveedor externo (webhooks firmados, callbacks, etc.); se
+señala para que el usuario decida si quiere agregarla igualmente o dejarla fuera por no estar
+sustentada en el material.
+\end{ojo}

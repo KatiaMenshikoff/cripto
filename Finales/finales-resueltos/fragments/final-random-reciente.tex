@@ -1,0 +1,442 @@
+%=====================================================================
+\section{Final --- Random reciente}
+%=====================================================================
+
+%=====================================================================
+\subsection{Ejercicio 1 --- Pulseras BLE del edificio Helíos (AES-CTR, modo degradado)}
+%=====================================================================
+
+\begin{consigna}
+El edificio Helíos usa pulseras electrónicas para controlar el acceso a las puertas.
+
+Cada pulsera tiene un identificador público $ID$, una clave simétrica $K$ de 128
+bits, y un bit \texttt{wearing} que indica si está siendo usada por una persona (1)
+o no (0).
+
+Cada 2 segundos, la pulsera transmite vía bluetooth (utilizando BLE broadcast, sin
+emparejamiento previo): Pulsera $\to$ aire: $(ID, ctr, C)$, donde $ctr$ es un
+contador que empieza en 0 y se incrementa, y $C = \mathrm{AES\text{-}CTR}_k(
+\mathit{wearing}\|ctr)$, y $k$ es una clave de 128 bits específica para cada
+pulsera.
+
+Los controladores de cada puerta escuchan BLE y reenvían cada mensaje a un
+servidor central por un canal considerado seguro: Controlador $\to$ Servidor:
+$(door\_id, timestamp, ID, ctr, C)$.
+
+El servidor conoce $K$ para cada $ID$ y descifra de dicho mensaje el valor $C$. Si
+de dicho descifrado, $ctr$ coincide con el valor enviado en plano, y el empleado
+figura en la base de datos como autorizado para abrir esa puerta, avisa al
+controlador que libere la cerradura. Sino, registra el incidente y no permite que
+se abra la puerta.
+
+En caso de caída de red (donde los controladores no podrían comunicarse con el
+servidor), algunas puertas pasan a modo ``degradado'': si detectan cualquier
+mensaje con un ID autorizado recientemente, abren la puerta sin consultar al
+servidor.
+
+\begin{enumerate}
+  \item[a)] Describir qué verificaciones adicionales podría realizar el servidor
+  para detectar usos con los siguientes patrones extraños: intento de abrir dos
+  puertas lejanas casi al mismo tiempo, intento de abrir puertas fuera del horario
+  normal. (1 pto.)
+  \item[b)] Un atacante puede escuchar y transmitir mensajes BLE a su entera
+  discreción. Explicar cómo podría modificar o reutilizar mensajes escuchados para
+  conseguir abrir una puerta. Proponer una solución. (1 pto.)
+  \item[c)] Si un atacante logra forzar el modo degradado, es trivial repetir un
+  mensaje reciente y conseguir que se abra la puerta. Proponer alguna mejora que
+  mitigue el problema sin introducir nuevos dispositivos o enlaces al sistema.
+  (1 pto.)
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Primer Parte, Clase 2 --- Cifrado (\S Modo CTR: keystream $E_k(\text{nonce}\|i)$,
+descifra con la misma función $E$, nunca usa $D_k$, paralelizable, CPA-Secure solo
+si no se repite $(k,\text{nonce})$); Primer Parte, Clase 3 --- MACs y Cifrado
+Autenticado (\S Maleabilidad de cifrados de flujo/CTR; \S el cifrado por sí solo no
+alcanza para integridad; \S MAC: infalsificabilidad, procesa todo el mensaje);
+Segunda Parte, Clase 2 --- Autenticación (\S OTP/HOTP: contador sincronizado,
+códigos de un solo uso); Segunda Parte, Clase 6 --- Pentesting (áreas candidatas de
+hipótesis, aplicable por analogía a los patrones de uso anómalo del inciso a).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{CTR es un cifrado de flujo, no autenticado.} $c_i = E_k(\text{nonce}
+  \|i)\oplus m_i$; el descifrado es $m_i = E_k(\text{nonce}\|i)\oplus c_i$ (nunca se
+  usa $D_k$, es la misma función $E$ en ambos sentidos). CTR da \emph{confidencialidad}
+  (si no se repite el par clave/nonce), pero \textbf{no} da integridad ni
+  autenticación por sí solo.
+  \item \textbf{Maleabilidad de cifrados de flujo (Clase 3, Primer Parte).} Si
+  $\mathrm{Enc}_k(m)=G(k)\oplus m=c$, entonces $c'=c\oplus x \Rightarrow
+  \mathrm{Dec}_k(c')=m\oplus x$: un atacante que conoce (o adivina) un bit del plano
+  en una posición conocida puede flippear ese bit del cifrado y, al descifrarse,
+  cambia exactamente ese bit del plano, \textbf{sin conocer la clave}.
+  \item \textbf{Ningún criptosistema visto es CCA-Secure:} el cifrado está pensado
+  para confidencialidad, no para resistir manipulación del texto cifrado; por eso la
+  integridad requiere una primitiva aparte, el \textbf{MAC}, que además debe procesar
+  la \emph{totalidad} del mensaje.
+  \item \textbf{OTP/HOTP (Clase 2, Segunda Parte):} $A$ y $B$ comparten una clave $K$
+  y un contador $C$; el valor depende de $(K,C)$, y cada valor sirve una única vez
+  (frescura por consumo, sin necesitar conexión).
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+El esquema es, otra vez, \emph{confidencialidad sin integridad}: se cifra
+$(\mathit{wearing}\|ctr)$ con AES-CTR, pero el mensaje $(ID,ctr,C)$ no lleva ningún
+MAC que lo ate. El $ctr$ además viaja \textbf{en claro} junto al cifrado, lo que
+facilita comparar y forzar coincidencias. A diferencia del ejercicio análogo de
+pulseras BLE resuelto en el final 2025-C2(1) (donde el orden era $CTR\|bit\_wearing$
+y no había pregunta sobre patrones de uso anómalo tipo IDS/SIEM, sino sobre estado
+degradado con OTP), acá el orden del cifrado es $wearing\|ctr$ (no cambia el
+análisis de maleabilidad, solo la posición del bit dentro del bloque cifrado) y el
+inciso a) pide explícitamente validaciones de \textbf{correlación entre eventos}
+(dos puertas lejanas casi al mismo tiempo, horario anormal), que en el material no
+tienen una caja dedicada de IDS/SIEM en las unidades relevadas para este final; se
+resuelve igual con el razonamiento de que el servidor puede cruzar información
+entre mensajes de distintas puertas y horarios, algo que se desprende directamente
+de que el servidor central recibe y procesa \emph{todos} los mensajes de todos los
+controladores.
+
+\paragraph{Resolución.}
+
+\textbf{a) Verificaciones adicionales para detectar patrones extraños.}
+El servidor central recibe los mensajes de \emph{todas} las puertas (con
+$door\_id$ y $timestamp$), por lo que puede cruzar información entre mensajes en
+lugar de validar cada uno de forma aislada:
+\begin{itemize}
+  \item \textbf{Coherencia física (velocidad de desplazamiento):} el servidor
+  conoce la ubicación de cada puerta ($door\_id$). Si un mismo $ID$ abre una puerta
+  y, en un lapso de tiempo menor al físicamente necesario para recorrer la
+  distancia entre ambas, se registra otro intento de apertura de una puerta lejana
+  con el mismo $ID$, la solicitud es físicamente imposible y debería rechazarse
+  (y generar alerta/incidente), en lugar de autorizar ambas.
+  \item \textbf{Ventanas horarias:} asociar a cada $ID$ (o a cada puerta) un rango
+  horario habilitado; si el $timestamp$ del mensaje cae fuera de ese rango, denegar
+  el acceso aunque el resto de la validación ($ctr$, autorización) sea correcta, y
+  registrar el incidente (tal como ya hace el servidor cuando el $ctr$ no coincide
+  o el empleado no está autorizado).
+  \item En ambos casos, la validación no reemplaza la verificación criptográfica
+  del mensaje individual (descifrado + comparación de $ctr$ + autorización): la
+  \textbf{complementa}, cruzando el historial de eventos que el servidor ya
+  centraliza para detectar patrones anómalos entre mensajes.
+\end{itemize}
+
+\textbf{b) Modificación/reutilización de mensajes escuchados.}
+Como $C$ se obtiene con AES-CTR (cifrado de flujo), aplica directamente la
+maleabilidad de los cifrados de flujo:
+\begin{itemize}
+  \item \textbf{Replay puro:} el atacante escucha un mensaje válido $(ID, ctr, C)$
+  y lo retransmite. El enunciado dice que el servidor compara si el $ctr$
+  descifrado coincide con el enviado en plano, pero \textbf{no} dice que lleve un
+  registro del último $ctr$ usado por ese $ID$; si no lo lleva, retransmitir el
+  mismo mensaje capturado hace que el servidor lo vuelva a aceptar tal cual.
+  \item \textbf{Modificación por maleabilidad del bit \texttt{wearing}:} dado que
+  $C = E_k(\text{nonce}\|i)\oplus(\mathit{wearing}\|ctr)$, sin conocer $k$ el
+  atacante puede flippear el bit del cifrado que corresponde a la posición del bit
+  \texttt{wearing} dentro de $C$ (si conoce o adivina esa posición): eso cambia
+  exactamente ese bit al descifrar, sin necesitar la clave, igual que el ataque de
+  maleabilidad visto en la Clase 3.
+  \item \textbf{Solución:} agregar \textbf{integridad} con un MAC sobre el mensaje
+  completo $(ID\|ctr\|\mathit{wearing})$, calculado con una clave de MAC (idealmente
+  distinta de la de cifrado) y verificado por el servidor antes de aceptar el
+  mensaje: cualquier bit flippeado por maleabilidad invalidaría la etiqueta. Además,
+  el servidor debe llevar un registro del último $ctr$ aceptado por cada $ID$ y
+  solo aceptar $ctr_{\text{nuevo}} > ctr_{\text{último}}$ (monotonicidad/frescura),
+  lo que bloquea el replay puro descripto arriba.
+\end{itemize}
+
+\textbf{c) Mitigar el replay en modo degradado sin agregar dispositivos ni enlaces.}
+En modo degradado la puerta no tiene conexión con el servidor, así que no puede
+verificar nada dinámicamente contra un estado remoto; solo puede razonar con la
+información que ya escucha localmente (sin sumar hardware ni enlaces nuevos):
+\begin{itemize}
+  \item Dado que el $ctr$ de cada pulsera es \textbf{estrictamente creciente} (el
+  enunciado dice que ``empieza en 0 y se incrementa''), el propio controlador de la
+  puerta puede, en modo degradado, \textbf{recordar localmente} (en su memoria) el
+  último $ctr$ visto por cada $ID$ que abrió recientemente, sin necesitar consultar
+  al servidor ni agregar ningún dispositivo/enlace nuevo.
+  \item Con esa información, el controlador degradado deja de aceptar ``cualquier
+  mensaje con un ID autorizado recientemente'' y exige, además, que el $ctr$
+  recibido sea \textbf{mayor} al último $ctr$ que ya usó ese $ID$ para abrir esa
+  puerta: un mensaje reciente repetido (mismo $ctr$) queda rechazado, porque ya fue
+  consumido.
+  \item Esto es exactamente la misma defensa de monotonicidad de frescura del
+  inciso b), aplicada localmente en el controlador (que ya recibe el $ctr$ en
+  claro), sin requerir conexión al servidor ni ningún componente adicional.
+\end{itemize}
+
+%=====================================================================
+\subsection{Ejercicio 2 --- Protocolo de autenticación Cliente--Servidor ($H(K_c\|r)$)}
+%=====================================================================
+
+\begin{consigna}
+Un sistema de control de acceso utiliza el siguiente protocolo de autenticación
+entre un cliente $C$ y un servidor $S$. Cada cliente comparte con el servidor una
+clave secreta $K_c$. $H(\cdot)$ es una función de hash libre de colisiones:
+\begin{enumerate}
+  \item[1.] $C\to S$: $id$
+  \item[2.] $S\to C$: $r$ (un número aleatorio de 128 bits)
+  \item[3.] $C\to S$: $t = H(K_c\|r)$
+  \item[4.] $S$ busca la clave $K_c$ asociada a $id$, recalcula $H(K_c\|r)$ y
+  acepta la autenticación si coincide con $t$.
+\end{enumerate}
+
+\begin{enumerate}
+  \item[a)] Explicar por qué este protocolo es mejor que uno donde el cliente
+  enviado solo un hash de la clave secreta. (1 pto.)
+  \item[b)] Para evitar la aleatoriedad en el protocolo, un desarrollador decide
+  modificar el paso 2 y mantener un contador $ctr$, que transmite en lugar de $r$
+  y va incrementando en cada uso. ¿Es esta implementación menos segura que la
+  anterior? Justificar. (1 pto.)
+  \item[c)] Modificar el protocolo para que exista autenticación mutua, es decir,
+  que $C$ también pueda autenticar a $S$ como resultado del intercambio. No
+  introducir nuevas claves. (1 pto.)
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Segunda Parte, Clase 2 --- Autenticación (\S Challenge-Response y EKE: el desafío
+$r$ como nonce, ``el nonce evita reutilizar respuestas capturadas''; \S OTP/HOTP:
+contador vs.\ aleatoriedad); Primer Parte, Clase 5 --- Protocolos (\S Nonce y
+frescura; \S Ataque por reflexión y la necesidad de ``romper la simetría'' de los
+mensajes con nonces/identidades distintas por sentido).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{Challenge-response (Clase 2, Segunda Parte):} el servidor manda un
+  challenge único $r$ (nonce); el cliente responde $f(k,r)$ (acá, $H(K_c\|r)$)
+  probando que conoce el secreto $K_c$ \textbf{sin enviarlo}. El material remarca
+  explícitamente: ``el nonce evita reutilizar respuestas capturadas''.
+  \item \textbf{Nonce y frescura (Clase 5, Primer Parte):} un nonce es un número
+  aleatorio de un solo uso que aporta frescura a un intercambio y evita ataques de
+  \emph{replay}.
+  \item \textbf{OTP/HOTP (Clase 2, Segunda Parte):} usar un \textbf{contador}
+  sincronizado en vez de un valor aleatorio también da frescura si se exige que sea
+  creciente, pero es la base de HOTP, que requiere sincronización de contador entre
+  ambas partes (a diferencia de un desafío aleatorio, imprevisible).
+  \item \textbf{Ataque por reflexión (Clase 5, Primer Parte):} en un protocolo de
+  challenge-response con nonces, un atacante puede abrir una \textbf{sesión
+  paralela} y reenviar el mismo desafío recibido para que la víctima ``firme''
+  ($f(r)$) y luego reflejar esa respuesta en la sesión original. La defensa que
+  remarca el material es \textbf{romper la simetría} de los mensajes (incluir
+  identidad/dirección, o usar nonces distintos por sentido).
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+Este protocolo es el patrón challenge-response de la Clase 2 (Segunda Parte)
+aplicado con un hash en vez de una función $f(k,r)$ genérica. Es prácticamente
+idéntico al ejercicio 2 del final 2025-C2(1), con dos diferencias puntuales de
+enunciado que no cambian el razonamiento de fondo: acá $r$ se especifica
+explícitamente de \textbf{128 bits}, y el inciso a) compara contra un cliente que
+enviara ``solo un hash de la clave secreta'' ($H(K_c)$, sin el desafío) en lugar de
+preguntar directamente qué pasaría si no estuviese $r$ --- es la misma idea. El
+ataque por reflexión de la Clase 5 (Primer Parte) es la advertencia clave para el
+inciso c): agregar un segundo desafío simétrico sin distinguir el sentido/rol de
+cada uno dejaría abierta la posibilidad de una sesión paralela que refleje la
+respuesta.
+
+\paragraph{Resolución.}
+
+\textbf{a) Por qué es mejor que enviar solo $H(K_c)$.}
+Si el cliente enviara directamente $H(K_c)$ (sin el desafío $r$), esa respuesta
+sería \textbf{siempre el mismo valor fijo} en cada intento de autenticación: un
+atacante que la capture una sola vez (escuchando el canal) podría luego
+\textbf{reenviarla (replay)} y el servidor la aceptaría como si fuera el cliente
+legítimo, sin conocer nunca $K_c$. Con el protocolo dado, en cambio, el servidor
+manda en cada autenticación un $r$ \textbf{aleatorio de 128 bits} distinto (un
+nonce), por lo que la respuesta $t=H(K_c\|r)$ también es distinta en cada
+ejecución: capturar una respuesta pasada no sirve para autenticarse de nuevo, ya
+que no hay dos ejecuciones del protocolo con el mismo $r$ (y por lo tanto la misma
+$t$) esperado. Es exactamente el rol del nonce en challenge-response: dar frescura
+y evitar que se reutilicen respuestas capturadas.
+
+\textbf{b) Contador incremental en vez de $r$ aleatorio: ¿menos seguro?}
+Sí, \textbf{es menos seguro} que usar un $r$ aleatorio, aunque un contador
+creciente ($ctr$) igualmente aporta algo de frescura si el servidor exige que sea
+estrictamente mayor al último usado (evitaría el replay literal del mismo
+mensaje). El problema es la \textbf{predictibilidad}: al ser incremental y
+conocido (se transmite en claro, igual que $r$), un atacante que observe la
+secuencia de valores usados en sucesivas autenticaciones puede \textbf{anticipar
+el próximo valor} de $ctr$ antes de que el servidor lo envíe. Esto es análogo a la
+distinción entre HOTP (contador, cuya progresión es previsible y requiere
+sincronización explícita entre las partes) y un desafío verdaderamente
+\textbf{aleatorio} (imprevisible salvo que se conozca la clave). Un valor
+aleatorio no permite a un atacante preparar de antemano una estrategia para un
+desafío futuro, mientras que un contador sí revela ese futuro con solo observar
+el tráfico.
+
+\textbf{c) Autenticación mutua sin introducir nuevas claves.}
+Reutilizando la misma $K_c$ compartida, se agrega un desafío en el otro sentido,
+rompiendo la simetría (Clase 5, Primer Parte) para evitar un ataque por
+reflexión:
+\begin{align*}
+C \to S &: id,\ r_C\\
+S \to C &: r_S,\ H(K_c\|r_C)\\
+C \to S &: H(K_c\|r_S)
+\end{align*}
+El servidor prueba que conoce $K_c$ respondiendo al desafío $r_C$ del cliente (en
+el mismo mensaje en que envía su propio desafío $r_S$); el cliente, a su vez,
+responde al desafío $r_S$ recibido. Cada parte verifica el hash correspondiente a
+\emph{su propio} desafío, y ambos usan la misma $K_c$ y la misma $H$, sin
+introducir ninguna clave nueva. Siguiendo la defensa que remarca el material
+contra el ataque por reflexión, conviene además que los dos desafíos \textbf{no
+sean intercambiables} uno por el otro sin ambigüedad (por ejemplo, atando dentro
+del hash la identidad o el rol de quien responde, del estilo
+$H(K_c\|r_C\|\text{``servidor''})$ y $H(K_c\|r_S\|\text{``cliente''})$), de modo
+que una sesión paralela abierta por un atacante no pueda usarse para que una de
+las partes legítimas ``firme'' un desafío que luego se reutilice en la otra
+sesión.
+
+%=====================================================================
+\subsection{Ejercicio 3 --- CasaIA (IoT hogareño): hipótesis de falla}
+%=====================================================================
+
+\begin{consigna}
+La empresa CasaIA vende dispositivos inteligentes para hogares (cerraduras
+inteligentes, luces, cámaras) que se controlan desde una aplicación móvil y desde
+una página web.
+
+Cada usuario crea una cuenta con email y contraseña. La autenticación se hace
+contra un API REST centralizado, que devuelve un token de sesión.
+
+Para vincular un dispositivo, el usuario escanea con la app un código QR impreso
+en el equipo; este código contiene el identificador del dispositivo y una clave
+de emparejamiento.
+
+Los dispositivos se conectan por WiFi a los servidores de CasaIA utilizando un
+protocolo propietario sobre TCP, con un canal persistente para recibir comandos
+(abrir/cerrar, encender/apagar, etc.).
+
+El sistema permite definir escenarios (por ejemplo, ``modo vacaciones'', ``modo
+noche''). Los escenarios se configuran desde la app/web, y el servidor los ejecuta
+enviando comandos a los distintos dispositivos según la hora, la geolocalización
+del teléfono del usuario, o sensores (movimiento, luz).
+
+El sistema permite otorgar acceso temporal a invitados: el dueño de la casa
+ingresa el email de la otra persona, y el sistema le envía un enlace que, al
+abrirlo, permite controlar ciertos dispositivos durante una ventana de tiempo
+configurable.
+
+En función de la descripción del sistema, establecer 4 hipótesis de falla
+plausibles siguiendo la metodología de pentesting. Por cada hipótesis definir una
+prueba siguiendo los lineamientos de la metodología. (1 pto c/u.)
+
+\emph{Aclaración:} No utilizar problemas genéricos como hipótesis de falla.
+Plantear situaciones y lugares concretos donde podría estar el problema. Por
+ejemplo, en lugar de decir ``puede haber un buffer overflow en la lectura del
+parámetro x que debe interpretarse como número'', decir ``es probable que haya un
+buffer pequeño dado que los números esperados tienen menos de 4 dígitos''.
+\end{consigna}
+
+\paragraph{Temas.}
+Segunda Parte, Clase 6 --- Pentesting (\S Metodología de hipótesis de falla, Paso 2:
+áreas candidatas de hipótesis, comparar con sistemas parecidos; \S Paso 3, la
+prueba debe ser repetible y concluyente); Segunda Parte, Clase 3 --- Principios de
+Diseño y Vulnerabilidades (\S CSRF; \S XSS, CWE-79); Segunda Parte, Clase 2 ---
+Autenticación (\S OTP/HOTP, contador vs.\ aleatorio); glosario (\S OAuth2/tokens,
+\S nonce, \S CSRF, \S XSS).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{Metodología de hipótesis de falla (Clase 6):} el Paso 2 consiste en
+  plantear posibles vulnerabilidades examinando implementaciones y mecanismos
+  concretos del sistema (¿está bien implementado el control?, ¿el ambiente
+  introduce errores?), y comparando con sistemas parecidos (sistemas similares
+  tienen problemas similares). El resultado del Paso 2 es una lista de posibles
+  vulnerabilidades asumidas como hipótesis; el Paso 3 (Prueba) exige que la
+  verificación de cada hipótesis sea \textbf{repetible y concluyente}.
+  \item \textbf{Nonce/token anti-CSRF (Clase 3):} la defensa real contra CSRF es un
+  token/nonce único que da frescura y evita replay; el mismo razonamiento aplica a
+  cualquier enlace o token de un solo uso (como el enlace de acceso temporal por
+  mail de CasaIA).
+  \item \textbf{XSS, CWE-79 (Clase 3):} inyectar código que termine ejecutado por
+  el browser de la víctima permite robar la sesión, aprovechando la confianza del
+  sitio en su sesión/cookie.
+  \item \textbf{Tokens de sesión (glosario):} un token de sesión que no tenga
+  expiración adecuada, alcance limitado, o que viaje sin protección, puede ser
+  robado o reutilizado para suplantar al usuario.
+  \item \textbf{OTP/HOTP (Clase 2):} un contador/valor de un solo uso que no se
+  invalida correctamente tras su consumo pierde la propiedad de ``one-time'' que
+  debería tener.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+La aclaración del enunciado (``no usar problemas genéricos, plantear situaciones y
+lugares concretos'') es exactamente el Paso 2 de la metodología de hipótesis de
+falla tal como está descripto en el material: no alcanza con decir ``puede haber
+una vulnerabilidad de replay'' en abstracto, sino señalar el mecanismo concreto de
+CasaIA donde eso es plausible (el QR de vinculación, el canal TCP de comandos, el
+enlace de invitado por email, el token de sesión). Cada hipótesis, además, debe
+llevar una prueba que sea repetible y concluyente (Paso 3).
+
+\paragraph{Resolución.}
+Aplicando la metodología de hipótesis de falla (examinar implementación/mecanismos
+concretos + comparar con sistemas parecidos) a cuatro componentes puntuales de
+CasaIA (QR de vinculación, canal TCP propietario de comandos, enlace de acceso
+temporal por email, token de sesión):
+
+\begin{enumerate}
+  \item \textbf{Hipótesis --- el QR de vinculación no vence ni se invalida tras el
+  primer uso.} Es probable que el QR impreso en el dispositivo contenga siempre el
+  mismo identificador y clave de emparejamiento \emph{estáticos}, sin que el
+  servidor los invalide después de la primera vinculación exitosa; si alguien
+  fotografía o copia ese QR antes de que el dueño legítimo lo escanee (por ejemplo,
+  un QR visible en la góndola de una tienda, o fotografiado por un instalador),
+  podría vincular el dispositivo a su propia cuenta antes o después que el dueño
+  real. \emph{Prueba (repetible y concluyente):} vincular un dispositivo a una
+  cuenta de prueba usando una foto del QR (sin tener el dispositivo físicamente en
+  mano) y luego, con el mismo QR, intentar vincularlo desde otra cuenta; si ambas
+  vinculaciones son aceptadas (o la segunda no revoca la primera sin aviso al
+  dueño), la hipótesis queda confirmada.
+  \item \textbf{Hipótesis --- el canal TCP persistente hacia los dispositivos no
+  reautentica cada comando individual.} Dado que el protocolo es propietario y el
+  canal es persistente (se autentica una vez al abrir la conexión), es probable que
+  los comandos posteriores (abrir/cerrar, encender/apagar) que viajan por ese canal
+  no lleven ninguna verificación adicional de que provienen de un usuario
+  autorizado en ese momento puntual, confiando únicamente en que el socket ya está
+  autenticado. \emph{Prueba:} con acceso a la red WiFi del dispositivo (escenario
+  de caja gris), capturar el tráfico del canal TCP durante una apertura legítima y
+  reenviar (\emph{replay}) ese mismo comando más tarde, o inyectar un comando
+  propio en la misma conexión; si el dispositivo lo ejecuta sin re-validar
+  autorización, la hipótesis queda confirmada.
+  \item \textbf{Hipótesis --- el enlace de acceso temporal por email no tiene
+  expiración ni invalidación efectiva.} Es probable que el enlace enviado por
+  email para el acceso temporal de invitados sea un token que, una vez generado,
+  siga siendo válido más allá de la ventana de tiempo configurada, o que no se
+  invalide si el dueño revoca el acceso manualmente antes de tiempo (análogo a un
+  token/nonce anti-CSRF sin frescura real); cualquiera que intercepte ese mail
+  (reenvío, cuenta de correo comprometida, o el link cacheado en el navegador del
+  invitado) podría seguir usándolo después de vencida la ventana. \emph{Prueba:}
+  generar un acceso temporal con una ventana corta, dejar que venza (o revocarlo
+  manualmente desde la app antes de que venza) y volver a abrir el mismo enlace;
+  si el sistema sigue otorgando control sobre los dispositivos, la hipótesis queda
+  confirmada.
+  \item \textbf{Hipótesis --- el token de sesión queda expuesto a través de un
+  campo de texto no sanitizado de la app/web (XSS, CWE-79).} Dado que el sistema
+  permite nombrar escenarios (``modo vacaciones'', ``modo noche'') y probablemente
+  también nombrar dispositivos o invitados, es probable que alguno de esos campos
+  de texto se muestre sin sanitizar en la interfaz web de otro usuario (por
+  ejemplo, el dueño ve el nombre que un invitado puso a un escenario compartido);
+  si ese campo permite inyectar código, un atacante podría robar el token de
+  sesión de quien lo visualiza. \emph{Prueba:} ingresar un script de prueba como
+  nombre de un escenario o dispositivo y verificar si se ejecuta al ser
+  renderizado en la sesión de otro usuario que visualiza ese mismo escenario/
+  dispositivo (por ejemplo, el dueño viendo un escenario creado por un invitado);
+  si el script corre y logra leer el token/cookie de sesión, la hipótesis queda
+  confirmada.
+\end{enumerate}
+
+\begin{ojo}
+Como en el análogo del final 2025-C2(1), la metodología de pentesting descripta
+en el material de Clase 6 tiene 5 pasos (Recolección $\to$ Hipótesis $\to$ Prueba
+$\to$ Generalización $\to$ Eliminación); acá solo se desarrollan explícitamente los
+pasos 2 (Hipótesis) y 3 (Prueba) para cada uno de los 4 ítems pedidos, que es lo
+que pide puntualmente el enunciado (``4 hipótesis... por cada hipótesis definir
+una prueba''). No hay en el material relevado para este final ningún contenido
+adicional sobre CasaIA, TCP propietario para IoT, geolocalización de escenarios,
+ni protocolos específicos de smart home más allá de los conceptos generales de
+CSRF/XSS/tokens/nonce usados arriba: esos detalles del enunciado (protocolo
+propietario, escenarios por sensor/geolocalización) no tienen una sección propia
+en las clases y se abordan por analogía con los mecanismos generales de
+autenticación y control de acceso ya vistos, sin agregar nada externo al material.
+\end{ojo}
