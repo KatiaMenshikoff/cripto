@@ -1,0 +1,357 @@
+%=====================================================================
+\section{Final --- 21/07/2021}
+%=====================================================================
+
+% =====================================================================
+\subsection{Ejercicio 1 --- Licitación transparente con AES-GCM (Tecnociudad)}
+% =====================================================================
+
+\begin{consigna}
+El consejo deliberante del partido de Tecnociudad solicitó la construcción de un sistema
+distribuido que permita realizar licitaciones de forma transparente y segura. Cuando el
+partido necesita contratar cualquier tipo de servicios, genera un pliego con la descripción
+de lo solicitado y espera que distintos contratistas presenten ofertas. Durante esta fase,
+los costos son secretos para evitar que un oferente tenga preferencia. Una vez vencido el
+plazo, se publica la propuesta de cada uno, junto con el precio, y se selecciona el que
+cumple con las condiciones con el menor costo.
+
+La implementación del sistema asegura que estas propiedades ocurran utilizando criptografía.
+La descripción a alto nivel es la siguiente:
+\begin{itemize}
+  \item Se publica la licitación con un ID único asociado.
+  \item Por cada licitación, se reciben archivos cifrados con AES-GCM de parte de los
+  oferentes interesados. Los archivos incluyen un documento con el ID de la licitación, la
+  descripción técnica, el CUIT de la empresa y el precio.
+  \item Al terminar el periodo de la licitación los oferentes comparten la clave utilizada,
+  y con ello se revisan todas las ofertas, y se adjudica la ganadora.
+  \item Si un oferente no provee la clave, queda automáticamente descalificado.
+  \item Para transparencia, se publican todas las ofertas recibidas ya descifradas y la
+  adjudicada en un portal público que puede ser consultado libremente.
+\end{itemize}
+
+\begin{enumerate}
+  \item[a)] Explicar por qué ningún oferente puede alterar su propuesta sin ser detectado.
+  (1 pto.)
+  \item[b)] Qué medidas adicionales serían necesarias para evitar que algún administrador
+  del sistema ignore a un proveedor diciendo que nunca entregó la clave. (1 pto.)
+  \item[c)] Considerar el caso de un oferente que envía un archivo a nombre de un competidor,
+  con un precio irrisoriamente bajo que lo perjudicaría. ¿Cómo evitaría esto usando funciones
+  criptográficas? (1 pto.)
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Primera Parte, Clase 3 --- MACs y Cifrado Autenticado (\S Modos AEAD en la práctica: GCM;
+\S Definición de cifrado autenticado; \S No-repudio: por qué los MAC no lo dan). Primera
+Parte, Clase 4 --- Asimétrico y Firma Digital (\S Diferencia entre cifrar y firmar;
+\S RSA-Signature / firma del hash; \S PKI y certificados digitales, no-repudio).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{AES-GCM} es un modo AEAD (\emph{cifrado autenticado}): además de
+  confidencialidad (modo Counter), produce una etiqueta de autenticación sobre el
+  \textbf{texto cifrado}. Al descifrar, primero se verifica el tag; si el cifrado fue
+  modificado, la verificación \textbf{falla} y el descifrado se rechaza (no se obtiene
+  ``basura'' silenciosa como con cifrado no autenticado).
+  \item \textbf{Encrypt-then-MAC / AEAD} da \textbf{confidencialidad + integridad +
+  autenticación}, pero \textbf{con clave simétrica compartida NO da no-repudio}: quien
+  verifica el tag/GHASH conoce la misma clave que quien lo generó, así que un tercero
+  no puede distinguir quién produjo el mensaje (ambas partes podrían haberlo generado).
+  \item Para \textbf{no-repudio} hace falta criptografía \textbf{asimétrica}: \textbf{firmar}
+  (con la clave \textbf{privada} del firmante) es lo que da no-repudio, porque solo el dueño
+  de la privada pudo producir esa firma, y cualquiera la verifica con la pública sin poder
+  falsificarla.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+El escenario combina dos capas que el material distingue con cuidado: (i) AES-GCM protege
+la \emph{confidencialidad e integridad del archivo cifrado en tránsito/reposo} durante la
+licitación (nadie puede leer los precios antes de tiempo ni modificar un archivo ya
+enviado sin que se note), pero (ii) por ser \textbf{simétrico y con clave compartida}, no
+resuelve el problema de que un administrador (que también conoce/gestiona las claves)
+niegue haber recibido algo, ni impide que alguien se haga pasar por otro oferente. Ambos
+puntos requieren la capa de \textbf{firma digital / PKI} de la Clase 4, que sí da
+autenticación de origen y no-repudio.
+
+\paragraph{Resolución.}
+
+\textbf{a)} Ningún oferente puede alterar su propuesta sin ser detectado porque el archivo
+se envía cifrado con \textbf{AES-GCM}, que es un esquema de \textbf{cifrado autenticado}
+(AEAD): además de cifrar el contenido (confidencialidad), GCM calcula una \textbf{etiqueta
+de autenticación} sobre el texto cifrado (usando GHASH). Al momento de descifrar (una vez
+compartida la clave), se \textbf{verifica primero el tag}; si el archivo cifrado fue
+modificado en cualquier bit respecto del que se envió originalmente, la verificación del
+tag \textbf{falla} y el descifrado se rechaza explícitamente (a diferencia de un cifrado
+sin autenticar, donde la manipulación pasaría desapercibida y solo produciría datos
+``basura'' al descifrar). Por lo tanto, cualquier intento de alterar el precio o la
+descripción técnica \emph{después} de enviado el archivo es detectable al momento de
+abrir las ofertas.
+
+\textbf{b)} El esquema descripto usa una \textbf{clave simétrica compartida} (el oferente
+``comparte la clave utilizada''); como se remarca en la Clase 3, un esquema con clave
+compartida (MAC/AEAD simétrico) \textbf{no da no-repudio}: quien controla el sistema
+(el administrador) también podría --- al menos en principio --- estar en condiciones de
+negar la recepción de la clave sin que el oferente pueda probar lo contrario, ya que no hay
+una firma verificable por un tercero independiente. La medida adicional es introducir
+\textbf{firma digital (asimétrica)}: que el oferente, al enviar la clave de descifrado,
+la \textbf{firme con su clave privada}, y que el administrador, al recibirla, devuelva un
+\textbf{acuse de recibo firmado} con su propia clave privada. De esta forma:
+\begin{itemize}
+  \item La firma del oferente sobre el envío de la clave prueba, ante cualquier tercero
+  (verificando con la clave pública del oferente), que efectivamente la envió.
+  \item El acuse de recibo firmado por el administrador (con su clave privada, verificable
+  con su pública conocida vía PKI/certificado) es una prueba de que el sistema la recibió;
+  como solo el administrador pudo generar esa firma, \textbf{no puede negarlo después}
+  (no-repudio).
+\end{itemize}
+Esto traslada el problema de ``palabra contra palabra'' a un esquema con \textbf{propiedades
+de no-repudio}, que el cifrado simétrico por sí solo no ofrece.
+
+\textbf{c)} El problema es que el sistema, tal como está descripto, no verifica que quien
+envía un archivo ``a nombre de'' un CUIT sea realmente el dueño de esa identidad: cualquiera
+podría escribir el CUIT de un competidor dentro del documento cifrado. Esto se evita
+usando \textbf{firma digital}: cada oferente debe \textbf{firmar su propuesta} (el
+documento completo: ID de licitación, descripción técnica, CUIT y precio) con su
+\textbf{clave privada} antes de cifrarlo y enviarlo, y esa clave privada debe estar
+asociada a su identidad mediante un \textbf{certificado digital} emitido por una
+\textbf{CA} (PKI), tal como en el ejemplo de firma de binarios de la Clase 4. Al
+adjudicar, el administrador (o cualquiera con la clave pública certificada del oferente)
+\textbf{verifica la firma}: si el documento dice ser del competidor pero está firmado con
+la clave privada del atacante, la verificación con la clave pública \emph{del competidor}
+\textbf{falla}, y la propuesta fraudulenta se descarta. En síntesis: \textbf{AES-GCM} da
+confidencialidad e integridad del archivo, pero la \textbf{autenticidad del emisor} (que
+el CUIT declarado sea quien realmente presentó la oferta) requiere \textbf{firma digital
+con PKI}, que es justamente lo que impide la suplantación de identidad descripta.
+
+% =====================================================================
+\subsection{Ejercicio 2 --- Elección de supervisor mediante hash y XOR}
+% =====================================================================
+
+\begin{consigna}
+El siguiente protocolo fue propuesto para que $N$ nodos de un sistema puedan elegir un
+supervisor, de tal manera que ningún nodo pueda ganar o perder sistemáticamente
+manipulando el intercambio:
+\begin{enumerate}
+  \item Cada nodo genera un valor $r_i$ de 64 bits y envía al resto $H(r_i)$.
+  \item Luego de recibir todos los valores, cada nodo publica $r_i$.
+  \item Cada nodo calcula $r_x = r_1 \oplus r_2 \oplus \dots \oplus r_n$.
+\end{enumerate}
+El nodo a menor distancia de $r_x$ es el nuevo supervisor, utilizando la distancia de
+Hamming como métrica (se comparan bit a bit los dígitos binarios de los dos valores, y
+cada discrepancia suma 1 de distancia --- por ejemplo 0010 y 1110 están a distancia 2).
+En caso de empate, se reinicia.
+
+\begin{enumerate}
+  \item[a)] Explicar por qué el paso 1 es necesario y no se puede comenzar el intercambio
+  en el paso 2 directamente. (1 pto.)
+  \item[b)] Considerar el caso de solo tres nodos. ¿Qué pasaría si el nodo 2, por ejemplo,
+  decide abusar el sistema, y repite en el paso 1 el valor $H(r_1)$ como si fuese el suyo?
+  Proponer una modificación simple que evite el problema. (1,5 ptos.)
+  \item[c)] Proponer una mejora al algoritmo para que no sea necesario repetir todo el
+  intercambio en caso de empate y siempre se llegue a un resultado que no pueda ser
+  manipulado. (0.5 ptos.)
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Primera Parte, Clase 3 --- MACs y Cifrado Autenticado (\S Funciones de hash: resistencia a
+preimagen, segunda preimagen y colisiones; uso como \emph{compromiso}/commitment previo a
+revelar un valor). \textbf{Nota:} el protocolo en sí (elección de supervisor con XOR y
+distancia de Hamming) no está descripto literalmente en el material como esquema con
+nombre propio; la resolución se apoya en las \textbf{propiedades de las funciones de hash}
+que sí están desarrolladas en la Clase 3, aplicadas como un esquema de compromiso
+(committing a $r_i$ vía $H(r_i)$ antes de revelarlo).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{Resistencia a preimagen:} dado un hash $y$, es computacionalmente inviable
+  hallar un mensaje $x$ tal que $H(x)=y$. Este es el uso relevante acá: publicar $H(r_i)$
+  primero \emph{compromete} al nodo con un valor sin revelarlo, porque nadie puede, a partir
+  del hash, deducir $r_i$ para ajustar su propio valor en función de los demás.
+  \item \textbf{Resistencia a segunda preimagen:} dado un mensaje $x$, es inviable hallar
+  $x'\neq x$ con el mismo hash. Esto es lo que impide, una vez publicado $H(r_i)$, cambiar
+  el $r_i$ real por otro $r_i'$ que también hashee a lo mismo en el paso 2.
+  \item El material señala explícitamente el uso de compromisos criptográficos (``probar que
+  se tenía algo antes de revelarlo''; ``juegos de cartas con compromiso'') como aplicación de
+  la resistencia a (segunda) preimagen.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+El paso 1 (publicar $H(r_i)$ antes de $r_i$) es exactamente el patrón de
+\textbf{compromiso-y-revelación} (commit-then-reveal) que la Clase 3 asocia a la resistencia
+a preimagen/segunda preimagen: sirve para que ningún participante pueda elegir su valor
+\emph{después} de ver los de los demás (lo cual rompería la imparcialidad de la elección).
+Es el mismo principio que sustenta, por ejemplo, no poder generar de antemano el $r_i$ en
+función del resultado final.
+
+\paragraph{Resolución.}
+
+\textbf{a)} El paso 1 (publicar $H(r_i)$ antes de $r_i$) es necesario porque, si en cambio
+se comenzara directamente publicando los $r_i$ en claro (paso 2), un nodo malicioso podría
+esperar a ver los valores $r_j$ ($j\neq i$) que ya publicaron todos los demás y \textbf{recién
+entonces} elegir su propio $r_i$ de forma tal que el XOR resultante $r_x$ quede
+convenientemente cerca (en distancia de Hamming) de su propio valor, garantizándose ser
+supervisor. Publicar primero $H(r_i)$ actúa como un \textbf{compromiso}: por
+\textbf{resistencia a preimagen}, ningún otro nodo puede, a partir de $H(r_i)$, obtener
+$r_i$ antes de que se revele en el paso 2, de modo que nadie puede ajustar su propio valor
+en función de los $r_i$ de los demás. Así se garantiza que todos los $r_i$ quedaron
+``congelados'' antes de que ninguno conociera el de los otros, haciendo el intercambio
+imparcial.
+
+\textbf{b)} Con tres nodos, si el nodo 2 en el paso 1 publica $H(z)=H(r_1)$ (repite el
+compromiso del nodo 1) en lugar de comprometerse con su propio valor, en el paso 2 puede
+publicar $z=r_1$ como si fuera su $r_2$ (es un valor válido porque su hash coincide con lo
+publicado). El resultado sería $r_x = r_1\oplus r_1\oplus r_3 = r_3$ (el XOR de $r_1$ consigo
+mismo se cancela), y el nodo 2 conocería de antemano que $r_x=r_3$: puede entonces mirar la
+distancia de Hamming entre $r_1,r_2^{\text{real}}$ y $r_3$ contra $r_x=r_3$ y decidir
+manipular el resultado a su favor (por ejemplo, el propio nodo 3 quedaría siempre exactamente
+a distancia 0 de $r_x$, y el nodo 2 puede jugar con esa certeza, o directamente evitar que el
+nodo 1 o 3 ganen si le conviniera). En cualquier caso, se rompe la propiedad buscada de que
+``ningún nodo pueda ganar o perder sistemáticamente manipulando el intercambio''.
+
+\textbf{Modificación simple:} exigir que \textbf{todos los compromisos $H(r_i)$ publicados en
+el paso 1 sean distintos entre sí} ($H(r_i)\neq H(r_j)$ para todo $i\neq j$); si dos nodos
+publican el mismo hash, se detecta la colisión de compromisos y se reinicia el proceso (o se
+descalifica al nodo repetido). Como por \textbf{resistencia a segunda preimagen} es inviable
+para el nodo 2 encontrar un $r_2'\neq r_1$ propio con $H(r_2')=H(r_1)$, la única forma de
+publicar un hash igual al de otro nodo es copiándolo literalmente, lo cual esta verificación
+detecta y bloquea antes de llegar al paso 2.
+
+\textbf{c)} Para no tener que reiniciar todo el intercambio (generar nuevos $r_i$ y repetir
+los tres pasos) en caso de empate en la distancia de Hamming, se puede definir un
+\textbf{criterio de desempate determinístico y no manipulable} sobre la información que ya
+está publicada, sin generar nueva aleatoriedad: por ejemplo, entre los nodos empatados en
+distancia mínima a $r_x$, elegir como supervisor al que tenga \textbf{el valor $r_i$
+numéricamente mayor (o menor)} interpretado como entero, o el que primero coincide bit a bit
+con $r_x$ leyendo de izquierda a derecha. Como los $r_i$ ya fueron comprometidos con hash y
+revelados (y no pueden cambiarse sin romper la resistencia a segunda preimagen del
+compromiso), este criterio de desempate no puede ser manipulado por ningún nodo a esta
+altura del protocolo (todos los valores ya están fijados e inmutables), y siempre produce un
+único ganador sin necesidad de reiniciar el intercambio completo.
+
+% =====================================================================
+\subsection{Ejercicio 3 --- Pentesting con hipótesis de falla (Agrolin)}
+% =====================================================================
+
+\begin{consigna}
+Agrolin S.A.\ se dedica a la construcción de soluciones tecnológicas para el campo.
+
+Recientemente se publicó un informe que menciona múltiples vulnerabilidades en uno de sus
+productos y provocó muchas pérdidas de ventas a punto de concretarse. Para corregir la
+situación, la empresa decidió contratar un servicio de \emph{pen testing}, realizar una
+evaluación más exhaustiva y corregir el producto para empezar a recuperar el daño a su
+imagen.
+
+El producto en cuestión permite hacer un seguimiento del rendimiento de las cosechas a lo
+largo del tiempo y determinar las rotaciones óptimas para mejorar la productividad. El
+sistema está compuesto por un frontend web que es un \emph{single page web app}, donde el
+usuario puede registrarse, autenticarse, dar de alta lotes marcado sus límites en un mapa,
+actualizarlos o eliminarlos. El sistema muestra según datos históricos de todos los clientes
+de la zona, el rinde esperado para la superficie en cuestión, y sugiere el tipo de cultivo
+con mayor rentabilidad en función de los valores de rinde y precios de mercados futuros
+estimados, y permite que el usuario ingrese los datos del tipo de cultivo y luego de la
+cosecha el rinde obtenido para comparar y poder mejorar en las próximas sugerencias.
+
+La aplicación web se ejecuta en los navegadores de cada cliente, y hace llamadas a un
+servidor backend a través de una API REST.
+
+Siguiendo la metodología de hipótesis de falla, establecer 4 hipótesis de vulnerabilidades
+que tengan alta probabilidad de existir en el escenario descripto. Para cada una, describir
+únicamente la hipótesis y la prueba que realizaría para confirmarla o refutarla (1 pto.\ por
+hipótesis).
+
+\emph{Aclaraciones:} No se considerarán válidas hipótesis genéricas. Tampoco se considerarán
+dos hipótesis que sean variantes del mismo tipo de falla (por ejemplo, el mismo problema en
+dos pantallas distintas).
+\end{consigna}
+
+\paragraph{Temas.}
+Segunda Parte, Clase 6 --- Pentesting (\S Metodología de Hipótesis de Falla: los pasos;
+\S Paso 2 --- Planteo de hipótesis de falla). Segunda Parte, Clase 3 --- Principios de
+Diseño y Vulnerabilidades (\S CWE / Top 25 MITRE: SQL Injection CWE-89; \S OWASP Top 10;
+\S STRIDE: Denial of Service, Spoofing/Improper Authentication).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item La \textbf{metodología de hipótesis de falla} exige, en el paso de
+  \textbf{planteo de hipótesis}, asumir la existencia de una vulnerabilidad concreta
+  \emph{antes} de probarla; luego se define una \textbf{prueba} específica para
+  confirmarla o refutarla (no alcanza con nombrar la categoría genérica: hay que decir
+  \emph{qué} se sospecha y \emph{cómo} se lo comprueba en este sistema puntual).
+  \item El material lista, dentro del \textbf{Top 25 CWE de MITRE}, entre las debilidades
+  más comunes: \textbf{CWE-89 SQL Injection} (falta de control en el ingreso de datos que
+  permite ejecutar comandos SQL: los datos del usuario se mezclan sin sanitizar con el
+  comando y la base los interpreta como código; defensa: \emph{prepared statements}/
+  parametrizar), \textbf{CWE-79 Cross-site Scripting}, y (Clase 3, taxonomía STRIDE)
+  \textbf{Denial of Service} (agotar los recursos necesarios para dar el servicio,
+  afectando disponibilidad) como categoría de amenaza reconocida explícitamente como
+  \emph{ataque de seguridad} aunque no comprometa confidencialidad/integridad.
+  \item \textbf{OWASP} publica el Top 10 de vulnerabilidades web más comunes (frameworks de
+  referencia junto con MITRE), relevante para un frontend \emph{single page web app} +
+  API REST como el descripto (autenticación, autorización, control de acceso a recursos por
+  ID).
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+El enunciado da todas las pistas típicas de una aplicación web con API REST y autenticación
+de usuarios: (1) el sistema tiene \textbf{autenticación} (registrarse/autenticarse), (2)
+tiene \textbf{ingreso de datos de usuario} que probablemente lleguen a una base de datos
+(lotes, límites en mapa, tipo de cultivo, rinde), (3) hace \textbf{consultas agregadas
+costosas} sobre datos históricos de todos los clientes de la zona, y (4) maneja
+\textbf{recursos por identificador} (lotes) que pertenecen a distintos clientes. Cada una
+de estas pistas mapea a una categoría de vulnerabilidad del Top 25/CWE o de STRIDE vista en
+la Clase 3, y la consigna pide aplicar sobre ellas el paso de \textbf{hipótesis + prueba}
+de la Clase 6 (no basta con nombrar la categoría).
+
+\paragraph{Resolución.}
+
+\textbf{Hipótesis 1 --- Autenticación deficiente (Improper Authentication).}
+\emph{Hipótesis:} el sistema de autenticación del frontend/API es débil o directamente
+inexistente en algunos endpoints, permitiendo iniciar sesión con credenciales triviales o
+acceder a funciones que deberían requerir sesión válida sin ella.
+\emph{Prueba:} intentar registrarse con credenciales simples (usuario/contraseña
+predecibles) y verificar si el sistema las acepta sin exigir complejidad; adicionalmente,
+intentar invocar directamente los endpoints de la API REST (alta/consulta de lotes) sin
+enviar token/cookie de sesión, para verificar si el backend responde igual que a un usuario
+autenticado.
+
+\textbf{Hipótesis 2 --- SQL Injection (CWE-89) en el ingreso de datos.}
+\emph{Hipótesis:} los campos donde el usuario ingresa datos (tipo de cultivo, límites del
+lote, rinde obtenido) no sanitizan/parametrizan la entrada antes de construir la consulta
+a la base de datos, permitiendo inyectar comandos SQL.
+\emph{Prueba:} en un campo de texto (por ejemplo, nombre del cultivo), ingresar una cadena
+con sintaxis SQL (p.\ ej.\ un valor que cierre la comilla e intente insertar/alterar una
+tabla) y verificar, sin necesidad de dañar la base, si el sistema devuelve un error de
+sintaxis SQL expuesto o un comportamiento anómalo que indique que el dato fue interpretado
+como comando en lugar de como valor.
+
+\textbf{Hipótesis 3 --- Denial of Service por consultas agregadas costosas.}
+\emph{Hipótesis:} la funcionalidad que muestra, según datos históricos de \textbf{todos los
+clientes de la zona}, el rinde esperado y sugiere el cultivo más rentable en función de
+precios de mercados futuros, requiere procesar/parsear múltiples consultas pesadas por cada
+solicitud; enviar varias de estas solicitudes en paralelo podría agotar los recursos del
+servidor y denegar el servicio a otros usuarios.
+\emph{Prueba (acotada, sin ejecutar el ataque real):} verificar únicamente si es posible
+disparar 2 de estas consultas costosas en paralelo desde una misma sesión/IP sin que el
+sistema las limite (rate limiting) o las rechace; no se realiza el ataque a mayor escala
+para no afectar el servicio, y se reporta la situación si se confirma la ausencia de
+límites.
+
+\textbf{Hipótesis 4 --- Autorización deficiente / control de acceso a recursos de otro
+cliente (Improper Authorization / Broken Access Control).}
+\emph{Hipótesis:} una vez autenticado, el sistema no verifica correctamente que el usuario
+solo pueda acceder a sus propios lotes, permitiendo acceder a lotes (y sus límites en el
+mapa, rindes, etc.) de otros clientes modificando un identificador en la URL o en la
+llamada a la API REST.
+\emph{Prueba:} tras crear una cuenta y autenticarse, identificar la URL/endpoint que expone
+un lote propio con su identificador (p.\ ej.\ \texttt{.../cliente/12/campo/1}) y probar
+acceder al mismo recurso cambiando el identificador de cliente por uno ajeno (p.\ ej.\
+\texttt{.../cliente/1/campo/1}); si el sistema devuelve los datos sin validar que el lote
+pertenece al usuario autenticado, se confirma la hipótesis. No se modifican datos ajenos
+para no ser intrusivo; solo se confirma el acceso indebido.
+
+\textbf{Nota sobre alcance:} las cuatro hipótesis corresponden a categorías distintas de
+falla (autenticación, inyección de datos, disponibilidad y autorización), tal como exige la
+aclaración de la consigna, y todas están sustentadas en la taxonomía CWE/STRIDE/OWASP
+desarrollada en la Clase 3 y en el paso de ``planteo de hipótesis'' de la metodología de
+pentesting de la Clase 6.

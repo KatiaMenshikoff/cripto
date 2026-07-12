@@ -1,0 +1,337 @@
+%=====================================================================
+\section{Final --- 17/07/2023}
+%=====================================================================
+
+\subsection{Ejercicio 1 --- Dispositivos de medición de agua (AES-ECB, HTTPS, integridad)}
+
+\begin{consigna}
+Hay una empresa que se encarga de controlar el agua. Para esto la empresa implementa unos
+dispositivos encargados de hacer las respectivas mediciones. Los mismos le informan a la
+central los datos recolectados.
+
+El procedimiento cuando se pone un dispositivo es el siguiente: primero el dispositivo emite
+su ID por broadcast, luego la central responde a ese ID y le envía una llave por HTTP. Cuando
+el dispositivo le debe enviar lo recolectado a la empresa usa AES-ECB como método de
+encripción.
+
+La empresa contrata una auditoría y le dice que posee fallas en la comunicación de la llave y
+problemas de integridad en la comunicación de los dispositivos.
+\begin{enumerate}
+  \item[a)] Usando HTTPS ¿se hubieran solucionado todos los problemas que informó la
+  auditoría?
+  \item[b)] En caso de no poder usar HTTPS por cuestiones de presupuestos ¿qué otro protocolo
+  utilizaría para el intercambio de claves?
+  \item[c)] ¿Qué cambios son necesarios para asegurar la integridad en el envío de información
+  de los dispositivos hacia la central?
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Primera Parte, Clase 2 --- Cifrado (\S ECB, \S modos de cifrado, \S CPA-security); Clase 3 ---
+MACs y Cifrado Autenticado (\S qué es un MAC, \S cifrado autenticado, \S modos AEAD:
+CCM/GCM); Clase 5 --- Protocolos (\S TLS Handshake, \S Diffie--Hellman); Segunda Parte,
+Clase 11 --- Protección de Datos (\S protocolos de transporte cifrados: TLS/HTTPS).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{ECB (Electronic Codebook):} cifra cada bloque de forma independiente,
+  $c_i=e_k(m_i)$. Es determinista: bloques de texto plano iguales producen cifrados iguales
+  $\Rightarrow$ \textbf{revela patrones/estructura} y \textbf{no es CPA-Secure}. No debe
+  usarse.
+  \item \textbf{HTTPS = HTTP sobre TLS.} El TLS Handshake acuerda un método de intercambio de
+  clave (RSA, Diffie--Hellman con certificado, ECDH, etc.), autentica con firmas y deriva un
+  \emph{Master Secret}; la criptografía negociable para el resto de la sesión incluye cifrado
+  simétrico (recomendado AES-GCM) y HMAC/AEAD para integridad.
+  \item \textbf{Diffie--Hellman} (Clase 5): acuerdo de clave cuya seguridad descansa en el
+  problema del logaritmo discreto (DLP); permite que ambas partes compartan una clave secreta
+  sobre un canal inseguro sin haberla intercambiado antes. \textbf{DH puro no autentica}: es
+  vulnerable a Man-in-the-Middle si no se combina con certificados (por eso en TLS va con
+  RSA/DSS).
+  \item \textbf{Cifrado autenticado / AEAD} (Clase 3): en la práctica, si se necesita
+  confidencialidad casi siempre también se necesita integridad, porque el cifrado simple
+  (como ECB) puede ser manipulado sin que nadie lo note. La recomendación es usar un modo
+  \textbf{AEAD} como \textbf{AES-GCM} (o CCM), que da confidencialidad e integridad juntas.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+El escenario combina dos fallas de diseño típicas de la materia: (1) enviar una clave en
+claro por un canal no cifrado (HTTP) para luego usarla en un cifrado simétrico, y (2) usar
+ECB, el modo que la Clase 2 marca como ``NO utilizar'' por no ser CPA-Secure y no dar
+integridad. Conecta con la distinción Clase 3 entre cifrado (confidencialidad) y MAC/AEAD
+(integridad): un cifrado por sí solo, aunque fuera un modo seguro como CBC o GCM sin
+autenticar, no impide que un atacante manipule bits del cifrado sin ser detectado si no hay
+un mecanismo de integridad de por medio.
+
+\paragraph{Resolución.}
+
+\textbf{a) No, no necesariamente se hubieran solucionado todos los problemas.}
+\begin{itemize}
+  \item Usando \textbf{HTTPS con TLS} para el paso donde la central envía la llave, sí se
+  soluciona el problema de la \textbf{comunicación de la llave}: TLS resuelve el intercambio
+  de claves de forma autenticada (certificados) y cifra el canal, evitando que un atacante
+  intercepte la llave en texto plano durante el handshake inicial. Esto ataca directamente la
+  falla ``fallas en la comunicación de la llave''.
+  \item Sin embargo, HTTPS solo protege la \textbf{comunicación} del dispositivo con la
+  central (la llave viajando por HTTP). \textbf{No cambia el método de encripción que el
+  dispositivo usa para enviar lo recolectado}, que sigue siendo \textbf{AES-ECB}. Como ECB es
+  determinista y no es CPA-Secure, \textbf{no da integridad} (bloques de datos repetidos
+  producen cifrados idénticos, y un atacante puede reordenar/reemplazar bloques de cifrado
+  sin que el receptor lo detecte, ya que ECB no incluye ningún mecanismo de autenticación).
+  Por lo tanto el problema de \textbf{integridad en la comunicación de los dispositivos}
+  \textbf{no queda resuelto} solo con HTTPS en el paso de intercambio de la llave.
+\end{itemize}
+
+\textbf{b) Diffie--Hellman.} Si no se puede pagar el costo de HTTPS/TLS completo, se puede
+usar directamente un protocolo de \textbf{intercambio de clave Diffie--Hellman}: permite que
+la central y el dispositivo acuerden una clave secreta compartida sobre un canal inseguro sin
+haberla compartido antes, basando su seguridad en el problema del logaritmo discreto. Queda
+como salvedad (marcada en el material) que \textbf{DH puro no autentica a las partes} y es
+susceptible a un ataque Man-in-the-Middle si un atacante se interpone en el intercambio; para
+mitigarlo haría falta combinarlo con algún mecanismo de autenticación (certificados o claves
+públicas ya conocidas), tal como TLS lo hace con RSA/DSS.
+
+\textbf{c)} Para asegurar la integridad en el envío de la información recolectada hacia la
+central hace falta:
+\begin{enumerate}
+  \item \textbf{Dejar de usar ECB en solitario:} es un modo sin ningún mecanismo de
+  autenticación, determinista y no CPA-Secure.
+  \item \textbf{Pasar a un esquema de cifrado autenticado (AEAD)}, que da confidencialidad
+  \emph{e} integridad en una sola construcción: \textbf{AES-GCM} (recomendación práctica del
+  material: rápido, estandarizado, en todas las librerías serias) o \textbf{AES-CCM}. Ambos
+  agregan, además del cifrado, un \emph{tag} de autenticación que permite al receptor
+  verificar que el mensaje cifrado no fue modificado en el camino.
+  \item Alternativamente (o en conjunto), agregar explícitamente un \textbf{MAC/HMAC} sobre lo
+  enviado, de forma que la central pueda \textbf{chequear que el mensaje no fue modificado en
+  el camino} (verificar el tag con la clave compartida antes de aceptar la medición).
+\end{enumerate}
+Nota de fidelidad: el material no detalla un protocolo específico de bajo costo distinto de
+Diffie--Hellman para IoT (p.\ ej. protocolos livianos de sensores); la respuesta se limita a
+lo cubierto en las clases de Protocolos y MACs/Cifrado Autenticado.
+
+%=====================================================================
+\subsection{Ejercicio 2 --- Ocultar un mensaje ``tipo sombras'' (OTP + integridad con hash/HMAC)}
+%=====================================================================
+
+\begin{consigna}
+Se quiere ocultar un mensaje de forma segura con una técnica similar a las sombras. Dado un
+mensaje ``m'' se eligen dos números random ($x_1,x_2$) y se generan por dos canales separados
+(posiblemente en lugares distintos):
+\begin{itemize}
+  \item $p_1 = x_1 \oplus m \oplus x_2$
+  \item $p_2 = x_2 \oplus x_1$
+  \item $p_1$ y $h(p_2)$
+  \item $p_2$ y $h(p_1)$
+\end{itemize}
+\begin{enumerate}
+  \item[a)] Explicar por qué si un atacante tiene acceso a solo 1 canal de comunicación aun se
+  mantiene la confidencialidad.
+  \item[b)] Explicar por qué si un atacante tiene acceso a un solo canal de comunicación aun se
+  mantiene la integridad.
+  \item[c)] Si un atacante tiene acceso a los 2 canales de información, cómo hacer para que se
+  mantenga \underline{solo la integridad}.
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Primera Parte, Clase 2 --- Cifrado (\S secreto perfecto, \S One-Time Pad / Vernam); Clase 5 ---
+Protocolos (\S secreto compartido de Shamir, umbral $(t,n)$: con menos del umbral no se filtra
+información); Clase 3 --- MACs y Cifrado Autenticado (\S funciones de hash, \S HMAC,
+\S no-repudio: por qué MAC/hash no lo dan).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{OTP (Clase 2):} $e_k(m) = m \oplus k$ con $k$ uniforme y del mismo tamaño que
+  $m$ tiene \textbf{secreto perfecto}: $\Pr[M{=}m\mid C{=}c] = \Pr[M{=}m]$. Si $x_1$ y $x_2$
+  son aleatorios e independientes, $x_1\oplus x_2$ se comporta como una clave uniforme.
+  \item \textbf{Secreto compartido / esquema umbral (Clase 5):} repartir información en
+  ``sombras'' tal que \textbf{con menos de las necesarias no se filtra ninguna información}
+  del secreto (entropía máxima). Acá el mensaje se reparte en dos partes ($p_1,p_2$) tal que
+  ninguna por separado revela $m$.
+  \item \textbf{Función de hash (Clase 3):} \textbf{no tiene clave} (es información pública);
+  depende de todos los bits del mensaje (efecto avalancha) y permite detectar si el mensaje
+  fue alterado comparando el hash recibido contra el hash recalculado. Al no tener clave, un
+  atacante que \textbf{controla el mensaje y puede recalcular el hash él mismo} puede
+  modificar ambos de forma consistente sin ser detectado.
+  \item \textbf{HMAC (Clase 3):} MAC construido a partir de una función de hash y una
+  \textbf{clave} $k$ compartida; a diferencia del hash simple, el atacante sin la clave
+  \textbf{no puede recalcular un tag válido} aunque conozca y modifique el mensaje.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+El esquema es análogo a un \textbf{secreto compartido de 2 sombras} (Clase 5) combinado con
+\textbf{OTP} (Clase 2): $p_1$ es el mensaje enmascarado con el XOR de dos valores aleatorios
+(equivalente a una clave OTP $x_1\oplus x_2$), y $p_2$ es esa misma máscara sin el mensaje.
+Ninguna de las dos partes por sí sola alcanza para reconstruir $m$: hace falta juntar ambos
+canales, igual que con el umbral de Shamir se necesita juntar $t$ sombras. El agregado de
+$h(\cdot)$ cruzado conecta con Clase 3 (funciones de hash sin clave) y anticipa la necesidad
+de HMAC para integridad \emph{autenticada} cuando el atacante controla todo.
+
+\paragraph{Resolución.}
+
+\textbf{a) Confidencialidad con acceso a un solo canal.}
+\begin{itemize}
+  \item \textbf{Canal 1} entrega $(p_1, h(p_2))$, con $p_1 = x_1\oplus m\oplus x_2$. Como
+  $x_1$ y $x_2$ son elegidos al azar e independientes, $k = x_1\oplus x_2$ se comporta como
+  una \textbf{clave OTP uniforme}: $p_1 = m \oplus k$. Por el resultado de secreto perfecto
+  del OTP, sin conocer $k$ el atacante no obtiene ninguna información sobre $m$ a partir de
+  $p_1$ solo. $h(p_2)$ tampoco aporta nada sobre $m$ (depende solo de $p_2 = x_1\oplus x_2$,
+  que no involucra a $m$).
+  \item \textbf{Canal 2} entrega $(p_2, h(p_1))$, con $p_2 = x_1\oplus x_2$. Esto es
+  exactamente la máscara $k$ usada para enmascarar $m$, pero \textbf{sin el mensaje}: no
+  contiene ninguna información de $m$. $h(p_1)$ tampoco revela $m$ porque una función de hash
+  no es invertible (no permite recuperar el mensaje original a partir del resumen).
+\end{itemize}
+En ambos casos se necesitan \textbf{ambos canales} para calcular
+$p_1 \oplus p_2 = (x_1\oplus m\oplus x_2)\oplus(x_1\oplus x_2) = m$; con uno solo la
+confidencialidad de $m$ se mantiene.
+
+\textbf{b) Integridad con acceso a un solo canal.}
+Cada canal lleva el valor a transmitir junto con el \textbf{hash del otro} valor
+($p_1$ con $h(p_2)$, y $p_2$ con $h(p_1)$), es decir, hashes \textbf{cruzados}. Si el
+atacante solo controla un canal (por ejemplo el que lleva $p_1$ y $h(p_2)$) y modifica $p_1$
+en tránsito, no tiene forma de recalcular un $h(p_2)$ consistente porque \textbf{no tiene
+acceso a $p_2$} (viaja por el otro canal, que no controla). Al llegar los dos valores al
+receptor, este recalcula $h(p_2)$ recibido en el otro canal y $h(p_1)$ recibido en este, y
+si $p_1$ fue alterado, el hash recalculado de $p_1$ no coincidirá con el $h(p_1)$ que viajó
+por el canal 2, delatando la alteración. Con un solo canal comprometido, la verificación
+cruzada contra el otro canal (no comprometido) detecta la manipulación.
+
+\textbf{c) Con acceso a los dos canales, mantener solo la integridad.}
+Si el atacante controla ambos canales, puede leer $p_1$ y $p_2$ enteros, calcular
+$h(\cdot)$ él mismo (la función de hash \textbf{no usa clave}, es pública) y modificar
+$p_1$ y/o $p_2$ recalculando los hashes cruzados de forma consistente: el esquema de hash
+simple deja de servir para integridad en ese caso (y de hecho la confidencialidad de $m$
+también se pierde, porque con los dos canales se recupera $m = p_1\oplus p_2$; por eso la
+consigna pide mantener \emph{solo} la integridad, asumiendo que la confidencialidad ya no es
+sostenible con acceso total a ambos canales).
+
+Para mantener la integridad hay que reemplazar el hash simple $h(\cdot)$ por un mecanismo
+\textbf{que dependa de una clave que el atacante no tenga}:
+\begin{itemize}
+  \item Usar \textbf{HMAC} en lugar de un hash sin clave: $\mathrm{HMAC}_k(p_2)$ en el canal 1
+  y $\mathrm{HMAC}_k(p_1)$ en el canal 2, con una clave $k$ secreta compartida entre emisor y
+  receptor mediante un canal previo seguro. Sin conocer $k$, el atacante no puede generar un
+  tag $\mathrm{HMAC}_k$ válido para un $p_1$ o $p_2$ modificado, aunque vea y edite el
+  contenido de ambos canales.
+  \item Alternativamente, \textbf{firmar digitalmente} $p_1$ y $p_2$ con la clave
+  \textbf{privada} del emisor: el atacante, aun controlando ambos canales, no puede falsificar
+  la firma sin esa clave privada, por lo que cualquier alteración se detecta al verificar la
+  firma con la clave pública correspondiente. (Esta variante, a diferencia de HMAC, además
+  daría no-repudio, ya que el material remarca que un MAC/HMAC simétrico \textbf{no} da
+  no-repudio porque ambas partes comparten la misma clave.)
+\end{itemize}
+
+%=====================================================================
+\subsection{Ejercicio 3 --- Pentesting a una página de noticias (hipótesis de falla)}
+%=====================================================================
+
+\begin{consigna}
+Una página de noticias en la que hay un usuario y un generador de noticias. A cada noticia se
+le puede poner etiquetas como categorías (Deportes, Interés general) o Ubicación (Argentina).
+
+Cada usuario lleva un puntaje (+1 por cada noticia rateada positivamente y -1 por cada noticia
+rateada negativamente). La página tiene una API REST y los llamados a la misma se hacen por
+HTTPS.
+
+Se le pagará por visualizaciones al generador de la noticia teniendo en cuenta algunos
+factores que no me acuerdo bien y no venían al caso.
+
+Se hizo un análisis de la página y se encontró que:
+\begin{enumerate}
+  \item Existe una URL para pedir todas las noticias:
+  \texttt{https://dominio.com/news?limit=100\&page=20}
+  \item Cuando se le recomienda o no recomienda una noticia se hace a través de
+  \texttt{https://dominio.com/\{generator\_id\}/\{news\_id\}/upvoted} o
+  \texttt{https://dominio.com/\{generator\_id\}/\{news\_id\}/downvoted}
+  \item Las personas se registran por usuario y password
+  \item Se chequearon los inputs de la página y cualquier intento de tag HTML ingresado
+  aparecerá como texto en la página $\rightarrow$ XSS no probable.
+\end{enumerate}
+Establecer 4 hipótesis de falla con las respectivas pruebas que haría.
+\end{consigna}
+
+\paragraph{Temas.}
+Segunda Parte, Clase 10b --- Pentesting (\S Metodología de Hipótesis de Falla: los pasos en
+orden --- Recolección, Hipótesis, Prueba, Generalización, Eliminación; \S Injection flaws;
+\S OWASP); Clase 8 --- Principios de Diseño y Vulnerabilidades (relacionado: validación de
+entrada, XSS/CWE-79).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item La \textbf{metodología de hipótesis de falla} (Clase 10b) tiene 5 pasos en orden:
+  \textbf{Recolección de información} $\to$ \textbf{Planteo de hipótesis de falla} $\to$
+  \textbf{Prueba} $\to$ \textbf{Generalización} $\to$ \textbf{Eliminación} (opcional). Cada
+  hipótesis debe: (1) partir de la información recolectada del sistema (los 4 hallazgos del
+  enunciado), (2) suponer una vulnerabilidad concreta, y (3) tener una \textbf{prueba}
+  asociada que la verifique.
+  \item El material define el \textbf{XSS (CWE-79)} como inyección de JS ejecutado por el
+  navegador de la víctima, y aquí el enunciado ya lo descarta explícitamente (los tags HTML
+  se muestran como texto, no se ejecutan) --- es un hallazgo del paso de Recolección que cierra
+  esa hipótesis.
+  \item El material menciona en general \textbf{OWASP} como organización que publica el
+  Top 10 de vulnerabilidades web y menciona \textbf{Injection flaws} (SQLi, XSS, OS command)
+  como la familia más frecuente ($\sim$90\% según el profesor).
+\end{itemize}
+
+\begin{warnbox}{Aviso de fidelidad al material}
+El enunciado del alumno (usado solo como referencia) etiqueta las hipótesis con nombres de
+categorías estilo OWASP Top 10 API (``Improper Authentication'', ``Broken Access Control'',
+``BOLA'', ataques de \emph{replay}). Los resúmenes de la materia \textbf{sí} cubren OWASP
+como organización/Top 10 y la familia de \emph{Injection flaws}, y \textbf{sí} cubren
+conceptos de control de acceso/autenticación de otras clases, pero \textbf{no} desarrollan
+esas siglas puntuales (BOLA, Improper Authentication, Broken Access Control como categorías
+nombradas) como parte del temario de Pentesting. Por eso, en la resolución de abajo se
+plantean las 4 hipótesis con el vocabulario y la metodología efectivamente vistos en la
+Clase 10b (hipótesis de falla + prueba), evitando nombrar categorías OWASP específicas que no
+están en el material, y describiendo la falla en términos genéricos de control de acceso /
+autenticación / lógica de negocio ya cubiertos en Segunda Parte.
+\end{warnbox}
+
+\paragraph{Resolución.}
+Aplicando la metodología de hipótesis de falla (Clase 10b) sobre los 4 hallazgos de la
+Recolección de información:
+
+\begin{enumerate}
+  \item \textbf{Hipótesis 1 --- falta de límite de intentos en el login.} El sistema se
+  registra y autentica por usuario y contraseña (hallazgo 3), y no hay ninguna mención de
+  control sobre los intentos de autenticación. \textbf{Hipótesis:} el endpoint de login no
+  limita ni registra intentos fallidos, permitiendo probar contraseñas por fuerza bruta contra
+  una cuenta válida. \textbf{Prueba:} realizar múltiples intentos de autenticación contra un
+  usuario existente con contraseñas distintas y observar si el sistema bloquea, demora o
+  registra los intentos repetidos, o si los permite indefinidamente.
+
+  \item \textbf{Hipótesis 2 --- falta de verificación del vínculo usuario/\texttt{generator\_id}
+  al votar.} Los endpoints de recomendación usan \texttt{\{generator\_id\}/\{news\_id\}/upvoted}
+  y \texttt{downvoted} directamente en la URL (hallazgo 2), sin mostrar cómo se valida contra
+  quién está autenticado. \textbf{Hipótesis:} el back-end no verifica que el
+  \texttt{generator\_id} de la URL corresponda al usuario autenticado o autorizado para votar,
+  permitiendo que un usuario vote (sume/reste puntaje) en nombre de otro generador o sin estar
+  autenticado. \textbf{Prueba:} (i) sin loguearse, llamar directamente a la URL de
+  \texttt{upvoted}/\texttt{downvoted} con un \texttt{generator\_id}/\texttt{news\_id} válidos y
+  observar si el sistema restringe el acceso; (ii) logueado como un usuario, llamar a la misma
+  URL con un \texttt{generator\_id} que no es el propio y observar si el sistema lo permite.
+
+  \item \textbf{Hipótesis 3 --- manipulación del parámetro \texttt{limit} de la URL de
+  noticias.} El hallazgo 1 expone una URL con parámetros \texttt{limit} y \texttt{page}
+  controlados por el cliente. \textbf{Hipótesis:} el valor de \texttt{limit} no está validado
+  ni acotado en el servidor, permitiendo pedir una cantidad arbitrariamente grande de noticias
+  en una sola request (degradación del servicio / consumo excesivo de recursos).
+  \textbf{Prueba:} modificar el valor de \texttt{limit} a números extremadamente altos (o
+  negativos/no numéricos) y observar la respuesta y el tiempo/recursos que consume el
+  servidor.
+
+  \item \textbf{Hipótesis 4 --- falta de control sobre votos repetidos del mismo usuario.} El
+  puntaje del generador depende de +1/-1 por cada rating (hallazgo del enunciado principal).
+  \textbf{Hipótesis:} el sistema no valida que un mismo usuario ya haya votado una misma
+  noticia, permitiendo repetir el llamado a \texttt{upvoted}/\texttt{downvoted} para inflar o
+  deflar artificialmente el puntaje de un generador (equivalente a un ataque de repetición
+  sobre la misma acción). \textbf{Prueba:} repetir la misma llamada de
+  \texttt{upvoted}/\texttt{downvoted} (mismo usuario, misma noticia) dos o más veces y verificar
+  si el puntaje del generador se incrementa cada vez o si el sistema detecta y descarta el
+  duplicado.
+\end{enumerate}
+
+Nota: el hallazgo 4 del enunciado (chequeo de tags HTML) queda \textbf{descartado} como
+hipótesis de XSS por el propio enunciado (paso de Recolección ya cerrado): cualquier tag
+ingresado se muestra como texto, no se ejecuta, así que no aplica la familia de
+\emph{Injection flaws} tipo XSS sobre ese input en particular.

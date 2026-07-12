@@ -1,0 +1,457 @@
+%=====================================================================
+\section{Final --- 10/07/2023}
+%=====================================================================
+
+%=====================================================================
+\subsection{Ejercicio 1 --- Sensor $\to$ maestro con AES-CBC: integridad y replay}
+%=====================================================================
+
+\begin{consigna}
+Una empresa tiene un sistema donde hay varios sensores que comunican a un dispositivo
+maestro sus diferentes niveles de sensado. Intercambian claves con Diffie-Hellman en su
+primera comunicación, y a partir de eso en todos los mensajes que los sensores envían
+(encriptados con AES-CBC) tienen la siguiente estructura:
+\begin{equation*}
+\#\text{sensor} \,\|\, e_k(\#\text{sensor} \,\|\, \text{valor\_sensado} \,\|\, \text{datos\_adicionales})
+\end{equation*}
+\begin{enumerate}
+  \item[1.] Hay un atacante que hace de alguna forma que los mensajes se alteren y
+  tengan datos adicionales no válidos, generando que el dispositivo maestro tire una
+  señal de alerta. ¿Cómo es posible? Encontrar una manera de solucionar este error en
+  el protocolo sin nuevas claves. (1,5 puntos)
+  \item[2.] Hay otro atacante que está enviando repetidamente la señal de sensado de un
+  sensor, haciendo que el dispositivo maestro registre niveles de sensado que no son
+  correctos. ¿Cómo es posible? Encontrar una forma de modificar el mensaje para que
+  esto no ocurra sin usar nuevas claves. (1,5 puntos)
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Primera Parte, Clase de MACs y Cifrado Autenticado (\S El nuevo escenario de ataque:
+integridad; \S Maleabilidad; \S Cifrado autenticado: Encrypt-then-MAC); Clase de
+Protocolos (\S Nonce y frescura; \S Replay; \S Diffie-Hellman como intercambio de clave).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{El cifrado por sí solo no da integridad.} El material lo remarca con el
+  ejemplo del sistema de RR.HH.: un criptosistema CPA-Secure (incluso uno ``bueno'') no
+  impide que un atacante \emph{manipule} el texto cifrado sin conocer la clave. La cita
+  del profesor: \prof{En general el problema de integridad no es evitar la modificación,
+  porque muchas veces no se puede, sino detectarla.}
+  \item \textbf{Maleabilidad:} propiedad de que modificar el texto cifrado se traduce de
+  forma sistemática/controlable en una modificación del texto plano. En un cifrado de
+  flujo, $c'=c\oplus x \Rightarrow \mathrm{Dec}_k(c')=m\oplus x$. AES-CBC también es
+  maleable: modificar un bloque de cifrado altera de forma predecible (vía el XOR con el
+  bloque anterior) el bloque de texto plano correspondiente, y además \textbf{corrompe}
+  el bloque siguiente al descifrar --- pero eso no evita que el atacante logre inyectar
+  datos con sentido si conoce o controla estructura del mensaje.
+  \item \textbf{Ningún criptosistema visto es CCA-Secure} (recuadro ``destacado'' del
+  material): el cifrado está pensado para confidencialidad, no para resistir
+  manipulación. Por eso la integridad requiere \textbf{otra primitiva: el MAC}.
+  \item \textbf{Solución sin cambiar claves --- Cifrado autenticado / MAC:} el material
+  define la construcción \textbf{Encrypt-then-MAC} como la única con demostración
+  general de seguridad: se cifra $m$ obteniendo $c$, y se etiqueta con
+  $t=\mathrm{Mac}_{k_2}(c)$ con clave \textbf{independiente} $k_2\ne k_1$; el receptor
+  \textbf{primero verifica} el tag y solo si es válido descifra. Alternativamente (y sin
+  agregar una clave nueva, ya que acá solo se cuenta con $k$ derivada de DH) se puede usar
+  un \textbf{HMAC con una clave derivada de la misma $k$} (p.\ ej.\ vía un KDF/hash, tal
+  como aparece en el ejercicio análogo del material: $c=E_{k_1}(m\|H(k_2\|m))$, donde
+  $k_1,k_2$ salen de la misma clave maestra) para no necesitar un nuevo intercambio DH.
+  \item \textbf{Nonce, timestamp y replay (Clase de Protocolos):} un \textbf{nonce}
+  (number used once) es un número aleatorio de un solo uso que aporta frescura y permite
+  detectar/evitar \textbf{replays} (repetición de mensajes viejos); el otro mecanismo de
+  frescura es el \textbf{timestamp}. El material lo usa en Needham-Schroeder y en la
+  variante Denning-Sacco justamente para evitar el reenvío de mensajes/claves viejas.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+El enunciado describe un mensaje cifrado con AES-CBC pero \textbf{sin ningún mecanismo
+de integridad ni de frescura}: no hay MAC sobre el mensaje, y no hay nonce, contador ni
+timestamp dentro de lo cifrado. Esto es exactamente el escenario que la unidad de MACs
+identifica como el ``nuevo escenario de ataque'': un cifrado CPA-Secure (o incluso
+CCA-inseguro, que es la realidad de todos los criptosistemas vistos) puede ser
+manipulado sin que el atacante conozca la clave. La restricción ``sin nuevas claves''
+en ambos incisos apunta a agregar mecanismos (MAC derivado de la misma clave, contador)
+en vez de rehacer el intercambio Diffie-Hellman.
+
+\paragraph{Resolución.}
+
+\textbf{1) Por qué es posible y cómo solucionarlo.}
+AES-CBC \textbf{cifra pero no autentica}: es un modo de cifrado por bloques que da
+confidencialidad (si el criptosistema es CPA-Secure), pero --- como remarca el
+material --- \textbf{ningún} criptosistema visto es CCA-Secure, es decir, ninguno
+resiste manipulación del texto cifrado. Un atacante que intercepta el mensaje puede
+alterar directamente el texto cifrado $e_k(\cdots)$ (por ejemplo, invirtiendo bits de
+algún bloque cifrado, lo cual --- por la estructura de CBC --- modifica de forma
+predecible/controlable el bloque de texto plano correspondiente al descifrar, aunque
+corrompa el bloque siguiente). Como no hay ningún chequeo de integridad, el dispositivo
+maestro descifra ``basura'' que cae en el campo \texttt{datos\_adicionales} sin que el
+receptor pueda detectar que fue modificado --- eso es lo que dispara la alerta (datos
+adicionales no válidos), sin que el atacante haya necesitado la clave.
+
+\textbf{Solución (sin nuevas claves):} agregar integridad con un \textbf{MAC/HMAC}
+calculado sobre el mensaje (siguiendo el patrón Encrypt-then-MAC del material, que es el
+único con demostración de seguridad), usando una clave derivada de la misma $k$ obtenida
+por Diffie-Hellman (no hace falta un nuevo intercambio):
+\begin{equation*}
+c = e_k(\#\text{sensor}\,\|\,\text{valor\_sensado}\,\|\,\text{datos\_adicionales}) \,\|\, m,
+\qquad m = \mathrm{HMAC}_k(c)
+\end{equation*}
+El maestro, al recibir $(\#\text{sensor}, c, m)$, \textbf{primero verifica} $m$ contra
+$c$ recalculando el HMAC; si no coincide, descarta el mensaje directamente (nunca llega
+a descifrar datos manipulados). Solo si el MAC es válido, descifra y usa
+\texttt{datos\_adicionales}. Así cualquier alteración del cifrado es detectada antes de
+generar una alerta espuria.
+
+\textbf{2) Por qué es posible y cómo solucionarlo.}
+El segundo atacante no modifica el contenido: \textbf{reenvía (replay)} un mensaje
+legítimo capturado anteriormente. Como la estructura del mensaje no incluye ningún
+elemento de \textbf{frescura} (ni nonce, ni contador, ni timestamp), el dispositivo
+maestro no tiene forma de distinguir un mensaje nuevo de uno viejo reenviado, y aun con
+un MAC válido (agregado en el punto 1) el mensaje \emph{reenviado} seguiría verificando
+correctamente --- el MAC da integridad y autenticación de origen, pero no dice nada
+sobre si el mensaje es \emph{nuevo}. Por eso el maestro termina registrando niveles de
+sensado viejos como si fueran actuales.
+
+\textbf{Solución (sin nuevas claves):} agregar un \textbf{contador (o timestamp)} dentro
+del contenido protegido por el MAC, tal como el material propone con la variante
+Denning-Sacco (agregar un timestamp $T$ dentro del bloque protegido para impedir
+reutilizar un mensaje/ticket viejo):
+\begin{equation*}
+c = e_k(\#\text{sensor}\,\|\,\text{valor\_sensado}\,\|\,\text{datos\_adicionales}\,\|\,n_i)\,\|\,m,
+\qquad m=\mathrm{HMAC}_k(c)
+\end{equation*}
+donde $n_i$ es un contador estrictamente creciente por sensor (o un timestamp). El
+maestro guarda el último contador válido recibido de cada sensor y \textbf{rechaza}
+cualquier mensaje cuyo contador/timestamp no sea mayor al último aceptado, aun cuando el
+MAC verifique correctamente. Esto detecta y descarta el replay sin necesidad de repetir
+el intercambio Diffie-Hellman ni generar nuevas claves.
+
+%=====================================================================
+\subsection{Ejercicio 2 --- Alternativas de MAC para datos grandes (árbol de Merkle)}
+%=====================================================================
+
+\begin{consigna}
+Se quiere enviar un conjunto de datos muy grande. Si bien se puede mandar la
+información junto con un MAC de la información entera, en caso de que una parte del
+mensaje tenga un error, es necesario mandar el mensaje entero de vuelta. Se buscan
+alternativas para MAC, donde se parte la data en bloques más pequeños, de forma que
+permitan no tener que enviar la información entera en caso de una falla en uno de los
+bloques. Las alternativas son las siguientes:
+\begin{enumerate}
+  \item[1.] En vez de calcular el MAC de cada bloque, se calcula el MAC' que es: el
+  contenido del bloque anterior concatenado al MAC del bloque actual. Excepto en el
+  bloque cero, que como no tiene anterior, se ponen 0s. (1 punto)
+  \item[2.] Se calcula el MAC de la concatenación de los MAC de cada bloque. (1 punto)
+  \item[3.] Se calcula el MAC usando el árbol de Merkle (buscar ejemplo de árbol de
+  Merkle). (1 punto)
+\end{enumerate}
+Para cada caso evaluar si tiene integridad y en caso de que sí, cómo harían cuando un
+bloque se envía con un dato erróneo (si es que hay una alternativa a no enviar todo el
+mensaje de vuelta).
+\end{consigna}
+
+\paragraph{Temas.}
+Primera Parte, Clase de MACs y Cifrado Autenticado (\S Qué es un MAC; \S Falsificación
+por bloques (parcial 2015); \S CBC-MAC; \S HMAC; \S Modelo iterativo Merkle-Damgård).
+
+\begin{warnbox}{Aviso de fidelidad --- el árbol de Merkle NO está en el material de la materia}
+El enunciado dice explícitamente ``buscar ejemplo de árbol de Merkle'': el \textbf{árbol
+de Merkle (hash tree)} como estructura de datos \textbf{no aparece} en los resúmenes de
+la materia (ni en la unidad de MACs ni en ninguna otra). Lo que sí está en el material es
+la construcción \textbf{Merkle-Damgård} (el esquema iterativo genérico con el que se
+construyen las funciones de hash como SHA-2, encadenando $H_i=f(H_{i-1},x_i)$) --- que es
+un concepto \textbf{distinto} (sirve para construir una función de hash sobre un mensaje
+secuencial, no es una estructura de árbol para autenticar bloques independientes). Por lo
+tanto, la resolución de la alternativa 3 usa la noción \emph{general} de MAC (Clase de
+MACs: $\mathrm{Mac}_k$ sobre una función de hash / HMAC) aplicada de forma recursiva sobre
+pares de hojas, que es la idea estándar de un árbol de hashes, pero \textbf{esa
+estructura en árbol específica no proviene de las clases provistas}: se avisa siguiendo
+la regla de oro en vez de presentarla como si estuviera dictada.
+\end{warnbox}
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{Qué exige un MAC (Clase de MACs):} terna $(\mathrm{Gen},\mathrm{Mac},
+  \mathrm{Vrfy})$; $\mathrm{Vrfy}_k(m,t)=1$ si $t$ es la etiqueta correcta de $m$. Un MAC
+  \textbf{robusto siempre procesa la totalidad} del contenido que dice proteger: si deja
+  algo afuera, ese resto queda \textbf{sin proteger} y es falsificable modificándolo
+  libremente.
+  \item \textbf{Falsificación por bloques (parcial 2015, en el material):} cuando un MAC
+  se define como bloques \textbf{calculados de forma independiente}
+  ($\mathrm{Mac}_k(m)=\langle F_k(m_1), F_k(F_k(m_2))\rangle$ y similares), el ataque
+  típico es \textbf{reusar/intercambiar bloques} entre mensajes distintos para forjar un
+  tag válido de otro mensaje --- justamente \emph{porque} cada bloque se verifica de
+  forma independiente. Esto es una debilidad de \emph{seguridad} (permite forjar
+  combinando piezas de mensajes distintos con MACs válidos), pero la misma independencia
+  es la que permite, del lado de la \textbf{detección de errores de transmisión}
+  (no forjas activas, sino bloques corrompidos), \textbf{verificar cada bloque por
+  separado} y así saber exactamente cuál falló.
+  \item \textbf{CBC-MAC (Clase de MACs):} $t_i=F_k(t_{i-1}\oplus m_i)$, el tag final
+  ``depende'' de todos los bloques anteriores por el encadenamiento, pero solo se
+  conserva/verifica el \textbf{último} tag $t_j$: no hay forma de saber, a partir de un
+  único CBC-MAC roto, cuál bloque intermedio fue el que falló (hay que volver a mandar
+  todo el mensaje para poder recalcular y comparar).
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+El punto clave a verificar es la alternativa 2. En el material, la idea de que un MAC
+\textbf{calculado independientemente por bloque} permita identificar exactamente qué
+bloque fue alterado es consistente con la sección de ``Falsificación por bloques'': ahí
+el material señala que esos esquemas son atacables \emph{justamente porque} cada
+$F_k(m_i)$ se computa y se verifica de forma aislada del resto. Esa misma propiedad
+(verificación aislada por bloque) es la que, en el escenario de este ejercicio
+(corrupción/error de un bloque, no un atacante activo forjando), permite decir
+\textbf{cuál bloque en particular no verifica}. Por lo tanto, el razonamiento de que
+"si falla un bloque hay que reenviar todo el mensaje porque no se puede saber cuál
+bloque falló" para la alternativa 2 \textbf{no es correcto} y se corrige en la
+resolución de abajo.
+
+\paragraph{Resolución.}
+
+\textbf{1) MAC$'_i$ = contenido del bloque anterior $\|$ MAC del bloque actual
+(MAC$'_i = B_{i-1}\,\|\,\mathrm{Mac}(B_i)$, con $B_{-1}=$ ceros).}
+\begin{itemize}
+  \item \textbf{¿Tiene integridad?} Sí, para el contenido de cada bloque: cada
+  $\mathrm{Mac}(B_i)$ se calcula (según la definición del material) sobre $B_i$ y se
+  puede verificar de forma independiente por bloque, exactamente igual que en la
+  alternativa 2. Además, al incluir el contenido crudo de $B_{i-1}$ junto al tag de
+  $B_i$, el receptor puede \textbf{cotejar que el bloque anterior recibido coincida}
+  con el que está referenciado en $\mathrm{MAC}'_i$: esto agrega una verificación de
+  \textbf{orden/posición} (detecta si se reordenaron o eliminaron bloques) que la
+  alternativa 2 no ofrece por sí sola, a costa de duplicar el contenido de cada bloque
+  (se transmite $B_{i-1}$ dos veces).
+  \item \textbf{Ante un bloque con error:} como $\mathrm{Mac}(B_i)$ se calcula solo
+  sobre $B_i$ (no está encadenado criptográficamente con los bloques anteriores, a
+  diferencia del CBC-MAC), el fallo se localiza en el bloque $i$ cuyo
+  $\mathrm{Mac}(B_i)$ no verifica. Alcanza con \textbf{reenviar únicamente el bloque
+  $B_i$} (el receptor ya tiene, del propio $\mathrm{MAC}'_{i+1}$, la copia correcta del
+  contenido de $B_i$ para volver a verificar la cadena de orden una vez corregido).
+\end{itemize}
+
+\begin{warnbox}{Corrección respecto de una lectura errónea}
+No corresponde afirmar que, si falla un bloque, ``hay que reenviar desde ese bloque y el
+siguiente'': dado que $\mathrm{Mac}(B_i)$ en esta construcción se calcula únicamente
+sobre $B_i$ (no sobre $B_i$ encadenado con $B_{i-1}$ dentro de la función de MAC), la
+localización del error es exacta en el bloque $i$, y $\mathrm{MAC}'_{i+1}$ no cambia
+al corregir $B_i$ (ya traía la copia correcta desde el envío original).
+\end{warnbox}
+
+\textbf{2) MAC = MAC(B$_1$) $\|$ $\cdots$ $\|$ MAC(B$_n$).}
+\begin{itemize}
+  \item \textbf{¿Tiene integridad?} Sí: si se altera cualquier bloque $B_i$, su
+  $\mathrm{Mac}(B_i)$ correspondiente deja de verificar (asumiendo un MAC infalsificable
+  como los del material: CBC-MAC o HMAC), mientras que los tags de los demás bloques
+  siguen siendo válidos.
+  \item \textbf{Ante un bloque con error --- corrección del razonamiento del alumno:}
+  \textbf{sí es posible saber exactamente cuál bloque falló}, y por lo tanto \textbf{no
+  hace falta reenviar el mensaje entero}. Como cada $\mathrm{Mac}(B_i)$ se computa y se
+  verifica de forma \textbf{independiente} (el mismo punto que el material remarca en
+  ``Falsificación por bloques'': cada bloque se calcula por separado), el receptor
+  recalcula $\mathrm{Mac}(B_i)$ para cada $i$ y lo compara contra la posición $i$ de la
+  cadena recibida; el (o los) bloque(s) cuyo MAC no coincide son exactamente los que
+  llegaron corruptos. Alcanza con \textbf{reenviar solo ese/esos bloque(s)}.
+  \item Este es justo el punto que había que revisar contra el material: la
+  independencia de los MAC por bloque, que en ``Falsificación por bloques'' se señala
+  como una \textbf{debilidad de seguridad} (permite reusar/intercambiar bloques entre
+  mensajes distintos para forjar un tag), es la \textbf{misma propiedad} que --- en este
+  contexto de detección de errores de transmisión, sin un atacante activo forjando ---
+  permite \textbf{localizar con precisión} el bloque dañado. No hay contradicción: son
+  dos consecuencias de la misma independencia, una negativa (falsificabilidad por
+  recombinación) y una positiva (localización de errores) en este ejercicio.
+\end{itemize}
+
+\textbf{3) MAC calculado con un árbol de Merkle.}
+Como se indicó en el aviso de fidelidad de arriba, la estructura específica del árbol de
+Merkle no está desarrollada en el material de la materia (solo Merkle-Damgård, que es
+otra cosa); se resuelve con la idea general de hash/MAC recursivo sobre pares de bloques,
+avisando que el detalle de la estructura en árbol excede las clases provistas:
+\begin{itemize}
+  \item Cada hoja se etiqueta con el hash/MAC de su bloque: $h_i = \mathrm{Mac}(B_i)$
+  (o $H(B_i)$ si se usa una función de hash del material, p.\ ej.\ SHA-3). Cada nodo
+  interno combina sus dos hijos: $h = \mathrm{Mac}_k(h_{\text{izq}}\|h_{\text{der}})$,
+  hasta llegar a una única \textbf{raíz} que resume todo el conjunto de datos.
+  \item \textbf{¿Tiene integridad?} Sí: si se modifica cualquier bloque hoja, su hash
+  cambia, y ese cambio se propaga hacia arriba modificando todos los hashes de los
+  nodos ancestros hasta la raíz --- cualquier alteración es detectable comparando la
+  raíz recalculada contra la raíz original.
+  \item \textbf{Ante un bloque con error:} \textbf{no hace falta reenviar todo el
+  mensaje.} Alcanza con reenviar el bloque hoja corregido junto con los hashes
+  ``hermanos'' del camino desde esa hoja hasta la raíz (un camino de altura
+  $\log_2 n$), de forma que el receptor pueda recalcular únicamente esa rama y
+  verificar que la nueva raíz coincide con la original. Esto es más eficiente en ancho
+  de banda de verificación que la alternativa 2 cuando $n$ es muy grande (overhead
+  logarítmico en vez de lineal en la cantidad de bloques), aunque ambas permiten
+  localizar y corregir un único bloque sin reenviar el mensaje completo.
+\end{itemize}
+
+\textbf{Resumen comparativo:} las tres alternativas dan integridad y, contrariamente a
+enviar un único MAC sobre el mensaje entero (que obliga a reenviar todo ante cualquier
+error), las tres permiten identificar el bloque afectado y reenviar solo lo necesario:
+la 1 y la 2 con overhead lineal (un tag por bloque, más en la 1 el contenido duplicado
+del bloque anterior para chequeo de orden), y la 3 (árbol de Merkle, fuera del material
+provisto pero pedida explícitamente por el enunciado) con overhead logarítmico por
+verificación.
+
+%=====================================================================
+\subsection{Ejercicio 3 --- Vulnerabilidades de un sitio de noticias}
+%=====================================================================
+
+\begin{consigna}
+Se tiene una página de noticias donde hay usuarios que pueden ratear una noticia
+positiva o negativamente. Los publicadores de noticias pueden subir noticias
+pegándola a una API REST. Los usuarios interactúan con la página a través de una
+página web que se comunica con la API. Los ingresos de las publicidades de las
+noticias se pagan a los creadores según la cantidad de visitas que tiene una noticia.
+
+Se encontraron 4 vulnerabilidades:
+\begin{enumerate}
+  \item Para evaluar la positividad de una noticia, los usuarios tocan un botón que
+  hace un GET a \texttt{/\{news\_id\}/positive} o \texttt{/\{news\_id\}/positive/negative},
+  pero se encontró que se puede hacer SSRF a través de esto.
+  \item El contenido de una noticia se postea tal cual como se recibe, sin hacer
+  validaciones.
+  \item Las cookies de sesión no son \texttt{http\_only}, y se pueden acceder a través
+  de javascript.
+  \item Un publicador de noticia hace un llamado al backend con una API KEY que se
+  introduce en el pedido de la siguiente forma: \texttt{/api/\{API\_KEY\}/publish}.
+\end{enumerate}
+\begin{enumerate}
+  \item[a)] Explicar cómo podría un atacante sumarse dinero de forma maliciosa con los
+  puntos 2 y 3. (1,5 puntos)
+  \item[b)] Explicar cómo tomaría ventaja un atacante de la vulnerabilidad 1. (1,5 puntos)
+  \item[c)] Explicar por qué es inseguro que se envíen las API KEYS como lo indica el
+  punto 4 e indicar cómo lo corregirían. (1 punto)
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Segunda Parte, Clase de Principios de Diseño y Vulnerabilidades (\S Vulnerabilidades
+web: XSS, CSRF, XXE; \S Buffer overflow e inyección de código, como marco general de
+``mezclar datos con código/control'').
+
+\begin{warnbox}{Aviso de fidelidad --- varios términos del enunciado no están (con ese nombre) en el material}
+\begin{itemize}
+  \item \textbf{SSRF (Server-Side Request Forgery)} \textbf{no aparece con ese nombre}
+  en los resúmenes de la materia. Lo más cercano en el material es \textbf{XXE (XML
+  External Entities)}: ``XML permite cargar esquemas desde una URL; si esa URL se usa
+  para hacer un GET a otra página, un atacante puede escanear la red interna visible por
+  el servidor''. Es el mismo patrón conceptual (el servidor hace, por instrucción del
+  atacante, un request a un destino que no controla el usuario) pero el material lo
+  desarrolla solo para el caso XXE, no como SSRF general vía un endpoint REST. Se marca
+  para que quede claro que la resolución de b) se apoya en esa analogía y no en un
+  contenido de SSRF dictado explícitamente.
+  \item El atributo de cookie \textbf{\texttt{http\_only}} \textbf{no se menciona
+  explícitamente} en el material (sí se cubre, en la unidad de Vulnerabilidades web, que
+  XSS permite ``robar la sesión'' ejecutando JS en el browser de la víctima, que es la
+  consecuencia directa de no tener esa protección).
+  \item Los mecanismos concretos de \textbf{transporte seguro de API keys} (headers,
+  OAuth/JWT) y el problema de que un secreto en la URL quede en \textbf{logs, historial
+  del navegador o se filtre por el header \texttt{Referer}} \textbf{tampoco están
+  desarrollados explícitamente} en el material provisto. La resolución de c) se apoya en
+  los principios generales de diseño del material (mediación completa, fallar de forma
+  segura, mínimo privilegio) más el criterio general de no exponer secretos donde quedan
+  registrados, pero se avisa que el material no cubre el detalle técnico de dónde
+  específicamente queda expuesta una URL.
+\end{itemize}
+\end{warnbox}
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{XSS (CWE-79, Clase de Vulnerabilidades web):} inyección de JavaScript
+  que termina \textbf{ejecutado por el browser de la víctima}, aprovechando la confianza
+  entre el sitio y la sesión del usuario; ocurre cuando se hace render de HTML
+  mezclando un dato controlado por el usuario con código sin escaparlo. Consecuencia
+  remarcada en el material: \textbf{permite robar la sesión}. Defensa: sanitizar/escapar
+  toda salida (\emph{escape on output}).
+  \item \textbf{``El contenido se postea tal cual, sin validaciones''} (vulnerabilidad 2)
+  es exactamente la falta de sanitización de entrada/salida que el material describe
+  como causa de XSS: el dato del publicador (potencialmente conteniendo
+  \texttt{<script>}) queda embebido en la página que ven los demás usuarios sin
+  escapar --- un \textbf{XSS almacenado} (\emph{stored XSS}), ya que el payload queda
+  guardado en la noticia y se ejecuta cada vez que otro usuario la visita.
+  \item \textbf{XXE (Clase de Vulnerabilidades web):} el servidor termina haciendo un
+  request (GET) a una URL/destino determinado por un input controlado por el atacante,
+  lo que permite usar al servidor como intermediario para alcanzar recursos que el
+  atacante no podría alcanzar directamente (p.\ ej.\ la red interna).
+  \item \textbf{Principios de Saltzer \& Schroeder (Clase de Principios de Diseño):}
+  \emph{mediación completa} (todo acceso debe pasar por un chequeo, sin atajos) y
+  \emph{fallar de forma segura} son relevantes para pensar por qué exponer un secreto en
+  una URL es delicado: la URL viaja/queda registrada por canales que no están pensados
+  para llevar secretos.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+Las vulnerabilidades 2 y 3 se combinan de forma clásica: la vulnerabilidad 2 (falta de
+sanitización) es la que \textbf{habilita} el XSS, y la vulnerabilidad 3 (cookies sin
+protección adicional contra acceso por JavaScript) es lo que hace que ese XSS pueda
+\textbf{robar la sesión} concretamente (tal como dice el material sobre XSS: ``permite
+robar la sesión''). La vulnerabilidad 1 es un patrón análogo al XXE del material
+(el servidor hace un request a donde el atacante decide). La vulnerabilidad 4 conecta con
+los principios de diseño generales (no exponer secretos por canales inadecuados), aunque
+--- como se avisó arriba --- el material no desarrolla el detalle de headers/OAuth/JWT.
+
+\paragraph{Resolución.}
+
+\textbf{a) Puntos 2 y 3 --- cómo un atacante se suma dinero de forma maliciosa.}
+Como el contenido de una noticia se postea \textbf{sin ninguna validación} (vulnerabilidad
+2), un publicador (o cualquiera con acceso a publicar) puede subir una noticia cuyo
+``contenido'' incluya un \texttt{<script>} malicioso: es un caso de \textbf{XSS
+almacenado} (el material define XSS como inyección de JS que se ejecuta en el browser de
+la víctima al renderizar HTML sin escapar un dato controlado por el atacante). Cuando
+otro usuario visita esa noticia, el JS inyectado se ejecuta en su browser, con la
+confianza de la sesión de ese usuario en el sitio.
+
+Como además las cookies de sesión \textbf{no son \texttt{http\_only}} (vulnerabilidad 3),
+ese JavaScript malicioso \textbf{puede leer la cookie de sesión} de cualquier usuario que
+visite la noticia (incluida la de otro publicador o incluso de un administrador) y
+enviarla al atacante --- exactamente la consecuencia que el material atribuye a XSS:
+``permite robar la sesión''. Con la cookie de sesión robada, el atacante puede
+\textbf{hacerse pasar por ese usuario} (\emph{masquerading}) y usar su identidad
+autenticada, por ejemplo, para hacer que el sistema le atribuya a sí mismo (o a una
+cuenta propia) visitas/ratings sobre sus propias noticias, o directamente actuar en el
+backend con los privilegios de publicador robado. Dado que el modelo de negocio paga
+según \textbf{cantidad de visitas}, el atacante puede automatizar, con las sesiones
+robadas, visitas/ratings positivos masivos y falsos sobre sus propias noticias
+publicadas, generando así ingresos por publicidad de forma fraudulenta sin que el pago
+esté respaldado por tráfico/interés real.
+
+\textbf{b) Ventaja que un atacante saca de la vulnerabilidad 1 (SSRF).}
+El endpoint \texttt{/\{news\_id\}/positive} (o \texttt{/\{news\_id\}/positive/negative})
+hace que el \textbf{servidor} realice una acción a partir de un parámetro (\texttt{news\_id})
+que el atacante controla. Si ese parámetro puede manipularse para que en lugar de
+identificar una noticia el servidor termine haciendo un request HTTP hacia una URL/host
+arbitrario elegido por el atacante, se está en el mismo patrón que el material describe
+para \textbf{XXE}: el servidor actúa como intermediario y hace peticiones a destinos que
+el atacante no podría alcanzar directamente. Un atacante puede aprovechar esto para:
+hacer que el servidor (que sí tiene acceso) haga requests hacia \textbf{recursos internos
+de la red} que no son alcanzables desde afuera (por ejemplo, otros servicios internos, o
+un endpoint de otra noticia/recurso que solo el backend puede alcanzar), usando al
+servidor de noticias como ``proxy'' para escanear o alcanzar esa red interna --- igual
+que en el ejemplo de XXE del material, donde el atacante ``puede escanear la red interna
+visible por el servidor''. También puede usarlo para forzar al servidor a hacer pedidos
+repetidos con fines de denegación de servicio hacia un tercero, usando la infraestructura
+del sitio como origen del ataque.
+
+\textbf{c) Por qué es inseguro poner la API KEY en la URL (\texttt{/api/\{API\_KEY\}/publish}) y cómo corregirlo.}
+Es inseguro porque la API KEY, al viajar como parte de la \textbf{URL}, deja de ser un
+secreto protegido y queda expuesta por canales que no están pensados para llevar
+secretos: cualquiera que pueda ver esa URL (quien mire por encima del hombro, quien tenga
+acceso a un proxy intermedio, o quien pueda ver dónde queda registrada) accede
+directamente a la API KEY con la que se pueden publicar noticias en nombre de ese
+publicador. \textbf{Nota:} el material no detalla explícitamente todos los canales por
+los que una URL con secreto puede filtrarse (logs, historial del navegador, header
+\texttt{Referer}, cachés intermedias); esto excede lo cubierto en las clases provistas,
+aunque es consistente con el principio general de que un mecanismo de autenticación
+\textbf{no debería fallar de forma insegura} exponiendo la credencial por un canal que no
+la protege.
+
+Además, tal como está planteado, no hay forma de saber si quien usa la API KEY es
+realmente el publicador dueño de esa clave: cualquiera que la obtenga puede usarla sin
+que el sistema pueda distinguir el uso legítimo del malicioso.
+
+\textbf{Corrección propuesta:} no incluir el secreto en la URL; enviar la API KEY en un
+\textbf{header HTTP} dedicado a autenticación (p.\ ej. \texttt{Authorization}), que no
+queda expuesto por los mismos canales que la URL. Esto es consistente con la idea general
+de la materia de separar el canal de datos de control (autenticación) del canal de datos
+de la petición en sí, en vez de mezclarlos en el mismo campo que identifica el recurso.

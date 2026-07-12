@@ -1,0 +1,437 @@
+%=====================================================================
+\section{Ejercicios adicionales}
+%=====================================================================
+
+% =====================================================================
+\subsection{Ejercicio --- Bingo virtual}
+% =====================================================================
+
+\begin{consigna}
+Una franquicia de bingos decide crear una aplicación que simule un bingo virtual donde
+los participantes paguen y obtengan dinero real.
+
+Cada juego tiene un valor de ingreso, y le permite al participante obtener un cartón con
+15 número elegidos al azar entre 1 y 90. Cuando comienza el juego, el servidor comienza a
+``sacar'' números, y los participantes deben ir marcando los números en su cartón si
+corresponde.
+
+Cuando uno de los participantes completa los 15 número de su cartón, selecciona el botón
+``bingo'', y si realmente salieron todos, gana el premio de esa jugada y termina la
+partida para todos. Si no fuese así, se le avisa y se lo descalifica.
+
+Resuelta la seguridad de los aspectos de introducir y retirar dinero se identificaron
+tres funcionalidades necesarias respecto a la dinámica del juego. Explicar como se podría
+lograr cada una recurriendo a funciones criptográficas \underline{simétricas solamente},
+justificando la elección. De ser necesario, explicar que información se intercambia en
+cada momento entre las apps y el servidor.
+
+\begin{enumerate}
+  \item[a)] El servidor debe generar una secuencia de números entre 1 y 90, que luego
+  pueda ser reproducida por los clientes al finalizar la partida (para garantizar que no
+  se favoreció adrede a alguien en el sorteo). (1 pto.)
+  \item[b)] Los cartones se crean en las apps cliente al inicio de la partida. El servidor
+  no conoce los cartones hasta el momento de verificar un bingo, pero debe ser posible
+  para el servidor verificar que el cartón no fue modificado una vez empezado el juego
+  (para evitar que un jugador arme el cartón ideal para ganar luego de 15 números). (1 pto.)
+  \item[c)] La app de cada participante deberá poder verificar si el ganador realmente
+  completó el bingo y emitir una alerta en caso contrario (para evitar que el servidor de
+  por ganador a alguien que no completo el cartón). Las apps no se comunican entre si,
+  sino a través del servidor. (1 pto.)
+\end{enumerate}
+
+\emph{Nota}: Considerar que hay aproximadamente $2^{55}$ cartones (combinatoria de 90
+tomados de a 15), y asumir que un atacante podría llegar a probar esa cantidad de
+combinaciones.
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 3 --- MACs y Cifrado Autenticado (\S Qué es un MAC; \S HMAC; \S funciones de hash y
+sus propiedades de resistencia; \S usos de la resistencia a preimagen para protocolos de
+compromiso/prueba de conocimiento; \S no-repudio: por qué los MAC no lo dan).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{MAC/HMAC:} terna $(\mathrm{Gen},\mathrm{Mac},\mathrm{Vrfy})$ con clave
+  \textbf{compartida} $k$; da integridad y autenticación de origen \emph{entre partes que
+  comparten la clave}, pero \textbf{no} no-repudio.
+  \item \textbf{Función de hash:} sin clave, de tamaño fijo, con tres resistencias
+  (preimagen, segunda preimagen, colisión). La resistencia a preimagen es la base de los
+  \textbf{protocolos de prueba de conocimiento / compromiso}: publicar $H(x)$ y después
+  revelar $x$, de forma que nadie pudo deducir $x$ antes de la revelación, y quien reveló
+  $x$ no puede haber cambiado de valor sin que se note (segunda preimagen).
+  \item \textbf{Ataque de cumpleaños / brute-force de espacios chicos:} si el espacio de
+  posibles mensajes es chico (acá, $2^{55}$ cartones), un compromiso $H(\text{cartón})$
+  \emph{sin sal} es vulnerable a que cualquiera enumere los $2^{55}$ cartones posibles,
+  los hashee y compare contra el compromiso publicado para deducir el cartón antes de
+  tiempo. La nota del enunciado es justamente el gancho para exigir un \textbf{nonce/sal
+  grande} (mucho mayor a 55 bits) dentro del compromiso.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+Los tres incisos son variaciones del mismo patrón: (a) y (b) son \textbf{compromisos}
+(commitments) usando la resistencia a preimagen/segunda preimagen de una función de hash
+(no llevan clave, pero son ``funciones criptográficas simétricas'' en el sentido amplio
+que exige la consigna, ya que no dependen de un par de claves pública/privada); (c) es un
+esquema de \textbf{autenticación con clave compartida} (MAC/HMAC) para que todas las apps
+puedan validar de forma independiente los mismos mensajes del servidor. Como está prohibido
+usar asimétrica, no hay firma digital disponible, así que ninguna de las tres soluciones
+da no-repudio frente al servidor (el servidor y las apps comparten secretos).
+
+\paragraph{Resolución.}
+
+\textbf{a) Sorteo verificable.} Antes de arrancar la partida el servidor elige una
+\textbf{semilla secreta} $s$ (número aleatorio, e.g. 256 bits) y publica un
+\textbf{compromiso} $c=H(s)$ a todas las apps (usando la resistencia a preimagen de un
+hash: nadie puede deducir $s$ a partir de $c$). La secuencia de 90 números se deriva de
+forma \textbf{determinística} de $s$ con una función pseudoaleatoria con clave (p.ej.
+$\mathrm{HMAC}_s(i)$ para $i=1,2,\dots$, usada como fuente de aleatoriedad de un
+\emph{shuffle} tipo Fisher--Yates sobre $\{1,\dots,90\}$). El servidor va revelando los
+números uno a uno a medida que los ``saca''; como se derivan de $s$ que solo él conoce, no
+puede ser forzado a revelar otro número, pero tampoco puede cambiar el orden a mitad de
+partida sin que se note (porque ya se comprometió a $c=H(s)$ antes de empezar). Al
+finalizar la partida, el servidor revela $s$; cada app recomputa $H(s)$ y verifica que
+coincide con $c$ (garantiza que $s$ es el mismo que se comprometió al inicio, por
+resistencia a segunda preimagen), y recomputa la secuencia completa de 90 números con $s$
+para verificar que coincide con la secuencia efectivamente anunciada durante el juego. Si
+alguna etapa no coincide, la secuencia fue manipulada.
+
+\textbf{b) Cartón no modificable.} Al empezar la partida, cada app cliente genera su
+cartón y envía al servidor un \textbf{compromiso} $h=H(\text{cartón}\,\|\,r)$, donde $r$ es
+un \textbf{nonce aleatorio grande} (mucho mayor a 55 bits, p.ej. 128 bits) generado por la
+app y que \textbf{no} se envía al servidor en ese momento. Por la nota del enunciado, si se
+omitiera $r$ el compromiso $H(\text{cartón})$ sería vulnerable a que cualquiera (el propio
+servidor u otro atacante con el compromiso) recorra los $2^{55}$ cartones posibles,
+hasheándolos hasta encontrar el que coincide, revelando el cartón antes de que termine la
+partida. Agregar $r$ (con un espacio mucho mayor que $2^{55}$) hace que la búsqueda por
+fuerza bruta sea inviable ($2^{55+128}$ combinaciones), preservando la \emph{ocultación}
+del cartón hasta el final. Al momento de reclamar bingo (o al finalizar la partida), la app
+envía $(\text{cartón}, r)$ al servidor, que recalcula $H(\text{cartón}\,\|\,r)$ y verifica
+que coincide con el $h$ recibido al inicio (resistencia a segunda preimagen: no puede
+existir otro cartón$'$ con el mismo $h$, así que el jugador no pudo cambiar el cartón
+después de comprometerse).
+
+\textbf{c) Verificación distribuida sin comunicación entre apps.} Todas las apps
+comparten con el servidor (instalada de antemano, al registrarse) una \textbf{clave
+simétrica} $k$ (puede ser una por partida, distribuida al inicio junto con $(G,q,g)$... o
+más simple, generada por el servidor y enviada cifrada/instalada a cada app al arrancar la
+partida). Cada número que el servidor ``saca'' en el paso (a) se transmite junto con una
+etiqueta $t_i=\mathrm{HMAC}_k(i\,\|\,\text{número}_i)$; cada app, al recibirlo, valida
+$\mathrm{Vrfy}_k$ y solo si es válido lo marca como ``anunciado''. De esta forma todas las
+apps arman localmente el mismo historial \textbf{autenticado} de números sacados, sin
+hablar entre sí (solo escuchan al servidor). Cuando alguien grita bingo, el servidor
+retransmite a todas las apps el cartón revelado del ganador junto con $(r,h)$ del punto
+(b); cada app, de forma independiente, (i) recalcula $H(\text{cartón}\|r)$ y compara con el
+$h$ que el servidor había repartido al inicio de la partida (si no coincide, el cartón fue
+alterado), y (ii) chequea que los 15 números del cartón estén todos entre los que su propio
+historial local marcó como ``anunciados y autenticados con $k$''. Si cualquiera de las dos
+verificaciones falla, la app emite una alerta al servidor (sigue sin comunicarse
+directamente con las demás apps, tal como pide la consigna).
+
+\begin{ojo}
+Ninguna de las tres soluciones da \textbf{no-repudio}: como todo se basa en hash sin clave
+o en un secreto \textbf{compartido} ($s$, $r$, $k$), el servidor sigue siendo, en última
+instancia, quien controla la información y a quien hay que confiarle la ejecución honesta
+del protocolo (el enunciado no permite usar firma digital, que sería la única forma de dar
+no-repudio, según Clase 4).
+\end{ojo}
+
+% =====================================================================
+\subsection{Ejercicio --- Robo de cables eléctricos}
+% =====================================================================
+
+\begin{consigna}
+El robo de cables por el valor intrínseco del cobre que traen es un gran problema para las
+compañías de distribución eléctrica, dado que les genera un doble perjuicio: el costo
+económico de reponer los cables y el costo asociado a resarcir a clientes cuyo servicio se
+ve afectado.
+
+Para detectar cortes (intencionales o no) en las lineas, cada cierta distancia se conectan
+pequeños dispositivos que modulan una señal de alta frecuencia en la misma linea que
+transporta energía. Cada dispositivo tiene una firma única (una frecuencia y un periodo
+dado --- diseñado de tal forma que todos los dispositivos pueden inyectar su señal sin
+interferirse entre si). Las lineas terminan en transformadores. Antes del transformador se
+coloca un dispositivo llamado \emph{colector} que recolecta todas las señales y aplica un
+filtro de alta frecuencia que limpia la señal para que llegue al transformador sin este
+ruido.
+
+Por la forma en que se juntan las señales, cada dispositivo es capaz de transmitir el
+equivalente a una secuencia de 320 bits arbitraria.
+
+Una implementación en particular de este sistema asigna a cada dispositivo un par de claves
+publica y privada de 320 bits, y hace que cada dispositivo envíe regularmente la firma
+digital de su numero de serie único (solo la firma!).
+
+El \emph{colector} conoce los números de serie de todos los dispositivos, y de cada uno la
+frecuencia (lo que le permite extraer los 320 bits de la señal especifica), la ubicación
+relativa en el cable y su clave publica. De esta manera, puede determinar que si deja de
+recibir la señal del dispositivo $x$ y todos los anteriores hubo un corte en el cable,
+mientras que si solo falta $x$ hubo un problema con el dispositivo en particular.
+
+\begin{enumerate}
+  \item[a)] Explicar paso a paso que tiene que hacer el colector para validar el estado de
+  la linea y llegar a uno de tres estados: todo ok, corte cercano al dispositivo $x$,
+  problemas con el dispositivo $x$. Ser preciso en la aplicación de cada función
+  criptográfica involucrada y sus parámetros. (1 pto)
+  \item[b)] En busca de abaratar costos, se probó una modificación al sistema donde
+  \underline{todos} los dispositivo comparten una \underline{única} clave secreta con el
+  aparato terminal (aunque cada uno sigue teniendo un numero de serie diferente), y
+  transmiten una etiqueta de su numero de serie, generada con un MAC criptográficamente
+  seguro. ¿Como cambia el algoritmo del colector? ¿Que desventajas genera este cambio a
+  nivel seguridad? (1 pto)
+  \item[b)] ¿Como modificaría el protocolo para evitar un ataque donde alguien corte una
+  sección pero agregue un aparato que repita las señales enviadas previamente por los
+  dispositivos que quedaron fuera de linea? (1 pto)
+\end{enumerate}
+
+\emph{Nota}: es imposible modificar el ancho de banda de cada dispositivo de 320 bits.
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 4 --- Cifrado Asimétrico y Firma Digital (\S Firmas digitales; \S RSA-Signature y por
+qué se firma el hash; \S curvas elípticas: 320 bits $\approx$ seguridad de RSA-2048);
+Clase 3 --- MACs y Cifrado Autenticado (\S Qué es un MAC; \S no-repudio: por qué los MAC no
+lo dan); Clase 5 --- Protocolos (\S nonce y timestamp como mecanismos de frescura;
+\S ataques de replay y sus defensas).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{Firma digital:} $\mathrm{Sign}_{sk}(m)$ con la clave \textbf{privada} del
+  firmante; $\mathrm{Vrfy}_{pk}(m,\sigma)$ con la clave \textbf{pública}, que cualquiera
+  (incluido el colector) puede ejecutar sin compartir secretos. Da no-repudio e integridad,
+  y es \textbf{públicamente verificable}: el colector solo necesita la clave pública de
+  cada dispositivo, no un secreto compartido.
+  \item \textbf{320 bits como firma sobre curva elíptica:} el material de la clase indica
+  que para una seguridad equivalente a RSA-2048 ($\sim$128 bits) alcanza con
+  $\sim$320 bits en curvas elípticas (ECDSA/ElGamal sobre curva). Esto encaja exactamente
+  con el ancho de banda de 320 bits que puede transmitir cada dispositivo: es coherente con
+  que la ``firma digital de su número de serie'' quepa en una única transmisión.
+  \item \textbf{MAC con clave compartida entre todos:} da integridad/autenticación pero
+  \textbf{no} distingue quién generó la etiqueta (cualquiera con la clave puede forjar la
+  de cualquier otro) y \textbf{no} da no-repudio (Clase 3).
+  \item \textbf{Frescura (nonce/timestamp) contra replay:} Clase 5 muestra que sin un
+  mecanismo de frescura, un atacante puede grabar y reenviar (\emph{replay}) un mensaje
+  válido viejo. La defensa es incluir un \textbf{nonce} o \textbf{timestamp} en lo que se
+  firma/etiqueta, de forma que el verificador rechace mensajes ``viejos''.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+El enunciado arma un caso de uso real de firma digital asimétrica (Clase 4) con la
+restricción de ancho de banda de 320 bits, que \textbf{calza justo} con el tamaño de firma
+de un esquema sobre curva elíptica visto en la Clase 4. La parte (b) reproduce el
+contraste MAC vs.\ firma digital de la Clase 3 (no-repudio) y la parte (b) repetida conecta
+con los mecanismos de frescura/anti-replay de la Clase 5 (Needham--Schroeder,
+Denning--Sacco), pero con la restricción extra de que el tamaño transmitido no puede
+crecer: se resuelve firmando/etiquetando el \textbf{hash} de (serie $\|$ contador), tal
+como en Clase 4 se explica por qué se firma el hash y no el mensaje (permite mensajes de
+tamaño arbitrario con una firma de tamaño fijo).
+
+\paragraph{Resolución.}
+
+\textbf{a) Algoritmo del colector (esquema original, con firma digital).} El colector
+mantiene, para cada dispositivo $i=1,\dots,n$ ordenado por \textbf{ubicación relativa en el
+cable} (desde el más cercano al colector hasta el más lejano), su número de serie
+$\text{serie}_i$, su frecuencia/periodo (para poder sintonizar y extraer los 320 bits que
+le corresponden) y su clave pública $pk_i$. Paso a paso:
+\begin{enumerate}
+  \item Para cada dispositivo $i$, el colector \textbf{sintoniza} su frecuencia/periodo
+  específica y trata de capturar los 320 bits transmitidos en esa señal.
+  \item Si capta señal en la frecuencia de $i$: interpreta esos 320 bits como una firma
+  $\sigma_i$ y ejecuta $\mathrm{Vrfy}_{pk_i}(\text{serie}_i,\sigma_i)$. Si la verificación
+  da $1$, el dispositivo $i$ está \textbf{transmitiendo correctamente} (nadie puede haber
+  falsificado esa firma sin la clave privada de $i$).
+  \item Si \textbf{no} capta señal en la frecuencia de un dispositivo $x$ y tampoco en la
+  de \textbf{todos} los dispositivos ubicados a partir de $x$ hacia el otro extremo del
+  cable (los que están ``detrás'' de $x$ respecto del colector): como la señal viaja por
+  el mismo conductor de cobre, un corte físico en el punto donde está $x$ interrumpe la
+  continuidad eléctrica para todos los dispositivos más allá del corte. Estado:
+  \textbf{corte cercano al dispositivo $x$}.
+  \item Si \textbf{solo falta} la señal de $x$, pero los dispositivos ubicados antes
+  \textbf{y} después de $x$ en el cable sí llegan (y verifican $\mathrm{Vrfy}$ = 1): el
+  cable sigue eléctricamente continuo (si no, tampoco llegarían los de más allá de $x$),
+  así que la falla es puntual del propio dispositivo $x$ (rotura, batería, etc.). Estado:
+  \textbf{problema con el dispositivo $x$}.
+  \item Si todos los dispositivos verifican correctamente: estado \textbf{todo ok}.
+\end{enumerate}
+
+\textbf{b) Variante con clave secreta única (MAC compartido).} El algoritmo del colector
+cambia únicamente en el paso de verificación: en vez de $\mathrm{Vrfy}_{pk_i}$ con una
+clave pública distinta por dispositivo, el colector (que ahora debe conocer la
+\textbf{única} clave secreta $K$ compartida por todos los dispositivos) recibe la etiqueta
+$t_i=\mathrm{MAC}_K(\text{serie}_i)$ transmitida en los 320 bits, recalcula
+$\mathrm{MAC}_K(\text{serie}_i)$ y compara con $t_i$ (en vez de verificar una firma con
+clave pública, recalcula y compara, como cualquier MAC). El resto de la lógica (corte
+cercano a $x$ vs.\ problema puntual en $x$, según qué señales llegan) no cambia.
+
+\textbf{Desventajas de seguridad:}
+\begin{itemize}
+  \item \textbf{Punto único de falla:} al ser una clave \textbf{compartida por todos los
+  dispositivos}, si un atacante extrae físicamente $K$ de \emph{un solo} dispositivo (por
+  ejemplo abriéndolo), \textbf{compromete a todo el sistema}: puede generar etiquetas
+  válidas para cualquier número de serie, falsificando la señal de cualquier dispositivo
+  (incluso de los que nunca tocó).
+  \item \textbf{Sin no-repudio ni atribución:} como todos comparten $K$, la etiqueta
+  \textbf{no prueba que la transmitió ese dispositivo en particular}: en principio
+  cualquiera que conozca $K$ (incluido otro dispositivo legítimo, o el propio colector)
+  podría haber generado esa etiqueta. Con firma digital (parte a) cada dispositivo es el
+  único que puede producir su firma (clave privada propia); con MAC compartido esa
+  propiedad se pierde por completo.
+  \item El colector mismo pasa a ser un blanco crítico: si se compromete, se filtra $K$ y
+  cae la seguridad de \emph{todos} los dispositivos de la red, no solo de uno.
+\end{itemize}
+
+\textbf{b) (repetida) --- Evitar el replay de señales viejas.} El ataque descripto es un
+\textbf{replay}: alguien corta una sección y coloca un aparato que retransmite las
+firmas/etiquetas \textbf{viejas} capturadas de los dispositivos que quedaron desconectados,
+haciendo que el colector siga viendo ``todo ok'' aunque esos dispositivos ya no estén. La
+defensa (Clase 5) es agregar \textbf{frescura} (nonce o timestamp/contador) a lo que se
+firma o etiqueta. Como el ancho de banda está fijado en 320 bits y no se puede agrandar, no
+alcanza con agregar el contador ``en claro'' junto a la firma (ocuparía más bits); la
+solución es la misma idea que justifica firmar el \textbf{hash} en la Clase 4: en vez de
+firmar/etiquetar $\text{serie}_i$ solo, cada dispositivo firma/etiqueta
+$H(\text{serie}_i\,\|\,c_i)$, donde $c_i$ es un \textbf{contador} (o ventana de tiempo)
+que el dispositivo incrementa en cada transmisión y que el colector puede predecir
+(ambos, dispositivo y colector, mantienen el contador sincronizado, o el colector acepta
+una ventana de contadores cercana al último visto). Como el hash tiene salida de tamaño
+fijo, la firma/etiqueta sigue ocupando exactamente 320 bits, sin importar que ahora el
+mensaje firmado sea más largo. El colector, al verificar, recalcula
+$H(\text{serie}_i\|c_i^{\text{esperado}})$ y ejecuta $\mathrm{Vrfy}$ (o recomputa el MAC)
+contra ese valor; si el aparato del atacante repite una firma/etiqueta vieja, el contador
+que usó para generarla ya \textbf{no coincide} con el esperado por el colector, y la
+verificación falla (detecta el replay). Si el contador nunca avanza mientras se supone que
+el dispositivo sigue transmitiendo, el colector puede además usar eso como señal adicional
+de anomalía.
+
+% =====================================================================
+\subsection{Ejercicio --- Organizame (pentesting de una app de calendario)}
+% =====================================================================
+
+\begin{consigna}
+``Organizame'' es una aplicación móvil que busca potenciar el uso eficiente del tiempo de
+las personas.
+
+La aplicación permite que un usuario se registre utilizando su cuenta de Google o su Apple
+Id, y pide acceso al calendario de dicha cuenta para obtener información de las reuniones
+agendadas.
+
+La información de agenda es almacenada en una base de datos en el servidor, donde procesos
+corren regularmente análisis y proponen mejoras a la agenda. Cuando uno de estos procesos
+encuentra una posible mejora, envía una notificación a la aplicación para que el usuario
+decida si desea aplicar el cambio o no. Algunos procesos son simples y rápidos, aunque hay
+algunos que tienen un orden de complejidad $O(n^3)$ en la cantidad de eventos del mes.
+
+La aplicación permite compartir huecos de tiempo libre del calendario de forma publica,
+para que otras personas puedan agendar reuniones. Para ello disponibiliza una pagina web
+por usuario, de la forma: \texttt{https://organizame.io/\{user\_id\}/public/calendar}. Un
+usuario puede habilitar o deshabilitar dicha página en su configuración de perfil. En ella,
+cualquier persona puede agendar una reunión en los momentos disponibles, y dejarle al dueño
+un mensaje que verá en su calendario.
+
+Ante un pedido de realizar un pentest que abarque el sistema, establecer 4 hipótesis de
+falla \textbf{pertinentes} para el caso, basadas en problemas de seguridad en aplicaciones.
+Explicar \textbf{para cada una}, como probarla según la metodología (la acción concreta que
+ejecutaría para verificar o refutar la hipótesis). (4 puntos, 1 pto cada uno)
+
+\textbf{Aclaración}: No utilizar problemas genéricos como hipótesis de falla. Plantear
+situaciones y lugares concretos donde podría estar el problema. Por ejemplo, en lugar de
+decir ``puede haber un buffer overflow'', decir ``es probable que haya un buffer overflow
+en la lectura del parámetro x que debe interpretarse como número y puede tener un buffer
+pequeño asumiendo que el número tiene menos de los dígitos de un long''.
+\end{consigna}
+
+\paragraph{Temas.}
+Clase 6 (Segunda Parte) --- Pentesting (\S Metodología de hipótesis de falla, en
+particular Paso 2 ``Hipótesis'' y Paso 3 ``Prueba''); Clase 1 --- Políticas y Control de
+Acceso (\S OAuth 2.0 y \emph{scope}); Clase 3 --- Principios de Diseño y Vulnerabilidades
+(\S Tipos de vulnerabilidades: relaciones de confianza, injection flaws; \S disponibilidad
+y DoS como ataque de seguridad).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{Metodología de hipótesis de falla (memorizar):} Recolección de información
+  $\to$ Planteo de hipótesis de falla $\to$ Prueba de la vulnerabilidad $\to$
+  Generalización $\to$ Eliminación (opcional). Acá se pide directamente el paso 2
+  (hipótesis) justificado con el paso 3 (cómo probarla): ``definir cómo probar'' prioriza
+  \emph{analizar documentación o comportamiento} antes que intentar explotar, y la prueba
+  debe ser \textbf{repetible y concluyente}.
+  \item \textbf{Relaciones de confianza (Clase 3, tipos de vulnerabilidades):} ``no
+  chequear autorización porque \emph{nadie va a adivinar la URL}'' es exactamente el
+  patrón de la URL \texttt{/\{user\_id\}/public/calendar}: hay que verificar que el
+  servidor efectivamente valide el flag de ``habilitado'' del usuario y no simplemente
+  confíe en que el \texttt{user\_id} es difícil de adivinar.
+  \item \textbf{OAuth y \emph{scope} (Clase 1):} el token de acceso debe limitarse al
+  \emph{scope} mostrado en la pantalla de consentimiento (acá, lectura de reuniones);
+  pedir de más (por ejemplo, permiso de escritura/administración total del calendario) es
+  una falla de diseño de autorización.
+  \item \textbf{Disponibilidad como propiedad de seguridad (Clase 3):} un ataque que tira
+  o degrada el sistema (DoS) \emph{es} un ataque de seguridad aunque no comprometa
+  confidencialidad ni integridad; un proceso de complejidad $O(n^3)$ sobre un dato que un
+  atacante puede inflar (cantidad de eventos del mes) es candidato directo.
+  \item \textbf{Injection flaws (Clase 3):} el profesor remarca que $\sim$90\% de las
+  vulnerabilidades caen en esta familia; cualquier campo de entrada no controlado (acá, el
+  ``mensaje'' que deja un desconocido en el calendario público) es un lugar concreto donde
+  buscarla.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+Las cuatro hipótesis se ubican, cada una, en un componente concreto descripto en el
+enunciado (la URL pública, el proceso $O(n^3)$, el flujo OAuth con Google/Apple, el campo
+de mensaje libre), tal como pide la aclaración de no usar hipótesis genéricas. Todas están
+tomadas de puntos ya vistos en el material (relaciones de confianza, disponibilidad/DoS,
+scope de OAuth, injection flaws) y no se agrega nada fuera de eso.
+
+\paragraph{Resolución.}
+
+\textbf{Hipótesis 1 --- IDOR / relación de confianza en \texttt{/\{user\_id\}/public/calendar}.}
+Es probable que el servidor, al recibir un \texttt{GET} a esa URL, no vuelva a validar que
+el usuario efectivamente tenga habilitada la opción ``pública'' en su perfil, confiando en
+que \texttt{user\_id} es difícil de adivinar o de enumerar (la relación de confianza
+``nadie va a adivinar la URL'' que señala el material). Si los \texttt{user\_id} son
+secuenciales o de algún modo predecibles, cualquiera podría ver/agendar en calendarios que
+el dueño nunca hizo públicos.
+\emph{Cómo probarla:} crear una cuenta de prueba con la página pública \textbf{deshabilitada},
+y con otra cuenta (o sin sesión) acceder directamente a
+\texttt{https://organizame.io/\{ese\_user\_id\}/public/calendar}; si igual devuelve datos
+de agenda o permite agendar, queda demostrado. También probar con \texttt{user\_id}
+consecutivos a uno propio habilitado, para ver si expone calendarios de terceros que no lo
+sabían.
+
+\textbf{Hipótesis 2 --- Denegación de servicio vía el proceso $O(n^3)$.} Es probable que el
+proceso de análisis de complejidad $O(n^3)$ en la cantidad de eventos del mes no tenga un
+límite de eventos por usuario/mes, por lo que un usuario (o un atacante que agenda a través
+de la página pública de un tercero) podría inflar artificialmente la cantidad de eventos de
+un mes para que ese proceso batch consuma recursos desproporcionados, degradando la
+disponibilidad del servicio para otros usuarios.
+\emph{Cómo probarla:} con una cuenta de prueba, generar mediante un script una gran
+cantidad de eventos en un mismo mes (por API propia o a través del flujo de agendar
+reunión desde una página pública), y medir el tiempo/CPU que insume la corrida del proceso
+de análisis para ese mes, verificando si crece de forma cúbica y si llega a afectar al
+resto del sistema (colas, timeouts, caída del servicio).
+
+\textbf{Hipótesis 3 --- Scope de OAuth excesivo al integrar Google/Apple Calendar.} Es
+probable que, al pedir ``acceso al calendario'' de la cuenta de Google/Apple, la app
+solicite un \emph{scope} más amplio del necesario (por ejemplo, lectura \textbf{y}
+escritura/administración del calendario, o acceso a otros datos de la cuenta), cuando para
+leer reuniones agendadas alcanzaría con un scope de solo lectura.
+\emph{Cómo probarla:} iniciar el flujo de registro con Google/Apple y revisar la pantalla
+de consentimiento y/o decodificar el \emph{access token} obtenido, verificando qué scopes
+concretos se solicitan y comparándolos con lo mínimo necesario (leer eventos); si el scope
+permite modificar o borrar eventos de la cuenta real de Google/Apple del usuario sin que
+eso sea necesario para la funcionalidad descripta, queda demostrado el exceso.
+
+\textbf{Hipótesis 4 --- Injection en el campo de mensaje de la página pública.} Es probable
+que el campo de texto donde un desconocido deja un mensaje al agendar una reunión desde
+\texttt{/\{user\_id\}/public/calendar} no sanitice la entrada antes de guardarla o de
+mostrarla en el calendario del dueño, permitiendo una inyección (por ejemplo, un payload de
+script si el mensaje se renderiza en la vista web del calendario del dueño).
+\emph{Cómo probarla:} desde la página pública, agendar una reunión de prueba dejando como
+mensaje un payload típico de prueba (por ejemplo una etiqueta de script inocua, o una
+comilla simple si el mensaje se guarda en una base de datos SQL), y luego revisar, desde la
+cuenta del dueño, si el mensaje se ejecuta/se interpreta en vez de mostrarse como texto
+plano, o si genera un error de base de datos que delate una inyección.
+
+\begin{ojo}
+No se incluyen hipótesis genéricas (``puede haber XSS en algún lado'', ``puede haber SQL
+injection en algún formulario'') porque la consigna explícitamente lo prohíbe: cada
+hipótesis de arriba está anclada a un componente y un flujo concreto descripto en el
+enunciado de ``Organizame''.
+\end{ojo}

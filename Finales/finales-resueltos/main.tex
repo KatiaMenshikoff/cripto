@@ -1,0 +1,177 @@
+% !TEX program = pdflatex
+%=====================================================================
+%  Criptografía y Seguridad --- ITBA · Finales resueltos
+%  Documento maestro: preámbulo + \input de cada fragmento.
+%=====================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla,es-noshorthands]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{geometry}
+\geometry{a4paper,margin=2.4cm,headheight=24pt}
+
+\usepackage{xcolor}
+%---- Paleta ITBA ----
+\definecolor{itbaCyan}{HTML}{6EC6D9}
+\definecolor{itbaCyanDark}{HTML}{2E8B9E}
+\definecolor{itbaBlue}{HTML}{AEDCEA}
+\definecolor{boxBlue}{HTML}{BBD4F0}
+\definecolor{slideGray}{HTML}{ECECEC}
+\definecolor{practGreen}{HTML}{4F8A3D}
+\definecolor{practGreenL}{HTML}{E2EFD9}
+\definecolor{attackRed}{HTML}{C0392B}
+\definecolor{codeBg}{HTML}{F5F5F5}
+
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{pifont}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,shapes.misc,shapes.symbols,arrows.meta,positioning,
+                calc,fit,backgrounds,decorations.pathmorphing,decorations.pathreplacing,
+                decorations.markings,shadows.blur,chains,matrix}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=itbaCyanDark,urlcolor=itbaCyanDark,
+            citecolor=itbaCyanDark,linktoc=all,
+            pdftitle={Finales resueltos - Criptografia y Seguridad},
+            pdfauthor={Criptografia y Seguridad - ITBA}}
+
+%---- Encabezados ----
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\textsc{Criptografía y Seguridad --- ITBA}}
+\rhead{\small Finales resueltos}
+\cfoot{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+%---- Títulos de sección con barra de color ----
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{itbaCyanDark}}
+  {\thesection}{0.6em}{}
+  [\vspace{-0.4em}{\color{itbaCyan}\titlerule[2pt]}]
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{itbaCyanDark}}
+  {\thesubsection}{0.6em}{}
+
+%---- Estilo de código ----
+\lstdefinestyle{code}{
+  basicstyle=\ttfamily\footnotesize, backgroundcolor=\color{codeBg},
+  keywordstyle=\color{itbaCyanDark}\bfseries, commentstyle=\color{practGreen}\itshape,
+  stringstyle=\color{attackRed}, breaklines=true, frame=single,
+  rulecolor=\color{black!30}, showstringspaces=false, columns=fullflexible, tabsize=2,
+  xleftmargin=10pt, framexleftmargin=8pt}
+\lstset{style=code}
+
+%=====================================================================
+%  Entorno requerido por los fragmentos: consigna textual del examen
+%=====================================================================
+\newtcolorbox{consigna}{
+  breakable, enhanced, colback=slideGray, colframe=black!55, boxrule=0.6pt, arc=2pt,
+  left=8pt,right=8pt,top=6pt,bottom=6pt, fonttitle=\bfseries, coltitle=white,
+  title={Consigna (textual)}}
+
+% Cajas auxiliares
+\newtcolorbox{defbox}[1]{enhanced,breakable,colback=itbaBlue!25,colframe=itbaCyanDark,
+  boxrule=1pt,arc=2pt,fonttitle=\bfseries,coltitle=white,title={#1}}
+\newtcolorbox{warnbox}[1]{enhanced,breakable,colback=attackRed!8,colframe=attackRed,
+  boxrule=1pt,arc=2pt,fonttitle=\bfseries,coltitle=white,title={#1}}
+\newtcolorbox{practbox}[1]{enhanced,breakable,colback=practGreenL,colframe=practGreen,
+  boxrule=1pt,arc=2pt,fonttitle=\bfseries,coltitle=white,title={#1}}
+\newtcolorbox{ojo}[1][]{breakable,enhanced,colback=orange!10!white,colframe=orange!80!black,
+  fonttitle=\bfseries,title={\faWarning Cuidado --- error típico},coltitle=black,#1}
+\newcommand{\faWarning}{$\triangle$\ }
+
+%---- Macros de control de acceso ----
+\newcommand{\dom}{\ensuremath{\succeq}}        % relación de dominancia
+\newcommand{\Lvl}{\ensuremath{\mathrm{L}}}     % nivel de seguridad L(·)
+\newcommand{\il}{\ensuremath{\mathrm{i}}}      % nivel de integridad i(·)
+\providecommand{\cmark}{\ding{51}}
+\providecommand{\xmark}{\ding{55}}
+
+% Cita textual del profesor (tomada del sistema de resúmenes por unidad)
+\newcommand{\prof}[1]{\medskip\noindent\textit{``#1''}\\[-2pt]\hspace*{1em}{\footnotesize\textcolor{gray}{--- dicho en clase}}\medskip}
+
+%=====================================================================
+\begin{document}
+%=====================================================================
+
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+{\LARGE\bfseries\color{itbaCyanDark} Finales resueltos de\\[3pt]
+Criptografía y Seguridad}\\[0.5cm]
+{\large Exámenes finales (72.44) --- resoluciones completas}\\[0.9cm]
+
+{\normalsize
+\begin{minipage}{0.88\textwidth}\itshape
+Este PDF reúne la resolución de varios exámenes finales de la materia. Cada ejercicio
+incluye la \textbf{consigna textual}, los \textbf{temas} involucrados (con referencia a la
+clase/unidad de los resúmenes de la materia), \textbf{qué necesitás saber} y la
+\textbf{resolución completa y razonada}, construida exclusivamente a partir del material
+de la materia (resúmenes de Primera y Segunda Parte).
+\end{minipage}}\\[1.0cm]
+
+{\normalsize Instituto Tecnológico de Buenos Aires (ITBA)}
+\vfill
+{\footnotesize\itshape Generado a partir de los resúmenes de la materia y los enunciados de los finales.}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+%=====================================================================
+\section*{Introducción}
+\addcontentsline{toc}{section}{Introducción}
+Este documento resuelve los ejercicios de los siguientes exámenes finales de
+Criptografía y Seguridad (72.44): \textbf{21/07/2021}, \textbf{17/07/2023},
+\textbf{06/07/2023}, \textbf{10/07/2023}, \textbf{2025 --- C2 (1)}, y un conjunto de
+\textbf{ejercicios adicionales} (bingo virtual, sensores de robo de cable, app
+``Organizame''). Por cada ejercicio se muestra la consigna textual, los temas que toca
+citando la unidad/clase correspondiente de los resúmenes de la materia (Primera Parte:
+criptografía; Segunda Parte: seguridad), y una resolución completa.
+
+\medskip
+\noindent\textbf{Regla de oro seguida en toda resolución:} no se agrega nada que no esté
+en el material de la materia (resúmenes de Primera y Segunda Parte). Cuando algún punto de
+un enunciado excede ese material, se lo señala explícitamente en la resolución en lugar de
+inventar contenido.
+
+\bigskip
+\noindent\textbf{Nota sobre las fuentes de los finales:} varios de los PDF de los exámenes
+ya traían respuestas manuscritas de un alumno rendido. Esas respuestas se usaron solo como
+referencia de qué se preguntaba; cada resolución de este documento fue re-elaborada y
+verificada contra los resúmenes de la materia, seleccionando lo correcto y corrigiendo o
+completando lo que no se ajustaba al material de la materia.
+
+\newpage
+
+%=====================================================================
+%  Fragmentos (orden cronológico)
+%=====================================================================
+\input{fragments/final-2021-07-21}
+\clearpage
+\input{fragments/final-2023-07-17}
+\clearpage
+\input{fragments/final-2023-07-06}
+\clearpage
+\input{fragments/final-2023-07-10}
+\clearpage
+\input{fragments/final-2025-c2-1}
+\clearpage
+\input{fragments/ejercicios-adicionales}
+
+\end{document}

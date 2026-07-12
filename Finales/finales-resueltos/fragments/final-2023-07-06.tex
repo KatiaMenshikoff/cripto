@@ -1,0 +1,436 @@
+%=====================================================================
+\section{Final --- 06/07/2023}
+%=====================================================================
+
+% =====================================================================
+\subsection{Ejercicio 1 --- $k$-anonimato en base de datos de emails (SPAM)}
+% =====================================================================
+
+\begin{consigna}
+Considerar una base de datos de emails que han sido utilizados para publicidad no
+deseada (SPAM) y un servicio que permite a cualquier persona consultar si su email está
+en la lista. La consulta misma le da al dueño del sistema acceso a nuevos emails que
+podrían ser vendidos, robados, o utilizados sin consentimiento.
+
+El servicio pretende mantener el anonimato de la información, en el sentido de no poder
+asociar un email particular a un usuario que usa el mismo. Para ello se decidió
+implementar un mecanismo conocido como $k$-annonymity, que establece la imposibilidad de
+asociar un dato a una entidad discernible en un grupo de al menos $k$ entidades.
+
+El servicio guarda en su base de datos el resultado de aplicar un hash criptográfico
+SHA-256 sobre cada email. Un cliente que quiera hacer una búsqueda, calcula
+\underline{localmente} el hash del email a consultar y envía \textbf{solo los primeros
+$x$ bits} del hash (donde $x$ es una constante definida como parte del servicio),
+recibiendo como respuesta todos los hashes de la base de datos que tengan dicho
+prefijo. De esta manera el usuario puede buscar si aparece su hash completo en la
+respuesta y responder la pregunta.
+
+\begin{enumerate}
+  \item[a)] ¿Mejora la seguridad si se utiliza un SALT de 256 bits para almacenar los
+  hashes? ¿Tiene alguna otra consecuencia? Aclaración: seguridad en este contexto
+  refiere al modelo a anonimato deseado. (1 pto)
+  \item[b)] Explicar por qué alguien que controle el servidor no puede saber ni cuál era
+  el email sobre el que preguntó el usuario, ni si el resultado de la búsqueda fue
+  exitoso o no. (1 pto)
+  \item[c)] ¿Con qué criterio se puede definir el valor $x$ (la cantidad de bits de
+  prefijo que debe enviar el cliente) si queremos garantizar 256-annonimity? (1 pto)
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Primera Parte, Clase 3 --- MACs y funciones de hash (\S Funciones de hash; \S
+Resistencia a preimagen/segunda preimagen/colisión; \S Paradoja del cumpleaños).
+Segunda Parte, Clase 2 --- Autenticación (\S Salt: qué hace y qué no hace un salt).
+\textbf{Aclaración de fidelidad:} el término ``$k$-anonimato'' / $k$-anonymity
+\textbf{no aparece} como tal en los resúmenes de la materia (Primera ni Segunda Parte);
+la definición usada acá es la que trae el propio enunciado del examen. La resolución se
+arma con las propiedades de funciones de hash y de salt que sí están en el material.
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{Resistencia a preimagen:} dado un hash $y$, es computacionalmente
+  imposible hallar $x$ con $h(x)=y$. Por eso el servidor, recibiendo un prefijo del
+  hash, no puede ``invertirlo'' para recuperar el email en claro.
+  \item \textbf{Salt:} perturbación aleatoria embebida en el hash, definida (según la
+  materia) para el escenario de \emph{cracking offline de contraseñas}: no agranda el
+  espacio de claves del usuario, pero multiplica por $2^{\text{bits de salt}}$ el costo
+  del atacante que intenta adivinar el valor original, porque impide reutilizar un
+  cómputo $h(a)$ contra varias cuentas en paralelo (cada cuenta usa una perturbación
+  distinta).
+  \item \textbf{Efecto avalancha / tamaño de salida fijo:} el hash de un mensaje
+  arbitrario da una etiqueta de tamaño fijo (acá 256 bits); dos entradas distintas dan
+  salidas que no guardan relación aparente entre sí.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+El protocolo del enunciado es, en esencia, un esquema de \textbf{PIR (búsqueda privada)
+construido ad-hoc} sobre resistencia a preimagen: el cliente nunca envía el email en
+claro, solo un prefijo de su hash, y el servidor responde con \emph{todos} los hashes
+que matchean ese prefijo (no solo el buscado) para no revelar cuál interesa
+puntualmente. Esto conecta con la idea de la materia de que un hash \textbf{no es
+reversible} (``un hash sirve para encriptar'' es FALSO, unidad de MACs) y con la
+distinción salt vs.\ espacio de claves (unidad de Autenticación): acá el salt no
+protege contra fuerza bruta sobre el hash sino que \textbf{rompe el protocolo mismo},
+como se ve en el inciso a).
+
+\paragraph{Resolución.}
+
+\textbf{a)} \textbf{No mejora la seguridad/anonimato buscado; al contrario, rompe el
+protocolo.} El objetivo del esquema no es dificultar un ataque de fuerza bruta offline
+contra el hash (que es para lo que el salt sirve en el material: penalizar al atacante
+que intenta adivinar $x$ tal que $h(x)=y$), sino permitir que el propio usuario legítimo
+recompute \emph{localmente} el hash de su email para poder consultarlo. Si se agrega un
+salt $s$ por registro ($h(\text{email}\|s)$), el cliente que quiere consultar
+\textbf{no conoce el salt} usado para su propio email en la base (el salt es
+justamente aleatorio y --- para que sirva su propósito de la materia --- no se le
+entrega al usuario de antemano), por lo que no puede recalcular localmente el prefijo
+correcto para preguntar. Consecuencias:
+\begin{itemize}
+  \item Si el servicio de todos modos le entregara el salt correspondiente a su email
+  para que pueda calcular el hash, eso \textbf{ya revela al servidor qué salt se pidió},
+  y si el salt es por-email, pedir ``el salt de mi email'' equivale a decir qué email se
+  está consultando --- \textbf{se pierde el anonimato} que se buscaba (el servidor sabe
+  qué registro se está consultando, aunque no vea el email en texto plano).
+  \item Si en cambio se usa \textbf{un único salt global} para toda la base, no cambia
+  nada respecto de no usar salt: todos los emails se perturban con el mismo valor, así
+  que el cliente puede seguir calculando el hash localmente sin pedir nada al servidor
+  (el salt global es efectivamente parte de la constante pública del hash).
+\end{itemize}
+En síntesis: un salt por-cuenta \textbf{rompe el protocolo} (el cliente no puede
+recalcular el hash sin filtrar información al servidor); un salt global no aporta nada
+al anonimato porque equivale a no usar salt. En ningún caso mejora el anonimato deseado.
+
+\textbf{b)} El cliente calcula $\mathrm{SHA256}(\text{email})$ \textbf{localmente} y
+envía solo los primeros $x$ bits de ese hash. Por \textbf{resistencia a preimagen} de
+SHA-256, el servidor no puede invertir esos $x$ bits para recuperar el email (ni
+siquiera el hash completo, del cual solo recibe un prefijo). Además, como el servidor
+responde con \textbf{todos} los hashes completos de la base que comparten ese prefijo
+(no solo el que interesa), no puede saber cuál de esos hashes de la respuesta es el que
+realmente le importa al cliente: la comparación final (¿aparece mi hash completo en la
+lista recibida?) la hace el cliente \textbf{del lado suyo}, sin informarle nada al
+servidor sobre el resultado. Por eso el servidor no puede saber ni qué email se
+consultó (solo ve un prefijo compartido por muchos emails posibles) ni si la búsqueda
+fue exitosa (esa comparación ocurre localmente en el cliente, nunca se envía de vuelta).
+
+\textbf{c)} El enunciado define $k$-annonymity como la imposibilidad de asociar un dato
+a una entidad discernible en un grupo de \textbf{al menos $k$ entidades}. Aplicado a
+este esquema, se necesita que el prefijo de $x$ bits enviado por el cliente sea
+compartido, en promedio, por al menos $k=256$ hashes de la base (para que el servidor
+no pueda reducir el conjunto de sospechosos a un grupo menor a 256 emails). Si $N$ es la
+cantidad de registros (emails) en la base y se asume que el hash distribuye
+uniformemente sus salidas entre los $2^x$ prefijos posibles (consecuencia del efecto
+avalancha del hash), la cantidad esperada de hashes por cada prefijo de $x$ bits es
+$N/2^x$. El criterio para garantizar 256-anonimity es entonces pedir que esa cantidad
+esperada sea al menos 256:
+\begin{equation*}
+\frac{N}{2^{x}} \ge 256 \quad\Longleftrightarrow\quad x \le \log_2\!\left(\frac{N}{256}\right).
+\end{equation*}
+Es decir, el valor $x$ (bits de prefijo a enviar) debe fijarse como
+$\boxed{\,x \le \log_2(N/256)\,}$, con $N$ el tamaño de la base de datos: cuantos menos
+bits de prefijo se envíen, más grande es el grupo de hashes indistinguibles entre sí (y
+al revés, si $x$ crece, el grupo de hashes que matchean se achica y se pierde
+anonimato). \textbf{Nota de fidelidad:} esta fórmula se deriva aplicando la definición
+de $k$-anonimato dada en el propio enunciado junto con las propiedades de hash de la
+materia (salida fija, efecto avalancha $\Rightarrow$ distribución aproximadamente
+uniforme de prefijos); el concepto de $k$-anonimato en sí no figura en los resúmenes de
+la materia, así que no se cita ningún resultado formal de la cátedra específico de
+$k$-anonimato.
+
+% =====================================================================
+\subsection{Ejercicio 2 --- Red de sensores de oleoducto: CHACHA20 + HMAC-SHA3}
+% =====================================================================
+
+\begin{consigna}
+Un oleoducto es una tubería que transporta petróleo a grandes distancias (a veces miles
+de kilómetros). Dada la longitud, la dificultad de acceso en segmentos soterrados y el
+costo de no poder utilizarlo, el diseño incluye un sistema de control activo que
+permite identificar problemas en el transporte con una localización precisa de dónde
+ocurre el problema.
+
+Cada 200m se emplazan un conjunto de sensores dentro del oleoducto que monitorean la
+presión y algunas características químicas que permiten estimar problemas como una fuga
+o contaminación. Estos sensores están conectados físicamente con un cableado interno, y
+cada 10 km hay concentradores, que son dispositivos externos a la tubería, que están
+conectados tanto al segmento anterior como al posterior al dispositivo y recopilan la
+información. Los concentradores transmiten por radiofrecuencia los resultados a una
+central, donde son analizados para generar alarmas cuando sea necesario (por ejemplo,
+si falta información de algún sensor).
+
+Dado el valor del material transportado, un escenario de ataque contemplado incluye a
+un grupo con acceso a tecnología sofisticada, capaz de tomar control físicamente de un
+concentrador y manipularlo, con el objetivo de ``pinchar'' un tubo y extraer petróleo
+en pequeñas cantidades (algunos camiones por día) para comercializarlo por canales no
+oficiales.
+
+Cada grupo de sensores tiene un identificador único público de 128 bits, un
+identificador único privado de 128 bits (que puede ser utilizado, por ejemplo, como
+clave, pero nunca es transmitido). Los sensores siguen un modelo de transmisión simple
+estilo token-ring para hacer uso del cable que los conecta, y cuando es su turno,
+transmiten un par (identificador, enc(valor sensado)), utilizando CHACHA20 como función
+de cifrado de flujo.
+
+Los concentradores cuentan con su propio par de identificadores, pero solo la central
+conoce los identificadores privados del resto. Cada concentrador captura los mensajes
+transmitidos por cada sensor durante 1 minuto, tanto de la sección anterior como la
+posterior al dispositivo, y las envía en un único mensaje de la forma (identificador,
+msg1|msg2|\ldots|msgn, mac(msg1|msg2|\ldots|msgn)), utilizando para el mac su
+identificador privado y la función hmac-sha3.
+
+Nota: a$|$b significa a seguido de b.
+
+\begin{enumerate}
+  \item[a)] Explicar qué debe hacer la central para verificar la integridad de los
+  valores de cada sensor que recibió, antes de determinar si sus valores son normales o
+  no. (1 pto)
+  \item[b)] ¿Puede alguien con capacidad de reemplazar un concentrador (incluso
+  averiguando su identificador privado) falsificar valores de sensores que la central
+  de como validos? Explicar por qué no o como puede hacerlo. (1 pto)
+  \item[c)] ¿Puede alguien con capacidad de reemplazar dos concentradores falsificar
+  valores de sensores que la central de como validos? Explicar por qué no o como puede
+  hacerlo. (1 pto)
+\end{enumerate}
+\end{consigna}
+
+\paragraph{Temas.}
+Primera Parte, Clase 2 --- Cifrado (\S Cifrado de flujo; \S Generador pseudoaleatorio;
+\S no reutilizar la clave/keystream; \S los cifrados de flujo no son seguros bajo
+múltiples cifrados con la misma clave). Primera Parte, Clase 3 --- MACs y cifrado
+autenticado (\S Qué es un MAC; \S HMAC: MAC a partir de una función de hash, incluye
+explícitamente HMAC-SHA3; \S infalsificabilidad / Mac-forge). Segunda Parte, Clase 8
+--- Principios de diseño (\S mínimo privilegio / confinamiento, para el razonamiento
+del inciso c).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item \textbf{MAC (Message Authentication Code):} terna $(\mathrm{Gen},
+  \mathrm{Mac}, \mathrm{Vrfy})$ con clave secreta compartida; $\mathrm{Vrfy}_k(m,t)=1$
+  si y solo si $t$ es una etiqueta válida de $m$ bajo $k$. Sin la clave, no se puede
+  generar ni verificar un tag válido (infalsificabilidad).
+  \item \textbf{HMAC:} $\mathrm{HMAC}_k(m) = H\big((k\oplus\texttt{opad})\,\|\,
+  H((k\oplus\texttt{ipad})\,\|\,m)\big)$; si $H$ es libre de colisiones, HMAC es
+  infalsificable. La materia menciona explícitamente HMAC-SHA1, HMAC-MD5 (evitar) y
+  \textbf{HMAC-SHA3}.
+  \item \textbf{Cifrado de flujo (CHACHA20 es una instancia de esta familia, aunque el
+  nombre concreto ``ChaCha20'' no aparece nombrado en los resúmenes de la materia):}
+  $e_k(m) = G(k)\oplus m$, con $G$ un generador pseudoaleatorio. Es
+  \textbf{determinístico}: la misma clave/semilla produce siempre el mismo keystream.
+  \item \textbf{Los cifrados de flujo NO son seguros bajo múltiples cifrados con la
+  misma clave} (como el OTP reusado): reusar la clave permite XOR-ear dos cifrados y
+  cancelar el keystream, exponiendo relaciones entre los textos planos.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+El identificador privado del sensor actúa como \textbf{clave simétrica de cifrado de
+flujo} para los datos, y el identificador privado del concentrador actúa como
+\textbf{clave del HMAC} sobre el mensaje agregado. Son dos primitivas independientes
+con dos claves independientes (una por sensor, para confidencialidad; una por
+concentrador, para integridad/autenticación del agregado), lo que limita el
+\textbf{alcance del compromiso} de cada clave --- la misma idea de compartimentar
+privilegios que aparece en la unidad de Principios de diseño (mínimo privilegio,
+confinamiento): comprometer una clave no debería dar poder sobre datos protegidos por
+otra clave distinta.
+
+\paragraph{Resolución.}
+
+\textbf{a)} Para verificar la integridad del mensaje agregado recibido de un
+concentrador, la central debe:
+\begin{enumerate}
+  \item Identificar el concentrador emisor por su \textbf{identificador público}
+  (que sí viaja en el mensaje).
+  \item Buscar el \textbf{identificador privado} de ese concentrador, que la central
+  conoce (según el enunciado, ``solo la central conoce los identificadores privados del
+  resto'').
+  \item Recalcular ella misma $\mathrm{HMAC}_{k_{\text{priv}}}(\text{msg}_1\|\cdots\|
+  \text{msg}_n)$ sobre la concatenación de mensajes recibida, usando el identificador
+  privado del concentrador como clave y la función hmac-sha3 (misma construcción que
+  usó el concentrador para generar el tag).
+  \item Comparar el valor recalculado con el $\mathrm{mac}(\cdot)$ recibido en el
+  mensaje: si coinciden, el mensaje \textbf{no fue alterado} en tránsito (íntegro y
+  autenticado como proveniente de ese concentrador); si no coinciden, se descarta/marca
+  como no confiable.
+\end{enumerate}
+Solo después de esa verificación (recalcular y comparar el HMAC) tiene sentido que la
+central analice si los valores sensados son ``normales o no''; verificar antes evita
+procesar datos manipulados como si fueran legítimos.
+
+\textbf{b)} \textbf{Sí puede falsificar valores}, precisamente porque conoce el
+identificador privado del concentrador reemplazado: ese identificador privado es
+exactamente la \textbf{clave del HMAC} que la central usa para validar la integridad
+del mensaje agregado de ese concentrador. Un atacante que reemplaza físicamente el
+concentrador puede:
+\begin{enumerate}
+  \item Inventar o alterar los valores sensados de esa sección ($\text{msg}_1', \ldots,
+  \text{msg}_n'$, p.ej.\ para esconder la caída de presión que delataría el
+  ``pinchazo'').
+  \item Calcular él mismo $\mathrm{HMAC}_{k_{\text{priv}}}(\text{msg}_1'\|\cdots\|
+  \text{msg}_n')$ con el identificador privado que conoce (o ya lo tiene disponible por
+  haber comprometido físicamente el dispositivo, según el enunciado).
+  \item Enviar (identificador público, mensajes falsificados, HMAC recalculado con la
+  clave correcta) a la central, que al recalcular el HMAC obtiene una coincidencia y da
+  los valores por \textbf{válidos}.
+\end{enumerate}
+Es decir, el HMAC protege contra un atacante que \textbf{no} conoce la clave (garantiza
+infalsificabilidad frente a un adversario sin oráculo/clave), pero no protege si el
+propio concentrador --- y por lo tanto quien lo controla --- es el poseedor legítimo de
+esa clave: quien tiene la clave puede generar tags válidos para cualquier mensaje que
+elija, exactamente como el emisor legítimo.
+
+\textbf{c)} Comprometer \textbf{dos} concentradores le da al atacante control sobre dos
+identificadores privados (dos claves de HMAC) en vez de una, pero cada concentrador
+usa \textbf{su propio par de identificadores}, independiente del resto (según el
+enunciado, ``los concentradores cuentan con su propio par de identificadores''). Por lo
+tanto:
+\begin{itemize}
+  \item El atacante puede falsificar, de la misma manera que en b), los valores de
+  \textbf{los dos segmentos} cubiertos por esos dos concentradores comprometidos (el
+  doble de alcance que en b), pero nada más).
+  \item \textbf{No puede} falsificar valores de sensores/concentradores fuera de esas
+  dos secciones: no conoce los identificadores privados del resto de los
+  concentradores ni de los sensores de otras secciones, y sin esa clave no puede
+  generar un HMAC que la central acepte como válido para esos otros segmentos (por la
+  infalsificabilidad del HMAC bajo una clave que el atacante desconoce).
+\end{itemize}
+En síntesis: comprometer $m$ concentradores solo compromete la integridad de esos $m$
+segmentos, nunca la del resto de la red --- consecuencia directa de que cada
+concentrador (y cada sensor) tiene su propia clave independiente, limitando el
+``radio de explosión'' de cada compromiso individual (mismo principio de aislar
+privilegios/claves visto en la unidad de Principios de diseño).
+
+% =====================================================================
+\subsection{Ejercicio 3 --- Hipótesis de falla para pentest de app móvil de exchange}
+% =====================================================================
+
+\begin{consigna}
+Una exchange de criptomonedas está expandiendo su aplicación web actual con una nueva
+aplicación móvil nativa para Android y otra para iOS.
+
+Se sabe que:
+\begin{itemize}
+  \item La aplicación se comunica con el servidor mediante un API REST.
+  \item La aplicación requiere que el usuario se registre con un email y una
+  contraseña.
+  \item Sin autenticarse en la aplicación, se puede ver un resumen del valor actual de
+  compra y venta de cada criptomoneda listada, y datos de volumen de operaciones.
+  \item Para ingresar dinero se puede utilizar una tarjeta de crédito o una cuenta
+  bancaria. Es necesario registrar los datos del medio a utilizar. Para retirar dinero,
+  solo se puede utilizar una transferencia bancaria.
+  \item Los ingresos y salidas de dinero están gestionados por un sistema de pagos
+  externo, AlphaPay, que es quien procesa las operaciones. El proveedor disponibiliza un
+  api para llevar a cabo las transacciones. Dicha API procesa las transacciones, pero no
+  almacena información de medios de pago, que sí almacena la plataforma para no
+  requerir al usuario ingresar todos los datos de cuenta en cada transacción.
+  \item La aplicación notifica por email cuando una orden de compra o venta se ejecuta,
+  incluyendo el resumen de la misma.
+\end{itemize}
+
+Ante un pedido de realizar un pentest que abarque la app, establecer 4 hipótesis de
+falla \textbf{pertinentes} para el caso, basadas en problemas de seguridad en
+aplicaciones. Explicar \textbf{para cada una}, como probaría según la metodología (la
+acción concreta que ejecutaría para verificar o refutar la hipótesis). (4 puntos, 1 pto
+cada uno)
+
+\textbf{Aclaración:} No utilizar problemas genéricos como hipótesis de falla. Plantear
+situaciones y lugares concretos donde podría estar el problema. Por ejemplo, en lugar de
+decir ``puede haber un buffer overflow'', decir ``es probable que haya un buffer
+overflow en la lectura del parámetro x que debe interpretarse como número y puede tener
+un buffer pequeño asumiendo que el número tiene menos de los dígitos de un long''.
+\end{consigna}
+
+\paragraph{Temas.}
+Segunda Parte, Clase 6 --- Pentesting (\S Metodología de Hipótesis de Falla, pasos y
+ejemplos de hipótesis concretas: seguridad en APIs, relaciones de confianza). Segunda
+Parte, Clase 3 --- Principios de diseño y vulnerabilidades (\S mediación completa;
+\S límite de confianza / trust boundary; \S CWE Top 25: injection, buffer overflow).
+Segunda Parte, Clase 2 --- Autenticación (\S fuerza bruta / throttling). Segunda Parte,
+Clase 7 --- Protección de datos (\S PCI-DSS: acotar datos críticos, tokenización).
+
+\paragraph{Qué necesitás saber.}
+\begin{itemize}
+  \item La \textbf{metodología de hipótesis de falla} exige, para cada hipótesis,
+  describir cómo se \textbf{probaría} (verificaría o refutaría): analizando
+  documentación/comportamiento, o --- si es necesario --- intentando explotar la
+  vulnerabilidad de forma controlada y repetible/concluyente.
+  \item \textbf{Mediación completa / trust boundary:} todo dato que cruza un límite de
+  confianza (ej.\ del cliente --- app móvil, que el atacante controla totalmente --- al
+  servidor) debe validarse en el lado de \emph{mayor} confianza; no se puede confiar en
+  valores calculados o enviados por el cliente.
+  \item \textbf{PCI-DSS (protección de datos):} acotar la cantidad de datos críticos
+  almacenados según su criticidad (no proteger todo por igual), y usar
+  \textbf{tokenización} para que, si se filtran los datos guardados por la plataforma,
+  no tengan valor por sí solos.
+  \item \textbf{Fuerza bruta / throttling:} sin límite de intentos o política de
+  contraseñas, un endpoint de autenticación es vulnerable a ataques de fuerza
+  bruta/diccionario contra cuentas existentes.
+\end{itemize}
+
+\paragraph{Notas y conexiones.}
+El enunciado da varias pistas textuales que apuntan directamente a puntos débiles ya
+vistos en la materia: (1) la plataforma \textbf{almacena datos de medios de pago}
+(tarjeta/cuenta bancaria) para no pedirlos en cada transacción --- esto es justo lo que
+PCI-DSS busca acotar/tokenizar, y es un dato crítico guardado localmente en vez de
+delegado al proveedor externo (AlphaPay), que explícitamente \emph{no} los almacena;
+(2) el flujo de compra/venta involucra un valor de cotización y un monto que el cliente
+podría manipular si el backend no revalida contra el servidor/AlphaPay (mediación
+completa); (3) el registro con email/contraseña es un endpoint de autenticación clásico
+para fuerza bruta si no hay throttling; (4) los emails de notificación de operaciones
+incluyen un ``resumen'' cuyo contenido podría filtrar de más.
+
+\paragraph{Resolución.}
+
+\textbf{Hipótesis 1 --- Almacenamiento inseguro de datos de medios de pago (PCI-DSS).}
+Es probable que los datos del medio de pago (número de tarjeta de crédito o datos de la
+cuenta bancaria) que la plataforma guarda para no pedirlos en cada transacción se
+almacenen en la base de datos de la aplicación sin la protección exigida por PCI-DSS
+(sin tokenización, es decir, guardando el dato real en vez de un token que apunte a él
+en un sistema aparte ultra-protegido) y/o asociados incorrectamente al usuario,
+permitiendo que un medio de pago registrado por un usuario sea reutilizable desde otra
+cuenta.
+\emph{Prueba:} con dos cuentas de prueba, registrar un medio de pago en la cuenta A y
+luego, desde la cuenta B, intentar usar el identificador interno de ese medio de pago
+(obtenido por ejemplo interceptando el tráfico de la API REST de la cuenta A) en una
+operación de ingreso de dinero; verificar si la transacción se acredita/ejecuta contra
+el medio de pago de otro usuario. Adicionalmente, revisar (con acceso de caja
+gris/blanca) si el campo del medio de pago se guarda en texto plano o tokenizado en la
+base.
+
+\textbf{Hipótesis 2 --- Confianza indebida en valores enviados por el cliente al
+ejecutar una orden.} Es probable que, al confirmar una compra o venta de una
+criptomoneda, el backend confíe en el monto y/o el precio de cotización enviados desde
+la app móvil por el API REST al iniciar la orden, en lugar de revalidar esos valores
+contra la cotización real del servidor en el momento de ejecutar la operación --- el
+cliente móvil cruza el límite de confianza (trust boundary) hacia el servidor y ese es
+el punto donde debería mediarse completamente la validación.
+\emph{Prueba:} interceptar (con un proxy) la request que envía la app al confirmar una
+orden de compra/venta, modificar el parámetro de precio o monto antes de que llegue al
+servidor, y verificar si la orden se ejecuta con el valor alterado en vez de con la
+cotización real vigente en el momento de la ejecución.
+
+\textbf{Hipótesis 3 --- Falta de límite de intentos (rate limiting) en el endpoint de
+registro/login con email y contraseña.} Es probable que el endpoint de autenticación
+(registro/login con email y contraseña) no implemente throttling ni bloqueo de cuenta
+tras varios intentos fallidos, permitiendo un ataque de fuerza bruta o de diccionario
+contra contraseñas de cuentas existentes.
+\emph{Prueba:} realizar múltiples intentos de autenticación consecutivos contra una
+cuenta de prueba válida usando contraseñas incorrectas (diccionario de contraseñas
+comunes) y observar si el sistema bloquea, limita (con backoff) o registra/alerta sobre
+los intentos, o si permite continuar indefinidamente.
+
+\textbf{Hipótesis 4 --- Exceso de información sensible en el email de notificación de
+operaciones.} Es probable que el email que notifica la ejecución de una orden de compra
+o venta, al incluir ``el resumen de la misma'', exponga información sensible en exceso
+(por ejemplo datos parciales del medio de pago usado, montos exactos de fondos
+disponibles, u otros identificadores internos de la cuenta/orden), quedando dicha
+información expuesta en un canal (el email) menos controlado que el API REST de la
+aplicación.
+\emph{Prueba:} ejecutar una orden de compra/venta de prueba y analizar el contenido
+completo del email recibido, verificando si incluye datos sensibles (número parcial o
+completo de tarjeta/cuenta, identificadores internos, saldo total) que excedan lo
+estrictamente necesario para informar la operación.
+
+\medskip
+\noindent\textbf{Nota de fidelidad:} las cuatro hipótesis se construyen a partir de
+datos concretos del propio enunciado (qué se registra, qué almacena la plataforma, qué
+notifica) combinados con los conceptos de la materia citados en ``Qué necesitás saber''
+(PCI-DSS/tokenización, mediación completa/trust boundary, throttling). No se incluyen
+hipótesis genéricas de OWASP Top Ten que no estén ancladas a un dato concreto del
+enunciado, siguiendo la aclaración del examen.
