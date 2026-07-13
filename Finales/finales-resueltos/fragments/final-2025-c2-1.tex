@@ -21,12 +21,12 @@ la puerta deja pasar a cualquier $ID$ que haya tenido acceso recientemente, sin
 hacer ninguna otra validación.
 
 \begin{enumerate}
-  \item[a)] ¿Qué validaciones podría hacer el servidor para evitar comportamientos
+  \item[a)] \textquestiondown{}Qué validaciones podría hacer el servidor para evitar comportamientos
   extraños como que se abran dos puertas distantes casi al mismo tiempo, o que se
   intenten abrir puertas fuera de un horario normal?
   \item[b)] Si alguien captura los mensajes, explicar cómo podría utilizarlos o
-  modificarlos para tener acceso. ¿Cómo lo solucionaría?
-  \item[c)] Si consiguen el estado degradado, ¿qué podría hacerse para que no puedan
+  modificarlos para tener acceso. \textquestiondown{}Cómo lo solucionaría?
+  \item[c)] Si consiguen el estado degradado, \textquestiondown{}qué podría hacerse para que no puedan
   acceder repitiendo mensajes?
 \end{enumerate}
 \end{consigna}
@@ -165,9 +165,9 @@ mismo que recibió, autentica a $C$.
 
 Preguntas:
 \begin{enumerate}
-  \item[1.] ¿Por qué el servidor manda ese $r$? ¿Qué pasaría si el cliente solo
+  \item[1.] \textquestiondown{}Por qué el servidor manda ese $r$? \textquestiondown{}Qué pasaría si el cliente solo
   mandase $H(K_c)$ en vez de que se use el $r$?
-  \item[2.] ¿Disminuiría la seguridad si se usara un contador incremental en vez
+  \item[2.] \textquestiondown{}Disminuiría la seguridad si se usara un contador incremental en vez
   del $r$ aleatorio?
   \item[3.] Plantear cómo se podría hacer para que el cliente autentique también al
   servidor, sin introducir nuevas claves.
@@ -300,8 +300,8 @@ contador vs.\ aleatorio; \S challenge-response); glosario (\S OAuth2/tokens,
 \begin{itemize}
   \item \textbf{Metodología de hipótesis de falla (Clase 6):} el paso 2 consiste en
   plantear posibles vulnerabilidades \textbf{examinando implementaciones y
-  mecanismos} (¿está bien implementado el control?, ¿el ambiente introduce
-  errores?, ¿es realmente seguro?) y \textbf{comparando con sistemas parecidos}
+  mecanismos} (\textquestiondown{}está bien implementado el control?, \textquestiondown{}el ambiente introduce
+  errores?, \textquestiondown{}es realmente seguro?) y \textbf{comparando con sistemas parecidos}
   (sistemas similares tienen problemas similares). El paso 3 (prueba) exige que la
   verificación de la hipótesis sea \textbf{repetible y concluyente}.
   \item \textbf{Nonce / frescura (Clase 3):} la defensa real contra CSRF es un

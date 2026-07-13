@@ -1,0 +1,201 @@
+%=====================================================================
+\section{Guía de patrones --- qué tener en cuenta para el examen}
+%=====================================================================
+Esta sección sintetiza, a partir de los 7 finales resueltos en las secciones siguientes,
+los \textbf{patrones que se repiten}: la estructura típica de cada final, los ``moldes'' de
+cada ejercicio, los puntos de la consigna que suelen decidir el puntaje, y los temas de la
+materia que conviene tener relacionados entre sí. No agrega contenido nuevo: es un mapa de
+lo que ya está resuelto en este mismo documento.
+
+%-----------------------------------------------------------------
+\subsection{Estructura fija del final: casi siempre 3 ejercicios con roles fijos}
+%-----------------------------------------------------------------
+En \textbf{6 de los 7 finales} el patrón es idéntico:
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.06\textwidth}p{0.24\textwidth}p{0.28\textwidth}p{0.34\textwidth}@{}}
+\toprule
+\textbf{\#} & \textbf{Rol del ejercicio} & \textbf{Tema típico} & \textbf{Clases involucradas} \\
+\midrule
+\textbf{1} & Sistema con \textbf{cifrado simétrico} que falla en integridad/replay/modo
+degradado & IoT, sensores, pulseras, dispositivos de acceso &
+Primera Parte Clase 2 (Cifrado: modos ECB/CBC/CTR/stream) + Clase 3 (MAC/AEAD) + Clase 5
+(nonce/replay) \\
+\textbf{2} & \textbf{Protocolo criptográfico} (autenticación, reparto de secreto, firma,
+SSO) con 2--3 preguntas puntuales & challenge-response, XOR ``sombras'', SSO/IdP, hash vs
+HMAC & Primera Parte Clase 2/3/4/5 + Segunda Parte Clase 2 (Autenticación) \\
+\textbf{3} & \textbf{Pentesting}: dar \textbf{4 hipótesis de falla} + cómo probar cada una
+& app web/mobile con varias funcionalidades (pagos, IoT, exchanges, calendario, noticias) &
+Segunda Parte Clase 6 (Pentesting) + a veces Clase 3 (vulnerabilidades) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+El único final que rompe el molde es \textbf{17/07/2023}, que reemplaza el ejercicio 2 por
+una variante del mismo esquema ``sombras'' del final 2025-C2 pero con enfoque distinto ---
+el patrón temático (protocolo con preguntas de robustez) se mantiene igual.
+
+\begin{practbox}{Implicancia para estudiar}
+Memorizar bien estos 3 ``moldes'' (no los enunciados exactos) cubre la gran mayoría del
+examen. Practicar variantes del ejercicio 1 y tener la checklist de hipótesis de falla del
+ejercicio 3 ``de memoria'' rinde más que estudiar cada final como un caso aislado.
+\end{practbox}
+
+%-----------------------------------------------------------------
+\subsection{Ejercicio 1 --- el ``molde IoT/sensor con cifrado roto''}
+%-----------------------------------------------------------------
+Reaparece casi textual en 3 finales (pulseras Helíos / pulseras 2025-C2 / sensor--maestro
+10/07/2023) con la misma trampa:
+\begin{itemize}
+  \item Se describe un sistema que envía $(\mathrm{ID}, \text{contador/ctr}, C)$ con
+  $C=\text{cifrado simétrico}(\text{dato})$.
+  \item El enunciado \textbf{nunca dice ``y esto tiene un MAC''} --- el punto es notar que
+  el cifrado \emph{solo} (CTR/CBC/ECB) \textbf{da confidencialidad pero no integridad}, y
+  que sin MAC un atacante puede reproducir/reenviar (\textbf{replay}) un mensaje válido
+  capturado antes, o explotar la \textbf{maleabilidad} (en CTR/stream: XORear el keystream
+  para voltear bits específicos sin conocer la clave; en ECB: bloques repetidos revelan
+  patrones).
+  \item Casi siempre hay un \textbf{``modo degradado''} (sin conexión al servidor) que baja
+  la guardia de validación --- ahí la pregunta es cómo mitigar sin agregar dispositivos
+  nuevos (la respuesta típica: OTP/HOTP precargadas, listas de hashes de un solo uso).
+\end{itemize}
+
+\begin{defbox}{Puntos clave a leer con cuidado en la consigna}
+\begin{itemize}
+  \item \textquestiondown{}El campo que viaja cifrado incluye un \textbf{contador/nonce}? Si sí, preguntar si
+  el verificador chequea que sea \textbf{estrictamente creciente} (sin eso, no hay
+  anti-replay real aunque el nonce exista).
+  \item \textquestiondown{}Qué pasa si \textbf{falla la conexión} al servidor central? Ese es siempre el
+  gancho para la pregunta de ``modo degradado''.
+  \item Fijarse en el \textbf{orden de los campos dentro del cifrado} (p.\ ej.
+  $\mathit{wearing}\|ctr$ vs.\ $ctr\|\mathit{wearing}$): no cambia la vulnerabilidad de
+  fondo, pero el enunciado espera que la resolución sea precisa con el orden exacto.
+\end{itemize}
+\end{defbox}
+
+%-----------------------------------------------------------------
+\subsection{Ejercicio 2 --- el ``molde de protocolo con preguntas de robustez''}
+%-----------------------------------------------------------------
+Patrones que reaparecen:
+\begin{itemize}
+  \item \textbf{Challenge-response con hash:} $C\to S: id$, $S\to C: r$ aleatorio,
+  $C\to S: H(K_c\|r)$. Casi siempre piden (a) por qué se usa $r$ y no $H(K_c)$ solo (evita
+  replay), (b) si cambiar $r$ por un contador incremental es menos seguro (sí: predecible,
+  aunque conceptualmente sirve como nonce único --- el problema real es previsibilidad, no
+  repetición), y (c) cómo lograr autenticación \textbf{mutua sin nuevas claves} (romper la
+  simetría con literales de rol, p.\ ej.\ $H(K_c\|r\|\text{``servidor''})$).
+  \item \textbf{Esquema tipo ``sombras'' con XOR + hash:} reparto de un secreto en 2 partes
+  (análogo a Shamir con umbral 2) donde cada parte se acompaña de un hash de la otra.
+  Preguntan qué pasa si un atacante ve \textbf{solo un canal} (nada: OTP con partes
+  independientes no filtra nada) y qué hace falta si ve \textbf{los dos canales} (pasar de
+  hash simple a HMAC, porque el hash sin clave lo puede recalcular cualquiera que controle
+  el mensaje).
+  \item \textbf{SSO/IdP con firma digital:} por qué el servicio no necesita la contraseña
+  (firma verificable con clave pública, no hace falta compartir secreto), cómo evitar reuso
+  del token en otro servicio (agregar nonce/expiración, o firmar el campo ``servicio''
+  junto con la identidad del que lo solicitó).
+\end{itemize}
+
+\begin{defbox}{Puntos clave a leer con cuidado}
+\begin{itemize}
+  \item Cuando el enunciado dice \textbf{``sin introducir nuevas claves''}, la respuesta
+  esperada usa literales/roles dentro del hash existente, no criptografía asimétrica nueva.
+  \item Distinguir siempre \textbf{integridad vs.\ confidencialidad vs.\ no repudio} --- la
+  mayoría de las preguntas de ``\textquestiondown{}qué se pierde si\ldots?'' giran en torno a esta tríada
+  (p.\ ej.\ MAC/HMAC da integridad+autenticidad pero \textbf{no} no-repudio; eso solo lo da
+  firma digital).
+\end{itemize}
+\end{defbox}
+
+%-----------------------------------------------------------------
+\subsection{Ejercicio 3 --- el ``molde de pentesting: 4 hipótesis de falla''}
+%-----------------------------------------------------------------
+Aparece en \textbf{todos} los finales, siempre con la misma consigna implícita: dar
+\textbf{4 hipótesis de falla concretas} (no genéricas) sobre un sistema descripto, y para
+cada una explicar \textbf{la acción concreta} que la probaría o refutaría, siguiendo la
+metodología de hipótesis de falla (Recolección de información $\to$ Hipótesis $\to$ Prueba
+$\to$ Generalización $\to$ Eliminación).
+
+\begin{warnbox}{Puntos clave a leer con cuidado en la consigna}
+Esto es lo que más puntaje pierde si se ignora:
+\begin{itemize}
+  \item La aclaración \textbf{``no usar hipótesis genéricas''} es literal en varios
+  enunciados: no alcanza con decir ``puede haber inyección SQL'' --- hay que
+  \textbf{anclar la hipótesis a un campo/flujo/URL concreto} de la descripción (ej.\ ``es
+  probable que el endpoint \texttt{/user\_id/public/calendar} permita enumerar
+  \texttt{user\_id} y acceder a calendarios ajenos'', no ``puede haber problemas de
+  autorización'').
+  \item \textbf{Leer todo el enunciado buscando ``ganchos'' ya insertados por el
+  enunciado}: casi siempre cada funcionalidad descripta (SMS/2FA, JWT en localStorage,
+  panel de soporte, proveedor de pago externo, links de acceso temporal por mail, QR de
+  vinculación, complejidad algorítmica alta) es un gancho para una hipótesis distinta. El
+  enunciado suele describir 4--6 funcionalidades porque cada una es una hipótesis
+  ``escondida''.
+  \item Cada hipótesis necesita: (1) \textbf{dónde} está el problema (componente/flujo
+  concreto), (2) \textbf{por qué es plausible} dado el diseño descripto, (3) \textbf{la
+  prueba concreta} (acción ejecutable, no ``revisar el código'').
+  \item Vocabulario a usar: el que está en las clases (hipótesis de falla, mediación
+  completa, mínimo privilegio, relaciones de confianza, pruebas según metodología).
+  \textbf{Evitar nombres de categorías estilo OWASP} (BOLA, IDOR, SSRF con esos nombres
+  puntuales) si no aparecen en el material --- se puede describir el problema en esos
+  términos conceptuales sin el nombre, y así queda dentro de la regla de oro.
+\end{itemize}
+\end{warnbox}
+
+%-----------------------------------------------------------------
+\subsection{Temas que se repiten cruzando ejercicios (para relacionar clases)}
+%-----------------------------------------------------------------
+\begin{itemize}
+  \item \textbf{Cifrado $\neq$ integridad} (Clase 2 y 3): es el eje de casi todos los
+  ejercicios 1. Todo esquema que solo cifra (ECB/CBC/CTR/stream sin MAC) es vulnerable a
+  manipulación o replay --- el material lo remarca explícitamente con el ejemplo de RR.HH.
+  \item \textbf{MAC da integridad + autenticidad, no no-repudio} (Clase 3): aparece cada
+  vez que se compara MAC/HMAC contra firma digital.
+  \item \textbf{Nonce/nonce creciente/contador vs.\ aleatorio} (Clase 5 y Segunda Parte
+  Clase 2): el eje de todas las preguntas de replay y challenge-response.
+  \item \textbf{Metodología de hipótesis de falla} (Segunda Parte Clase 6): un solo
+  esqueleto de 5 pasos que hay que poder aplicar a \emph{cualquier} sistema descripto, sin
+  conocer el sistema de antemano.
+  \item \textbf{Principios de diseño (mediación completa, mínimo privilegio, defensa en
+  profundidad)} (Segunda Parte Clase 3): sirven como el ``por qué'' detrás de cada
+  hipótesis de falla.
+\end{itemize}
+
+%-----------------------------------------------------------------
+\subsection{Huecos de material detectados al resolver}
+%-----------------------------------------------------------------
+\begin{ojo}
+Estos términos aparecieron en enunciados de finales pero \textbf{no están, tal cual, en
+los resúmenes de la materia} --- si aparecen en el examen real, resolver con los conceptos
+afines que sí están (indicado entre paréntesis) y no dar por sentado vocabulario externo:
+\begin{itemize}
+  \item \textbf{$k$-anonimato} (usar: resistencia a preimagen, salting, efecto avalancha).
+  \item \textbf{SSRF} (usar: XXE / falta de mediación completa sobre recursos internos).
+  \item \textbf{ChaCha20} por nombre (usar: cifrado de flujo genérico, $E_k(m)=G(k)\oplus m$,
+  PRG).
+  \item \textbf{Árbol de Merkle} (usar: Merkle--Damgård es lo que sí está --- son conceptos
+  distintos).
+  \item \textbf{Términos OWASP puntuales} (BOLA, IDOR, ``Broken Access Control'' como
+  nombre propio): usar el concepto de autorización rota / control de acceso, no el nombre
+  de la categoría.
+\end{itemize}
+\end{ojo}
+
+%-----------------------------------------------------------------
+\subsection{Checklist rápida para el día del examen}
+%-----------------------------------------------------------------
+\begin{enumerate}
+  \item Identificar el ``molde'' de cada ejercicio (\textquestiondown{}es IoT+cifrado? \textquestiondown{}protocolo?
+  \textquestiondown{}pentesting?).
+  \item Ejercicio 1: preguntarse primero ``\textquestiondown{}esto tiene MAC o no?'' y ``\textquestiondown{}qué pasa en modo
+  degradado/sin conexión?''.
+  \item Ejercicio 2: identificar si la pregunta es sobre integridad, confidencialidad o
+  no-repudio antes de responder --- cada una tiene una herramienta distinta.
+  \item Ejercicio 3: releer la descripción y anotar, funcionalidad por funcionalidad, un
+  candidato a hipótesis de falla concreta (URL/campo/flujo específico) antes de escribir
+  nada --- normalmente hay más ganchos en el enunciado que las 4 hipótesis pedidas, así que
+  se puede elegir las 4 más sólidas.
+  \item Citar explícitamente la clase/tema al fundamentar (igual que en las resoluciones de
+  este documento), y si algo excede el material, decirlo en vez de inventar.
+\end{enumerate}

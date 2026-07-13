@@ -26,13 +26,13 @@ prefijo. De esta manera el usuario puede buscar si aparece su hash completo en l
 respuesta y responder la pregunta.
 
 \begin{enumerate}
-  \item[a)] ¿Mejora la seguridad si se utiliza un SALT de 256 bits para almacenar los
-  hashes? ¿Tiene alguna otra consecuencia? Aclaración: seguridad en este contexto
+  \item[a)] \textquestiondown{}Mejora la seguridad si se utiliza un SALT de 256 bits para almacenar los
+  hashes? \textquestiondown{}Tiene alguna otra consecuencia? Aclaración: seguridad en este contexto
   refiere al modelo a anonimato deseado. (1 pto)
   \item[b)] Explicar por qué alguien que controle el servidor no puede saber ni cuál era
   el email sobre el que preguntó el usuario, ni si el resultado de la búsqueda fue
   exitoso o no. (1 pto)
-  \item[c)] ¿Con qué criterio se puede definir el valor $x$ (la cantidad de bits de
+  \item[c)] \textquestiondown{}Con qué criterio se puede definir el valor $x$ (la cantidad de bits de
   prefijo que debe enviar el cliente) si queremos garantizar 256-annonimity? (1 pto)
 \end{enumerate}
 \end{consigna}
@@ -106,7 +106,7 @@ SHA-256, el servidor no puede invertir esos $x$ bits para recuperar el email (ni
 siquiera el hash completo, del cual solo recibe un prefijo). Además, como el servidor
 responde con \textbf{todos} los hashes completos de la base que comparten ese prefijo
 (no solo el que interesa), no puede saber cuál de esos hashes de la respuesta es el que
-realmente le importa al cliente: la comparación final (¿aparece mi hash completo en la
+realmente le importa al cliente: la comparación final (\textquestiondown{}aparece mi hash completo en la
 lista recibida?) la hace el cliente \textbf{del lado suyo}, sin informarle nada al
 servidor sobre el resultado. Por eso el servidor no puede saber ni qué email se
 consultó (solo ve un prefijo compartido por muchos emails posibles) ni si la búsqueda
@@ -182,10 +182,10 @@ Nota: a$|$b significa a seguido de b.
   \item[a)] Explicar qué debe hacer la central para verificar la integridad de los
   valores de cada sensor que recibió, antes de determinar si sus valores son normales o
   no. (1 pto)
-  \item[b)] ¿Puede alguien con capacidad de reemplazar un concentrador (incluso
+  \item[b)] \textquestiondown{}Puede alguien con capacidad de reemplazar un concentrador (incluso
   averiguando su identificador privado) falsificar valores de sensores que la central
   de como validos? Explicar por qué no o como puede hacerlo. (1 pto)
-  \item[c)] ¿Puede alguien con capacidad de reemplazar dos concentradores falsificar
+  \item[c)] \textquestiondown{}Puede alguien con capacidad de reemplazar dos concentradores falsificar
   valores de sensores que la central de como validos? Explicar por qué no o como puede
   hacerlo. (1 pto)
 \end{enumerate}

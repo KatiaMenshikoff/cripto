@@ -17,11 +17,11 @@ primera comunicación, y a partir de eso en todos los mensajes que los sensores 
 \begin{enumerate}
   \item[1.] Hay un atacante que hace de alguna forma que los mensajes se alteren y
   tengan datos adicionales no válidos, generando que el dispositivo maestro tire una
-  señal de alerta. ¿Cómo es posible? Encontrar una manera de solucionar este error en
+  señal de alerta. \textquestiondown{}Cómo es posible? Encontrar una manera de solucionar este error en
   el protocolo sin nuevas claves. (1,5 puntos)
   \item[2.] Hay otro atacante que está enviando repetidamente la señal de sensado de un
   sensor, haciendo que el dispositivo maestro registre niveles de sensado que no son
-  correctos. ¿Cómo es posible? Encontrar una forma de modificar el mensaje para que
+  correctos. \textquestiondown{}Cómo es posible? Encontrar una forma de modificar el mensaje para que
   esto no ocurra sin usar nuevas claves. (1,5 puntos)
 \end{enumerate}
 \end{consigna}
@@ -212,7 +212,7 @@ resolución de abajo.
 \textbf{1) MAC$'_i$ = contenido del bloque anterior $\|$ MAC del bloque actual
 (MAC$'_i = B_{i-1}\,\|\,\mathrm{Mac}(B_i)$, con $B_{-1}=$ ceros).}
 \begin{itemize}
-  \item \textbf{¿Tiene integridad?} Sí, para el contenido de cada bloque: cada
+  \item \textbf{\textquestiondown{}Tiene integridad?} Sí, para el contenido de cada bloque: cada
   $\mathrm{Mac}(B_i)$ se calcula (según la definición del material) sobre $B_i$ y se
   puede verificar de forma independiente por bloque, exactamente igual que en la
   alternativa 2. Además, al incluir el contenido crudo de $B_{i-1}$ junto al tag de
@@ -239,7 +239,7 @@ al corregir $B_i$ (ya traía la copia correcta desde el envío original).
 
 \textbf{2) MAC = MAC(B$_1$) $\|$ $\cdots$ $\|$ MAC(B$_n$).}
 \begin{itemize}
-  \item \textbf{¿Tiene integridad?} Sí: si se altera cualquier bloque $B_i$, su
+  \item \textbf{\textquestiondown{}Tiene integridad?} Sí: si se altera cualquier bloque $B_i$, su
   $\mathrm{Mac}(B_i)$ correspondiente deja de verificar (asumiendo un MAC infalsificable
   como los del material: CBC-MAC o HMAC), mientras que los tags de los demás bloques
   siguen siendo válidos.
@@ -271,7 +271,7 @@ avisando que el detalle de la estructura en árbol excede las clases provistas:
   (o $H(B_i)$ si se usa una función de hash del material, p.\ ej.\ SHA-3). Cada nodo
   interno combina sus dos hijos: $h = \mathrm{Mac}_k(h_{\text{izq}}\|h_{\text{der}})$,
   hasta llegar a una única \textbf{raíz} que resume todo el conjunto de datos.
-  \item \textbf{¿Tiene integridad?} Sí: si se modifica cualquier bloque hoja, su hash
+  \item \textbf{\textquestiondown{}Tiene integridad?} Sí: si se modifica cualquier bloque hoja, su hash
   cambia, y ese cambio se propaga hacia arriba modificando todos los hashes de los
   nodos ancestros hasta la raíz --- cualquier alteración es detectable comparando la
   raíz recalculada contra la raíz original.

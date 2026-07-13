@@ -186,7 +186,7 @@ clave secreta $K_c$. $H(\cdot)$ es una función de hash libre de colisiones:
   enviado solo un hash de la clave secreta. (1 pto.)
   \item[b)] Para evitar la aleatoriedad en el protocolo, un desarrollador decide
   modificar el paso 2 y mantener un contador $ctr$, que transmite en lugar de $r$
-  y va incrementando en cada uso. ¿Es esta implementación menos segura que la
+  y va incrementando en cada uso. \textquestiondown{}Es esta implementación menos segura que la
   anterior? Justificar. (1 pto.)
   \item[c)] Modificar el protocolo para que exista autenticación mutua, es decir,
   que $C$ también pueda autenticar a $S$ como resultado del intercambio. No
@@ -250,7 +250,7 @@ que no hay dos ejecuciones del protocolo con el mismo $r$ (y por lo tanto la mis
 $t$) esperado. Es exactamente el rol del nonce en challenge-response: dar frescura
 y evitar que se reutilicen respuestas capturadas.
 
-\textbf{b) Contador incremental en vez de $r$ aleatorio: ¿menos seguro?}
+\textbf{b) Contador incremental en vez de $r$ aleatorio: \textquestiondown{}menos seguro?}
 Sí, \textbf{es menos seguro} que usar un $r$ aleatorio, aunque un contador
 creciente ($ctr$) igualmente aporta algo de frescura si el servidor exige que sea
 estrictamente mayor al último usado (evitaría el replay literal del mismo
@@ -340,7 +340,7 @@ Autenticación (\S OTP/HOTP, contador vs.\ aleatorio); glosario (\S OAuth2/token
 \begin{itemize}
   \item \textbf{Metodología de hipótesis de falla (Clase 6):} el Paso 2 consiste en
   plantear posibles vulnerabilidades examinando implementaciones y mecanismos
-  concretos del sistema (¿está bien implementado el control?, ¿el ambiente
+  concretos del sistema (\textquestiondown{}está bien implementado el control?, \textquestiondown{}el ambiente
   introduce errores?), y comparando con sistemas parecidos (sistemas similares
   tienen problemas similares). El resultado del Paso 2 es una lista de posibles
   vulnerabilidades asumidas como hipótesis; el Paso 3 (Prueba) exige que la
